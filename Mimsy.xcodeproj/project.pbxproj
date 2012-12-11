@@ -10,6 +10,7 @@
 		370040361676C89C0009907A /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 370040351676C89C0009907A /* README.md */; };
 		3700403A1676D4790009907A /* TextDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 370040391676D4790009907A /* TextDocument.m */; };
 		3700403D1676D4860009907A /* TextDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3700403B1676D4860009907A /* TextDocument.xib */; };
+		3759B6571676F01900D3F3B8 /* TextController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3759B6561676F01900D3F3B8 /* TextController.m */; };
 		37A8C69716758FF400D4DB13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C69616758FF400D4DB13 /* Cocoa.framework */; };
 		37A8C6A116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C69F16758FF400D4DB13 /* InfoPlist.strings */; };
 		37A8C6A316758FF400D4DB13 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6A216758FF400D4DB13 /* main.m */; };
@@ -37,6 +38,8 @@
 		370040381676D4790009907A /* TextDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextDocument.h; path = ../../mimsy/Mimsy/TextDocument.h; sourceTree = "<group>"; };
 		370040391676D4790009907A /* TextDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TextDocument.m; path = ../../mimsy/Mimsy/TextDocument.m; sourceTree = "<group>"; };
 		3700403C1676D4860009907A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = ../../mimsy/Mimsy/en.lproj/TextDocument.xib; sourceTree = "<group>"; };
+		3759B6551676F01900D3F3B8 /* TextController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextController.h; sourceTree = "<group>"; };
+		3759B6561676F01900D3F3B8 /* TextController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextController.m; sourceTree = "<group>"; };
 		37A8C69216758FF400D4DB13 /* Mimsy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mimsy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37A8C69616758FF400D4DB13 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		37A8C69916758FF400D4DB13 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -120,13 +123,15 @@
 		37A8C69C16758FF400D4DB13 /* Mimsy */ = {
 			isa = PBXGroup;
 			children = (
+				37A8C6CD167590E700D4DB13 /* TODO */,
+				37A8C6AE16758FF400D4DB13 /* MainMenu.xib */,
 				3700403B1676D4860009907A /* TextDocument.xib */,
 				370040381676D4790009907A /* TextDocument.h */,
 				370040391676D4790009907A /* TextDocument.m */,
-				370040351676C89C0009907A /* README.md */,
-				37A8C6CD167590E700D4DB13 /* TODO */,
-				37A8C6AE16758FF400D4DB13 /* MainMenu.xib */,
+				3759B6551676F01900D3F3B8 /* TextController.h */,
+				3759B6561676F01900D3F3B8 /* TextController.m */,
 				37A8C69D16758FF400D4DB13 /* Supporting Files */,
+				370040351676C89C0009907A /* README.md */,
 			);
 			path = Mimsy;
 			sourceTree = "<group>";
@@ -276,6 +281,7 @@
 			files = (
 				37A8C6A316758FF400D4DB13 /* main.m in Sources */,
 				3700403A1676D4790009907A /* TextDocument.m in Sources */,
+				3759B6571676F01900D3F3B8 /* TextController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -2,4 +2,6 @@
 
 @interface TextDocument : NSDocument
 
+- (void)controllerDidLoad;
+
 @end

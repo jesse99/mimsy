@@ -1,5 +1,6 @@
 * Get a basic editor running:
-	- get loading working
+	- make sure revert works
+	- maybe use a better name for the controll view outlet (be sure to commit 1st)
 	- loading needs to talk to the view
 	- make sure arbitrary files can be read
 	- make sure something sensible happens for binary files
