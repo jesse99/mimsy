@@ -1,0 +1,27 @@
+* Get a basic editor running:
+	- may want to look at some sample code
+* Change the version number to 0.1
+* Rename files and classes
+* Get text files loading and saving.
+* Work on styling:
+	- 10.7 added support for regexen
+	- maybe use two-step process: blocking update of current view, thread for entire doc
+	- look into using VIMs color schemes
+	- should be a way to include back color in the style file
+		` probably need some way to override default back color 
+* Add to github.
+* Maybe handle common extension points via external files:
+	- for build systems Python script returning
+		` build file (mimsy will watch for changes to this file)
+		` targets
+		` command lines for the targets
+	- for tools declarative file with
+		` regex for errors
+		` regex for warnings
+		` mapping from group number to standard categories like file, line, col
+	- language files need to include search URL
+	- would be nice to do something for SCCSs
+* Work on directory editor.
+* Work on building.
+* Might want to add to the app store:
+	- see what the policy is for open source apps
