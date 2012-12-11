@@ -1,14 +1,6 @@
-//
-//  MIMDocument.m
-//  Mimsy
-//
-//  Created by Jesse Jones on 12/9/12.
-//  Copyright (c) 2012 Jesse Jones. All rights reserved.
-//
+#import "TextDocument.h"
 
-#import "MIMDocument.h"
-
-@implementation MIMDocument
+@implementation TextDocument
 
 - (id)init
 {
@@ -23,7 +15,7 @@
 {
 	// Override returning the nib file name of the document
 	// If you need to use a subclass of NSWindowController or if your document supports multiple NSWindowControllers, you should remove this method and override -makeWindowControllers instead.
-	return @"MIMDocument";
+	return @"TextDocument";
 }
 
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController
