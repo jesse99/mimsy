@@ -1,7 +1,9 @@
 * Get a basic editor running:
-	- add a text edtor view
-	- should be scrollable
-	- document needs to talk to the view
+	- get loading working
+	- loading needs to talk to the view
+	- make sure arbitrary files can be read
+	- make sure something sensible happens for binary files
+	- get saving working
 * Get text files loading and saving.
 * Work on styling:
 	- 10.7 added support for regexen
