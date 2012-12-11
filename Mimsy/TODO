@@ -1,6 +1,7 @@
-* Rename files and classes
 * Get a basic editor running:
-	- may want to look at some sample code
+	- add a text edtor view
+	- should be scrollable
+	- document needs to talk to the view
 * Get text files loading and saving.
 * Work on styling:
 	- 10.7 added support for regexen
