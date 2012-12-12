@@ -11,6 +11,7 @@
 		3700403A1676D4790009907A /* TextDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 370040391676D4790009907A /* TextDocument.m */; };
 		3700403D1676D4860009907A /* TextDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3700403B1676D4860009907A /* TextDocument.xib */; };
 		3759B6571676F01900D3F3B8 /* TextController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3759B6561676F01900D3F3B8 /* TextController.m */; };
+		3759B6601678376000D3F3B8 /* Decode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3759B65F1678376000D3F3B8 /* Decode.m */; };
 		37A8C69716758FF400D4DB13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C69616758FF400D4DB13 /* Cocoa.framework */; };
 		37A8C6A116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C69F16758FF400D4DB13 /* InfoPlist.strings */; };
 		37A8C6A316758FF400D4DB13 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6A216758FF400D4DB13 /* main.m */; };
@@ -19,7 +20,7 @@
 		37A8C6B816758FF400D4DB13 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C6B716758FF400D4DB13 /* SenTestingKit.framework */; };
 		37A8C6B916758FF400D4DB13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C69616758FF400D4DB13 /* Cocoa.framework */; };
 		37A8C6C116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C6BF16758FF400D4DB13 /* InfoPlist.strings */; };
-		37A8C6C416758FF400D4DB13 /* MimsyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6C316758FF400D4DB13 /* MimsyTests.m */; };
+		37A8C6C416758FF400D4DB13 /* DecodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6C316758FF400D4DB13 /* DecodeTests.m */; };
 		37A8C6CE167590E700D4DB13 /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C6CD167590E700D4DB13 /* TODO */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,8 @@
 		3700403C1676D4860009907A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = ../../mimsy/Mimsy/en.lproj/TextDocument.xib; sourceTree = "<group>"; };
 		3759B6551676F01900D3F3B8 /* TextController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextController.h; sourceTree = "<group>"; };
 		3759B6561676F01900D3F3B8 /* TextController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextController.m; sourceTree = "<group>"; };
+		3759B65E1678376000D3F3B8 /* Decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Decode.h; sourceTree = "<group>"; };
+		3759B65F1678376000D3F3B8 /* Decode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Decode.m; sourceTree = "<group>"; };
 		37A8C69216758FF400D4DB13 /* Mimsy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mimsy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37A8C69616758FF400D4DB13 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		37A8C69916758FF400D4DB13 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -55,8 +58,8 @@
 		37A8C6B716758FF400D4DB13 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		37A8C6BE16758FF400D4DB13 /* MimsyTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MimsyTests-Info.plist"; sourceTree = "<group>"; };
 		37A8C6C016758FF400D4DB13 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		37A8C6C216758FF400D4DB13 /* MimsyTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MimsyTests.h; sourceTree = "<group>"; };
-		37A8C6C316758FF400D4DB13 /* MimsyTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MimsyTests.m; sourceTree = "<group>"; };
+		37A8C6C216758FF400D4DB13 /* DecodeTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DecodeTests.h; sourceTree = "<group>"; };
+		37A8C6C316758FF400D4DB13 /* DecodeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DecodeTests.m; sourceTree = "<group>"; };
 		37A8C6CD167590E700D4DB13 /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -89,6 +92,8 @@
 				370040391676D4790009907A /* TextDocument.m */,
 				3759B6551676F01900D3F3B8 /* TextController.h */,
 				3759B6561676F01900D3F3B8 /* TextController.m */,
+				3759B65E1678376000D3F3B8 /* Decode.h */,
+				3759B65F1678376000D3F3B8 /* Decode.m */,
 			);
 			name = "Text Editor";
 			sourceTree = "<group>";
@@ -159,8 +164,8 @@
 		37A8C6BC16758FF400D4DB13 /* MimsyTests */ = {
 			isa = PBXGroup;
 			children = (
-				37A8C6C216758FF400D4DB13 /* MimsyTests.h */,
-				37A8C6C316758FF400D4DB13 /* MimsyTests.m */,
+				37A8C6C216758FF400D4DB13 /* DecodeTests.h */,
+				37A8C6C316758FF400D4DB13 /* DecodeTests.m */,
 				37A8C6BD16758FF400D4DB13 /* Supporting Files */,
 			);
 			path = MimsyTests;
@@ -290,6 +295,7 @@
 				37A8C6A316758FF400D4DB13 /* main.m in Sources */,
 				3700403A1676D4790009907A /* TextDocument.m in Sources */,
 				3759B6571676F01900D3F3B8 /* TextController.m in Sources */,
+				3759B6601678376000D3F3B8 /* Decode.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,7 +303,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				37A8C6C416758FF400D4DB13 /* MimsyTests.m in Sources */,
+				37A8C6C416758FF400D4DB13 /* DecodeTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -422,7 +428,7 @@
 				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_PEDANTIC = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_LABEL = YES;
@@ -447,7 +453,7 @@
 				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_PEDANTIC = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_LABEL = YES;
