@@ -24,9 +24,4 @@
 	[[self document] controllerDidLoad];
 }
 
-- (NSTextView*) view
-{
-	return theView;
-}
-
 @end

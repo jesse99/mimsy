@@ -4,8 +4,8 @@
 
 @implementation TextDocument
 {
-	TextController* controller;
-	NSMutableAttributedString* text;
+	TextController* _controller;
+	NSMutableAttributedString* _text;
 }
 
 - (id)init
@@ -19,18 +19,18 @@
 
 - (void)makeWindowControllers
 {
-	controller = [[TextController alloc] init];
-	[self addWindowController:controller];
+	_controller = [[TextController alloc] init];
+	[self addWindowController:_controller];
 }
 
 - (void)controllerDidLoad
 {
-	NSAssert([controller view], @"%@ has a nil view", controller);
+	NSAssert([_controller view], @"%@ has a nil view", _controller);
 
-	if (text)
+	if (_text)
 	{
-		[[[controller view] textStorage] setAttributedString:text];
-		text = nil;
+		[[[_controller view] textStorage] setAttributedString:_text];
+		_text = nil;
 	}
 }
 
@@ -40,7 +40,6 @@
 }
 
 // TODO:
-// fix the malloc issue
 // encoding
 // bad encoding (eg a binary file)
 // check for leaks, use profile action
@@ -61,11 +60,11 @@
 	(void) typeName;
 	(void) outError;
 	
-	NSAssert(text == nil, @"%@ should be nil", text);
+	NSAssert(_text == nil, @"%@ should be nil", _text);
 	
 	NSStringEncoding encoding = NSUTF8StringEncoding;
 	NSString* str = [[NSString alloc] initWithData:data encoding:encoding];
-	text = [[NSMutableAttributedString alloc] initWithString:str];
+	_text = [[NSMutableAttributedString alloc] initWithString:str];
 	
 	// Insert code here to read your document from the given data of the specified type. If outError != NULL, ensure that you create and set an appropriate error when returning NO.
 	// You can also choose to override -readFromFileWrapper:ofType:error: or -readFromURL:ofType:error: instead.
