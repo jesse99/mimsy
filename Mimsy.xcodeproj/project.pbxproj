@@ -35,8 +35,8 @@
 
 /* Begin PBXFileReference section */
 		370040351676C89C0009907A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../../mimsy/README.md; sourceTree = "<group>"; };
-		370040381676D4790009907A /* TextDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextDocument.h; path = ../../mimsy/Mimsy/TextDocument.h; sourceTree = "<group>"; };
-		370040391676D4790009907A /* TextDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TextDocument.m; path = ../../mimsy/Mimsy/TextDocument.m; sourceTree = "<group>"; };
+		370040381676D4790009907A /* TextDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextDocument.h; sourceTree = "<group>"; };
+		370040391676D4790009907A /* TextDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDocument.m; sourceTree = "<group>"; };
 		3700403C1676D4860009907A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = ../../mimsy/Mimsy/en.lproj/TextDocument.xib; sourceTree = "<group>"; };
 		3759B6551676F01900D3F3B8 /* TextController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextController.h; sourceTree = "<group>"; };
 		3759B6561676F01900D3F3B8 /* TextController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextController.m; sourceTree = "<group>"; };
@@ -81,6 +81,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3759B65D1678338600D3F3B8 /* Text Editor */ = {
+			isa = PBXGroup;
+			children = (
+				3700403B1676D4860009907A /* TextDocument.xib */,
+				370040381676D4790009907A /* TextDocument.h */,
+				370040391676D4790009907A /* TextDocument.m */,
+				3759B6551676F01900D3F3B8 /* TextController.h */,
+				3759B6561676F01900D3F3B8 /* TextController.m */,
+			);
+			name = "Text Editor";
+			sourceTree = "<group>";
+		};
 		37A8C68716758FF400D4DB13 = {
 			isa = PBXGroup;
 			children = (
@@ -125,13 +137,9 @@
 			children = (
 				37A8C6CD167590E700D4DB13 /* TODO */,
 				37A8C6AE16758FF400D4DB13 /* MainMenu.xib */,
-				3700403B1676D4860009907A /* TextDocument.xib */,
-				370040381676D4790009907A /* TextDocument.h */,
-				370040391676D4790009907A /* TextDocument.m */,
-				3759B6551676F01900D3F3B8 /* TextController.h */,
-				3759B6561676F01900D3F3B8 /* TextController.m */,
-				37A8C69D16758FF400D4DB13 /* Supporting Files */,
+				3759B65D1678338600D3F3B8 /* Text Editor */,
 				370040351676C89C0009907A /* README.md */,
+				37A8C69D16758FF400D4DB13 /* Supporting Files */,
 			);
 			path = Mimsy;
 			sourceTree = "<group>";
