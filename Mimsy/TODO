@@ -1,12 +1,7 @@
-* Get a basic editor running:
-	- make sure revert works
-	- maybe use a better name for the controll view outlet (be sure to commit 1st)
-	- loading needs to talk to the view
-	- make sure arbitrary files can be read
-	- make sure something sensible happens for binary files
-	- get saving working
+* Work on document class
 * Get text files loading and saving.
 * Work on styling:
+	- look at tmlanguage
 	- 10.7 added support for regexen
 	- maybe use two-step process: blocking update of current view, thread for entire doc
 	- look into using VIMs color schemes
@@ -25,5 +20,10 @@
 	- would be nice to do something for SCCSs
 * Work on directory editor.
 * Work on building.
+* Would be nice to have some sort of indication of dirty files:
+	- probably from git's perspective
+* XCode and (I guess) TextMate have a bunch of macros:
+	- type some abreviation, hit escape, and they are expanded
 * Might want to add to the app store:
 	- see what the policy is for open source apps
+	- look at Prepare for Mac App Store Submission

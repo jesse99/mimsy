@@ -40,13 +40,22 @@
 }
 
 // TODO:
+// fix the malloc issue
 // encoding
-// bad encoding
+// bad encoding (eg a binary file)
+// check for leaks, use profile action
+// maybe use a better name for the controller view outlet (be sure to commit 1st)
 // endian
+// saving
+// revert (make sure the order of operations is ok)
 // gremlins
+// make sure arbitrary files can be read
 // rich formats
+// binary format
 // confirm on large files
 // reload
+// review NSDocument
+// check for leaks
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
 {
 	(void) typeName;
