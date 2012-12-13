@@ -1,5 +1,6 @@
 #import "TextDocument.h"
 
+#import "Decode.h"
 #import "TextController.h"
 
 @implementation TextDocument
@@ -40,8 +41,6 @@
 }
 
 // TODO:
-// encoding
-// bad encoding (eg a binary file)
 // check for leaks, use profile action
 // maybe use a better name for the controller view outlet (be sure to commit 1st)
 // endian
@@ -62,14 +61,19 @@
 	
 	NSAssert(_text == nil, @"%@ should be nil", _text);
 	
-	NSStringEncoding encoding = NSUTF8StringEncoding;
-	NSString* str = [[NSString alloc] initWithData:data encoding:encoding];
-	_text = [[NSMutableAttributedString alloc] initWithString:str];
-	
-	// Insert code here to read your document from the given data of the specified type. If outError != NULL, ensure that you create and set an appropriate error when returning NO.
-	// You can also choose to override -readFromFileWrapper:ofType:error: or -readFromURL:ofType:error: instead.
-	// If you override either of these, you should also override -isEntireFileLoaded to return NO if the contents are lazily loaded.
-	return YES;
+	Decode* decode = [[Decode alloc] initWithData:data];
+	NSString* text = [decode text];
+	if (text)
+	{
+		_text = [[NSMutableAttributedString alloc] initWithString:text];
+		return YES;
+	}
+	else
+	{
+		NSDictionary* dict = @{NSLocalizedDescriptionKey:@"Couldn't read the document", NSLocalizedFailureReasonErrorKey:[decode error]};
+		*outError = [NSError errorWithDomain:@"mimsy" code:1 userInfo:dict];
+		return NO;
+	}
 }
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError

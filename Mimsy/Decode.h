@@ -10,8 +10,6 @@
 // One of text or error will be non-nil.
 @property NSString* text;
 @property NSString* error;
-
-// Really a NSStringEncoding, but all the constants are ints.
-@property int encoding;
+@property NSStringEncoding encoding;
 
 @end

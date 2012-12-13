@@ -1,2 +1,2 @@
-Some text
-
+Here is a bullet: •
+and pi: π
