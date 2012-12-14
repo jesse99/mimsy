@@ -90,7 +90,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 }
 
 // TODO:
-// binary (need ToText helper)
+// binary (will need Open as Binary menu item)
 // saving
 // revert (make sure the order of operations is ok)
 // control chars
@@ -119,7 +119,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 - (void)confirmOpen:(NSData *)data error:(NSError **)outError
 {
 	NSString* name = [[self fileURL] lastPathComponent];
-	NSString* mesg = [[NSString alloc] initWithFormat:@"This file is %@. Are you sure you want to open it?", [Utils bytesToStr:data.length precision:1]];
+	NSString* mesg = [[NSString alloc] initWithFormat:@"This file is %@. Are you sure you want to open it?", [Utils bytesToStr:data.length]];
 	NSInteger button = NSRunAlertPanel(name, mesg, @"No", @"Yes", nil);
 	if (button != NSAlertAlternateReturn)
 	{
