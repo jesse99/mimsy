@@ -3,6 +3,7 @@
 #import "Decode.h"
 #import "TextController.h"
 #import "TranscriptController.h"
+#import "Utils.h"
 
 static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
@@ -89,9 +90,6 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 }
 
 // TODO:
-// looks like there are some new document types available
-// make sure arbitrary files can be read
-// confirm on large files
 // binary (need ToText helper)
 // saving
 // revert (make sure the order of operations is ok)
@@ -100,7 +98,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 // review NSDocument
 // check for leaks?
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
-{	
+{
 	NSAssert(self.text == nil, @"%@ should be nil", self.text);
 	
 	self.endian = NoEndian;
@@ -108,6 +106,29 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	self.binary = false;
 	*outError = nil;
 	
+	const NSUInteger MaxBytes = 512*1024;		// I think this is around 16K lines of source
+	if ([data length] > MaxBytes)
+		[self confirmOpen:data error:outError];
+
+	if (*outError == nil)
+		[self doReadFromData:data ofType:typeName error:outError];
+	
+	return *outError == nil;
+}
+
+- (void)confirmOpen:(NSData *)data error:(NSError **)outError
+{
+	NSString* name = [[self fileURL] lastPathComponent];
+	NSString* mesg = [[NSString alloc] initWithFormat:@"This file is %@. Are you sure you want to open it?", [Utils bytesToStr:data.length precision:1]];
+	NSInteger button = NSRunAlertPanel(name, mesg, @"No", @"Yes", nil);
+	if (button != NSAlertAlternateReturn)
+	{
+		*outError = [NSError errorWithDomain:NSCocoaErrorDomain code:NSUserCancelledError userInfo:nil];
+	}
+}
+
+- (void)doReadFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
+{
 	if ([typeName isEqualToString:@"Plain Text, UTF8 Encoded"] || [typeName isEqualToString:@"HTML"])
 	{
 		Decode* decode = [[Decode alloc] initWithData:data];
@@ -154,6 +175,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	}
 	else if ([typeName isEqualToString:@"Word 2007 Format (docx)"])
 	{
+		// There is also NSWordMLTextDocumentType, but that is an older (2003) XML format.
 		NSDictionary* options = @{NSDocumentTypeDocumentAttribute:NSOfficeOpenXMLTextDocumentType};
 		self.text = [[NSMutableAttributedString alloc] initWithData:data options:options documentAttributes:NULL error:outError];
 	}
@@ -171,8 +193,6 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	{
 		NSAssert(false, @"readData> bad typeName: %@", typeName);
 	}
-	
-	return *outError == nil;
 }
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError
