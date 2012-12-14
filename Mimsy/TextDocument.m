@@ -89,6 +89,9 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 
 // TODO:
 // encoding warning
+//    need to support the transcript window
+//    figure out how to access it, maybe something like sharedApplication
+//    add the warning
 // looks like there are some new document types available
 // make sure arbitrary files can be read
 // confirm on large files

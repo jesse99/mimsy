@@ -1,12 +1,12 @@
 #import <Cocoa/Cocoa.h>
 
-enum LineEndian
+typedef enum LineEndian : NSUInteger
 {
 	NoEndian,			// used for documents not read as text (e.g. Word)
 	UnixEndian,			// "\n"
 	MacEndian,			// "\r"
 	WindowsEndian,		// "\r\n"
-};
+} LineEndian;
 
 // Document object used when editing text documents.
 @interface TextDocument : NSDocument
