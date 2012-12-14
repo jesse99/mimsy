@@ -19,6 +19,10 @@
 	- language files need to include search URL
 	- would be nice to do something for SCCSs
 * Work on directory editor.
+* Do something special with file rename when a SCCS is present.
+* Should have a mode where tab uses tab at the start of lines, but spaces once the line starts.
+* Might also want to use that wacky VIM(?) meta-data embedded in files containing info like tab lengths
+	- or support a dot file that does the same thing
 * Work on building.
 * Would be nice to have some sort of indication of dirty files:
 	- probably from git's perspective

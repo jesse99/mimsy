@@ -10,6 +10,7 @@
 		370040361676C89C0009907A /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 370040351676C89C0009907A /* README.md */; };
 		3700403A1676D4790009907A /* TextDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 370040391676D4790009907A /* TextDocument.m */; };
 		3700403D1676D4860009907A /* TextDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3700403B1676D4860009907A /* TextDocument.xib */; };
+		3705C80E167B6F6400E5D54C /* LineEndianTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3705C80D167B6F6400E5D54C /* LineEndianTests.m */; };
 		3759B6571676F01900D3F3B8 /* TextController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3759B6561676F01900D3F3B8 /* TextController.m */; };
 		3759B6601678376000D3F3B8 /* Decode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3759B65F1678376000D3F3B8 /* Decode.m */; };
 		37A8C69716758FF400D4DB13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C69616758FF400D4DB13 /* Cocoa.framework */; };
@@ -39,6 +40,8 @@
 		370040381676D4790009907A /* TextDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextDocument.h; sourceTree = "<group>"; };
 		370040391676D4790009907A /* TextDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDocument.m; sourceTree = "<group>"; };
 		3700403C1676D4860009907A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = ../../mimsy/Mimsy/en.lproj/TextDocument.xib; sourceTree = "<group>"; };
+		3705C80C167B6F6400E5D54C /* LineEndianTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineEndianTests.h; sourceTree = "<group>"; };
+		3705C80D167B6F6400E5D54C /* LineEndianTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LineEndianTests.m; sourceTree = "<group>"; };
 		3759B6551676F01900D3F3B8 /* TextController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextController.h; sourceTree = "<group>"; };
 		3759B6561676F01900D3F3B8 /* TextController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextController.m; sourceTree = "<group>"; };
 		3759B65E1678376000D3F3B8 /* Decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Decode.h; sourceTree = "<group>"; };
@@ -167,6 +170,8 @@
 				37A8C6C216758FF400D4DB13 /* DecodeTests.h */,
 				37A8C6C316758FF400D4DB13 /* DecodeTests.m */,
 				37A8C6BD16758FF400D4DB13 /* Supporting Files */,
+				3705C80C167B6F6400E5D54C /* LineEndianTests.h */,
+				3705C80D167B6F6400E5D54C /* LineEndianTests.m */,
 			);
 			path = MimsyTests;
 			sourceTree = "<group>";
@@ -304,6 +309,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				37A8C6C416758FF400D4DB13 /* DecodeTests.m in Sources */,
+				3705C80E167B6F6400E5D54C /* LineEndianTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

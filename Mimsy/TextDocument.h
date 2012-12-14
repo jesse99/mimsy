@@ -12,4 +12,7 @@ enum LineEndian
 
 - (void)controllerDidLoad;
 
+@property NSMutableAttributedString* text;		// note that this will be set to nil once the view is initialized
+@property enum LineEndian endian;
+
 @end

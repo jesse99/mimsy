@@ -54,8 +54,6 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 @implementation TextDocument
 {
 	TextController* _controller;
-	NSMutableAttributedString* _text;
-	enum LineEndian _endian;
 }
 
 - (id)init
@@ -77,10 +75,10 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
 	NSAssert([_controller view], @"%@ has a nil view", _controller);
 
-	if (_text)
+	if (self.text)
 	{
-		[[[_controller view] textStorage] setAttributedString:_text];
-		_text = nil;
+		[[[_controller view] textStorage] setAttributedString:self.text];
+		self.text = nil;
 	}
 }
 
@@ -105,14 +103,14 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
 	(void) typeName;
 	
-	NSAssert(_text == nil, @"%@ should be nil", _text);
+	NSAssert(self.text == nil, @"%@ should be nil", self.text);
 	
 	Decode* decode = [[Decode alloc] initWithData:data];
 	NSMutableString* text = [decode text];
 	if (text)
 	{
 		bool hasMac, hasWindows;
-		_endian = getEndian(text, &hasMac, &hasWindows);
+		self.endian = getEndian(text, &hasMac, &hasWindows);
 		
 		// To make life easier on ourselves text documents in memory are always
 		// unix endian (this will also fixup files with mixed line endings).
@@ -122,7 +120,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		if (hasMac)
 			[text replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange(0, [text length])];
 		
-		_text = [[NSMutableAttributedString alloc] initWithString:text];
+		self.text = [[NSMutableAttributedString alloc] initWithString:text];
 		return YES;
 	}
 	else
