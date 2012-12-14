@@ -2,6 +2,7 @@
 
 #import "Decode.h"
 #import "TextController.h"
+#import "TranscriptController.h"
 
 static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
@@ -88,10 +89,6 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 }
 
 // TODO:
-// encoding warning
-//    need to support the transcript window
-//    figure out how to access it, maybe something like sharedApplication
-//    add the warning
 // looks like there are some new document types available
 // make sure arbitrary files can be read
 // confirm on large files
@@ -117,10 +114,12 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		NSMutableString* text = decode.text;
 		if (text)
 		{
-			// TODO: encoding warning
 			bool hasMac, hasWindows;
 			self.endian = getEndian(text, &hasMac, &hasWindows);
 			self.encoding = decode.encoding;
+			
+			if (self.encoding == NSMacOSRomanStringEncoding)
+				[TranscriptController writeError:@"Read the file as Mac OS Roman (it isn't utf-8, utf-16, or utf-32)."];
 			
 			// To make life easier on ourselves text documents in memory are always
 			// unix endian (this will also fixup files with mixed line endings).
