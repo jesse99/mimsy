@@ -3,10 +3,59 @@
 #import "Decode.h"
 #import "TextController.h"
 
+static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
+{
+	int counts[3] = {0};
+	*hasWindows = false;
+	*hasMac = false;
+		
+	// It's annoying to scan the entire string for line endings, but in the common
+	// case where we are dealing with Unix files we need to scan the entire file
+	// to ensure that there are no line endings we need to fix.
+	NSUInteger i = 0;
+	NSUInteger len = [text length];
+	while (i < len)
+	{
+		unichar ch = [text characterAtIndex:i];
+		if (i + 1 < len && ch == '\r' && [text characterAtIndex:i+1] == '\n')
+		{
+			*hasWindows = true;
+			counts[WindowsEndian] += 1;
+			i += 2;
+		}
+		else if (ch == '\r')
+		{
+			*hasMac = true;
+			counts[MacEndian] += 1;
+			i += 1;
+		}
+		else if (ch == '\n')
+		{
+			counts[UnixEndian] += 1;
+			i += 1;
+		}
+		else
+		{
+			i += 1;
+		}
+	}
+
+	// Set the endian to whichever is the most common.
+	if (counts[WindowsEndian] > counts[MacEndian] && counts[WindowsEndian] > counts[UnixEndian])
+		return WindowsEndian;
+	
+	else if (counts[MacEndian] > counts[WindowsEndian] && counts[MacEndian] > counts[UnixEndian])
+		return MacEndian;
+	
+	else
+		return UnixEndian;
+}
+
 @implementation TextDocument
 {
 	TextController* _controller;
 	NSMutableAttributedString* _text;
+	enum LineEndian _endian;
 }
 
 - (id)init
@@ -41,9 +90,7 @@
 }
 
 // TODO:
-// check for leaks, use profile action
-// maybe use a better name for the controller view outlet (be sure to commit 1st)
-// endian
+// line endian
 // saving
 // revert (make sure the order of operations is ok)
 // gremlins
@@ -57,20 +104,30 @@
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
 {
 	(void) typeName;
-	(void) outError;
 	
 	NSAssert(_text == nil, @"%@ should be nil", _text);
 	
 	Decode* decode = [[Decode alloc] initWithData:data];
-	NSString* text = [decode text];
+	NSMutableString* text = [decode text];
 	if (text)
 	{
+		bool hasMac, hasWindows;
+		_endian = getEndian(text, &hasMac, &hasWindows);
+		
+		// To make life easier on ourselves text documents in memory are always
+		// unix endian (this will also fixup files with mixed line endings).
+		if (hasWindows)
+			[text replaceOccurrencesOfString:@"\r\n" withString:@"\n" options:NSLiteralSearch range:NSMakeRange(0, [text length])];
+		
+		if (hasMac)
+			[text replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange(0, [text length])];
+		
 		_text = [[NSMutableAttributedString alloc] initWithString:text];
 		return YES;
 	}
 	else
 	{
-		NSDictionary* dict = @{NSLocalizedDescriptionKey:@"Couldn't read the document", NSLocalizedFailureReasonErrorKey:[decode error]};
+		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:[decode error]};
 		*outError = [NSError errorWithDomain:@"mimsy" code:1 userInfo:dict];
 		return NO;
 	}
