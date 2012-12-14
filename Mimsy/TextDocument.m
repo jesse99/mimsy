@@ -5,7 +5,7 @@
 
 static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
-	int counts[3] = {0};
+	int counts[4] = {0};
 	*hasWindows = false;
 	*hasMac = false;
 		
@@ -88,47 +88,89 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 }
 
 // TODO:
-// line endian
+// encoding warning
+// looks like there are some new document types available
+// make sure arbitrary files can be read
+// confirm on large files
+// binary (need ToText helper)
 // saving
 // revert (make sure the order of operations is ok)
-// gremlins
-// make sure arbitrary files can be read
-// rich formats
-// binary format
-// confirm on large files
+// control chars
 // reload
 // review NSDocument
-// check for leaks
+// check for leaks?
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
-{
-	(void) typeName;
-	
+{	
 	NSAssert(self.text == nil, @"%@ should be nil", self.text);
 	
-	Decode* decode = [[Decode alloc] initWithData:data];
-	NSMutableString* text = [decode text];
-	if (text)
+	self.endian = NoEndian;
+	self.encoding = 0;
+	self.binary = false;
+	*outError = nil;
+	
+	if ([typeName isEqualToString:@"Plain Text, UTF8 Encoded"] || [typeName isEqualToString:@"HTML"])
 	{
-		bool hasMac, hasWindows;
-		self.endian = getEndian(text, &hasMac, &hasWindows);
-		
-		// To make life easier on ourselves text documents in memory are always
-		// unix endian (this will also fixup files with mixed line endings).
-		if (hasWindows)
-			[text replaceOccurrencesOfString:@"\r\n" withString:@"\n" options:NSLiteralSearch range:NSMakeRange(0, [text length])];
-		
-		if (hasMac)
-			[text replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange(0, [text length])];
-		
-		self.text = [[NSMutableAttributedString alloc] initWithString:text];
-		return YES;
+		Decode* decode = [[Decode alloc] initWithData:data];
+		NSMutableString* text = decode.text;
+		if (text)
+		{
+			// TODO: encoding warning
+			bool hasMac, hasWindows;
+			self.endian = getEndian(text, &hasMac, &hasWindows);
+			self.encoding = decode.encoding;
+			
+			// To make life easier on ourselves text documents in memory are always
+			// unix endian (this will also fixup files with mixed line endings).
+			if (hasWindows)
+				[text replaceOccurrencesOfString:@"\r\n" withString:@"\n" options:NSLiteralSearch range:NSMakeRange(0, [text length])];
+			
+			if (hasMac)
+				[text replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange(0, [text length])];
+			
+			self.text = [[NSMutableAttributedString alloc] initWithString:text];
+			
+			// If an html file is being edited in Mimsy then ensure that it is saved
+			// as plain text. (To save a document as html the user needs to use save as
+			// and explicitly select html).
+			[self setFileType:@"Plain Text, UTF8 Encoded"];
+		}
+		else
+		{
+			NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:[decode error]};
+			*outError = [NSError errorWithDomain:@"mimsy" code:1 userInfo:dict];
+		}
+	}
+	else if ([typeName isEqualToString:@"Rich Text Format (RTF)"])
+	{
+		NSDictionary* options = @{NSDocumentTypeDocumentAttribute:NSRTFTextDocumentType};
+		self.text = [[NSMutableAttributedString alloc] initWithData:data options:options documentAttributes:NULL error:outError];
+	}
+	else if ([typeName isEqualToString:@"Word 97 Format (doc)"])
+	{
+		NSDictionary* options = @{NSDocumentTypeDocumentAttribute:NSDocFormatTextDocumentType};
+		self.text = [[NSMutableAttributedString alloc] initWithData:data options:options documentAttributes:NULL error:outError];
+	}
+	else if ([typeName isEqualToString:@"Word 2007 Format (docx)"])
+	{
+		NSDictionary* options = @{NSDocumentTypeDocumentAttribute:NSOfficeOpenXMLTextDocumentType};
+		self.text = [[NSMutableAttributedString alloc] initWithData:data options:options documentAttributes:NULL error:outError];
+	}
+	else if ([typeName isEqualToString:@"Open Document Text (odt)"])
+	{
+		NSDictionary* options = @{NSDocumentTypeDocumentAttribute:NSOpenDocumentTextDocumentType};
+		self.text = [[NSMutableAttributedString alloc] initWithData:data options:options documentAttributes:NULL error:outError];
+	}
+	else if ([typeName isEqualToString:@"binary"])
+	{
+		self.text = [[NSMutableAttributedString alloc] initWithString:@"todo"];
+		self.binary = true;
 	}
 	else
 	{
-		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:[decode error]};
-		*outError = [NSError errorWithDomain:@"mimsy" code:1 userInfo:dict];
-		return NO;
+		NSAssert(false, @"readData> bad typeName: %@", typeName);
 	}
+	
+	return *outError == nil;
 }
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError
