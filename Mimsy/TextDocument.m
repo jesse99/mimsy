@@ -196,7 +196,6 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 }
 
 // TODO:
-// save as
 // restore endian
 // control chars
 // reload
@@ -210,6 +209,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	
 	if ([typeName isEqualToString:@"Plain Text, UTF8 Encoded"])
 	{
+		self.encoding = NSUTF8StringEncoding;
 		data = [str dataUsingEncoding:self.encoding allowLossyConversion:YES];
 	}
 	else if ([typeName isEqualToString:@"Plain Text, UTF16 Encoded"])
@@ -220,7 +220,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	}
 	else if ([typeName isEqualToString:@"HTML"])
 	{
-		NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSRTFTextDocumentType};
+		NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType};
 		data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
 	}
 	else if ([typeName isEqualToString:@"Rich Text Format (RTF)"])
@@ -235,7 +235,6 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	}
 	else if ([typeName isEqualToString:@"Word 2007 Format (docx)"])
 	{
-		// There is also NSWordMLTextDocumentType, but that is an older (2003) XML format.
 		NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSOfficeOpenXMLTextDocumentType};
 		data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
 	}
