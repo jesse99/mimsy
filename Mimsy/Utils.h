@@ -8,6 +8,6 @@
 
 // Returns a `hexdump -C` sort of string except that unicode symbols are
 // used for control characters.
-//+ (NSString*)bufferToStr:(const void*)buffer length:(NSUInteger)length;
++ (NSString*)bufferToStr:(const void*)buffer length:(NSUInteger)length;
 
 @end

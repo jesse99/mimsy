@@ -90,7 +90,6 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 }
 
 // TODO:
-// binary (will need Open as Binary menu item)
 // saving
 // revert (make sure the order of operations is ok)
 // control chars
@@ -186,7 +185,8 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	}
 	else if ([typeName isEqualToString:@"binary"])
 	{
-		self.text = [[NSMutableAttributedString alloc] initWithString:@"todo"];
+		NSString* str = [Utils bufferToStr:data.bytes length:data.length];
+		self.text = [[NSMutableAttributedString alloc] initWithString:str];
 		self.binary = true;
 	}
 	else
