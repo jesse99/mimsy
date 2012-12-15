@@ -1,10 +1,9 @@
 * Work on document class
-* Get text files loading and saving.
 * Work on styling:
 	- look at tmlanguage
+	- look into using VIMs color schemes
 	- 10.7 added support for regexen
 	- maybe use two-step process: blocking update of current view, thread for entire doc
-	- look into using VIMs color schemes
 	- should be a way to include back color in the style file
 		` probably need some way to override default back color 
 * Maybe handle common extension points via external files:
@@ -19,9 +18,11 @@
 	- language files need to include search URL
 	- would be nice to do something for SCCSs
 * Work on directory editor.
-* git modified indicator is nice.
+* git modified file indicator is nice.
 * Do something with the About box.
 * Do something special with file rename when a SCCS is present.
+* Would be nice to have some better logging:
+	- http://boredzo.org/blog/archives/2008-01-20/asl-logging
 * Should have a mode where tab uses tab at the start of lines, but spaces once the line starts.
 * Might also want to use that wacky VIM(?) meta-data embedded in files containing info like tab lengths
 	- or support a dot file that does the same thing
@@ -32,4 +33,4 @@
 	- type some abreviation, hit escape, and they are expanded
 * Might want to add to the app store:
 	- see what the policy is for open source apps
-	- look at Prepare for Mac App Store Submission
+	- look at Prepare for Mac App Store Submission link

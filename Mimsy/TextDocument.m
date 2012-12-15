@@ -89,13 +89,6 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
     return YES;
 }
 
-// TODO:
-// saving
-// revert (make sure the order of operations is ok)
-// control chars
-// reload
-// review NSDocument
-// check for leaks?
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
 {
 	NSAssert(self.text == nil, @"%@ should be nil", self.text);
@@ -193,18 +186,70 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	{
 		NSAssert(false, @"readData> bad typeName: %@", typeName);
 	}
+
+	if (self.text && _controller)
+	{
+		// This path is taken for revert, but not for the initial open.
+		[[[_controller view] textStorage] setAttributedString:self.text];
+		self.text = nil;
+	}
 }
 
+// TODO:
+// save as
+// restore endian
+// control chars
+// reload
+// review NSDocument
+// check for leaks?
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError
-{
-	(void) typeName;
-	(void) outError;
+{	
+	NSData* data = nil;
+	NSTextStorage* storage = [_controller.view textStorage];
+	NSMutableString* str = [storage mutableString];
 	
-	// Insert code here to write your document to data of the specified type. If outError != NULL, ensure that you create and set an appropriate error when returning nil.
-	// You can also choose to override -fileWrapperOfType:error:, -writeToURL:ofType:error:, or -writeToURL:ofType:forSaveOperation:originalContentsURL:error: instead.
-	NSException *exception = [NSException exceptionWithName:@"UnimplementedMethod" reason:[NSString stringWithFormat:@"%@ is unimplemented", NSStringFromSelector(_cmd)] userInfo:nil];
-	@throw exception;
-	return nil;
+	if ([typeName isEqualToString:@"Plain Text, UTF8 Encoded"])
+	{
+		data = [str dataUsingEncoding:self.encoding allowLossyConversion:YES];
+	}
+	else if ([typeName isEqualToString:@"Plain Text, UTF16 Encoded"])
+	{
+		// This case is only used when the user selects save as and then the utf16 encoding.
+		self.encoding = NSUTF16LittleEndianStringEncoding;
+		data = [str dataUsingEncoding:self.encoding allowLossyConversion:YES];
+	}
+	else if ([typeName isEqualToString:@"HTML"])
+	{
+		NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSRTFTextDocumentType};
+		data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
+	}
+	else if ([typeName isEqualToString:@"Rich Text Format (RTF)"])
+	{
+		NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSRTFTextDocumentType};
+		data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
+	}
+	else if ([typeName isEqualToString:@"Word 97 Format (doc)"])
+	{
+		NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSDocFormatTextDocumentType};
+		data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
+	}
+	else if ([typeName isEqualToString:@"Word 2007 Format (docx)"])
+	{
+		// There is also NSWordMLTextDocumentType, but that is an older (2003) XML format.
+		NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSOfficeOpenXMLTextDocumentType};
+		data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
+	}
+	else if ([typeName isEqualToString:@"Open Document Text (odt)"])
+	{
+		NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSOpenDocumentTextDocumentType};
+		data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
+	}
+	else
+	{
+		NSAssert(false, @"dataOfType:error:> bad typeName: %@", typeName);
+	}
+	
+	return data;
 }
 
 @end
