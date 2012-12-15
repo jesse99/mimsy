@@ -5,6 +5,89 @@
 #import "TranscriptController.h"
 #import "Utils.h"
 
+static NSString* BOM = @"\uFEFF";			// Cocoa considers this a control character
+
+// We can't use a dict literal because the keys are not compile time constants.
+static NSDictionary* controlNames()
+{
+	static NSMutableDictionary* names = nil;
+	
+	if (names == nil)
+	{
+		names = [NSMutableDictionary new];
+		
+		// See http://www.fileformat.info/info/unicode/category/Cc/list.htm
+		names[[NSNumber numberWithUnsignedInt:0x00]] = @"NULL";
+		names[[NSNumber numberWithUnsignedInt:0x01]] = @"START OF HEADING";
+		names[[NSNumber numberWithUnsignedInt:0x02]] = @"START OF TEXT";
+		names[[NSNumber numberWithUnsignedInt:0x03]] = @"END OF TEXT";
+		names[[NSNumber numberWithUnsignedInt:0x04]] = @"END OF TRANSMISSION";
+		names[[NSNumber numberWithUnsignedInt:0x05]] = @"ENQUIRY";
+		names[[NSNumber numberWithUnsignedInt:0x06]] = @"ACKNOWLEDGE";
+		names[[NSNumber numberWithUnsignedInt:0x07]] = @"BELL";
+		names[[NSNumber numberWithUnsignedInt:0x08]] = @"BACKSPACE";
+		names[[NSNumber numberWithUnsignedInt:0x09]] = @"CHARACTER TABULATION";
+		names[[NSNumber numberWithUnsignedInt:0x0A]] = @"LINE FEED";
+		names[[NSNumber numberWithUnsignedInt:0x0B]] = @"LINE TABULATION";
+		names[[NSNumber numberWithUnsignedInt:0x0C]] = @"FORM FEED";
+		names[[NSNumber numberWithUnsignedInt:0x0D]] = @"CARRIAGE RETURN";
+		names[[NSNumber numberWithUnsignedInt:0x0E]] = @"SHIFT OUT";
+		names[[NSNumber numberWithUnsignedInt:0x0F]] = @"SHIFT IN";
+		names[[NSNumber numberWithUnsignedInt:0x10]] = @"DATA LINK ESCAPE";
+		names[[NSNumber numberWithUnsignedInt:0x11]] = @"DEVICE CONTROL ONE";
+		names[[NSNumber numberWithUnsignedInt:0x12]] = @"DEVICE CONTROL TWO";
+		names[[NSNumber numberWithUnsignedInt:0x13]] = @"DEVICE CONTROL THREE";
+		names[[NSNumber numberWithUnsignedInt:0x14]] = @"DEVICE CONTROL FOUR";
+		names[[NSNumber numberWithUnsignedInt:0x15]] = @"NEGATIVE ACKNOWLEDGE";
+		names[[NSNumber numberWithUnsignedInt:0x16]] = @"SYNCHRONOUS IDLE";
+		names[[NSNumber numberWithUnsignedInt:0x17]] = @"END OF TRANSMISSION BLOCK";
+		names[[NSNumber numberWithUnsignedInt:0x18]] = @"CANCEL";
+		names[[NSNumber numberWithUnsignedInt:0x19]] = @"END OF MEDIUM";
+		names[[NSNumber numberWithUnsignedInt:0x1A]] = @"SUBSTITUTE";
+		names[[NSNumber numberWithUnsignedInt:0x1B]] = @"ESCAPE";
+		names[[NSNumber numberWithUnsignedInt:0x1C]] = @"INFORMATION SEPARATOR FOUR";
+		names[[NSNumber numberWithUnsignedInt:0x1D]] = @"INFORMATION SEPARATOR THREE ";
+		names[[NSNumber numberWithUnsignedInt:0x1E]] = @"INFORMATION SEPARATOR TWO";
+		names[[NSNumber numberWithUnsignedInt:0x1F]] = @"INFORMATION SEPARATOR ONE";
+		
+		names[[NSNumber numberWithUnsignedInt:0x7F]] = @"DELETE";
+		names[[NSNumber numberWithUnsignedInt:0x80]] = @"unnamed control";
+		names[[NSNumber numberWithUnsignedInt:0x81]] = @"unnamed control";
+		names[[NSNumber numberWithUnsignedInt:0x82]] = @"BREAK PERMITTED HERE";
+		names[[NSNumber numberWithUnsignedInt:0x83]] = @"NO BREAK HERE";
+		names[[NSNumber numberWithUnsignedInt:0x84]] = @"unnamed control";
+		names[[NSNumber numberWithUnsignedInt:0x85]] = @"NEXT LINE";
+		names[[NSNumber numberWithUnsignedInt:0x86]] = @"START OF SELECTED AREA";
+		names[[NSNumber numberWithUnsignedInt:0x87]] = @"END OF SELECTED AREA";
+		names[[NSNumber numberWithUnsignedInt:0x88]] = @"CHARACTER TABULATION SET";
+		names[[NSNumber numberWithUnsignedInt:0x89]] = @"CHARACTER TABULATION WITH JUSTIFICATION";
+		names[[NSNumber numberWithUnsignedInt:0x8A]] = @"LINE TABULATION SET";
+		names[[NSNumber numberWithUnsignedInt:0x8B]] = @"PARTIAL LINE FORWARD";
+		names[[NSNumber numberWithUnsignedInt:0x8C]] = @"PARTIAL LINE BACKWARD";
+		names[[NSNumber numberWithUnsignedInt:0x8D]] = @"REVERSE LINE FEED";
+		names[[NSNumber numberWithUnsignedInt:0x8E]] = @"SINGLE SHIFT TWO";
+		names[[NSNumber numberWithUnsignedInt:0x8F]] = @"SINGLE SHIFT THREE";
+		names[[NSNumber numberWithUnsignedInt:0x90]] = @"DEVICE CONTROL STRING";
+		names[[NSNumber numberWithUnsignedInt:0x91]] = @"PRIVATE USE ONE";
+		names[[NSNumber numberWithUnsignedInt:0x92]] = @"PRIVATE USE TWO";
+		names[[NSNumber numberWithUnsignedInt:0x93]] = @"SET TRANSMIT STATE";
+		names[[NSNumber numberWithUnsignedInt:0x94]] = @"CANCEL CHARACTER";
+		names[[NSNumber numberWithUnsignedInt:0x95]] = @"MESSAGE WAITING";
+		names[[NSNumber numberWithUnsignedInt:0x96]] = @"START OF GUARDED AREA";
+		names[[NSNumber numberWithUnsignedInt:0x97]] = @"END OF GUARDED AREA";
+		names[[NSNumber numberWithUnsignedInt:0x98]] = @"START OF STRING";
+		names[[NSNumber numberWithUnsignedInt:0x99]] = @"unnamed control";
+		names[[NSNumber numberWithUnsignedInt:0x9A]] = @"SINGLE CHARACTER INTRODUCER";
+		names[[NSNumber numberWithUnsignedInt:0x9B]] = @"CONTROL SEQUENCE INTRODUCER";
+		names[[NSNumber numberWithUnsignedInt:0x9C]] = @"STRING TERMINATOR";
+		names[[NSNumber numberWithUnsignedInt:0x9D]] = @"OPERATING SYSTEM COMMAND";
+		names[[NSNumber numberWithUnsignedInt:0x9E]] = @"PRIVACY MESSAGE";
+		names[[NSNumber numberWithUnsignedInt:0x9F]] = @"APPLICATION PROGRAM COMMAND";
+	}
+	
+	return names;
+}
+
 static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
 	int counts[4] = {0};
@@ -142,6 +225,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 			if (hasMac)
 				[text replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange(0, [text length])];
 			
+			[self checkForControlChars:text];
 			self.text = [[NSMutableAttributedString alloc] initWithString:text];
 			
 			// If an html file is being edited in Mimsy then ensure that it is saved
@@ -196,9 +280,9 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 }
 
 // TODO:
-// restore endian
-// control chars
+// commit
 // reload
+// review Continuum doc class
 // review NSDocument
 // check for leaks?
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError
@@ -210,17 +294,23 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	if ([typeName isEqualToString:@"Plain Text, UTF8 Encoded"])
 	{
 		self.encoding = NSUTF8StringEncoding;
+		[self restoreEndian:str];
+		[self checkForControlChars:str];
 		data = [str dataUsingEncoding:self.encoding allowLossyConversion:YES];
 	}
 	else if ([typeName isEqualToString:@"Plain Text, UTF16 Encoded"])
 	{
 		// This case is only used when the user selects save as and then the utf16 encoding.
 		self.encoding = NSUTF16LittleEndianStringEncoding;
+		[self restoreEndian:str];
+		[self checkForControlChars:str];
 		data = [str dataUsingEncoding:self.encoding allowLossyConversion:YES];
 	}
 	else if ([typeName isEqualToString:@"HTML"])
 	{
 		NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType};
+		[self restoreEndian:str];
+		[self checkForControlChars:str];
 		data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
 	}
 	else if ([typeName isEqualToString:@"Rich Text Format (RTF)"])
@@ -249,6 +339,100 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	}
 	
 	return data;
+}
+
+- (void)restoreEndian:(NSMutableString*)str
+{
+	NSAssert(self.endian != 0, @"encoding was zero");
+	
+	NSRange range = NSMakeRange(0, str.length);
+	if (self.endian == MacEndian)
+		[str replaceOccurrencesOfString:@"\n" withString:@"\r" options:NSLiteralSearch range:range];
+	else if (self.endian == WindowsEndian)
+		[str replaceOccurrencesOfString:@"\n" withString:@"\r\n" options:NSLiteralSearch range:range];
+}
+
+
+// It is fairly rare for control characters to wind up in text files, but when it does happen
+// it can be quite annoying, especially because they cannot ordinarily be seen. So, if this
+// happens we'll write a message to the transcript window to alert the user.
+- (void)checkForControlChars:(NSString*)text
+{
+	int numGremlines = 0;
+	NSDictionary* chars = [self findControlChars:text outCount:&numGremlines];
+	
+	if (chars.count > 0)
+	{
+		NSString* file = [[[self fileURL] path] lastPathComponent];
+		
+		NSString* mesg;
+		if (chars.count <= 5)
+			mesg = [[NSString alloc] initWithFormat:@"Found %@ in %@.\n", [self charsToString:chars], file];
+		else
+			mesg = [[NSString alloc] initWithFormat:@"Found %d control characters of %lu different types in %@.\n", numGremlines, chars.count, file];
+		
+		[TranscriptController writeError:mesg];
+	}
+}
+
+// Returns a dict where the key is a control character and the value the
+// number of times it has appeared.
+- (NSDictionary*)findControlChars:(NSString*)str outCount:(int*)count
+{
+	NSMutableDictionary* chars = [NSMutableDictionary new];
+	
+	NSUInteger len = str.length;
+	NSRange range = NSMakeRange(0, len);
+	id controlChars = [NSCharacterSet controlCharacterSet];
+	while (true)
+	{
+		NSRange temp = [str rangeOfCharacterFromSet:controlChars options:NSLiteralSearch range:range];
+		if (temp.length == 0)
+			break;
+		
+		unichar ch = [str characterAtIndex:temp.location];
+		if (ch != '\r' && ch != '\n' && ch != '\t' && ch != [BOM characterAtIndex:0])
+		{
+			NSNumber* key = [NSNumber numberWithUnsignedInt:ch];
+			id value = chars[key];
+			if (value)
+				chars[key] = [NSNumber numberWithInt:([value intValue] + 1)];
+			else
+				chars[key] = [NSNumber numberWithInt:1];
+			*count += 1;
+		}
+		
+		range = NSMakeRange(temp.location + 1, len - (temp.location + 1));
+	}
+	
+	return chars;
+	
+}
+
+- (NSString*)charsToString:(NSDictionary*)chars
+{
+	NSMutableArray* strs = [NSMutableArray arrayWithCapacity:chars.count];
+	
+	bool plural = chars.count > 1;
+	
+	NSUInteger i = 0;
+	NSDictionary* names = controlNames();
+	for (NSNumber* ch in chars)
+	{
+		id name = names[ch];
+		if (name)
+			strs[i++] = [[NSString alloc] initWithFormat:@"%@ '\\x%.2X' (%@)", chars[ch], [ch intValue], name];
+		else
+			strs[i++] = [[NSString alloc] initWithFormat:@"%@ '\\x%.2X' (?)", chars[ch], [ch intValue]];
+		
+		if ([chars[ch] intValue] > 1)
+			plural = true;
+	}
+	
+	NSMutableString* result = [NSMutableString new];
+	[result appendString:[strs componentsJoinedByString:@" and "]];
+	[result appendString:(plural ? @" characters" : @" character")];
+	return result;
 }
 
 @end

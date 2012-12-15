@@ -1,0 +1,4 @@
+File with
+carriage-return ff
+and new-line
+line endings
