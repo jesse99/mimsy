@@ -154,18 +154,21 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
 	_controller = [[TextController alloc] init];
 	[self addWindowController:_controller];
-	[_controller open];
 }
 
 - (void)controllerDidLoad
 {
 	NSAssert([_controller view], @"%@ has a nil view", _controller);
 
+//	DoResetURL(fileURL());
+//	m_controller.OnPathChanged();
+	
 	if (self.text)
 	{
 		[[[_controller view] textStorage] setAttributedString:self.text];
 		self.text = nil;
 	}
+	[_controller open];
 }
 
 + (BOOL)autosavesInPlace
@@ -335,10 +338,6 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	}
 }
 
-// TODO:
-// review Continuum doc class
-// review NSDocument
-// check for leaks?
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError
 {	
 	NSData* data = nil;
