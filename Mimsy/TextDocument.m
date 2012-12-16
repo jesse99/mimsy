@@ -181,43 +181,8 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
 	if ([self hasChangedOnDisk])
 	{
-		if ([self isDocumentEdited])
-		{
-			// Cocoa will display this sheet, but it does it when the user attempts
-			// to save which is much later than we'd like.
-			NSString* title = @"The file for this document has been modified - do you want to revert?";
-			
-			SEL selector = @selector(reloadSheetDidEnd:returnCode:contextInfo:);
-			NSBeginAlertSheet(
-				title,					// title
-				@"Revert",				// defaultButton,
-				@"Keep",				// alternateButton
-				NULL,					// otherButton
-				[self windowForSheet],	// docWindow
-				self,					// modalDelegate
-				selector,				// didEndSelector
-				NULL,					// didDismissSelector
-				NULL,					// contextInfo
-				@"Another application has made changes to the file for this document. You can choose to keep the version in Continuum, or revert to the version on disk. (Reverting will lose any unsaved changes.)"); // message (can't use a local or we get warnings)
-		}
-		else
-		{
-			[self reload];
-		}
-	}
-}
-
-- (void)reloadSheetDidEnd:(NSWindow*)sheet returnCode:(int)code contextInfo:(void *)context
-{
-	(void) sheet;
-	(void) context;
-	
-	if (code == NSAlertDefaultReturn)
-	{
 		[self reload];
-		//[self saveDocument:self];
 	}
-	[self setFileModificationDate:[NSDate date]];
 }
 
 - (void) reload
