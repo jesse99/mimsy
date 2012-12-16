@@ -154,6 +154,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
 	_controller = [[TextController alloc] init];
 	[self addWindowController:_controller];
+	[_controller open];
 }
 
 - (void)controllerDidLoad
@@ -170,6 +171,96 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 + (BOOL)autosavesInPlace
 {
     return YES;
+}
+
+// Continuum popped up a sheet if the ocument was edited and another process had changed it.
+// However this doesn't appear to be neccesary with autosavesInPlace. (And with autosavesInPlace
+// off the Continuum code doesn't work quite right because when Appkit pops up an annoying
+// alert on save that I haven't figured out how to get rid of).
+- (void) reloadIfChanged
+{
+	if ([self hasChangedOnDisk])
+	{
+		if ([self isDocumentEdited])
+		{
+			// Cocoa will display this sheet, but it does it when the user attempts
+			// to save which is much later than we'd like.
+			NSString* title = @"The file for this document has been modified - do you want to revert?";
+			
+			SEL selector = @selector(reloadSheetDidEnd:returnCode:contextInfo:);
+			NSBeginAlertSheet(
+				title,					// title
+				@"Revert",				// defaultButton,
+				@"Keep",				// alternateButton
+				NULL,					// otherButton
+				[self windowForSheet],	// docWindow
+				self,					// modalDelegate
+				selector,				// didEndSelector
+				NULL,					// didDismissSelector
+				NULL,					// contextInfo
+				@"Another application has made changes to the file for this document. You can choose to keep the version in Continuum, or revert to the version on disk. (Reverting will lose any unsaved changes.)"); // message (can't use a local or we get warnings)
+		}
+		else
+		{
+			[self reload];
+		}
+	}
+}
+
+- (void)reloadSheetDidEnd:(NSWindow*)sheet returnCode:(int)code contextInfo:(void *)context
+{
+	(void) sheet;
+	(void) context;
+	
+	if (code == NSAlertDefaultReturn)
+	{
+		[self reload];
+		//[self saveDocument:self];
+	}
+	[self setFileModificationDate:[NSDate date]];
+}
+
+- (void) reload
+{
+	NSString* type = [self fileType];
+	NSURL* url = [self fileURL];
+	
+	NSError* error = nil;
+	BOOL read = [self revertToContentsOfURL:url ofType:type error:&error];
+	if (!read)
+	{
+		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't reload %@:\n%@.", url, [error localizedFailureReason]];
+		[TranscriptController writeError:mesg];
+	}
+	
+	NSAssert(self.text == nil, @"text wasn't nil");
+	[_controller open];
+}
+
+- (bool)hasChangedOnDisk
+{
+	bool changed = false;
+	
+	NSURL* url = [self fileURL];
+	if (url != nil)
+	{
+		NSDate* docTime = [self fileModificationDate];
+		
+		NSError* error = nil;
+		NSDictionary* attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:url.path error:&error];
+		if (error == nil)
+		{
+			NSDate* fileTime = attrs[NSFileModificationDate];
+			
+			if (fileTime != nil && [fileTime compare:docTime] == NSOrderedDescending)
+			{
+				changed = true;
+			}
+		}
+	}
+		
+	return changed;
+
 }
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
@@ -280,8 +371,6 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 }
 
 // TODO:
-// commit
-// reload
 // review Continuum doc class
 // review NSDocument
 // check for leaks?

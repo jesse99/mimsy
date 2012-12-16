@@ -11,7 +11,8 @@ typedef enum LineEndian : NSUInteger
 // Document object used when editing text documents.
 @interface TextDocument : NSDocument
 
-- (void)controllerDidLoad;
+- (void) controllerDidLoad;
+- (void) reloadIfChanged;
 
 @property NSMutableAttributedString* text;		// note that this will be set to nil once the view is initialized
 @property enum LineEndian endian;

@@ -27,6 +27,7 @@
 * Might also want to use that wacky VIM(?) meta-data embedded in files containing info like tab lengths
 	- or support a dot file that does the same thing
 * Work on building.
+* Make sure builds call reloadIfChanged
 * Would be nice to have some sort of indication of dirty files:
 	- probably from git's perspective
 * XCode and (I guess) TextMate have a bunch of macros:

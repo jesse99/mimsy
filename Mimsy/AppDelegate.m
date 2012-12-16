@@ -2,6 +2,22 @@
 
 @implementation AppDelegate
 
+- (void) applicationDidBecomeActive:(NSNotification*)notification
+{
+	(void) notification;
+	
+	[self reloadIfChanged];
+}
+
+- (void) reloadIfChanged
+{
+	for (id doc in [[NSDocumentController sharedDocumentController] documents])
+	{
+		if ([doc respondsToSelector:@selector(reloadIfChanged)])
+			[doc reloadIfChanged];
+	}
+}
+
 - (IBAction)openAsBinary:(id)sender
 {
 	(void) sender;
