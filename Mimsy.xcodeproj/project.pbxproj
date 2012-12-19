@@ -15,6 +15,8 @@
 		3705C816167BC2F000E5D54C /* Transcript.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3705C814167BC2F000E5D54C /* Transcript.xib */; };
 		3705C81E167BE9BD00E5D54C /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3705C81D167BE9BD00E5D54C /* Utils.m */; };
 		3705C821167BF72200E5D54C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3705C820167BF72200E5D54C /* AppDelegate.m */; };
+		375140D416800FFD00C329AF /* ConfigParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D316800FFD00C329AF /* ConfigParser.m */; };
+		375140D816801A4800C329AF /* ConfigParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D716801A4800C329AF /* ConfigParserTests.m */; };
 		3759B6571676F01900D3F3B8 /* TextController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3759B6561676F01900D3F3B8 /* TextController.m */; };
 		3759B6601678376000D3F3B8 /* Decode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3759B65F1678376000D3F3B8 /* Decode.m */; };
 		37A8C69716758FF400D4DB13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C69616758FF400D4DB13 /* Cocoa.framework */; };
@@ -53,6 +55,10 @@
 		3705C81D167BE9BD00E5D54C /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
 		3705C81F167BF72200E5D54C /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3705C820167BF72200E5D54C /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		375140D216800FFD00C329AF /* ConfigParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParser.h; sourceTree = "<group>"; };
+		375140D316800FFD00C329AF /* ConfigParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigParser.m; sourceTree = "<group>"; };
+		375140D616801A4800C329AF /* ConfigParserTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParserTests.h; sourceTree = "<group>"; };
+		375140D716801A4800C329AF /* ConfigParserTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigParserTests.m; sourceTree = "<group>"; };
 		3759B6551676F01900D3F3B8 /* TextController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextController.h; sourceTree = "<group>"; };
 		3759B6561676F01900D3F3B8 /* TextController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextController.m; sourceTree = "<group>"; };
 		3759B65E1678376000D3F3B8 /* Decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Decode.h; sourceTree = "<group>"; };
@@ -169,6 +175,8 @@
 				37A8C6AE16758FF400D4DB13 /* MainMenu.xib */,
 				3705C81F167BF72200E5D54C /* AppDelegate.h */,
 				3705C820167BF72200E5D54C /* AppDelegate.m */,
+				375140D216800FFD00C329AF /* ConfigParser.h */,
+				375140D316800FFD00C329AF /* ConfigParser.m */,
 				3705C81C167BE9BD00E5D54C /* Utils.h */,
 				3705C81D167BE9BD00E5D54C /* Utils.m */,
 				3759B65D1678338600D3F3B8 /* Text Editor */,
@@ -198,6 +206,8 @@
 				37A8C6BD16758FF400D4DB13 /* Supporting Files */,
 				3705C80C167B6F6400E5D54C /* LineEndianTests.h */,
 				3705C80D167B6F6400E5D54C /* LineEndianTests.m */,
+				375140D616801A4800C329AF /* ConfigParserTests.h */,
+				375140D716801A4800C329AF /* ConfigParserTests.m */,
 			);
 			path = MimsyTests;
 			sourceTree = "<group>";
@@ -331,6 +341,7 @@
 				3705C815167BC2F000E5D54C /* TranscriptController.m in Sources */,
 				3705C81E167BE9BD00E5D54C /* Utils.m in Sources */,
 				3705C821167BF72200E5D54C /* AppDelegate.m in Sources */,
+				375140D416800FFD00C329AF /* ConfigParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,6 +351,7 @@
 			files = (
 				37A8C6C416758FF400D4DB13 /* DecodeTests.m in Sources */,
 				3705C80E167B6F6400E5D54C /* LineEndianTests.m in Sources */,
+				375140D816801A4800C329AF /* ConfigParserTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
