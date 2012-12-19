@@ -1,3 +1,13 @@
+// It's a bit lame to use yet another file format, but the principle places
+// that we use it have some unusual constraints:
+// 1) Language files revolve around regexen which are sufficiently ugly to
+// write that I don't want to have to escape them.
+// 2) For style files we need to associate the embedded RTF style information
+// with keys. So the parser has to be able to parse attributed strings and
+// must return offsets as well as key/values.
+//
+// This rules out pretty much all the common formats except maybe INI files
+// of which this format is very close to a subset of.
 #import "ConfigParser.h"
 
 @implementation ConfigParserEntry

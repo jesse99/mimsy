@@ -1,3 +1,4 @@
+* Comment parser.
 * Work on windows db
 	- use sqlite
 * Work on styling:
@@ -32,6 +33,10 @@
 	- copy the old version to a *.bak file
 	- or maybe flip it around and add a *.new.* file?
 	- write a note to transcript for any backed up
+* Provide some sort of quick reference feature:
+	- file with a list of urls/paths
+	- probably a File sub-menu
+	- maybe Mimsy style config file (so we can have better menu item titles)
 * Would be nice to have a way to create new files:
 	- option-N pops up a list users can choose from
 	- remember last selection

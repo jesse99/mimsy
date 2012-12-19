@@ -6,7 +6,6 @@
 @property NSUInteger offset;
 @end
 
-
 // Used to parse line oriented files where:
 // lines that start with a # are comment lines
 // lines with just whitespace are ignored
