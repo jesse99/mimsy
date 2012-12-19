@@ -1,9 +1,5 @@
-* Add a parser for Continuum style config files:
-	- lines that start with # are comment lines
-	- blank lines are ignored
-	- lines that start with name + colon represent key/values
-	- keys may be duplicated
-	- need a way to return the range for the keys
+* Work on windows db
+	- use sqlite
 * Work on styling:
 	- load language files from the bundle
 	- style language elements (hard-code styles for now)
@@ -20,9 +16,31 @@
 		` probably need some way to override default back color 
 	- languages need to support peeking at the file
 		` see /usr/share/vim/vim73/filetype.vim
+	- add some sort of search key
+		- can appear multiple times
+		- augments context menu
 	- install language files from the bundle to ~/Preferences
 	- add a pref for extensions to languages
 	- make sure pref has a button to open the dir with the vim files
+* Language files should have support for a run key:
+	- value is command line used to run a single file (or *.c file for C based languages)
+	- probably triggered by option-R
+	- will need to include this in shortcuts (could start this file before hooking it up)
+	- possibly also syntax check command
+* On startup need to check for install of new files:
+	- use date modified (which won't be 100% reliable)
+	- copy the old version to a *.bak file
+	- or maybe flip it around and add a *.new.* file?
+	- write a note to transcript for any backed up
+* Would be nice to have a way to create new files:
+	- option-N pops up a list users can choose from
+	- remember last selection
+	- probably mustache (and maybe also arbitrary scripts)
+	- mustache could have templates for things like user name, year, maybe custom settings
+	- scripts could have a mode to tell mimsy what they need (eg class name)
+	- could do similar thing to support inserting language elements
+	- may want a way to disable these, maybe it is present but ignored if wrapped in parens
+	- could include build scripts (eg C Makefile)
 * Maybe handle common extension points via external files:
 	- for build systems Python script returning
 		` build file (mimsy will watch for changes to this file)
