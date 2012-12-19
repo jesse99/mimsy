@@ -28,11 +28,27 @@
 	- probably triggered by option-R
 	- will need to include this in shortcuts (could start this file before hooking it up)
 	- possibly also syntax check command
-* On startup need to check for install of new files:
-	- use date modified (which won't be 100% reliable)
-	- copy the old version to a *.bak file
-	- or maybe flip it around and add a *.new.* file?
-	- write a note to transcript for any backed up
+* On startup need to install new files:
+	- use a manifest.minsy file in support files
+	- has (support files) version number and key/values for files/md5sums (probably need relative paths)
+	- on startup thread is used to update old files or add new files
+	- if hard-coded version matches version in manifest early exit
+	- if installed file md5sum does not match package file md5sum then
+		` if installed file md5sum matches the manifest sum then overwrite
+		` else add *.new.* file
+	- files in package but not installed are installed
+	- files installed but not in package are reported
+	- manifest md5sum can be 'ignore' to cause package file to not be installed
+	- when done write and open a report to application support
+		` include a note that the file can be removed
+		` include a timestamp
+		` include details on what happened with most important first (eg *.new.* files)
+		` probably rtf file
+	- probably want an install.rtf help file
+		` talk about how this works
+		` frequently used configuration options
+		` installing command line tool
+		` uninstall
 * Provide some sort of quick reference feature:
 	- file with a list of urls/paths
 	- probably a File sub-menu
@@ -76,3 +92,6 @@
 * Might want to add to the app store:
 	- see what the policy is for open source apps
 	- look at Prepare for Mac App Store Submission link
+* Release checklist:
+	- increment support files version number
+	
