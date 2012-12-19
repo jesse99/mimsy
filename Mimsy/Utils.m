@@ -79,4 +79,22 @@ static NSString* Replacement = @"\uFFFD";
 	return result;
 }
 
+// Based on some Apple sample code floating around the interwebs.
++ (NSString*)pathForTemporaryFileWithPrefix:(NSString*)prefix
+{	
+    CFUUIDRef uuid = CFUUIDCreate(NULL);
+    assert(uuid != NULL);
+	
+    CFStringRef uuidStr = CFUUIDCreateString(NULL, uuid);
+    assert(uuidStr != NULL);
+	
+    NSString* result = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%@", prefix, uuidStr]];
+    assert(result != nil);
+	
+    CFRelease(uuidStr);
+    CFRelease(uuid);
+	
+    return result;
+}
+
 @end

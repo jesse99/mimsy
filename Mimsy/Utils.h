@@ -10,4 +10,7 @@
 // used for control characters.
 + (NSString*)bufferToStr:(const void*)buffer length:(NSUInteger)length;
 
+// Returns a path to a unique file name in the temporary directory for the current user.
++ (NSString*)pathForTemporaryFileWithPrefix:(NSString *)prefix;
+
 @end
