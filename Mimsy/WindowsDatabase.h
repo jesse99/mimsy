@@ -16,11 +16,11 @@ struct WindowInfo
 + (void)setup;
 
 // Returns NSZeroRect if the path cannot be found.
-+ (NSRect) getFrame:(NSString*)path;
++ (NSRect)getFrame:(NSString*)path;
 
 // Returns false if the path cannot be found.
-+ (bool) getInfo:(struct WindowInfo*)info forPath:(NSString*)path;
++ (bool)getInfo:(struct WindowInfo*)info forPath:(NSString*)path;
 
-+ (void) saveInfo:(const struct WindowInfo*)info frame:(NSRect)frame forPath:(NSString*)path;
++ (void)saveInfo:(const struct WindowInfo*)info frame:(NSRect)frame forPath:(NSString*)path;
 
 @end

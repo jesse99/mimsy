@@ -2,7 +2,7 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
-- (void) applicationDidBecomeActive:(NSNotification *)notification;
+- (void)applicationDidBecomeActive:(NSNotification *)notification;
 
 - (IBAction)openAsBinary:(id)sender;
 
