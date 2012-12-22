@@ -8,8 +8,8 @@
 - (id)initWithData:(NSData*)data;
 
 // One of text or error will be non-nil.
-@property NSMutableString* text;
-@property NSString* error;
-@property NSStringEncoding encoding;
+@property (readonly) NSMutableString* text;
+@property (readonly) NSString* error;
+@property (readonly) NSStringEncoding encoding;
 
 @end

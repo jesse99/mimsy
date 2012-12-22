@@ -1,6 +1,21 @@
 #import "AppDelegate.h"
 
+#import "WindowsDatabase.h"
+
 @implementation AppDelegate
+
+// Note that windows will still be open when this is called.
+- (void)applicationWillTerminate:(NSNotification *)notification
+{
+	(void) notification;
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification*)notification
+{
+	(void) notification;
+
+	[WindowsDatabase setup];
+}
 
 - (void) applicationDidBecomeActive:(NSNotification*)notification
 {

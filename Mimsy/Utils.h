@@ -1,5 +1,7 @@
 #import <Cocoa/Cocoa.h>
 
+extern const NSRange NSZeroRange;
+
 // Misc utility functions.
 @interface Utils : NSObject
 

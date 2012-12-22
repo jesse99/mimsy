@@ -206,17 +206,17 @@ static NSStringEncoding getEncoding(NSData* data, unsigned long* skipBytes)
 				
 				if (str != nil)
 				{
-					self.text = str;
-					self.encoding = encoding;
+					_text = str;
+					_encoding = encoding;
 				}
 			}
 			if (self.text == nil)
-				[self setError:@"Couldn't read the file as Unicode or Mac OS Roman."];	// should only happen if there are embedded control characters in the header
+				_error = @"Couldn't read the file as Unicode or Mac OS Roman.";	// should only happen if there are embedded control characters in the header
 		}
 		else
 		{
-			self.text = [NSMutableString string];
-			self.encoding = NSUTF8StringEncoding;
+			_text = [NSMutableString string];
+			_encoding = NSUTF8StringEncoding;
 		}
     }
     

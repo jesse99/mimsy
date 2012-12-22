@@ -139,6 +139,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 @implementation TextDocument
 {
 	TextController* _controller;
+	NSURL* _url;
 }
 
 - (id)init
@@ -158,17 +159,29 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 
 - (void)controllerDidLoad
 {
-	NSAssert([_controller view], @"%@ has a nil view", _controller);
+	NSAssert([_controller textView], @"%@ has a nil view", _controller);
 
-//	DoResetURL(fileURL());
-//	m_controller.OnPathChanged();
+	_url = [self fileURL];
+	[_controller onPathChanged];
 	
 	if (self.text)
 	{
-		[[[_controller view] textStorage] setAttributedString:self.text];
-		self.text = nil;
+		[[[_controller textView] textStorage] setAttributedString:self.text];
+		_text = nil;
 	}
 	[_controller open];
+}
+
+// This is called every time the document is saved.
+- (void)setFileURL:(NSURL *)url
+{
+	[super setFileURL:url];
+	
+	if (_controller && ![url isEqual:_url])
+	{
+		_url = url;
+		[_controller onPathChanged];
+	}
 }
 
 + (BOOL)autosavesInPlace
@@ -235,9 +248,9 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
 	NSAssert(self.text == nil, @"%@ should be nil", self.text);
 	
-	self.endian = NoEndian;
-	self.encoding = 0;
-	self.binary = false;
+	_endian = NoEndian;
+	_encoding = 0;
+	_binary = false;
 	*outError = nil;
 	
 	const NSUInteger MaxBytes = 512*1024;		// I think this is around 16K lines of source
@@ -270,8 +283,8 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		if (text)
 		{
 			bool hasMac, hasWindows;
-			self.endian = getEndian(text, &hasMac, &hasWindows);
-			self.encoding = decode.encoding;
+			_endian = getEndian(text, &hasMac, &hasWindows);
+			_encoding = decode.encoding;
 			
 			if (self.encoding == NSMacOSRomanStringEncoding)
 				[TranscriptController writeError:@"Read the file as Mac OS Roman (it isn't utf-8, utf-16, or utf-32)."];
@@ -285,7 +298,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 				[text replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange(0, [text length])];
 			
 			[self checkForControlChars:text];
-			self.text = [[NSMutableAttributedString alloc] initWithString:text];
+			_text = [[NSMutableAttributedString alloc] initWithString:text];
 			
 			// If an html file is being edited in Mimsy then ensure that it is saved
 			// as plain text. (To save a document as html the user needs to use save as
@@ -301,29 +314,29 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	else if ([typeName isEqualToString:@"Rich Text Format (RTF)"])
 	{
 		NSDictionary* options = @{NSDocumentTypeDocumentAttribute:NSRTFTextDocumentType};
-		self.text = [[NSMutableAttributedString alloc] initWithData:data options:options documentAttributes:NULL error:outError];
+		_text = [[NSMutableAttributedString alloc] initWithData:data options:options documentAttributes:NULL error:outError];
 	}
 	else if ([typeName isEqualToString:@"Word 97 Format (doc)"])
 	{
 		NSDictionary* options = @{NSDocumentTypeDocumentAttribute:NSDocFormatTextDocumentType};
-		self.text = [[NSMutableAttributedString alloc] initWithData:data options:options documentAttributes:NULL error:outError];
+		_text = [[NSMutableAttributedString alloc] initWithData:data options:options documentAttributes:NULL error:outError];
 	}
 	else if ([typeName isEqualToString:@"Word 2007 Format (docx)"])
 	{
 		// There is also NSWordMLTextDocumentType, but that is an older (2003) XML format.
 		NSDictionary* options = @{NSDocumentTypeDocumentAttribute:NSOfficeOpenXMLTextDocumentType};
-		self.text = [[NSMutableAttributedString alloc] initWithData:data options:options documentAttributes:NULL error:outError];
+		_text = [[NSMutableAttributedString alloc] initWithData:data options:options documentAttributes:NULL error:outError];
 	}
 	else if ([typeName isEqualToString:@"Open Document Text (odt)"])
 	{
 		NSDictionary* options = @{NSDocumentTypeDocumentAttribute:NSOpenDocumentTextDocumentType};
-		self.text = [[NSMutableAttributedString alloc] initWithData:data options:options documentAttributes:NULL error:outError];
+		_text = [[NSMutableAttributedString alloc] initWithData:data options:options documentAttributes:NULL error:outError];
 	}
 	else if ([typeName isEqualToString:@"binary"])
 	{
 		NSString* str = [Utils bufferToStr:data.bytes length:data.length];
-		self.text = [[NSMutableAttributedString alloc] initWithString:str];
-		self.binary = true;
+		_text = [[NSMutableAttributedString alloc] initWithString:str];
+		_binary = true;
 	}
 	else
 	{
@@ -333,20 +346,20 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	if (self.text && _controller)
 	{
 		// This path is taken for revert, but not for the initial open.
-		[[[_controller view] textStorage] setAttributedString:self.text];
-		self.text = nil;
+		[[[_controller textView] textStorage] setAttributedString:self.text];
+		_text = nil;
 	}
 }
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError
 {	
 	NSData* data = nil;
-	NSTextStorage* storage = [_controller.view textStorage];
+	NSTextStorage* storage = [_controller.textView textStorage];
 	NSMutableString* str = [storage mutableString];
 	
 	if ([typeName isEqualToString:@"Plain Text, UTF8 Encoded"])
 	{
-		self.encoding = NSUTF8StringEncoding;
+		_encoding = NSUTF8StringEncoding;
 		[self restoreEndian:str];
 		[self checkForControlChars:str];
 		data = [str dataUsingEncoding:self.encoding allowLossyConversion:YES];
@@ -354,7 +367,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	else if ([typeName isEqualToString:@"Plain Text, UTF16 Encoded"])
 	{
 		// This case is only used when the user selects save as and then the utf16 encoding.
-		self.encoding = NSUTF16LittleEndianStringEncoding;
+		_encoding = NSUTF16LittleEndianStringEncoding;
 		[self restoreEndian:str];
 		[self checkForControlChars:str];
 		data = [str dataUsingEncoding:self.encoding allowLossyConversion:YES];

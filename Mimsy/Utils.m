@@ -1,5 +1,7 @@
 #import "Utils.h"
 
+const NSRange NSZeroRange = {0};
+
 // These are more technically correct but the new-line and tab symbols are really hard
 // to read unless the font's point size is very large.
 //    static NSString* NewLineSymbol = @"\u2424";

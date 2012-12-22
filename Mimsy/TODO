@@ -1,10 +1,12 @@
-* Work on windows db
-	- use sqlite
-* Work on styling:
+* Get first cut at language styles working:
 	- load language files from the bundle
-	- style language elements (hard-code styles for now)
-		` maybe use two-step process: blocking update of current view, thread for entire doc
-	- add a vim language
+	- hard code element styles
+	- use a thread to compute styles for a doc
+	- scroll to saved position after styles are applied
+	  but don't scroll if the user has already scrolled
+	- cache styles for files (use a pretty large cache, maybe 100 files)
+* Work on styling:
+	- add mimsy language
 	- support ConditionalGLob
 		` value is glob, space, regex
 		` may appear more than once
@@ -19,9 +21,12 @@
 	- add some sort of search key
 		- can appear multiple times
 		- augments context menu
+	- add a vim language
 	- install language files from the bundle to ~/Preferences
 	- add a pref for extensions to languages
 	- make sure pref has a button to open the dir with the vim files
+* Need a menu item to remove styles.
+* Add an icon.
 * Language files should have support for a run key:
 	- value is command line used to run a single file (or *.c file for C based languages)
 	- probably triggered by option-R
@@ -48,10 +53,16 @@
 		` frequently used configuration options
 		` installing command line tool
 		` uninstall
+* Context menu should maybe use a hueristic to add open (local) files based on selection name.
+* Add directory document:
+	- use WindowDatabase
+	- return should do an open
+* Maybe control-1 and control-2 windows should auto-hide.
 * Provide some sort of quick reference feature:
 	- file with a list of urls/paths
 	- probably a File sub-menu
 	- maybe Mimsy style config file (so we can have better menu item titles)
+* NSLayoutManager has methods for underlining and striking through character ranges.
 * Would be nice to have a way to create new files:
 	- option-N pops up a list users can choose from
 	- remember last selection
@@ -75,6 +86,7 @@
 * Work on directory editor.
 * git modified file indicator is nice.
 * Do something with the About box.
+* The suggestions that XCode provides when there are errors are pretty cool.
 * Do something special with file rename when a SCCS is present.
 * Would be nice to have some better logging:
 	- http://boredzo.org/blog/archives/2008-01-20/asl-logging
@@ -83,7 +95,21 @@
 	- or support a dot file that does the same thing
 * Work on building:
 	- might be able to use vim files, eg /usr/share/vim/vim73/compiler/gcc.vim
+* Might be cool to replace some strings on load/save:
+	- -> and => to unicode arrows
+	- :: to something
+	- probably would also have to do this during editing
 * Make sure builds call reloadIfChanged
+* Maybe could have an option to get rid of tabs altogether
+	- tab adds enough spaces to offset to a modulo-N column
+	- backspace gobbles N spaces where possible
+	- would this work with proportional fonts?
+	- optionally allow tabs at the start of lines
+* Can we support references somehow?
+	- ideally per language
+* Maybe also a short view:
+	- remove function bodies
+	- possibly format doc comments
 * Would be nice to have some sort of indication of dirty files:
 	- probably from git's perspective
 * XCode and (I guess) TextMate have a bunch of macros:
@@ -91,6 +117,8 @@
 * Might want to add to the app store:
 	- see what the policy is for open source apps
 	- look at Prepare for Mac App Store Submission link
+* Support named bookmarks.
+* History of cursor positions?
 * Release checklist:
 	- increment support files version number
 	
