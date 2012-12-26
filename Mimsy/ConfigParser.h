@@ -7,9 +7,9 @@
 @end
 
 // Used to parse line oriented files where:
-// lines that start with a # are comment lines
-// lines with just whitespace are ignored
-// lines that start with a name and a colon represent key/value pairs
+// 1) lines that start with a # are comment lines
+// 2) lines with just whitespace are ignored
+// 3) lines that start with a name and a colon represent key/value pairs
 //    the name is anything except whitespace and colon
 //    the value is everything after the colon to the end of line character
 //    (with whitespace trimmed from the front and back)
