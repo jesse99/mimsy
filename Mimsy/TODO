@@ -1,4 +1,7 @@
 * Get first cut at language styles working:
+	- work on Languages
+	- work on Styler
+
 	- get language files loading from the bundle
 	- use a blocking function to map keywords to style names
 	- map the style names to hard-coded attribute styles
