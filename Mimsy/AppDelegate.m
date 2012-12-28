@@ -13,6 +13,8 @@
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
 	(void) notification;
+	
+	assert([NSThread isMultiThreaded]);
 
 	[WindowsDatabase setup];
 }

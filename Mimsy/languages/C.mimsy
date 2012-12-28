@@ -1,0 +1,8 @@
+Language: c
+Globs: *.c
+LineComment: //
+
+Keyword: auto bool break case char const continue default do double else enum extern false float for goto if int long register return short signed sizeof static struct switch true typedef union unsigned void volatile while
+Keyword: __asm __based1 __cdecl __declspec __except __fastcall __finally __inline __int16 __int32 __int64 __int8 __leave __stdcall __try dllexport2 dllimport2
+Keyword: __asm__ __inline__ __typeof__ __unix__ __vax__ asm inline typeof unix vax
+Keyword: NULL
