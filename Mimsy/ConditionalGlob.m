@@ -32,10 +32,10 @@
 	return self;
 }
 
-- (bool)matchName:(NSString*)name contents:(NSString*)contents
+- (int)matchName:(NSString*)name contents:(NSString*)contents
 {
 	if ([super matchName:name])
-		return true;
+		return 1;
 
 	for (NSUInteger i = 0; i < _conditionals.count; ++i)
 	{
@@ -44,12 +44,12 @@
 			NSTextCheckingResult* match = [_regexen[i] firstMatchInString:contents options:0 range:NSMakeRange(0, contents.length)];
 			if (match && match.range.location != NSNotFound)
 			{
-				return true;
+				return 2;
 			}
 		}
 	}
 
-	return false;
+	return 0;
 }
 
 @end

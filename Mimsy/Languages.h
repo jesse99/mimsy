@@ -15,6 +15,7 @@
 @end
 
 // TODO:
+// globs should return an int instead of a bool
 // load languages from the bundle
 // doesn't really make sense to have aync setup
 // need a mapping from language name to RegexStyler

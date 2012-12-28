@@ -18,14 +18,14 @@
 	return self;
 }
 
-- (bool)matchName:(NSString*)name
+- (int)matchName:(NSString*)name
 {
 	for (NSString* glob in _globs)
 	{
 		if (fnmatch([glob UTF8String], [name UTF8String], FNM_CASEFOLD) == 0)
-			return true;
+			return 1;
 	}
-	return false;
+	return 0;
 }
 
 @end

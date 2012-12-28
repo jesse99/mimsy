@@ -10,6 +10,7 @@
 - (id)initWithGlob:(NSString*)glob;
 - (id)initWithGlobs:(NSArray*)globs;
 
-- (bool)matchName:(NSString*)name;
+// Returns 1 for match and 0 for no match.
+- (int)matchName:(NSString*)name;
 
 @end

@@ -6,14 +6,14 @@
 - (void)testSimple
 {
 	ConditionalGlob* glob = [[ConditionalGlob alloc] initWithGlob:@"f[oe][oe].*"];
-	STAssertTrue([glob matchName:@"foo.txt"], nil);
-	STAssertTrue([glob matchName:@"foo.txt" contents:@"blah"], nil);
+	STAssertEquals([glob matchName:@"foo.txt"], 1, nil);
+	STAssertEquals([glob matchName:@"foo.txt" contents:@"blah"], 1, nil);
 	
-	STAssertTrue([glob matchName:@"fee.rtf"], nil);
-	STAssertTrue([glob matchName:@"fee.rtf" contents:@"blah"], nil);
+	STAssertEquals([glob matchName:@"fee.rtf"], 1, nil);
+	STAssertEquals([glob matchName:@"fee.rtf" contents:@"blah"], 1, nil);
 
-	STAssertFalse([glob matchName:@"goo.txt"], nil);
-	STAssertFalse([glob matchName:@"goo.txt" contents:@"blah"], nil);
+	STAssertEquals([glob matchName:@"goo.txt"], 0, nil);
+	STAssertEquals([glob matchName:@"goo.txt" contents:@"blah"], 0, nil);
 }
 
 - (void)testConditional
@@ -30,14 +30,14 @@
 
 	ConditionalGlob* glob = [[ConditionalGlob alloc] initWithGlobs:globs regexen:regexen conditionals:conditionals];
 	
-	STAssertFalse([glob matchName:@"foo.h"], nil);
-	STAssertTrue([glob matchName:@"foo.m"], nil);
-	STAssertFalse([glob matchName:@"foo.cpp"], nil);
+	STAssertEquals([glob matchName:@"foo.h"], 0, nil);
+	STAssertEquals([glob matchName:@"foo.m"], 1, nil);
+	STAssertEquals([glob matchName:@"foo.cpp"], 0, nil);
 	
-	STAssertFalse([glob matchName:@"foo.h" contents:@"// a C file"], nil);
-	STAssertTrue([glob matchName:@"foo.h" contents:@"// an objc file\n@interface foo\n@end\n"], nil);
-	STAssertTrue([glob matchName:@"foo.m" contents:@"// an objc file"], nil);
-	STAssertFalse([glob matchName:@"foo.cpp" contents:@"// a C++ file"], nil);
+	STAssertEquals([glob matchName:@"foo.h" contents:@"// a C file"], 0, nil);
+	STAssertEquals([glob matchName:@"foo.h" contents:@"// an objc file\n@interface foo\n@end\n"], 2, nil);
+	STAssertEquals([glob matchName:@"foo.m" contents:@"// an objc file"], 1, nil);
+	STAssertEquals([glob matchName:@"foo.cpp" contents:@"// a C++ file"], 0, nil);
 }
 
 @end
