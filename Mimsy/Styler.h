@@ -13,6 +13,8 @@ typedef void (^StylesCompleted)(StyleRuns* runs);
 
 @end
 
+// this will need the file name
+// if no styler was found still need to call the callback
 
 // when applying styles
 // if editCount == 0 && !scrolled

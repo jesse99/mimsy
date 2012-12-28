@@ -2,10 +2,8 @@
 	- work on Languages
 	- work on Styler
 
-	- get language files loading from the bundle
 	- use a blocking function to map keywords to style names
 	- map the style names to hard-coded attribute styles
-	- use a thread to compute styles
 	- styles should be applied based on distance from view center
 		` maybe in a chunked fashion using a main thread queue
 		`can't change attribute values once they have been applied
@@ -19,11 +17,12 @@
 	- use regexen for the elements
 		` NSRegularExpression has issues with its API, have to be very careful or it will throw?
 		` PCRE which has lots of features
-		` Oniguruma which is fairly light wright
+		` Oniguruma which is fairly light weight
 	- add mimsy language
 	- support ConditionalGLob
 		` value is glob, space, regex
 		` may appear more than once
+		` see /usr/share/vim/vim73/filetype.vim
 	- maybe Lua can be used for config (and other stuff)
 		` http://playcontrol.net/opensource/LuaCocoa/
 		` do we really need a scripting bridge?
@@ -35,8 +34,6 @@
 	- add some VIM style color files, vimcolorschemetest.googlecode.com
 	- should be a way to include back color in the style file
 		` probably need some way to override default back color 
-	- languages need to support peeking at the file
-		` see /usr/share/vim/vim73/filetype.vim
 	- add some sort of search key
 		- can appear multiple times
 		- augments context menu
@@ -46,6 +43,14 @@
 	- make sure pref has a button to open the dir with the vim files
 	- may be able to do something with NSLinkAttributeName
 * Need a menu item to remove styles.
+* Add context specific help:
+	- probably rtf files
+	- use generic help if no windows are up (or its selected from the help menu)
+	  mention that help files can be edited by the user (will need to install them)
+	- language files need help key with a path to a file
+	- open all help files (except generic) relevant to the current context
+	- for find could document most common regex options and link to more complete reference
+	- mimsy files could also show regex help file (maybe via a ConditionalHelp key)
 * Add an icon.
 * Language files should have support for a run key:
 	- value is command line used to run a single file (or *.c file for C based languages)

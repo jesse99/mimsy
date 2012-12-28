@@ -1,5 +1,6 @@
 #import "AppDelegate.h"
 
+#import "Languages.h"
 #import "WindowsDatabase.h"
 
 @implementation AppDelegate
@@ -17,6 +18,7 @@
 	assert([NSThread isMultiThreaded]);
 
 	[WindowsDatabase setup];
+	[Languages setup];
 }
 
 - (void) applicationDidBecomeActive:(NSNotification*)notification
