@@ -94,10 +94,6 @@
 		37514100168BFF8000C329AF /* RegexStyler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexStyler.m; sourceTree = "<group>"; };
 		37514102168BFF8C00C329AF /* Languages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Languages.h; sourceTree = "<group>"; };
 		37514103168BFF8C00C329AF /* Languages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Languages.m; sourceTree = "<group>"; };
-		37514105168CA4F500C329AF /* utarray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utarray.h; sourceTree = "<group>"; };
-		37514106168CA4F600C329AF /* uthash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uthash.h; sourceTree = "<group>"; };
-		37514107168CA4F600C329AF /* utlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utlist.h; sourceTree = "<group>"; };
-		37514108168CA4F700C329AF /* utstring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utstring.h; sourceTree = "<group>"; };
 		3751410B168CE15600C329AF /* create-vector.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "create-vector.py"; sourceTree = "<group>"; };
 		3751410D168CE19000C329AF /* make-vectors.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "make-vectors.sh"; sourceTree = "<group>"; };
 		3759B6551676F01900D3F3B8 /* TextController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextController.h; sourceTree = "<group>"; };
@@ -172,12 +168,8 @@
 				375140DB1682355B00C329AF /* Database.m */,
 				375140E516835CB400C329AF /* Paths.h */,
 				375140E616835CB400C329AF /* Paths.m */,
-				37514105168CA4F500C329AF /* utarray.h */,
-				37514106168CA4F600C329AF /* uthash.h */,
 				3705C81C167BE9BD00E5D54C /* Utils.h */,
 				3705C81D167BE9BD00E5D54C /* Utils.m */,
-				37514107168CA4F600C329AF /* utlist.h */,
-				37514108168CA4F700C329AF /* utstring.h */,
 				375140E216828EB500C329AF /* WindowsDatabase.h */,
 				375140E316828EB600C329AF /* WindowsDatabase.m */,
 			);
