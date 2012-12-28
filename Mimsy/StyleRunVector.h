@@ -1,4 +1,4 @@
-// Generated using `./Mimsy/create-vector.py --element=struct StyleRun --struct=StyleRunVector --size=NSUInteger --headers=StyleRun.h` on 27 December 2012 06:31.
+// Generated using `./Mimsy/create-vector.py --element=struct StyleRun --struct=StyleRunVector --size=NSUInteger --headers=StyleRun.h` on 27 December 2012 07:20.
 #include "StyleRun.h"
 
 #include <assert.h>
@@ -7,7 +7,7 @@
 
 struct StyleRunVector
 {
-	struct StyleRun* data;				// read/write
+	struct StyleRun* data;	// read/write
 	NSUInteger count;		// read-only
 	NSUInteger capacity;	// read-only
 };
@@ -25,7 +25,7 @@ static inline struct StyleRunVector newStyleRunVector()
 
 static inline void freeStyleRunVector(struct StyleRunVector* vector)
 {
-	// Vectors are often passed around via postruct StyleRuner because it should be
+	// Vectors are often passed around via pointer because it should be
 	// slightly more efficient but typically are not heap allocated.
 	free(vector->data);
 }

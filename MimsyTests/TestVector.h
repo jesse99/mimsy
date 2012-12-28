@@ -1,4 +1,4 @@
-// Generated using `./Mimsy/create-vector.py --element=int --struct=TestVector --size=NSUInteger` on 27 December 2012 06:31.
+// Generated using `./Mimsy/create-vector.py --element=int --struct=TestVector --size=NSUInteger` on 27 December 2012 07:20.
 #include <assert.h>
 #include <stdlib.h>		// for malloc and free
 #include <string.h>		// for memcpy

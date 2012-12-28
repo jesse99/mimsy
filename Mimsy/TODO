@@ -74,6 +74,7 @@
 * Add directory document:
 	- use WindowDatabase
 	- return should do an open
+* Might want Run and Test commands (run different targets).
 * Build menu should reload if build file changes.
 * Maybe control-1 and control-2 windows should auto-hide.
 * Provide some sort of quick reference feature:

@@ -31,7 +31,7 @@ static inline struct {NAME} new{NAME}()
 
 static inline void free{NAME}(struct {NAME}* vector)
 {
-	// Vectors are often passed around via po{TYPE}er because it should be
+	// Vectors are often passed around via pointer because it should be
 	// slightly more efficient but typically are not heap allocated.
 	free(vector->data);
 }
