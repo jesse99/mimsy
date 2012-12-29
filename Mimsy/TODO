@@ -13,6 +13,7 @@
 	  but don't scroll if the user has already scrolled
 	- cache styles for files (use a pretty large cache, maybe 100 files)
 	  might want some sort of cache size logging, maybe when various threasholds are breached
+* Got an assert creating a new document and quitting.
 * Work on styling:
 	- use regexen for the elements
 		` NSRegularExpression has issues with its API, have to be very careful or it will throw?

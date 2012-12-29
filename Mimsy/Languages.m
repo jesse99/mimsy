@@ -2,13 +2,13 @@
 
 #import "ConfigParser.h"
 #import "ConditionalGlob.h"
+#import "Language.h"
 #import "Paths.h"
 #import "RegexStyler.h"
 #import "TranscriptController.h"
 #import "Utils.h"
 
-static NSArray* _globs;		// [ConditionalGlob]
-static NSArray* _stylers;	// [RegexStyler]
+static NSArray* _languages;
 
 @implementation Languages
 
@@ -17,21 +17,34 @@ static NSArray* _stylers;	// [RegexStyler]
 	[self _processFiles];
 }
 
-+ (RegexStyler*)findStylerWithFileName:(NSString*)name contents:(NSString*)text
++ (Language*)findWithFileName:(NSString*)name contents:(NSString*)text
 {
-	(void) name;
-	(void) text;
-	assert(_globs.count == _stylers.count);
+	Language* lang = nil;
+	int best = 0;
 	
-	return nil;
+	for (Language* candidate in _languages)
+	{
+		// Unfortunately some files (notably *.h) can match multiple
+		// languages so we need to try more than just the first match.
+		int weight = [candidate.glob matchName:name contents:text];
+		if (weight > best)
+		{
+			lang = candidate;
+			best = weight;
+		}
+	}
+	
+	return lang;
 }
 
+// This can be a bit expensive so a task would be kind of nice, but we'll
+// almost always want to use the languages immediately so in practice
+// loading them asynchronously won't help much.
 + (void)_processFiles
 {
-	assert(_globs == nil);
+	assert(_languages == nil);
 	
-	NSMutableArray* globs = [NSMutableArray new];
-	NSMutableArray* stylers = [NSMutableArray new];
+	NSMutableArray* languages = [NSMutableArray new];
 	
 	NSString* dir = [Paths installedDir:@"languages"];
 	Glob* glob = [[Glob alloc] initWithGlob:@"*.mimsy"];
@@ -40,40 +53,39 @@ static NSArray* _stylers;	// [RegexStyler]
 	[Utils enumerateDir:dir glob:glob error:&error block:
 	 ^(NSString* item)
 	 {
-		 [self _processFile:item globs:globs stylers:stylers];
+		 [self _processFile:item languages:languages];
 	 }
 	 ];
 	if (error)
 	{
-		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load the language files at %@:\n%@.", dir, [error localizedFailureReason]];
+		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load the language files at %@:\n%@.\n", dir, [error localizedFailureReason]];
 		[TranscriptController writeError:mesg];
 	}
 	
-	_globs = globs;
-	_stylers = stylers;
+	_languages = languages;
 }
 
-+ (void)_processFile:(NSString*)path globs:(NSMutableArray*)globs stylers:(NSMutableArray*)stylers
+// This code would be clearer with goto, but goto often has problems when used with ARC.
++ (void)_processFile:(NSString*)path languages:(NSMutableArray*)languages
 {
+	Language* lang = nil;
+	
 	NSError* error = nil;
 	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
-	if (error)
-		goto err;
+	if (!error)
+	{
+		lang = [[Language alloc] initWithParser:parser outError:&error];
+	}
 	
-	
-	return;
-	
-err:
-	NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load language %@:\n%@.", path, [error localizedFailureReason]];
-	[TranscriptController writeError:mesg];
+	if (lang)
+	{
+		[languages addObject:lang];
+	}
+	else
+	{
+		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load language %@:\n%@\n", path, [error localizedFailureReason]];
+		[TranscriptController writeError:mesg];
+	}
 }
 
 @end
-
-// TODO:
-// load languages from the bundle
-// make sure we properly handle errors enumerating languages
-// make sure we properly handle failures loading a language
-// doesn't really make sense to have aync setup
-// need a mapping from language name to RegexStyler
-// might want a testSetup

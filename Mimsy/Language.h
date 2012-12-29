@@ -5,7 +5,7 @@
 // Encapsulates the information from a language file.
 @interface Language : NSObject
 
-- (id)initWithParser:(ConfigParser*)parser error:(NSError**)error;
+- (id)initWithParser:(ConfigParser*)parser outError:(NSError**)error;
 
 // ---- Required Elements -----------------------------------------
 

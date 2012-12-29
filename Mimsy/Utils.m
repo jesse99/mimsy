@@ -146,12 +146,15 @@ static NSString* Replacement = @"\uFFFD";
 {
 	NSFileManager* fm = [NSFileManager new];
 	NSArray* candidates = [fm contentsOfDirectoryAtPath:path error:error];
-	if (!error)
+	if (!*error)
 	{
 		for (NSString* candidate in candidates)
 		{
 			if (!glob || [glob matchName:candidate])
-				block(candidate);
+			{
+				NSString* item = [path stringByAppendingPathComponent:candidate];
+				block(item);
+			}
 		}
 	}
 }

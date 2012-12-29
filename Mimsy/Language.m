@@ -7,7 +7,7 @@
 
 @implementation Language
 
-- (id)initWithParser:(ConfigParser*)parser error:(NSError**)error
+- (id)initWithParser:(ConfigParser*)parser outError:(NSError**)error
 {
 	NSMutableArray* globs = [NSMutableArray new];
 	NSMutableArray* errors = [NSMutableArray new];
@@ -50,7 +50,7 @@
 
 	if (!_language)
 		[errors addObject:@"Language key is missing"];
-	if (!_glob)
+	if (globs.count == 0)
 		[errors addObject:@"Globs key is missing"];
 	if (names.count == 0)
 		[errors addObject:@"failed to find a language element"];
@@ -82,8 +82,16 @@
 		NSError* error = nil;
 		NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
 		NSRegularExpression* re = [[NSRegularExpression alloc] initWithPattern:pattern options:options error:&error];
-		assert(error == nil);	// errors should have been caught in _preflightPatterns
-		return [[RegexStyler alloc] initWithRegex:re elementNames:names];
+		if (!error)
+		{
+			return [[RegexStyler alloc] initWithRegex:re elementNames:names];
+		}
+		else
+		{
+			NSString* reason = [error localizedFailureReason];
+			[errors addObject:[NSString stringWithFormat:@"aggregate regex failed to parse: %@", reason]];
+			return nil;
+		}
 	}
 	else
 	{
