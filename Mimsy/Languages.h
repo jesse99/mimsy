@@ -10,13 +10,6 @@
 // Attempts to find a styler for the given file name and file contents (some languages
 // peek into the file contents to determine if the language is applicable). Returns
 // nil if a language was not found.
-+ (RegexStyler*)findStylerWithFileName:(NSString*)name text:(NSString*)text;
++ (RegexStyler*)findStylerWithFileName:(NSString*)name contents:(NSString*)text;
 
 @end
-
-// TODO:
-// globs should return an int instead of a bool
-// load languages from the bundle
-// doesn't really make sense to have aync setup
-// need a mapping from language name to RegexStyler
-// might want a testSetup

@@ -63,6 +63,7 @@
 		ConfigParserEntry* entry = [ConfigParserEntry new];
 		entry.offset = _index;
 		entry.key = [self parseKey:contents];
+		entry.line = _line;
 		
 		[self parseColon:contents error:error];
 		if (*error == nil)
@@ -217,8 +218,8 @@
 	 ^ (ConfigParserEntry* entry, NSUInteger index, BOOL* stop)
 	{
 		(void) index;
+		(void) stop;
 		block(entry);
-		*stop = NO;
 	}];
 }
 

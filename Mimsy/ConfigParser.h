@@ -2,8 +2,9 @@
 
 @interface ConfigParserEntry : NSObject
 @property NSString* key;
-@property NSString* value;
+@property NSString* value;		// whitespace will be trimmed from either end
 @property NSUInteger offset;
+@property NSUInteger line;
 @end
 
 // Used to parse line oriented files where:

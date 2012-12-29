@@ -1,5 +1,7 @@
 #import "Utils.h"
 
+#import "Glob.h"
+
 const NSRange NSZeroRange = {0};
 
 // These are more technically correct but the new-line and tab symbols are really hard
@@ -14,6 +16,34 @@ static NSString* DownHookedArrow = @"\u21A9";
 static NSString* Replacement = @"\uFFFD";
 
 @implementation Utils
+
++ (NSArray*)splitString:(NSString*)str by:(NSString*)separator
+{
+	NSArray* tmp = [str componentsSeparatedByString:separator];
+	
+	NSMutableArray* result = [[NSMutableArray alloc] initWithCapacity:tmp.count];
+	for (NSString* s in tmp)
+	{
+		if (s.length > 0)
+			[result addObject:s];
+	}
+	
+	return result;
+}
+
++ (NSString*)titleCase:(NSString*)str
+{
+	NSString* result = str;
+	
+	if (result.length > 0)
+	{
+		NSString* prefix = [[str substringToIndex:1] uppercaseString];
+		NSString* suffix = [str substringFromIndex:1];
+		result = [prefix stringByAppendingString:suffix];
+	}
+	
+	return str;
+}
 
 + (NSString*)bytesToStr:(NSUInteger)bytes
 {
@@ -81,6 +111,18 @@ static NSString* Replacement = @"\uFFFD";
 	return result;
 }
 
++ (NSArray*)mapArray:(NSArray*)array block:(id (^)(id element))block
+{
+	NSMutableArray* result = [[NSMutableArray alloc] initWithCapacity:array.count];
+	
+	for (id element in array)
+	{
+		[result addObject:block(element)];
+	}
+	
+	return result;
+}
+
 // Based on some Apple sample code floating around the interwebs.
 + (NSString*)pathForTemporaryFileWithPrefix:(NSString*)prefix
 {	
@@ -97,6 +139,21 @@ static NSString* Replacement = @"\uFFFD";
     CFRelease(uuid);
 	
     return result;
+}
+
++ (void)enumerateDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item)
+																					)block
+{
+	NSFileManager* fm = [NSFileManager new];
+	NSArray* candidates = [fm contentsOfDirectoryAtPath:path error:error];
+	if (!error)
+	{
+		for (NSString* candidate in candidates)
+		{
+			if (!glob || [glob matchName:candidate])
+				block(candidate);
+		}
+	}
 }
 
 @end

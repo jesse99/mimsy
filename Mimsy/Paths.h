@@ -7,4 +7,8 @@
 // backed up by Time Machine. Returns nil on errors.
 + (NSString*)caches;
 
+// Path to a directory of (dynamically) installed files in the current
+// user's home directory, e.g. "languages".
++ (NSString*)installedDir:(NSString*)name;
+
 @end

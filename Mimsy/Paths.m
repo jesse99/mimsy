@@ -38,4 +38,13 @@ static bool _triedCaches;
 	return _caches;
 }
 
+// TODO: This is not right. We need to support installing files from the
+// bundle and use the install directory instead.
++ (NSString*)installedDir:(NSString*)name
+{
+	NSString* resources = NSBundle.mainBundle.resourcePath;
+	return [resources stringByAppendingPathComponent:name];
+	
+}
+
 @end

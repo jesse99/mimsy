@@ -38,6 +38,7 @@
 		37862C4B168DE67200DB9E66 /* Glob.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C4A168DE67200DB9E66 /* Glob.m */; };
 		37862C4E168DE83D00DB9E66 /* ConditionalGlob.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C4D168DE83D00DB9E66 /* ConditionalGlob.m */; };
 		37862C51168DEA7200DB9E66 /* ConditionalGLobTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C50168DEA7200DB9E66 /* ConditionalGLobTests.m */; };
+		37862C54168E546500DB9E66 /* Language.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C53168E546500DB9E66 /* Language.m */; };
 		37A8C69716758FF400D4DB13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C69616758FF400D4DB13 /* Cocoa.framework */; };
 		37A8C6A116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C69F16758FF400D4DB13 /* InfoPlist.strings */; };
 		37A8C6A316758FF400D4DB13 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6A216758FF400D4DB13 /* main.m */; };
@@ -119,6 +120,8 @@
 		37862C4D168DE83D00DB9E66 /* ConditionalGlob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConditionalGlob.m; sourceTree = "<group>"; };
 		37862C4F168DEA7200DB9E66 /* ConditionalGLobTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConditionalGLobTests.h; sourceTree = "<group>"; };
 		37862C50168DEA7200DB9E66 /* ConditionalGLobTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConditionalGLobTests.m; sourceTree = "<group>"; };
+		37862C52168E546500DB9E66 /* Language.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Language.h; sourceTree = "<group>"; };
+		37862C53168E546500DB9E66 /* Language.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Language.m; sourceTree = "<group>"; };
 		37A8C69216758FF400D4DB13 /* Mimsy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mimsy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37A8C69616758FF400D4DB13 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		37A8C69916758FF400D4DB13 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -195,6 +198,8 @@
 		375140F3168BD64500C329AF /* Styler */ = {
 			isa = PBXGroup;
 			children = (
+				37862C52168E546500DB9E66 /* Language.h */,
+				37862C53168E546500DB9E66 /* Language.m */,
 				37514102168BFF8C00C329AF /* Languages.h */,
 				37514103168BFF8C00C329AF /* Languages.m */,
 				375140FF168BFF8000C329AF /* RegexStyler.h */,
@@ -473,6 +478,7 @@
 				37514104168BFF8C00C329AF /* Languages.m in Sources */,
 				37862C4B168DE67200DB9E66 /* Glob.m in Sources */,
 				37862C4E168DE83D00DB9E66 /* ConditionalGlob.m in Sources */,
+				37862C54168E546500DB9E66 /* Language.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

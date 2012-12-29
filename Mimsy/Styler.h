@@ -15,6 +15,7 @@ typedef void (^StylesCompleted)(StyleRuns* runs);
 
 // this will need the file name
 // if no styler was found still need to call the callback
+// maybe rename this AsyncStyler
 
 // when applying styles
 // if editCount == 0 && !scrolled

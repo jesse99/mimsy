@@ -28,6 +28,7 @@
 		` do we really need a scripting bridge?
 		` http://www.rogerboesch.com/2010/11/22/lightweight-integration-of-lua-in-objective-c/
 		` http://stackoverflow.com/questions/8477218/building-a-simple-bridge-between-objc-and-lua
+		` would be nice to use this for functional testing (including error cases)
 	- get color files working
 		` probably want to add some of the VIM groups, 
 		  see http://vimdoc.sourceforge.net/htmldoc/syntax.html NAMING CONVENTIONS
@@ -117,6 +118,17 @@
 * Do something special with file rename when a SCCS is present.
 * Would be nice to have some better logging:
 	- http://boredzo.org/blog/archives/2008-01-20/asl-logging
+	- would need some sort of topic log
+	- need a config file to control what is logged and at what level
+	- missing could be logged at info
+	- maybe also where it is logged
+	- initialize the logger in main
+	- could have ERROR, WARNING, INFO, and DEBUG macros
+	- first log line has timestamp and mimsy version number
+	- log lines look like: 0.001 ERROR Space-time continuum rupture!
+	   where the number is seconds from startup
+	- errors written to the transcript could be auto-logged (but not stderr)
+	- probably want to install the log config file into settings dir
 * Should have a mode where tab uses tab at the start of lines, but spaces once the line starts.
 * Might also want to use that wacky VIM(?) meta-data embedded in files containing info like tab lengths
 	- or support a dot file that does the same thing
