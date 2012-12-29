@@ -24,7 +24,7 @@
 		375140E716835CB400C329AF /* Paths.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140E616835CB400C329AF /* Paths.m */; };
 		375140EA1684B21B00C329AF /* RestoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140E91684B21B00C329AF /* RestoreView.m */; };
 		375140EF168B789100C329AF /* languages in Resources */ = {isa = PBXBuildFile; fileRef = 375140EE168B789100C329AF /* languages */; };
-		375140F2168BD64000C329AF /* Styler.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140F1168BD64000C329AF /* Styler.m */; };
+		375140F2168BD64000C329AF /* AsyncStyler.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140F1168BD64000C329AF /* AsyncStyler.m */; };
 		375140FE168BFA7800C329AF /* StyleRuns.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140FD168BFA7800C329AF /* StyleRuns.m */; };
 		37514101168BFF8000C329AF /* RegexStyler.m in Sources */ = {isa = PBXBuildFile; fileRef = 37514100168BFF8000C329AF /* RegexStyler.m */; };
 		37514104168BFF8C00C329AF /* Languages.m in Sources */ = {isa = PBXBuildFile; fileRef = 37514103168BFF8C00C329AF /* Languages.m */; };
@@ -91,8 +91,8 @@
 		375140E81684B21B00C329AF /* RestoreView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RestoreView.h; sourceTree = "<group>"; };
 		375140E91684B21B00C329AF /* RestoreView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RestoreView.m; sourceTree = "<group>"; };
 		375140EE168B789100C329AF /* languages */ = {isa = PBXFileReference; lastKnownFileType = folder; path = languages; sourceTree = "<group>"; };
-		375140F0168BD64000C329AF /* Styler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Styler.h; sourceTree = "<group>"; };
-		375140F1168BD64000C329AF /* Styler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Styler.m; sourceTree = "<group>"; };
+		375140F0168BD64000C329AF /* AsyncStyler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncStyler.h; sourceTree = "<group>"; };
+		375140F1168BD64000C329AF /* AsyncStyler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncStyler.m; sourceTree = "<group>"; };
 		375140FC168BFA7800C329AF /* StyleRuns.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StyleRuns.h; sourceTree = "<group>"; };
 		375140FD168BFA7800C329AF /* StyleRuns.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StyleRuns.m; sourceTree = "<group>"; };
 		375140FF168BFF8000C329AF /* RegexStyler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexStyler.h; sourceTree = "<group>"; };
@@ -198,14 +198,14 @@
 		375140F3168BD64500C329AF /* Styler */ = {
 			isa = PBXGroup;
 			children = (
+				375140F0168BD64000C329AF /* AsyncStyler.h */,
+				375140F1168BD64000C329AF /* AsyncStyler.m */,
 				37862C52168E546500DB9E66 /* Language.h */,
 				37862C53168E546500DB9E66 /* Language.m */,
 				37514102168BFF8C00C329AF /* Languages.h */,
 				37514103168BFF8C00C329AF /* Languages.m */,
 				375140FF168BFF8000C329AF /* RegexStyler.h */,
 				37514100168BFF8000C329AF /* RegexStyler.m */,
-				375140F0168BD64000C329AF /* Styler.h */,
-				375140F1168BD64000C329AF /* Styler.m */,
 				37862C3F168D259500DB9E66 /* StyleRun.h */,
 				375140FC168BFA7800C329AF /* StyleRuns.h */,
 				375140FD168BFA7800C329AF /* StyleRuns.m */,
@@ -472,7 +472,7 @@
 				375140E416828EB600C329AF /* WindowsDatabase.m in Sources */,
 				375140E716835CB400C329AF /* Paths.m in Sources */,
 				375140EA1684B21B00C329AF /* RestoreView.m in Sources */,
-				375140F2168BD64000C329AF /* Styler.m in Sources */,
+				375140F2168BD64000C329AF /* AsyncStyler.m in Sources */,
 				375140FE168BFA7800C329AF /* StyleRuns.m in Sources */,
 				37514101168BFF8000C329AF /* RegexStyler.m in Sources */,
 				37514104168BFF8C00C329AF /* Languages.m in Sources */,
