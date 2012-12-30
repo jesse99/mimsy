@@ -122,6 +122,11 @@
 	return [[self.textView textStorage] string];
 }
 
+- (Language*)language
+{
+	return _language;
+}
+
 - (void)setLanguage:(Language*)lang
 {
 	if (lang != _language)

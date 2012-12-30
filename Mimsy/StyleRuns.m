@@ -65,32 +65,4 @@
 	}
 }
 
-- (void)sortByDistanceFrom:(NSUInteger)offset threshold:(NSUInteger)threshold
-{
-	// Only sort if the new offset is significantly different from the previous
-	// offset (there's no point in re-sorting runs when the user scrolls by a line
-	// or two).
-	if (offset != _oldOffset && abs((int) _oldOffset - (int) offset) > threshold)
-	{
-		// mergesort because it's expected that the runs will usually be more or less sorted already
-		mergesort_b(_runs.data, _runs.count, sizeof(struct StyleRun),
-			^(const void* lhs, const void* rhs)
-			{
-				const struct StyleRun* run1 = (const struct StyleRun*) lhs;
-				const struct StyleRun* run2 = (const struct StyleRun*) rhs;
-				int delta1 = abs((int) run1->range.location - (int) offset);
-				int delta2 = abs((int) run2->range.location - (int) offset);
-				if (delta1 < delta2)
-					return -1;
-				else if (delta1 > delta2)
-					return 1;
-				else
-					return 0;
-			}
-		);
-		
-		_oldOffset = offset;
-	}
-}
-
 @end

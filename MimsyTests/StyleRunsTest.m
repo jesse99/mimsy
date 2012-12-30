@@ -51,27 +51,4 @@
 	STAssertEqualObjects(locations[2], @20, nil);
 }
 
-- (void)testSorted
-{
-	StyleRuns* styleRuns = [self createRuns];
-	[styleRuns sortByDistanceFrom:11 threshold:0];
-	
-	NSMutableArray* styles = [NSMutableArray array];
-	NSMutableArray* locations = [NSMutableArray array];
-	[styleRuns process:^(id style, NSRange range, bool* stop)
-	 {
-		 [styles addObject:style];
-		 [locations addObject:[NSNumber numberWithUnsignedLong:range.location]];
-	 }];
-	
-	STAssertEqualObjects(styles[0], @"Keyword style", nil);
-	STAssertEqualObjects(locations[0], @10, nil);
-	
-	STAssertEqualObjects(styles[1], @"String style", nil);
-	STAssertEqualObjects(locations[1], @20, nil);
-	
-	STAssertEqualObjects(styles[2], @"Keyword style", nil);
-	STAssertEqualObjects(locations[2], @0, nil);
-}
-
 @end

@@ -26,8 +26,4 @@ typedef void (^ProcessStyleRun)(id style, NSRange range, bool* stop);
 // times block was called.
 - (void)process:(ProcessStyleRun)block;
 
-// Sorts the run so that the runs closest to offset will be
-// processed first. Will not sort if abs(oldOffset - offset) <= threshold.
-- (void)sortByDistanceFrom:(NSUInteger)offset threshold:(NSUInteger)threshold;
-
 @end

@@ -147,6 +147,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
     self = [super init];
     if (self)
 	{
+		_endian = UnixEndian;
     }
     return self;
 }
@@ -300,7 +301,6 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 			
 			[self checkForControlChars:text];
 			_text = [[NSMutableAttributedString alloc] initWithString:text];
-			_endian = UnixEndian;
 			
 			// If an html file is being edited in Mimsy then ensure that it is saved
 			// as plain text. (To save a document as html the user needs to use save as
