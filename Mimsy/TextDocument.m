@@ -166,7 +166,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	
 	if (self.text)
 	{
-		[[[_controller textView] textStorage] setAttributedString:self.text];
+		[_controller setAttributedText:self.text];
 		_text = nil;
 	}
 	[_controller open];
@@ -248,7 +248,6 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
 	NSAssert(self.text == nil, @"%@ should be nil", self.text);
 	
-	_endian = NoEndian;
 	_encoding = 0;
 	_binary = false;
 	*outError = nil;
@@ -276,6 +275,8 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 
 - (void)doReadFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
 {
+	_endian = NoEndian;
+	
 	if ([typeName isEqualToString:@"Plain Text, UTF8 Encoded"] || [typeName isEqualToString:@"HTML"])
 	{
 		Decode* decode = [[Decode alloc] initWithData:data];
@@ -299,6 +300,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 			
 			[self checkForControlChars:text];
 			_text = [[NSMutableAttributedString alloc] initWithString:text];
+			_endian = UnixEndian;
 			
 			// If an html file is being edited in Mimsy then ensure that it is saved
 			// as plain text. (To save a document as html the user needs to use save as
@@ -346,7 +348,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	if (self.text && _controller)
 	{
 		// This path is taken for revert, but not for the initial open.
-		[[[_controller textView] textStorage] setAttributedString:self.text];
+		[_controller setAttributedText:self.text];
 		_text = nil;
 	}
 }
@@ -409,8 +411,6 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 
 - (void)restoreEndian:(NSMutableString*)str
 {
-	NSAssert(self.endian != 0, @"encoding was zero");
-	
 	NSRange range = NSMakeRange(0, str.length);
 	if (self.endian == MacEndian)
 		[str replaceOccurrencesOfString:@"\n" withString:@"\r" options:NSLiteralSearch range:range];

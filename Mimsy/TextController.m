@@ -1,8 +1,9 @@
 #import "TextController.h"
 
-#import "TextDocument.h"
-
+#import "Language.h"
+#import "Languages.h"
 #import "RestoreView.h"
+#import "TextDocument.h"
 #import "WindowsDatabase.h"
 
 @implementation TextController
@@ -10,6 +11,8 @@
 	RestoreView* _restorer;
 	bool _closed;
 	bool _wordWrap;
+	NSUInteger _editCount;
+	Language* _language;
 }
 
 - (id)init
@@ -17,8 +20,9 @@
     self = [super initWithWindowNibName:@"TextDocument"];
     if (self)
 	{
-		// This will be set to nil once the view has been restored.
 		[self setShouldCascadeWindows:NO];
+
+		// This will be set to nil once the view has been restored.
 		_restorer = [[RestoreView alloc] init:self];
     }
     
@@ -31,8 +35,9 @@
 	[[self document] controllerDidLoad];
 
 	__weak id this = self;
-	[[self.textView layoutManager] setDelegate:this];
-	[[self.textView layoutManager] setBackgroundLayoutEnabled:YES];
+	[self.textView.textStorage setDelegate:this];
+	[self.textView.layoutManager setDelegate:this];
+	[self.textView.layoutManager setBackgroundLayoutEnabled:YES];
 }
 
 - (void)windowWillClose:(NSNotification*)notification
@@ -101,9 +106,28 @@
 	//DoSetTabSettings();
 }
 
+- (NSAttributedString*)attributedText
+{
+	return self.textView.textStorage;
+}
+
+- (void)setAttributedText:(NSAttributedString*)text
+{
+	_editCount++;
+	[self.textView.textStorage setAttributedString:text];
+}
+
 - (NSString*)text
 {
 	return [[self.textView textStorage] string];
+}
+
+- (void)setLanguage:(Language*)lang
+{
+	if (lang != _language)
+	{
+		_language = lang;
+	}
 }
 
 - (NSString*)path
@@ -120,6 +144,9 @@
 		NSRect frame = [WindowsDatabase getFrame:path];
 		if (NSWidth(frame) >= 40)
 			[self.window setFrame:frame display:YES];	// note that Cocoa will ensure that windows with title bars are not moved off screen
+		
+		NSString* name = [path lastPathComponent];
+		self.Language = [Languages findWithFileName:name contents:self.text];
 		
 		if (_restorer)
 			[_restorer setPath:path];
@@ -151,6 +178,18 @@
 	}
 	
 	[_textView sizeToFit];
+}
+
+// Note that this is called for every key stroke.
+- (void)textStorageDidProcessEditing:(NSNotification*)notification
+{
+	(void)notification;
+	
+	NSUInteger mask = self.textView.textStorage.editedMask;
+	if ((mask & NSTextStorageEditedCharacters))
+	{
+		_editCount++;
+	}
 }
 
 - (void)layoutManager:(NSLayoutManager*)layout didCompleteLayoutForTextContainer:(NSTextContainer*)container atEnd:(BOOL)atEnd

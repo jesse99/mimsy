@@ -232,9 +232,9 @@
 				375140E91684B21B00C329AF /* RestoreView.m */,
 				3759B6551676F01900D3F3B8 /* TextController.h */,
 				3759B6561676F01900D3F3B8 /* TextController.m */,
-				3700403B1676D4860009907A /* TextDocument.xib */,
 				370040381676D4790009907A /* TextDocument.h */,
 				370040391676D4790009907A /* TextDocument.m */,
+				3700403B1676D4860009907A /* TextDocument.xib */,
 			);
 			name = "Text Editor";
 			sourceTree = "<group>";
