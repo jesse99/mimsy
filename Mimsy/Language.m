@@ -16,6 +16,8 @@
 	NSMutableArray* patterns = [NSMutableArray new];
 	NSMutableArray* lines = [NSMutableArray new];
 	
+	[names addObject:@"Default"];
+	
 	[parser enumerate:
 		^(ConfigParserEntry* entry)
 		{
@@ -52,7 +54,7 @@
 		[errors addObject:@"Language key is missing"];
 	if (globs.count == 0)
 		[errors addObject:@"Globs key is missing"];
-	if (names.count == 0)
+	if (patterns.count == 0)
 		[errors addObject:@"failed to find a language element"];
 	
 	_glob = [[ConditionalGlob alloc] initWithGlobs:globs];
@@ -71,7 +73,7 @@
 
 - (RegexStyler*)_createStyler:(NSArray*)names patterns:(NSArray*)patterns lines:(NSArray*)lines errors:(NSMutableArray*)errors
 {
-	assert(patterns.count == names.count);
+	assert(patterns.count + 1 == names.count);
 	
 	if ([self _preflightPatterns:patterns lines:lines errors:errors])
 	{

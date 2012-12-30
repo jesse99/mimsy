@@ -7,7 +7,7 @@ typedef void (^ProcessStyleRun)(id style, NSRange range, bool* stop);
 
 // Style runs computed for a text document. Once constructed it
 // should only be used by the main thread. Note that there will
-// be a style for every pice of text (text that doesn't match
+// be a style for every piece of text (text that doesn't match
 // a language regex will be given the "Default" style).
 @interface StyleRuns : NSObject
 
