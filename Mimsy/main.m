@@ -49,10 +49,11 @@ static void initLogging(void)
 	else
 	{
 		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load %@:\n%@.", path, [error localizedFailureReason]];
-		ERROR("Mimsy", "%@", mesg);
+		LOG_ERROR("Mimsy", "%@", mesg);
 	}
 }
 
+// When unit testing argv will contain a "-SenTest" switch.
 int main(int argc, char *argv[])
 {
 	initLogging();
@@ -60,7 +61,7 @@ int main(int argc, char *argv[])
 	NSDateFormatter* formatter = [NSDateFormatter new];
 	[formatter setDateFormat:@"yyyy-MM-dd 'at' HH:mm"];				
 	LOG("Mimsy", "Started up on %@", [formatter stringFromDate:[NSDate date]]);
-	
+		
 	NSString* version = getAppVersion();
 	if (version)
 		LOG("Mimsy", "Version %@", version);

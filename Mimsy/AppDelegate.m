@@ -11,7 +11,7 @@
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
 	(void) notification;
-	INFO("App", "Terminating");
+	LOG_INFO("App", "Terminating");
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
@@ -19,7 +19,7 @@
 	(void) notification;
 	
 	assert([NSThread isMultiThreaded]);
-	DEBUG("App", "Finished launching");
+	LOG_DEBUG("App", "Finished launching");
 
 	[WindowsDatabase setup];
 	[Languages setup];

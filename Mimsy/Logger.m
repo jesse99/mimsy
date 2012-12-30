@@ -25,10 +25,7 @@ static double getTime(void)
 	struct timeval value;
 	gettimeofday(&value, NULL);
 	double secs = value.tv_sec + 1.0e-6*value.tv_usec;
-	
-	double oldTime = _time;
-	_time = secs;
-	return secs - oldTime;
+	return secs - _time;
 }
 
 // We want this to be fast because it is called by _shouldLog. One
@@ -53,7 +50,7 @@ void setupLogging(const char* path)
 	assert(_file == NULL);
 	
 	_file = fopen(path, "w");
-	getTime();
+	_time = getTime();
 	
 	if (!_file)
 	{
@@ -68,7 +65,7 @@ void setTopicLevel(const char* topic, const char* level)
 	{
 		if (_numTopics == MAX_TOPICS)
 		{
-			ERROR("Mimsy", "More than %d log topics", MAX_TOPICS);
+			LOG_ERROR("Mimsy", "More than %d log topics", MAX_TOPICS);
 			return;
 		}
 		index = _numTopics++;
@@ -91,7 +88,7 @@ void setTopicLevel(const char* topic, const char* level)
 		_levels[index] = ERROR_LEVEL;
 	
 	else
-		ERROR("Mimsy", "Attempt to set %s topic to bogus level %s", topic, level);
+		LOG_ERROR("Mimsy", "Attempt to set %s topic to bogus level %s", topic, level);
 }
 
 bool _shouldLog(const char* topic, int level)

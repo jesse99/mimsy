@@ -51,7 +51,7 @@ static TranscriptController* controller;
 
 + (void)writeError:(NSString*)text
 {
-	ERROR("Mimsy", "%@", text);
+	LOG_ERROR("Mimsy", "%@", text);
 	NSAttributedString* str = [[NSAttributedString alloc] initWithString:[text stringByAppendingString:@"\n"]];
 	[[[TranscriptController getInstance].view textStorage] appendAttributedString:str];
 }

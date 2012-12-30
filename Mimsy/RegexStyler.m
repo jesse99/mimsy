@@ -1,5 +1,6 @@
 #import "RegexStyler.h"
 
+#import "Logger.h"
 #import "StyleRuns.h"
 
 @implementation RegexStyler
@@ -31,7 +32,7 @@
 			(void) stop;
 			if (match.numberOfRanges > 0)
 			{
-				assert(match.numberOfRanges == _names.count + 1);
+				assert(match.numberOfRanges == _names.count);
 				for (NSUInteger i = 1; i < match.numberOfRanges; ++i)
 				{
 					NSRange range = [match rangeAtIndex:i];

@@ -1,5 +1,7 @@
 #import "Paths.h"
 
+#import "Logger.h"
+
 static NSString* _caches;
 static bool _triedCaches;
 
@@ -23,14 +25,14 @@ static bool _triedCaches;
 				[fm createDirectoryAtPath:_caches withIntermediateDirectories:YES attributes:nil error:&error];
 				if (error)
 				{
-					NSLog(@"Error creating '%@: %@", _caches, [error localizedFailureReason]);
+					LOG_ERROR("Mimsy", "Couldn't create '%@: %@", _caches, [error localizedFailureReason]);
 					_caches = nil;
 				}
 			}
 		}
 		else
 		{
-			NSLog(@"URLsForDirectory:NSCachesDirectory failed to find any directories");
+			LOG_ERROR("Mimsy", "URLsForDirectory:NSCachesDirectory failed to find any directories");
 		}
 		_triedCaches = true;
 	}

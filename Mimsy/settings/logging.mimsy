@@ -1,0 +1,7 @@
+# The keys are topics. Logs with a topic not listed here will happen at INFO level.
+#
+# The values are log levels and can be ERROR, WARN, INFO, or DEBUG. 
+# Log levels will also log whatever is to their left (so DEBUG logs everything).
+App:   INFO
+Mimsy: INFO
+Text:  INFO

@@ -1,7 +1,7 @@
 // Relatively simple logger that supports both log topics and log levels.
 #import <Foundation/Foundation.h>
 
-#undef DEBUG
+#undef LOG
 
 extern const int ERROR_LEVEL;
 extern const int WARN_LEVEL;
@@ -13,7 +13,7 @@ void setTopicLevel(const char* topic, const char* level);
 bool _shouldLog(const char* topic, int level);
 void _doLog(const char* topic, const char* level, const char* format, va_list args);
 
-static inline void ERROR(const char* topic, const char* format, ...)
+static inline void LOG_ERROR(const char* topic, const char* format, ...)
 {
 	if (_shouldLog(topic, ERROR_LEVEL))
 	{
@@ -24,7 +24,7 @@ static inline void ERROR(const char* topic, const char* format, ...)
 	}
 }
 
-static inline void WARN(const char* topic, const char* format, ...)
+static inline void LOG_WARN(const char* topic, const char* format, ...)
 {
 	if (_shouldLog(topic, WARN_LEVEL))
 	{
@@ -35,7 +35,7 @@ static inline void WARN(const char* topic, const char* format, ...)
 	}
 }
 
-static inline void INFO(const char* topic, const char* format, ...)
+static inline void LOG_INFO(const char* topic, const char* format, ...)
 {
 	if (_shouldLog(topic, INFO_LEVEL))
 	{
@@ -46,7 +46,7 @@ static inline void INFO(const char* topic, const char* format, ...)
 	}
 }
 
-static inline void DEBUG(const char* topic, const char* format, ...)
+static inline void LOG_DEBUG(const char* topic, const char* format, ...)
 {
 	if (_shouldLog(topic, DEBUG_LEVEL))
 	{

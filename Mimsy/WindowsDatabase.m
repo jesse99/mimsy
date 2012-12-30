@@ -1,5 +1,7 @@
 #import "WindowsDatabase.h"
+
 #import "Database.h"
+#import "Logger.h"
 #import "Paths.h"
 
 @implementation WindowsDatabase
@@ -54,7 +56,7 @@ static void destroy()
 	return self;
 	
 err:
-	NSLog(@"Error creating database at '%@': %@", Paths.caches, [error localizedFailureReason]);
+	LOG_ERROR("Mimsy", "Couldn' create database at '%@': %@", Paths.caches, [error localizedFailureReason]);
 	self->_db = nil;
 	return self;
 }
@@ -84,7 +86,7 @@ err:
 	return result;
 	
 err:
-	NSLog(@"Error querying window frame: %@", [error localizedFailureReason]);
+	LOG_ERROR("Mimsy", "Query window frame failed: %@", [error localizedFailureReason]);
 	return NSZeroRect;
 }
 
@@ -116,7 +118,7 @@ err:
 	return false;
 	
 err:
-	NSLog(@"Error querying window info: %@", [error localizedFailureReason]);
+	LOG_ERROR("Mimsy", "Query window info failed: %@", [error localizedFailureReason]);
 	return false;
 }
 
@@ -141,7 +143,7 @@ err:
 	return;
 	
 err:
-	NSLog(@"Error saving window info: %@", [error localizedFailureReason]);
+	LOG_ERROR("Mimsy", "Saving window info failed: %@", [error localizedFailureReason]);
 }
 
 @end
