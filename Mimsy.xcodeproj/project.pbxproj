@@ -43,6 +43,7 @@
 		37862C5E168FEC3A00DB9E66 /* TextStyles.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C5D168FEC3A00DB9E66 /* TextStyles.m */; };
 		37862C60168FF58900DB9E66 /* styles in Resources */ = {isa = PBXBuildFile; fileRef = 37862C5F168FF58900DB9E66 /* styles */; };
 		37862C63169096D000DB9E66 /* Logger.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C62169096CF00DB9E66 /* Logger.m */; };
+		37862C651690BC0600DB9E66 /* settings in Resources */ = {isa = PBXBuildFile; fileRef = 37862C641690BC0600DB9E66 /* settings */; };
 		37A8C69716758FF400D4DB13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C69616758FF400D4DB13 /* Cocoa.framework */; };
 		37A8C6A116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C69F16758FF400D4DB13 /* InfoPlist.strings */; };
 		37A8C6A316758FF400D4DB13 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6A216758FF400D4DB13 /* main.m */; };
@@ -133,6 +134,7 @@
 		37862C5F168FF58900DB9E66 /* styles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = styles; sourceTree = "<group>"; };
 		37862C61169096CF00DB9E66 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
 		37862C62169096CF00DB9E66 /* Logger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Logger.m; sourceTree = "<group>"; };
+		37862C641690BC0600DB9E66 /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = settings; sourceTree = "<group>"; };
 		37A8C69216758FF400D4DB13 /* Mimsy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mimsy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37A8C69616758FF400D4DB13 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		37A8C69916758FF400D4DB13 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -196,14 +198,14 @@
 				375140DB1682355B00C329AF /* Database.m */,
 				37862C49168DE67200DB9E66 /* Glob.h */,
 				37862C4A168DE67200DB9E66 /* Glob.m */,
+				37862C61169096CF00DB9E66 /* Logger.h */,
+				37862C62169096CF00DB9E66 /* Logger.m */,
 				375140E516835CB400C329AF /* Paths.h */,
 				375140E616835CB400C329AF /* Paths.m */,
 				3705C81C167BE9BD00E5D54C /* Utils.h */,
 				3705C81D167BE9BD00E5D54C /* Utils.m */,
 				375140E216828EB500C329AF /* WindowsDatabase.h */,
 				375140E316828EB600C329AF /* WindowsDatabase.m */,
-				37862C61169096CF00DB9E66 /* Logger.h */,
-				37862C62169096CF00DB9E66 /* Logger.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -317,12 +319,13 @@
 		37A8C69D16758FF400D4DB13 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				37A8C69E16758FF400D4DB13 /* Mimsy-Info.plist */,
+				37A8C6A516758FF400D4DB13 /* Credits.rtf */,
 				37A8C69F16758FF400D4DB13 /* InfoPlist.strings */,
 				37A8C6A216758FF400D4DB13 /* main.m */,
+				37A8C69E16758FF400D4DB13 /* Mimsy-Info.plist */,
 				37A8C6A416758FF400D4DB13 /* Mimsy-Prefix.pch */,
-				37A8C6A516758FF400D4DB13 /* Credits.rtf */,
 				375140EE168B789100C329AF /* languages */,
+				37862C641690BC0600DB9E66 /* settings */,
 				37862C5F168FF58900DB9E66 /* styles */,
 			);
 			name = "Supporting Files";
@@ -445,6 +448,7 @@
 				3751410C168CE15600C329AF /* create-vector.py in Resources */,
 				3751410E168CE19000C329AF /* make-vectors.sh in Resources */,
 				37862C60168FF58900DB9E66 /* styles in Resources */,
+				37862C651690BC0600DB9E66 /* settings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

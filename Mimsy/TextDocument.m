@@ -438,9 +438,9 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		
 		NSString* mesg;
 		if (chars.count <= 5)
-			mesg = [[NSString alloc] initWithFormat:@"Found %@ in %@.\n", [self charsToString:chars], file];
+			mesg = [[NSString alloc] initWithFormat:@"Found %@ in %@.", [self charsToString:chars], file];
 		else
-			mesg = [[NSString alloc] initWithFormat:@"Found %d control characters of %lu different types in %@.\n", numGremlines, chars.count, file];
+			mesg = [[NSString alloc] initWithFormat:@"Found %d control characters of %lu different types in %@.", numGremlines, chars.count, file];
 		
 		[TranscriptController writeError:mesg];
 	}

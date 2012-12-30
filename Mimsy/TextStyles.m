@@ -59,7 +59,7 @@ static NSDictionary* _attrMap;		// element name => attributes
 	}
 	else
 	{
-		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load the styles file at %@:\n%@.\n", _path, [error localizedFailureReason]];
+		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load the styles file at %@:\n%@.", _path, [error localizedFailureReason]];
 		[TranscriptController writeError:mesg];
 		return nil;
 	}
@@ -73,7 +73,7 @@ static NSDictionary* _attrMap;		// element name => attributes
 	ConfigParser* parser = [[ConfigParser alloc] initWithContent:text.string outError:&error];
 	if (error)
 	{
-		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't parse the styles file at %@:\n%@.\n", _path, [error localizedFailureReason]];
+		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't parse the styles file at %@:\n%@.", _path, [error localizedFailureReason]];
 		[TranscriptController writeError:mesg];
 		return false;
 	}
@@ -88,7 +88,7 @@ static NSDictionary* _attrMap;		// element name => attributes
 	
 	if (!map[@"Default"])
 	{
-		NSString* mesg = [[NSString alloc] initWithFormat:@"Styles file at '%@' is missing a Default style.\n", _path];
+		NSString* mesg = [[NSString alloc] initWithFormat:@"Styles file at '%@' is missing a Default style.", _path];
 		[TranscriptController writeError:mesg];
 		map[@"Default"] = _baseAttrs;
 	}
@@ -103,7 +103,7 @@ static NSDictionary* _attrMap;		// element name => attributes
 	}
 	else
 	{
-		NSString* mesg = [[NSString alloc] initWithFormat:@"Styles file at '%@' has a duplicate %@ style.\n", _path, name];
+		NSString* mesg = [[NSString alloc] initWithFormat:@"Styles file at '%@' has a duplicate %@ style.", _path, name];
 		[TranscriptController writeError:mesg];
 	}
 }

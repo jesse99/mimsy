@@ -58,7 +58,7 @@ static NSArray* _languages;
 	 ];
 	if (error)
 	{
-		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load the language files at %@:\n%@.\n", dir, [error localizedFailureReason]];
+		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load the language files at %@:\n%@.", dir, [error localizedFailureReason]];
 		[TranscriptController writeError:mesg];
 	}
 	
@@ -83,7 +83,7 @@ static NSArray* _languages;
 	}
 	else
 	{
-		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load language %@:\n%@\n", path, [error localizedFailureReason]];
+		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load language %@:\n%@", path, [error localizedFailureReason]];
 		[TranscriptController writeError:mesg];
 	}
 }

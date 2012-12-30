@@ -8,7 +8,8 @@ extern const int WARN_LEVEL;
 extern const int INFO_LEVEL;
 extern const int DEBUG_LEVEL;
 
-void setupLogging(void);
+void setupLogging(const char* path);
+void setTopicLevel(const char* topic, const char* level);
 bool _shouldLog(const char* topic, int level);
 void _doLog(const char* topic, const char* level, const char* format, va_list args);
 
