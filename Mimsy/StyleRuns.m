@@ -6,6 +6,7 @@
 	NSArray* _styles;
 	ElementToStyle _styler;
 	struct StyleRunVector _runs;
+	NSUInteger _processed;
 	NSUInteger _oldOffset;
 }
 
@@ -25,7 +26,8 @@
 
 - (NSUInteger)length
 {
-	return _runs.count;
+	assert(_processed <= _runs.count);
+	return _runs.count - _processed;
 }
 
 - (void)mapElementsToStyles:(ElementToStyle)block
@@ -54,14 +56,12 @@
 	assert(_styles);				// must call mapElementsToStyles at least once
 	assert(_names.count == _styles.count);
 	
-	(void) block;
-	
 	bool stop = false;
-	for (NSUInteger index = 0; index < _runs.count && !stop; ++index)
+	for (; _processed < _runs.count && !stop; ++_processed)
 	{
-		NSUInteger element = _runs.data[index].elementIndex;
+		NSUInteger element = _runs.data[_processed].elementIndex;
 		assert(element < _styles.count);
-		block(_styles[element], _runs.data[index].range, &stop);
+		block(_styles[element], _runs.data[_processed].range, &stop);
 	}
 }
 
