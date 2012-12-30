@@ -1,4 +1,5 @@
 #import "TranscriptController.h"
+#import "Logger.h"
 
 static TranscriptController* controller;
 
@@ -36,15 +37,23 @@ static TranscriptController* controller;
 	[[[TranscriptController getInstance].view textStorage] appendAttributedString:str];
 }
 
-+ (void)writeError:(NSString*)text
++ (void)writeStderr:(NSString*)text
 {
 	NSAttributedString* str = [[NSAttributedString alloc] initWithString:text];
 	[[[TranscriptController getInstance].view textStorage] appendAttributedString:str];
 }
 
-+ (void)writeOutput:(NSString*)text
++ (void)writeStdout:(NSString*)text
 {
 	NSAttributedString* str = [[NSAttributedString alloc] initWithString:text];
 	[[[TranscriptController getInstance].view textStorage] appendAttributedString:str];
 }
+
++ (void)writeError:(NSString*)text
+{
+	ERROR("Mimsy", "%@", text);
+	NSAttributedString* str = [[NSAttributedString alloc] initWithString:text];
+	[[[TranscriptController getInstance].view textStorage] appendAttributedString:str];
+}
+
 @end

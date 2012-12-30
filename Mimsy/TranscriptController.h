@@ -7,7 +7,9 @@
 @property IBOutlet NSTextView *view;
 
 + (void)writeCommand:(NSString*)text;	// typically the text of a command executed via a build tool
-+ (void)writeError:(NSString*)text;		// typically stderr from a tool run via a build
-+ (void)writeOutput:(NSString*)text;	// typically stfout from a tool run via a build
++ (void)writeStderr:(NSString*)text;	// typically stderr from a tool run via a build
++ (void)writeStdout:(NSString*)text;	// typically stfout from a tool run via a build
+
++ (void)writeError:(NSString*)text;		// Mimsy error
 
 @end

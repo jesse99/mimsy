@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 
 #import "Languages.h"
+#import "Logger.h"
 #import "TextStyles.h"
 #import "WindowsDatabase.h"
 
@@ -10,6 +11,7 @@
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
 	(void) notification;
+	INFO("App", "Terminating");
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
@@ -17,6 +19,7 @@
 	(void) notification;
 	
 	assert([NSThread isMultiThreaded]);
+	DEBUG("App", "Finished launching");
 
 	[WindowsDatabase setup];
 	[Languages setup];

@@ -1,6 +1,7 @@
 #import "TextDocument.h"
 
 #import "Decode.h"
+#import "Logger.h"
 #import "TextController.h"
 #import "TranscriptController.h"
 #import "Utils.h"
@@ -178,6 +179,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
 	[super setFileURL:url];
 	
+	INFO("Text", "Writing document to %@", url);		// TODO: include the path
 	if (_controller && ![url isEqual:_url])
 	{
 		_url = url;
@@ -236,6 +238,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 			
 			if (fileTime != nil && [fileTime compare:docTime] == NSOrderedDescending)
 			{
+				DEBUG("Text", "Focument XXX changed on disk");		// TODO: include the path
 				changed = true;
 			}
 		}
@@ -252,6 +255,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	_encoding = 0;
 	_binary = false;
 	*outError = nil;
+	INFO("Text", "Reading document from XXX");		// TODO: include the path
 	
 	const NSUInteger MaxBytes = 512*1024;		// I think this is around 16K lines of source
 	if ([data length] > MaxBytes)
@@ -277,6 +281,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 - (void)doReadFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
 {
 	_endian = NoEndian;
+	ERROR("Text", "This isn't really an error");		// TODO: remove this
 	
 	if ([typeName isEqualToString:@"Plain Text, UTF8 Encoded"] || [typeName isEqualToString:@"HTML"])
 	{
