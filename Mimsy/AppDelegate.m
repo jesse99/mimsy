@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 
 #import "Languages.h"
+#import "TextStyles.h"
 #import "WindowsDatabase.h"
 
 @implementation AppDelegate
@@ -19,6 +20,7 @@
 
 	[WindowsDatabase setup];
 	[Languages setup];
+	[TextStyles setup];
 }
 
 - (void) applicationDidBecomeActive:(NSNotification*)notification

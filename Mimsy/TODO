@@ -16,6 +16,7 @@
 	  but don't scroll if the user has already scrolled
 	- cache styles for files (use a pretty large cache, maybe 100 files)
 	  might want some sort of cache size logging, maybe when various thresholds are breached
+	- do we need editCount?
 * Try to get using default style after pasting and then typing working.
 * Work on styling:
 	- add mimsy language
@@ -43,6 +44,9 @@
 	- add a pref for extensions to languages
 	- make sure pref has a button to open the dir with the vim files
 	- may be able to do something with NSLinkAttributeName
+	- probably should have a way to have fallback element name aliases
+	- would be nice if there was a way to show which elements text ranges belong to
+		` could do this by adding a "style name" attribute
 * Need a menu item to remove styles.
 * Add context specific help:
 	- probably rtf files

@@ -1,5 +1,6 @@
 #import "TextController.h"
 
+#import "ApplyStyles.h"
 #import "Language.h"
 #import "Languages.h"
 #import "RestoreView.h"
@@ -13,6 +14,7 @@
 	bool _wordWrap;
 	NSUInteger _editCount;
 	Language* _language;
+	ApplyStyles* _applier;
 }
 
 - (id)init
@@ -24,6 +26,7 @@
 
 		// This will be set to nil once the view has been restored.
 		_restorer = [[RestoreView alloc] init:self];
+		_applier = [[ApplyStyles alloc] init:self];
     }
     
     return self;
@@ -115,6 +118,7 @@
 {
 	_editCount++;
 	[self.textView.textStorage setAttributedString:text];
+	[_applier addDirtyLocation:0];
 }
 
 - (NSString*)text
@@ -132,6 +136,7 @@
 	if (lang != _language)
 	{
 		_language = lang;
+		[_applier addDirtyLocation:0];
 	}
 }
 
@@ -155,6 +160,7 @@
 		
 		if (_restorer)
 			[_restorer setPath:path];
+		[_applier addDirtyLocation:0];
 	}
 }
 
@@ -194,6 +200,9 @@
 	if ((mask & NSTextStorageEditedCharacters))
 	{
 		_editCount++;
+		
+		NSUInteger loc = self.textView.textStorage.editedRange.location;
+		[_applier addDirtyLocation:loc];
 	}
 }
 

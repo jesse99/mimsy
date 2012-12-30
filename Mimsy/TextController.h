@@ -13,6 +13,7 @@
 @property IBOutlet NSScrollView *scrollView;
 @property NSAttributedString* attributedText;
 @property (readonly) NSString* text;
+@property (readonly) NSUInteger editCount;
 @property Language* language;
 
 @end
