@@ -19,6 +19,7 @@ static int _numTopics;
 
 static int _topicWidth;
 static int _levelWidth;
+static NSLock* _lock;
 
 static double getTime(void)
 {
@@ -51,6 +52,7 @@ void setupLogging(const char* path)
 	
 	_file = fopen(path, "w");
 	_time = getTime();
+	_lock = [NSLock new];
 	
 	if (!_file)
 	{
@@ -71,24 +73,24 @@ void setTopicLevel(const char* topic, const char* level)
 		index = _numTopics++;
 	}
 	
-	_topics[index] = strdup(topic);
-	_topicWidth = MAX((int) strlen(topic), _topicWidth);
-	_levelWidth = MAX((int) strlen(level), _levelWidth);
-	
+	int ilevel = INFO_LEVEL;
 	if (strcmp(level, "DEBUG") == 0)
-		_levels[index] = DEBUG_LEVEL;
-	
+		ilevel = DEBUG_LEVEL;
 	else if (strcmp(level, "INFO") == 0)
-		_levels[index] = INFO_LEVEL;
-	
+		ilevel = INFO_LEVEL;
 	else if (strcmp(level, "WARN") == 0)
-		_levels[index] = WARN_LEVEL;
-	
+		ilevel = WARN_LEVEL;
 	else if (strcmp(level, "ERROR") == 0)
-		_levels[index] = ERROR_LEVEL;
-	
+		ilevel = ERROR_LEVEL;
 	else
 		LOG_ERROR("Mimsy", "Attempt to set %s topic to bogus level %s", topic, level);
+	
+	[_lock lock];
+	_topics[index] = strdup(topic);
+	_levels[index] = ilevel;
+	_topicWidth = MAX((int) strlen(topic), _topicWidth);
+	_levelWidth = MAX((int) strlen(level), _levelWidth);
+	[_lock unlock];
 }
 
 bool _shouldLog(const char* topic, int level)
@@ -108,6 +110,7 @@ bool _shouldLog(const char* topic, int level)
 
 void _doLog(const char* topic, const char* level, const char* format, va_list args)
 {
+	[_lock lock];
 	fprintf(_file, "%.3f\t%-*s\t%-*s\t", getTime(), _topicWidth, topic, _levelWidth, level);
 	if (strstr(format, "%@"))
 		fprintf(_file, "%s", [[NSString alloc] initWithFormat:[NSString stringWithUTF8String:format] arguments:args].UTF8String);
@@ -115,5 +118,6 @@ void _doLog(const char* topic, const char* level, const char* format, va_list ar
 		vfprintf(_file, format, args);
 	fprintf(_file, "\n");
 	fflush(_file);
+	[_lock unlock];
 }
 
