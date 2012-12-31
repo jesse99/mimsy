@@ -13,6 +13,17 @@ void setTopicLevel(const char* topic, const char* level);
 bool _shouldLog(const char* topic, int level);
 void _doLog(const char* topic, const char* level, const char* format, va_list args);
 
+static inline void LOG_ERROR(const char* topic, const char* format, ...) __printflike(2, 3);
+static inline void LOG_WARN(const char* topic, const char* format, ...) __printflike(2, 3);
+static inline void LOG_INFO(const char* topic, const char* format, ...) __printflike(2, 3);
+static inline void LOG_DEBUG(const char* topic, const char* format, ...) __printflike(2, 3);
+static inline void LOG(const char* topic, const char* format, ...) __printflike(2, 3);
+
+static inline const char* STR(NSObject* object)
+{
+	return object.description.UTF8String;
+}
+
 static inline void LOG_ERROR(const char* topic, const char* format, ...)
 {
 	if (_shouldLog(topic, ERROR_LEVEL))

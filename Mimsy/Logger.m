@@ -112,10 +112,7 @@ void _doLog(const char* topic, const char* level, const char* format, va_list ar
 {
 	[_lock lock];
 	fprintf(_file, "%.3f\t%-*s\t%-*s\t", getTime(), _topicWidth, topic, _levelWidth, level);
-	if (strstr(format, "%@"))
-		fprintf(_file, "%s", [[NSString alloc] initWithFormat:[NSString stringWithUTF8String:format] arguments:args].UTF8String);
-	else
-		vfprintf(_file, format, args);
+	vfprintf(_file, format, args);
 	fprintf(_file, "\n");
 	fflush(_file);
 	[_lock unlock];
