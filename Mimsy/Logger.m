@@ -21,14 +21,6 @@ static int _topicWidth;
 static int _levelWidth;
 static NSLock* _lock;
 
-static double getTime(void)
-{
-	struct timeval value;
-	gettimeofday(&value, NULL);
-	double secs = value.tv_sec + 1.0e-6*value.tv_usec;
-	return secs - _time;
-}
-
 // We want this to be fast because it is called by _shouldLog. One
 // easy way to do this is to use a really simple hash map based on
 // the first and last four characters in the topic (with an assert
@@ -44,6 +36,15 @@ static int findTopic(const char* topic)
 	}
 	
 	return -1;
+}
+
+// This is kind of handy for timing stuff so we export it.
+double getTime(void)
+{
+	struct timeval value;
+	gettimeofday(&value, NULL);
+	double secs = value.tv_sec + 1.0e-6*value.tv_usec;
+	return secs - _time;
 }
 
 void setupLogging(const char* path)

@@ -3,6 +3,7 @@
 #import "ConfigParser.h"
 #import "ConditionalGlob.h"
 #import "Language.h"
+#import "Logger.h"
 #import "Paths.h"
 #import "RegexStyler.h"
 #import "TranscriptController.h"
@@ -69,6 +70,8 @@ static NSArray* _languages;
 + (void)_processFile:(NSString*)path languages:(NSMutableArray*)languages
 {
 	Language* lang = nil;
+	
+	LOG_DEBUG("Text", "Loading %s", STR([path lastPathComponent]));
 	
 	NSError* error = nil;
 	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];

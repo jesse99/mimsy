@@ -130,6 +130,7 @@
 	- :: to something
 	- probably would also have to do this during editing
 * Make sure builds call reloadIfChanged
+* Info window should have a popup to override default styler file.
 * Maybe could have an option to get rid of tabs altogether
 	- tab adds enough spaces to offset to a modulo-N column
 	- backspace gobbles N spaces where possible

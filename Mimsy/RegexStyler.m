@@ -22,7 +22,7 @@
 - (StyleRuns*)computeStyles:(NSString*)text editCount:(NSUInteger)count
 {
 	__block struct StyleRunVector runs = newStyleRunVector();
-	reserveStyleRunVector(&runs, 2*text.length/40);	// this is how many runs I had in a screen of random rust code
+	reserveStyleRunVector(&runs, 2*text.length/40);	// this is how many runs I had in a screen of random rust code (x2 because of Default runs)
 	
 	__block NSUInteger lastMatch = 0;
 	[_regex enumerateMatchesInString:text options:NSMatchingReportCompletion range:NSMakeRange(0, text.length) usingBlock:

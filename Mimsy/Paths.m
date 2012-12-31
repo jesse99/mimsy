@@ -25,7 +25,7 @@ static bool _triedCaches;
 				[fm createDirectoryAtPath:_caches withIntermediateDirectories:YES attributes:nil error:&error];
 				if (error)
 				{
-					LOG_ERROR("Mimsy", "Couldn't create '%@: %@", _caches, [error localizedFailureReason]);
+					LOG_ERROR("Mimsy", "Couldn't create '%s': %s", STR(_caches), STR([error localizedFailureReason]));
 					_caches = nil;
 				}
 			}

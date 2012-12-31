@@ -1,5 +1,6 @@
 #import "RestoreView.h"
 
+#import "Logger.h"
 #import "TextController.h"
 #import "Utils.h"
 #import "WindowsDatabase.h"
@@ -57,6 +58,7 @@
 	{
 		if (_info.length == -1 || _info.length == _controller.text.length)	// only restore the view if it has not changed since we last had it open
 		{
+			LOG_DEBUG("Text", "Scrolling to saved location");
 			if (!NSEqualPoints(_info.origin, NSZeroPoint))
 			{
 				NSClipView* clip = _controller.scrollView.contentView;

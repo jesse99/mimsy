@@ -141,8 +141,7 @@ static NSString* Replacement = @"\uFFFD";
     return result;
 }
 
-+ (void)enumerateDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item)
-																					)block
++ (void)enumerateDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item))block
 {
 	NSFileManager* fm = [NSFileManager new];
 	NSArray* candidates = [fm contentsOfDirectoryAtPath:path error:error];

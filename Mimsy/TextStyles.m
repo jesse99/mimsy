@@ -1,6 +1,7 @@
 #import "TextStyles.h"
 
 #import "ConfigParser.h"
+#import "Logger.h"
 #import "Paths.h"
 #import "TranscriptController.h"
 
@@ -16,6 +17,7 @@ static NSDictionary* _attrMap;		// element name => attributes
 	
 	NSString* dir = [Paths installedDir:@"styles"];
 	_path = [dir stringByAppendingPathComponent:@"Default.rtf"];
+	LOG_DEBUG("Text", "Loading styles from %s", STR(_path));
 
 	// This should include everything which might be applied from a style run.
 	NSMutableDictionary* attrs = [NSMutableDictionary new];
@@ -41,7 +43,11 @@ static NSDictionary* _attrMap;		// element name => attributes
 {
 	NSDictionary* result = _attrMap[name];
 	if (!result)
-		result = _attrMap[@"Default"];	// TODO: might want a log here, maybe Debug level
+	{
+		LOG_INFO("Text", "Couldn't find element %s in the styles file", STR(name));
+		result = _attrMap[@"Default"];
+	}
+	
 	return result;
 }
 

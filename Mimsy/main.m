@@ -49,7 +49,7 @@ static void initLogging(void)
 	else
 	{
 		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load %@:\n%@.", path, [error localizedFailureReason]];
-		LOG_ERROR("Mimsy", "%@", mesg);
+		LOG_ERROR("Mimsy", "%s", STR(mesg));
 	}
 }
 
@@ -60,11 +60,11 @@ int main(int argc, char *argv[])
 	
 	NSDateFormatter* formatter = [NSDateFormatter new];
 	[formatter setDateFormat:@"yyyy-MM-dd 'at' HH:mm"];				
-	LOG("Mimsy", "Started up on %@", [formatter stringFromDate:[NSDate date]]);
+	LOG("Mimsy", "Started up on %s", STR([formatter stringFromDate:[NSDate date]]));
 		
 	NSString* version = getAppVersion();
 	if (version)
-		LOG("Mimsy", "Version %@", version);
+		LOG("Mimsy", "Version %s", STR(version));
 	
 	return NSApplicationMain(argc, (const char **)argv);	// note that we typically don't return from NSApplicationMain
 }

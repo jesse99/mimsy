@@ -1,6 +1,7 @@
 #import "ApplyStyles.h"
 
 #import "AsyncStyler.h"
+#import "Logger.h"
 #import "StyleRuns.h"
 #import "TextController.h"
 #import "TextStyles.h"
@@ -18,13 +19,14 @@
 	return self;
 }
 
-- (void)addDirtyLocation:(NSUInteger)loc
+- (void)addDirtyLocation:(NSUInteger)loc reason:(NSString*)reason
 {
 	if (!_queued)
 	{
 		// If nothing is queued then we can apply all the runs.
 		_firstDirtyLoc = NSNotFound;
 		_queued = true;
+		LOG_DEBUG("Text", "Starting up AsyncStyler for %.1fKiB (%s)", _controller.text.length/1024.0, STR(reason));
 		
 		[AsyncStyler computeStylesFor:_controller.language withText:_controller.text editCount:_controller.editCount completion:
 			^(StyleRuns* runs)
@@ -53,7 +55,10 @@
 
 - (void)_applyRuns:(StyleRuns*)runs
 {
+	NSUInteger count = runs.length;
+	LOG_DEBUG("Text", "Applying %lu runs", count);
 	NSTextStorage* storage = _controller.textView.textStorage;
+	double startTime = getTime();
 	
 	[runs process:
 		^(id style, NSRange range, bool* stop)
@@ -68,11 +73,13 @@
 			}
 		}
 	];
+	double elapsed = getTime() - startTime;
+	LOG_DEBUG("Text", "Finished applying runs, processed %.0f/sec", count/elapsed);
 	
 	_queued = false;
 	if (_firstDirtyLoc != NSNotFound)
 	{
-		[self addDirtyLocation:_firstDirtyLoc];	// TODO: probably want to do this on a delay
+		[self addDirtyLocation:_firstDirtyLoc reason:@"still dirty"];	// TODO: probably want to do this on a delay
 	}
 }
 

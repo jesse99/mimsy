@@ -10,6 +10,7 @@ extern const int DEBUG_LEVEL;
 
 void setupLogging(const char* path);
 void setTopicLevel(const char* topic, const char* level);
+double getTime(void);
 bool _shouldLog(const char* topic, int level);
 void _doLog(const char* topic, const char* level, const char* format, va_list args);
 

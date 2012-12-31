@@ -3,6 +3,7 @@
 #import "ApplyStyles.h"
 #import "Language.h"
 #import "Languages.h"
+#import "Logger.h"
 #import "RestoreView.h"
 #import "TextDocument.h"
 #import "WindowsDatabase.h"
@@ -98,6 +99,7 @@
 
 - (void)open
 {
+	LOG_DEBUG("Text", "Window for %s opened", STR(self.path));
 	// TODO: need to do this stuff
 	//Broadcaster.Invoke("opening document window", m_boss);
 	
@@ -118,7 +120,7 @@
 {
 	_editCount++;
 	[self.textView.textStorage setAttributedString:text];
-	[_applier addDirtyLocation:0];
+	[_applier addDirtyLocation:0 reason:@"set text"];
 }
 
 - (NSString*)text
@@ -136,7 +138,7 @@
 	if (lang != _language)
 	{
 		_language = lang;
-		[_applier addDirtyLocation:0];
+		[_applier addDirtyLocation:0 reason:@"set language"];
 	}
 }
 
@@ -160,7 +162,7 @@
 		
 		if (_restorer)
 			[_restorer setPath:path];
-		[_applier addDirtyLocation:0];
+		[_applier addDirtyLocation:0 reason:@"path changed"];
 	}
 }
 
@@ -194,7 +196,7 @@
 // Note that this is called for every key stroke.
 - (void)textStorageDidProcessEditing:(NSNotification*)notification
 {
-	(void)notification;
+	(void) notification;
 	
 	NSUInteger mask = self.textView.textStorage.editedMask;
 	if ((mask & NSTextStorageEditedCharacters))
@@ -202,13 +204,14 @@
 		_editCount++;
 		
 		NSUInteger loc = self.textView.textStorage.editedRange.location;
-		[_applier addDirtyLocation:loc];
+		[_applier addDirtyLocation:loc reason:@"user edit"];
 	}
 }
 
 - (void)layoutManager:(NSLayoutManager*)layout didCompleteLayoutForTextContainer:(NSTextContainer*)container atEnd:(BOOL)atEnd
 {
 	(void) container;
+	LOG_DEBUG("Text", "Completed layout for %s, atEnd = %s", STR(self.path), atEnd ? "true" : "false");
 	
 	if (!_closed)
 	{

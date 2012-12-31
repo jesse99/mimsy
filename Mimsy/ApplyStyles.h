@@ -9,6 +9,6 @@
 - (id)init:(TextController*)controller;
 
 // Called with the start of a range which has been edited.
-- (void)addDirtyLocation:(NSUInteger)loc;
+- (void)addDirtyLocation:(NSUInteger)loc reason:(NSString*)reason;
 
 @end

@@ -179,7 +179,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
 	[super setFileURL:url];
 	
-	LOG_INFO("Text", "Writing document to %@", url);		// TODO: include the path
+	LOG_INFO("Text", "Set file URL to %s", STR(url));
 	if (_controller && ![url isEqual:_url])
 	{
 		_url = url;
@@ -208,6 +208,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
 	NSString* type = [self fileType];
 	NSURL* url = [self fileURL];
+	LOG_INFO("Text", "Reloading document from %s", STR(url));
 	
 	NSError* error = nil;
 	BOOL read = [self revertToContentsOfURL:url ofType:type error:&error];
@@ -238,7 +239,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 			
 			if (fileTime != nil && [fileTime compare:docTime] == NSOrderedDescending)
 			{
-				LOG_DEBUG("Text", "Focument XXX changed on disk");		// TODO: include the path
+				LOG_DEBUG("Text", "Document %s changed on disk", STR(url));
 				changed = true;
 			}
 		}
@@ -255,7 +256,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	_encoding = 0;
 	_binary = false;
 	*outError = nil;
-	LOG_INFO("Text", "Reading document from XXX");		// TODO: include the path
+	LOG_INFO("Text", "Reading document fom %s", STR(self.fileURL));
 	
 	const NSUInteger MaxBytes = 512*1024;		// I think this is around 16K lines of source
 	if ([data length] > MaxBytes)
@@ -281,7 +282,6 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 - (void)doReadFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
 {
 	_endian = NoEndian;
-	LOG_ERROR("Text", "This isn't really an error");		// TODO: remove this
 	
 	if ([typeName isEqualToString:@"Plain Text, UTF8 Encoded"] || [typeName isEqualToString:@"HTML"])
 	{
@@ -363,6 +363,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	NSData* data = nil;
 	NSTextStorage* storage = [_controller.textView textStorage];
 	NSMutableString* str = [storage mutableString];
+	LOG_INFO("Text", "Saving document to %s", STR(self.fileURL));
 	
 	if ([typeName isEqualToString:@"Plain Text, UTF8 Encoded"])
 	{
