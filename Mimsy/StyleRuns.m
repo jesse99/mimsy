@@ -26,7 +26,7 @@
 
 - (NSUInteger)length
 {
-	ASSERT(_processed <= _runs.count);
+	DEBUG_ASSERT(_processed <= _runs.count);
 	return _runs.count - _processed;
 }
 
@@ -53,14 +53,14 @@
 
 - (void)process:(ProcessStyleRun)block
 {
-	ASSERT(_styles);				// must call mapElementsToStyles at least once
-	ASSERT(_names.count == _styles.count);
+	DEBUG_ASSERT(_styles);				// must call mapElementsToStyles at least once
+	DEBUG_ASSERT(_names.count == _styles.count);
 	
 	bool stop = false;
 	for (; _processed < _runs.count && !stop; ++_processed)
 	{
 		NSUInteger element = _runs.data[_processed].elementIndex;
-		ASSERT(element < _styles.count);
+		DEBUG_ASSERT(element < _styles.count);
 		block(_styles[element], _runs.data[_processed].range, &stop);
 	}
 }

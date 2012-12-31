@@ -32,7 +32,7 @@
 			(void) stop;
 			if (match.numberOfRanges > 0)
 			{
-				ASSERT(match.numberOfRanges == _names.count);
+				DEBUG_ASSERT(match.numberOfRanges == _names.count);
 				for (NSUInteger i = 1; i < match.numberOfRanges; ++i)
 				{
 					NSRange range = [match rangeAtIndex:i];
