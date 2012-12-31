@@ -5,6 +5,7 @@
 #import "StyleRuns.h"
 #import "TextController.h"
 #import "TextStyles.h"
+#import "TextView.h"
 
 @implementation ApplyStyles
 {
@@ -53,6 +54,7 @@
 	}
 }
 
+// Getting 100K runs applied per second on an early 2009 Mac Pro.
 - (void)_applyRuns:(StyleRuns*)runs
 {
 	NSUInteger count = runs.length;
@@ -60,6 +62,7 @@
 	NSTextStorage* storage = _controller.textView.textStorage;
 	double startTime = getTime();
 	
+	[storage beginEditing];
 	[runs process:
 		^(id style, NSRange range, bool* stop)
 		{
@@ -73,6 +76,8 @@
 			}
 		}
 	];
+	[storage endEditing];
+	
 	double elapsed = getTime() - startTime;
 	LOG_DEBUG("Text", "Finished applying runs, processed %.0f/sec", count/elapsed);
 	

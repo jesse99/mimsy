@@ -3,6 +3,7 @@
 #import "Assert.h"
 #import "Decode.h"
 #import "TextController.h"
+#import "TextView.h"
 #import "TranscriptController.h"
 #import "Utils.h"
 
@@ -256,7 +257,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	_encoding = 0;
 	_binary = false;
 	*outError = nil;
-	LOG_INFO("Text", "Reading document fom %s", STR(self.fileURL));
+	LOG_INFO("Text", "Reading document from %s", STR(self.fileURL));
 	
 	const NSUInteger MaxBytes = 512*1024;		// I think this is around 16K lines of source
 	if ([data length] > MaxBytes)

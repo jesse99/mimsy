@@ -45,6 +45,7 @@
 		37862C63169096D000DB9E66 /* Logger.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C62169096CF00DB9E66 /* Logger.m */; };
 		37862C651690BC0600DB9E66 /* settings in Resources */ = {isa = PBXBuildFile; fileRef = 37862C641690BC0600DB9E66 /* settings */; };
 		37862C6816912ECB00DB9E66 /* Assert.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C6716912ECB00DB9E66 /* Assert.m */; };
+		37862C6B1692070700DB9E66 /* TextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C6A1692070700DB9E66 /* TextView.m */; };
 		37A8C69716758FF400D4DB13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C69616758FF400D4DB13 /* Cocoa.framework */; };
 		37A8C6A116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C69F16758FF400D4DB13 /* InfoPlist.strings */; };
 		37A8C6A316758FF400D4DB13 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6A216758FF400D4DB13 /* main.m */; };
@@ -138,6 +139,8 @@
 		37862C641690BC0600DB9E66 /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = settings; sourceTree = "<group>"; };
 		37862C6616912ECA00DB9E66 /* Assert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Assert.h; sourceTree = "<group>"; };
 		37862C6716912ECB00DB9E66 /* Assert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Assert.m; sourceTree = "<group>"; };
+		37862C691692070600DB9E66 /* TextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextView.h; sourceTree = "<group>"; };
+		37862C6A1692070700DB9E66 /* TextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextView.m; sourceTree = "<group>"; };
 		37A8C69216758FF400D4DB13 /* Mimsy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mimsy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37A8C69616758FF400D4DB13 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		37A8C69916758FF400D4DB13 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -259,6 +262,8 @@
 				3700403B1676D4860009907A /* TextDocument.xib */,
 				37862C5C168FEC3A00DB9E66 /* TextStyles.h */,
 				37862C5D168FEC3A00DB9E66 /* TextStyles.m */,
+				37862C691692070600DB9E66 /* TextView.h */,
+				37862C6A1692070700DB9E66 /* TextView.m */,
 			);
 			name = "Text Editor";
 			sourceTree = "<group>";
@@ -511,6 +516,7 @@
 				37862C5E168FEC3A00DB9E66 /* TextStyles.m in Sources */,
 				37862C63169096D000DB9E66 /* Logger.m in Sources */,
 				37862C6816912ECB00DB9E66 /* Assert.m in Sources */,
+				37862C6B1692070700DB9E66 /* TextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

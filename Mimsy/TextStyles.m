@@ -5,9 +5,9 @@
 #import "Paths.h"
 #import "TranscriptController.h"
 
-static NSString* _path;				// path to the styles file
-static NSDictionary* _baseAttrs;	// attributes
-static NSDictionary* _attrMap;		// element name => attributes
+static NSString* _path;					// path to the styles file
+static NSDictionary* _baseAttrs;		// attributes
+static NSMutableDictionary* _attrMap;	// element name => attributes
 
 @implementation TextStyles
 
@@ -21,7 +21,7 @@ static NSDictionary* _attrMap;		// element name => attributes
 
 	// This should include everything which might be applied from a style run.
 	NSMutableDictionary* attrs = [NSMutableDictionary new];
-	attrs[NSFontAttributeName]               = [NSFont fontWithName:@"Times" size:17];
+	attrs[NSFontAttributeName]               = [NSFont fontWithName:@"Times" size:17];	// TODO: use a pref for this
 	attrs[NSForegroundColorAttributeName]    = [NSColor blackColor];
 	attrs[NSUnderlineStyleAttributeName]     = @0;
 	attrs[NSLigatureAttributeName]           = @1;
@@ -39,13 +39,19 @@ static NSDictionary* _attrMap;		// element name => attributes
 	_attrMap = map;
 }
 
++ (NSDictionary*)fallbackStyle
+{
+	return _baseAttrs;
+}
+
 + (NSDictionary*)attributesForElement:(NSString*)name
 {
 	NSDictionary* result = _attrMap[name];
 	if (!result)
 	{
-		LOG_INFO("Text", "Couldn't find element %s in the styles file", STR(name));
+		LOG_WARN("Text", "Couldn't find element %s in the styles file", STR(name));
 		result = _attrMap[@"Default"];
+		_attrMap[name] = result;
 	}
 	
 	return result;
@@ -87,7 +93,9 @@ static NSDictionary* _attrMap;		// element name => attributes
 	[parser enumerate:
 		^(ConfigParserEntry *entry)
 		{
-			NSDictionary* attrs = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
+			NSMutableDictionary* attrs = [NSMutableDictionary new];
+			[attrs addEntriesFromDictionary:_baseAttrs];
+			[attrs addEntriesFromDictionary:[text fontAttributesInRange:NSMakeRange(entry.offset, 1)]];
 			[TextStyles setStyleName:entry.key attrMap:map attrs:attrs];
 		}
 	];

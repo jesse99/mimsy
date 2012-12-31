@@ -60,7 +60,7 @@
 											<int key="NSvFlags">2322</int>
 											<string key="NSFrameSize">{600, 636}</string>
 											<reference key="NSSuperview" ref="90157818"/>
-											<reference key="NSNextKeyView" ref="909851836"/>
+											<reference key="NSNextKeyView" ref="831078726"/>
 											<string key="NSReuseIdentifierKey">_NS:13</string>
 											<object class="NSTextContainer" key="NSTextContainer" id="272499302">
 												<object class="NSLayoutManager" key="NSLayoutManager">
@@ -81,7 +81,7 @@
 												<int key="NSTCFlags">1</int>
 											</object>
 											<object class="NSTextViewSharedData" key="NSSharedData">
-												<int key="NSFlags">19751</int>
+												<int key="NSFlags">67128615</int>
 												<int key="NSTextCheckingTypes">0</int>
 												<nil key="NSMarkedAttributes"/>
 												<object class="NSColor" key="NSBackgroundColor" id="535874729">
@@ -318,7 +318,7 @@ wGw</bytes>
 							</array>
 							<string key="NSFrameSize">{600, 636}</string>
 							<reference key="NSSuperview" ref="568628114"/>
-							<reference key="NSNextKeyView" ref="831078726"/>
+							<reference key="NSNextKeyView" ref="90157818"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<int key="NSsFlags">133648</int>
 							<reference key="NSVScroller" ref="909851836"/>
@@ -545,6 +545,7 @@ wGw</bytes>
 				<string key="-3.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<boolean value="NO" key="100027.IBNSViewMetadataTranslatesAutoresizingMaskIntoConstraints"/>
 				<string key="100027.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="100028.CustomClassName">TextView</string>
 				<string key="100028.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="100029.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="100030.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>

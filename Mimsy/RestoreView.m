@@ -2,6 +2,7 @@
 
 #import "Logger.h"
 #import "TextController.h"
+#import "TextView.h"
 #import "Utils.h"
 #import "WindowsDatabase.h"
 

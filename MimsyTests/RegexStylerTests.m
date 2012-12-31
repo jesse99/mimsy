@@ -29,6 +29,15 @@
 		 [locations addObject:[NSNumber numberWithUnsignedLong:range.location]];
 	 }];
 
+	// "if"			0
+	// " (blah) "	2
+	// "'x'"		10
+	// " "			13
+	// "else"		14
+	// " "			18
+	// "'y'"		19
+	// ";"			22
+
 	STAssertEquals(styles.count, (NSUInteger) 8, nil);
 	STAssertEquals(locations.count, (NSUInteger) 8, nil);
 	
@@ -66,12 +75,3 @@
 }
 
 @end
-
-// "if"			0
-// " (blah) "	2
-// "'x'"		10
-// " "			13
-// "else"		14
-// " "			18
-// "'y'"		19
-// ";"			22

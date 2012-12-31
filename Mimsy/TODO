@@ -152,6 +152,7 @@
 * History of cursor positions?
 * Release checklist:
 	- increment support files version number
-	- probably want to enable asserts in release
+	- ship the release version
+	
 	
 	

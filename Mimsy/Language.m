@@ -36,6 +36,13 @@
 				
 				_lineComment = entry.value;
 			}
+			else if ([entry.key isEqualToString:@"Word"])	// TODO: reserved
+			{
+//				if (_lineComment)
+//					[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
+				
+//				_lineComment = entry.value;
+			}
 			
 			else if ([entry.key isEqualToString:@"Globs"])
 			{
@@ -72,6 +79,11 @@
 	return errors.count == 0 ? self : nil;
 }
 
+- (NSString*)description
+{
+	return _language;
+}
+
 - (RegexStyler*)_createStyler:(NSArray*)names patterns:(NSArray*)patterns lines:(NSArray*)lines errors:(NSMutableArray*)errors
 {
 	ASSERT(patterns.count + 1 == names.count);
@@ -79,7 +91,7 @@
 	if ([self _preflightPatterns:patterns lines:lines errors:errors])
 	{
 		NSArray* groups = [Utils mapArray:patterns block:
-			^id (id element) {return [NSString stringWithFormat:@"(%@)", element];}];
+			^id (NSString* p) {return [NSString stringWithFormat:@"(%@)", p];}];
 		NSString* pattern = [groups componentsJoinedByString:@"|"];
 
 		NSError* error = nil;
