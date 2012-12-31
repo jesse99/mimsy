@@ -1,7 +1,7 @@
 #import "WindowsDatabase.h"
 
+#import "Assert.h"
 #import "Database.h"
-#import "Logger.h"
 #import "Paths.h"
 
 @implementation WindowsDatabase
@@ -19,7 +19,7 @@ static void destroy()
 
 + (void)setup
 {
-	assert(_instance == nil);
+	ASSERT(_instance == nil);
 		
 	_instance = [WindowsDatabase new];
 }

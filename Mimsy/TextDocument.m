@@ -1,7 +1,7 @@
 #import "TextDocument.h"
 
+#import "Assert.h"
 #import "Decode.h"
-#import "Logger.h"
 #import "TextController.h"
 #import "TranscriptController.h"
 #import "Utils.h"
@@ -161,7 +161,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 
 - (void)controllerDidLoad
 {
-	NSAssert([_controller textView], @"%@ has a nil view", _controller);
+	ASSERT([_controller textView]);
 
 	_url = [self fileURL];
 	[_controller onPathChanged];
@@ -218,7 +218,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		[TranscriptController writeError:mesg];
 	}
 	
-	NSAssert(self.text == nil, @"text wasn't nil");
+	ASSERT(self.text == nil);
 	[_controller open];
 }
 
@@ -251,7 +251,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
 {
-	NSAssert(self.text == nil, @"%@ should be nil", self.text);
+	ASSERT(self.text == nil);
 	
 	_encoding = 0;
 	_binary = false;
@@ -347,7 +347,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	}
 	else
 	{
-		NSAssert(false, @"readData> bad typeName: %@", typeName);
+		ASSERT_MESG("bad typeName: %s", STR(typeName)); NSAssert(false, @"");
 	}
 
 	if (self.text && _controller)
@@ -409,7 +409,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	}
 	else
 	{
-		NSAssert(false, @"dataOfType:error:> bad typeName: %@", typeName);
+		ASSERT_MESG("bad typeName: %s", STR(typeName));
 	}
 	
 	return data;

@@ -1,7 +1,7 @@
 #import "AppDelegate.h"
 
+#import "Assert.h"
 #import "Languages.h"
-#import "Logger.h"
 #import "TextStyles.h"
 #import "WindowsDatabase.h"
 
@@ -18,7 +18,7 @@
 {
 	(void) notification;
 	
-	assert([NSThread isMultiThreaded]);
+	ASSERT([NSThread isMultiThreaded]);
 	LOG_DEBUG("App", "Finished launching");
 
 	[WindowsDatabase setup];

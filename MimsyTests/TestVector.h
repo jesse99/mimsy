@@ -1,5 +1,5 @@
 // Generated using `./Mimsy/create-vector.py --element=int --struct=TestVector --size=NSUInteger` on 27 December 2012 07:20.
-#include <assert.h>
+#include "Assert.h"
 #include <stdlib.h>		// for malloc and free
 #include <string.h>		// for memcpy
 
@@ -30,7 +30,7 @@ static inline void freeTestVector(struct TestVector* vector)
 
 static inline void reserveTestVector(struct TestVector* vector, NSUInteger capacity)
 {
-	assert(vector->count <= vector->capacity);
+	ASSERT(vector->count <= vector->capacity);
 
 	if (capacity > vector->capacity)
 	{
@@ -48,13 +48,13 @@ static inline void pushTestVector(struct TestVector* vector, int element)
 	if (vector->count == vector->capacity)
 		reserveTestVector(vector, 2*vector->capacity);
 
-	assert(vector->count < vector->capacity);
+	ASSERT(vector->count < vector->capacity);
 	vector->data[vector->count++] = element;
 }
 
 static inline int popTestVector(struct TestVector* vector)
 {
-	assert(vector->count > 0);
+	ASSERT(vector->count > 0);
 	return vector->data[--vector->count];
 }
 

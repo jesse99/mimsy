@@ -1,7 +1,7 @@
 #import "TextStyles.h"
 
+#import "Assert.h"
 #import "ConfigParser.h"
-#import "Logger.h"
 #import "Paths.h"
 #import "TranscriptController.h"
 
@@ -13,7 +13,7 @@ static NSDictionary* _attrMap;		// element name => attributes
 
 + (void)setup
 {
-	assert(_baseAttrs == nil);
+	ASSERT(_baseAttrs == nil);
 	
 	NSString* dir = [Paths installedDir:@"styles"];
 	_path = [dir stringByAppendingPathComponent:@"Default.rtf"];
@@ -73,7 +73,7 @@ static NSDictionary* _attrMap;		// element name => attributes
 
 + (bool)_parseStyles:(NSAttributedString*)text attrMap:(NSMutableDictionary*)map
 {
-	assert(map.count == 0);		// can't modify attributes once they have been applied
+	ASSERT(map.count == 0);		// can't modify attributes once they have been applied
 	
 	NSError* error = nil;
 	ConfigParser* parser = [[ConfigParser alloc] initWithContent:text.string outError:&error];

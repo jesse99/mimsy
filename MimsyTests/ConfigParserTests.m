@@ -1,5 +1,6 @@
 #import "ConfigParserTests.h"
 
+#import "Assert.h"
 #import "ConfigParser.h"
 
 @implementation ConfigParserTests
@@ -59,7 +60,7 @@
 // For now we don't check offsets.
 - (void)checkGood:(NSString*)content keys:(NSArray*)keys values:(NSArray*)values func:(const char*)func
 {
-	NSAssert(keys.count == values.count, @"keys and values have different lengths");
+	ASSERT(keys.count == values.count);
 	
 	NSString* fname = [[NSString alloc] initWithFormat:@"%s", func];
 	

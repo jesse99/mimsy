@@ -26,7 +26,7 @@
 
 - (NSUInteger)length
 {
-	assert(_processed <= _runs.count);
+	ASSERT(_processed <= _runs.count);
 	return _runs.count - _processed;
 }
 
@@ -34,7 +34,7 @@
 {
 	if (!_styler)
 	{
-		assert(!_styles);
+		ASSERT(!_styles);
 		NSMutableArray* styles = [NSMutableArray arrayWithCapacity:_names.count];
 		[_names enumerateObjectsUsingBlock:^(NSString* name, NSUInteger index, BOOL* stop)
 		{
@@ -47,20 +47,20 @@
 	}
 	else
 	{
-		assert(_styler == block);	// can call mapElementsToStyles multiple times, but only with the same mapping
+		ASSERT(_styler == block);	// can call mapElementsToStyles multiple times, but only with the same mapping
 	}
 }
 
 - (void)process:(ProcessStyleRun)block
 {
-	assert(_styles);				// must call mapElementsToStyles at least once
-	assert(_names.count == _styles.count);
+	ASSERT(_styles);				// must call mapElementsToStyles at least once
+	ASSERT(_names.count == _styles.count);
 	
 	bool stop = false;
 	for (; _processed < _runs.count && !stop; ++_processed)
 	{
 		NSUInteger element = _runs.data[_processed].elementIndex;
-		assert(element < _styles.count);
+		ASSERT(element < _styles.count);
 		block(_styles[element], _runs.data[_processed].range, &stop);
 	}
 }

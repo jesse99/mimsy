@@ -1,5 +1,6 @@
 #import "Language.h"
 
+#import "Assert.h"
 #import "ConditionalGlob.h"
 #import "ConfigParser.h"
 #import "RegexStyler.h"
@@ -73,7 +74,7 @@
 
 - (RegexStyler*)_createStyler:(NSArray*)names patterns:(NSArray*)patterns lines:(NSArray*)lines errors:(NSMutableArray*)errors
 {
-	assert(patterns.count + 1 == names.count);
+	ASSERT(patterns.count + 1 == names.count);
 	
 	if ([self _preflightPatterns:patterns lines:lines errors:errors])
 	{
@@ -103,7 +104,7 @@
 
 - (bool)_preflightPatterns:(NSArray*)patterns lines:(NSArray*)lines errors:(NSMutableArray*)errors
 {
-	assert(patterns.count == lines.count);
+	ASSERT(patterns.count == lines.count);
 	
 	NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
 

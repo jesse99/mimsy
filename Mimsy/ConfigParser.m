@@ -10,6 +10,8 @@
 // of which this format is very close to a subset of.
 #import "ConfigParser.h"
 
+#import "Assert.h"
+
 @implementation ConfigParserEntry
 @end
 
@@ -101,7 +103,7 @@
 			_index += 1;
 	}
 	
-	NSAssert(begin < _index, @"first character should have been a letter");
+	ASSERT(begin < _index);
 	return [contents substringWithRange:NSMakeRange(begin, _index - begin)];
 }
 

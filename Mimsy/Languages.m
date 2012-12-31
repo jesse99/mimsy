@@ -1,9 +1,9 @@
 #import "Languages.h"
 
+#import "Assert.h"
 #import "ConfigParser.h"
 #import "ConditionalGlob.h"
 #import "Language.h"
-#import "Logger.h"
 #import "Paths.h"
 #import "RegexStyler.h"
 #import "TranscriptController.h"
@@ -43,7 +43,7 @@ static NSArray* _languages;
 // loading them asynchronously won't help much.
 + (void)_processFiles
 {
-	assert(_languages == nil);
+	ASSERT(_languages == nil);
 	
 	NSMutableArray* languages = [NSMutableArray new];
 	

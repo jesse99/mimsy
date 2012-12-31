@@ -11,7 +11,7 @@
 
 - (id)initWithRegex:(NSRegularExpression*)regex elementNames:(NSArray*)names
 {
-	assert(regex.numberOfCaptureGroups + 1 == names.count);
+	ASSERT(regex.numberOfCaptureGroups + 1 == names.count);
 	
 	_regex = regex;
 	_names = names;
@@ -32,7 +32,7 @@
 			(void) stop;
 			if (match.numberOfRanges > 0)
 			{
-				assert(match.numberOfRanges == _names.count);
+				ASSERT(match.numberOfRanges == _names.count);
 				for (NSUInteger i = 1; i < match.numberOfRanges; ++i)
 				{
 					NSRange range = [match rangeAtIndex:i];

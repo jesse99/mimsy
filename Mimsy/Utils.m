@@ -1,5 +1,6 @@
 #import "Utils.h"
 
+#import "Assert.h"
 #import "Glob.h"
 
 const NSRange NSZeroRange = {0};
@@ -62,7 +63,7 @@ static NSString* Replacement = @"\uFFFD";
 
 + (NSString*)bufferToStr:(const void*)buffer length:(NSUInteger)length
 {
-	NSAssert(buffer != NULL, @"buffer was NULL");
+	ASSERT(buffer != NULL);
 	
 	NSMutableString* result = [NSMutableString new];
 	const unsigned char* data = (const unsigned char*) buffer;
@@ -127,13 +128,13 @@ static NSString* Replacement = @"\uFFFD";
 + (NSString*)pathForTemporaryFileWithPrefix:(NSString*)prefix
 {	
     CFUUIDRef uuid = CFUUIDCreate(NULL);
-    assert(uuid != NULL);
+    ASSERT(uuid != NULL);
 	
     CFStringRef uuidStr = CFUUIDCreateString(NULL, uuid);
-    assert(uuidStr != NULL);
+    ASSERT(uuidStr != NULL);
 	
     NSString* result = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%@", prefix, uuidStr]];
-    assert(result != nil);
+    ASSERT(result != nil);
 	
     CFRelease(uuidStr);
     CFRelease(uuid);

@@ -7,7 +7,7 @@ except:
 	sys.stderr.write("This script requires Python 2.7 or later\n")
 	sys.exit(2)
 
-Header = """#include <assert.h>
+Header = """#include "Assert.h"
 #include <stdlib.h>		// for malloc and free
 #include <string.h>		// for memcpy
 
@@ -38,7 +38,7 @@ static inline void free{NAME}(struct {NAME}* vector)
 
 static inline void reserve{NAME}(struct {NAME}* vector, {SIZE} capacity)
 {
-	assert(vector->count <= vector->capacity);
+	ASSERT(vector->count <= vector->capacity);
 
 	if (capacity > vector->capacity)
 	{
@@ -56,13 +56,13 @@ static inline void push{NAME}(struct {NAME}* vector, {TYPE} element)
 	if (vector->count == vector->capacity)
 		reserve{NAME}(vector, 2*vector->capacity);
 
-	assert(vector->count < vector->capacity);
+	ASSERT(vector->count < vector->capacity);
 	vector->data[vector->count++] = element;
 }
 
 static inline {TYPE} pop{NAME}(struct {NAME}* vector)
 {
-	assert(vector->count > 0);
+	ASSERT(vector->count > 0);
 	return vector->data[--vector->count];
 }
 """

@@ -107,7 +107,7 @@
 	
 	//Broadcaster.Invoke("opened document window", m_boss);
 	//synchronizeWindowTitleWithDocumentName();		// bit of a hack, but we need something like this for IDocumentWindowTitle to work
-	
+
 	//DoSetTabSettings();
 }
 

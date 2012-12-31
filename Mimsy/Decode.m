@@ -1,5 +1,7 @@
 #import "Decode.h"
 
+#import "Assert.h"
+
 // Returns true if the character is a control character that should not
 // appear in source code.
 static bool isBadControl(unsigned char b)
@@ -180,7 +182,7 @@ static NSStringEncoding getEncoding(NSData* data, unsigned long* skipBytes)
 
 - (id)initWithData:(NSData*)data;
 {
-	NSAssert(data, @"data is nil");
+	ASSERT(data);
 
     self = [super init];
     if (self)
