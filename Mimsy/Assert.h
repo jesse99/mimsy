@@ -3,11 +3,17 @@
 // 2) Defaults to working in release, but also has a debug only version.
 //
 // Unlike NSAssert this version:
-// 3) Fails fast and hard (NSAsset does all kinds of crazy NSAssertionHandler nonsense).
+// 3) Fails fast and hard (NSAsset does all kinds of thread specific NSAssertionHandler nonsense).
 // 4) Is easy to set a breakpoint within (by default NSAssert just bails after printing a stack trace).
 //
 // Unlike assert this version:
 // 4) Is easy to set a breakpoint within (although assert, at least, drops you into the debugger when it fires).
+//
+// The macros are:
+// ASSERT(predicate)		assertion that runs in both debug and release
+// ASSERT_MESG(mesg)		assertion that always fails for both debug and release
+//
+// DEBUG_ASSERT(predicate)	assertion that is compiled out in release
 #import "Logger.h"
 
 void _assertFailed(const char* fname, const char* file, int line, const char* expr);
@@ -31,3 +37,10 @@ void _assertMesg(const char* fname, const char* file, int line, const char* form
 	#define	DEBUG_ASSERT(e) \
 	(__builtin_expect(!(e), 0) ? _assertFailed(__func__, __FILE__, __LINE__, #e) : (void) 0)
 #endif
+
+// Treat NSAssert like ASSERT (for the main thread anyway).
+@interface AssertHandler : NSAssertionHandler
+- (void)handleFailureInMethod:(SEL)selector object:(id)object file:(NSString *)fileName lineNumber:(NSInteger)line description:(NSString *)format,... NS_FORMAT_FUNCTION(5,6);
+
+- (void)handleFailureInFunction:(NSString *)functionName file:(NSString *)fileName lineNumber:(NSInteger)line description:(NSString *)format,... NS_FORMAT_FUNCTION(4,5);
+@end

@@ -1,7 +1,7 @@
 #import <Cocoa/Cocoa.h>
 
+#import "Assert.h"
 #import "ConfigParser.h"
-#import "Logger.h"
 #import "Paths.h"
 
 static NSString* getAppVersion(void)
@@ -65,6 +65,10 @@ int main(int argc, char *argv[])
 	NSString* version = getAppVersion();
 	if (version)
 		LOG("Mimsy", "Version %s", STR(version));
+	
+	// Unfortunately this only works for the main thread.
+	NSAssertionHandler* handler = [AssertHandler new];
+	[[[NSThread currentThread] threadDictionary] setValue:handler forKey:NSAssertionHandlerKey];
 	
 	return NSApplicationMain(argc, (const char **)argv);	// note that we typically don't return from NSApplicationMain
 }
