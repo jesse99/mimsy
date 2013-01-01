@@ -50,7 +50,7 @@
 {
 	NSColorPanel* panel = [NSColorPanel sharedColorPanel];
 	[panel setContinuous:YES];
-	[panel setColor:[NSColor blackColor]];
+	[panel setColor:[NSColor whiteColor]];
 	_changingBackColor = false;
 	[NSApp orderFrontColorPanel:sender];
 }
@@ -78,6 +78,7 @@
 		{
 			NSColor* color = [sender color];
 			[self setBackgroundColor:color];
+			[_controller.document updateChangeCount:NSChangeDone | NSChangeDiscardable];
 		}
 		else
 		{
