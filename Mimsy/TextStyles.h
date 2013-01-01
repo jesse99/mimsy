@@ -12,4 +12,6 @@
 // for the "Default" style are returned.
 + (NSDictionary*)attributesForElement:(NSString*)name;
 
++ (NSColor*)backColor;
+
 @end

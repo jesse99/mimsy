@@ -4,10 +4,12 @@
 #import "ConfigParser.h"
 #import "Paths.h"
 #import "TranscriptController.h"
+#import "Utils.h"
 
 static NSString* _path;					// path to the styles file
 static NSDictionary* _baseAttrs;		// attributes
 static NSMutableDictionary* _attrMap;	// element name => attributes
+static NSColor* _backColor;
 
 @implementation TextStyles
 
@@ -37,6 +39,9 @@ static NSMutableDictionary* _attrMap;	// element name => attributes
 	if (!text || ![TextStyles _parseStyles:text attrMap:map])
 		map[@"Default"] = _baseAttrs;
 	_attrMap = map;
+	
+	NSColor* color = [Utils readMetaDataFrom:_path named:@"mimsy-back-color"];
+	_backColor = color ? color : [NSColor whiteColor];
 }
 
 + (NSDictionary*)fallbackStyle
@@ -55,6 +60,11 @@ static NSMutableDictionary* _attrMap;	// element name => attributes
 	}
 	
 	return result;
+}
+
++ (NSColor*)backColor
+{
+	return _backColor;
 }
 
 + (NSAttributedString*)_loadStyles

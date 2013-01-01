@@ -38,6 +38,7 @@
 						return [TextStyles attributesForElement:name];
 					}
 				];
+				[_controller.textView setBackgroundColor:[TextStyles backColor]];
 				[self _applyRuns:runs];
 			}
 		 ];
