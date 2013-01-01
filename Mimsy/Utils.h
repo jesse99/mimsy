@@ -29,6 +29,14 @@ extern const NSRange NSZeroRange;
 // Iterates over all items in the directory that match the glob. Hidden files are
 // returned (except '.' and '..'). If glob is nil all the items are returned.
 // Note that this does not enumerate sub-directories.
-+ (void)enumerateDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item)
-																   )block;
++ (void)enumerateDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item))block;
+
+// Associates arbitrary data with the file or directory at path. This will not
+// always work (e.g. if the path is to read-only media) and errors are ignored
+// so it should not be used for critical data.
++ (void)writeMetaDataTo:(NSString*)path named:(NSString*)name with:(id<NSCoding>)object;
+
+// If the data cannot be read nil is returned.
++ (id)readMetaDataFrom:(NSString*)path named:(NSString*)name;
+
 @end

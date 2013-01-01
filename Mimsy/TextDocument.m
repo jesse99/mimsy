@@ -172,6 +172,8 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		[_controller setAttributedText:self.text];
 		_text = nil;
 	}
+	[self readMetataDataFrom:self.fileURL.path];
+	
 	[_controller open];
 }
 
@@ -265,6 +267,9 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 
 	if (*outError == nil)
 		[self doReadFromData:data ofType:typeName error:outError];
+	
+	if (*outError == nil && self.fileURL && _controller)
+		[self readMetataDataFrom:self.fileURL.path];
 	
 	return *outError == nil;
 }
@@ -412,8 +417,37 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	{
 		ASSERT_MESG("bad typeName: %s", STR(typeName));
 	}
-	
+		
 	return data;
+}
+
+// We can't save metadata in dataOfType: because it winds up in the temp file
+// and doesn't get copied over when the file is moved to the correct location.
+// Dunno if this is the best approach but to work around this we override the
+// last method called during document saving.
+- (void)setFileModificationDate:(NSDate*)modificationDate
+{
+	[super setFileModificationDate:modificationDate];
+	if (self.fileURL && self.isDocumentEdited)			// need to check for edited because this is also called on open
+		[self saveMetataDataTo:self.fileURL.path];
+}
+
+- (void)saveMetataDataTo:(NSString*)path
+{
+	// If the document has a language then the back color is set via the
+	// styles file so there is no need to save colors for it.
+	if (!_controller.language)
+	{
+		NSColor* color = _controller.textView.backgroundColor;
+		[Utils writeMetaDataTo:path named:@"mimsy-back-color" with:color];
+	}
+}
+
+- (void)readMetataDataFrom:(NSString*)path
+{
+	NSColor* color = [Utils readMetaDataFrom:path named:@"mimsy-back-color"];
+	if (color)
+		[_controller.textView setBackgroundColor:color];
 }
 
 - (void)restoreEndian:(NSMutableString*)str
@@ -424,7 +458,6 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	else if (self.endian == WindowsEndian)
 		[str replaceOccurrencesOfString:@"\n" withString:@"\r\n" options:NSLiteralSearch range:range];
 }
-
 
 // It is fairly rare for control characters to wind up in text files, but when it does happen
 // it can be quite annoying, especially because they cannot ordinarily be seen. So, if this
