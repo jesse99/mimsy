@@ -1,41 +1,24 @@
 * Get first cut at language styles working:
-	- text document needs to create Language instances
-	- text editor needs to compute styles on open and after edits (textStorageDidProcessEditing)
-	- for textStorageDidProcessEditing need to fire off a timer
-	- text editor should apply the styles
-	  for now use hard-coded attributes and one-pass algorithm
-	- scroll to saved position after styles are applied
-
-	- use a (single) styles.rtf file for style attributes
-	- styles should be applied based on distance from view center
-		` maybe in a chunked fashion using a main thread queue
-		`can't change attribute values once they have been applied
-			pref modifications or style name swicthing should create new attributes
-		` use beginEditing and endEditing when applying attributes
 	- scroll to saved position after styles are applied
 	  but don't scroll if the user has already scrolled
 	- cache styles for files (use a pretty large cache, maybe 100 files)
 	  might want some sort of cache size logging, maybe when various thresholds are breached
-	- do we need editCount?
-* Try to get using default style after pasting and then typing working.
 * Work on styling:
+	- get color files working
+		` probably want to add some of the VIM groups, 
+		  see http://vimdoc.sourceforge.net/htmldoc/syntax.html NAMING CONVENTIONS
+	- add some VIM style color files, vimcolorschemetest.googlecode.com
 	- add mimsy language
-	- support ConditionalGLob
-		` value is glob, space, regex
-		` may appear more than once
-		` see /usr/share/vim/vim73/filetype.vim
 	- maybe Lua can be used for config (and other stuff)
 		` http://playcontrol.net/opensource/LuaCocoa/
 		` do we really need a scripting bridge?
 		` http://www.rogerboesch.com/2010/11/22/lightweight-integration-of-lua-in-objective-c/
 		` http://stackoverflow.com/questions/8477218/building-a-simple-bridge-between-objc-and-lua
 		` would be nice to use this for functional testing (including error cases)
-	- get color files working
-		` probably want to add some of the VIM groups, 
-		  see http://vimdoc.sourceforge.net/htmldoc/syntax.html NAMING CONVENTIONS
-	- add some VIM style color files, vimcolorschemetest.googlecode.com
-	- should be a way to include back color in the style file
-		` probably need some way to override default back color 
+	- support ConditionalGLob
+		` value is glob, space, regex
+		` may appear more than once
+		` see /usr/share/vim/vim73/filetype.vim
 	- add some sort of search key
 		- can appear multiple times
 		- augments context menu

@@ -59,27 +59,31 @@
 	{
 		if (_info.length == -1 || _info.length == _controller.text.length)	// only restore the view if it has not changed since we last had it open
 		{
-			if (!NSEqualPoints(_info.origin, NSZeroPoint))
+			NSClipView* clip = _controller.scrollView.contentView;
+			NSPoint origin = clip.bounds.origin;
+			if (NSEqualPoints(origin, NSZeroPoint))		// don't scroll if the user has already scrolled
 			{
-				LOG_DEBUG("Text", "Scrolling to saved origin");
-				NSClipView* clip = _controller.scrollView.contentView;
-				[clip scrollToPoint:_info.origin];
-				[_controller.scrollView reflectScrolledClipView:clip];
-				
-				if (!NSEqualRanges(_info.selection, NSZeroRange))
+				if (!NSEqualPoints(_info.origin, NSZeroPoint))
+				{
+					LOG_DEBUG("Text", "Scrolling to saved origin");
+					[clip scrollToPoint:_info.origin];
+					[_controller.scrollView reflectScrolledClipView:clip];
+					
+					if (!NSEqualRanges(_info.selection, NSZeroRange))
+						[_controller.textView setSelectedRange:_info.selection];
+				}
+				else if (!NSEqualRanges(_info.selection, NSZeroRange) && _info.selection.location + _info.selection.length <= _controller.text.length)
+				{
+					LOG_DEBUG("Text", "Scrolling to saved selection");
 					[_controller.textView setSelectedRange:_info.selection];
-			}
-			else if (!NSEqualRanges(_info.selection, NSZeroRange) && _info.selection.location + _info.selection.length <= _controller.text.length)
-			{
-				LOG_DEBUG("Text", "Scrolling to saved selection");
-				[_controller.textView setSelectedRange:_info.selection];
-				[_controller.textView scrollRangeToVisible:_visible];
-				
-				[_controller.textView showFindIndicatorForRange:_deferred];
-			}
-			else
-			{
-				LOG_DEBUG("Text", "Not scrolling to saved selection");
+					[_controller.textView scrollRangeToVisible:_visible];
+					
+					[_controller.textView showFindIndicatorForRange:_deferred];
+				}
+				else
+				{
+					LOG_DEBUG("Text", "Not scrolling to saved selection");
+				}
 			}
 		}
 		
