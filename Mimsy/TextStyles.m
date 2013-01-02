@@ -19,7 +19,7 @@ static NSColor* _backColor;
 	
 	NSString* dir = [Paths installedDir:@"styles"];
 	_path = [dir stringByAppendingPathComponent:@"Default.rtf"];
-	LOG_DEBUG("Text", "Loading styles from %s", STR(_path));
+	LOG_DEBUG("Styler", "Loading styles from %s", STR(_path));
 
 	// This should include everything which might be applied from a style run.
 	NSMutableDictionary* attrs = [NSMutableDictionary new];
@@ -54,7 +54,7 @@ static NSColor* _backColor;
 	NSDictionary* result = _attrMap[name];
 	if (!result)
 	{
-		LOG_WARN("Text", "Couldn't find element %s in the styles file", STR(name));
+		LOG_WARN("Styler", "Couldn't find element %s in the styles file", STR(name));
 		result = _attrMap[@"Default"];
 		_attrMap[name] = result;
 	}

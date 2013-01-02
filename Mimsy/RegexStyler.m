@@ -55,7 +55,7 @@
 						NSUInteger elementIndex = _groupToName.data[i];
 						DEBUG_ASSERT(elementIndex < _names.count);
 						
-//						LOG_INFO("Mimsy", "Matched %s (%lu) at [%lu, %lu)",
+//						LOG_INFO("Styler", "Matched %s (%lu) at [%lu, %lu)",
 //							STR(_names[elementIndex]), elementIndex, candidate.location, candidate.length);
 						if (index == NSIntegerMax)
 						{
@@ -68,7 +68,7 @@
 						}
 						else
 						{
-							LOG_WARN("Text", "'%s' matched %s and %s",
+							LOG_WARN("Styler", "'%s' matched %s and %s",
 								STR([text substringWithRange:candidate]), STR(_names[index]), STR(_names[elementIndex]));
 						}
 					}

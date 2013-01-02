@@ -2,6 +2,7 @@
 #
 # The values are log levels and can be ERROR, WARN, INFO, or DEBUG. 
 # Log levels will also log whatever is to their left (so DEBUG logs everything).
-App:   INFO
-Mimsy: INFO
-Text:  DEBUG
+App:     INFO
+Mimsy:   INFO
+Styler:  DEBUG
+Text:    INFO

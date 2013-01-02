@@ -71,7 +71,7 @@ static NSArray* _languages;
 {
 	Language* lang = nil;
 	
-	LOG_DEBUG("Text", "Loading %s", STR([path lastPathComponent]));
+	LOG_DEBUG("Styler", "Loading %s", STR([path lastPathComponent]));
 	
 	NSError* error = nil;
 	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
