@@ -156,6 +156,8 @@
 		if (count > 0)
 			LOG_DEBUG("Text", "Applied %lu dirty runs (%.0fK runs/sec)", count, (count/1000.0)/elapsed);
 		_queued = false;
+		[_controller resetAttributes];
+		
 		dispatch_queue_t main = dispatch_get_main_queue();
 		dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 100*1000);	// 0.1s
 		dispatch_after(delay, main, ^{if (!_queued) [self addDirtyLocation:_firstDirtyLoc reason:@"still dirty"];});
