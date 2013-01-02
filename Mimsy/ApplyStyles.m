@@ -173,6 +173,8 @@
 		LOG_DEBUG("Styler", "Applied last %lu runs (%.0fK runs/sec)", count, (count/1000.0)/elapsed);
 		_queued = false;
 	}
+	if (count > 0)
+		_applied = true;
 }
 
 - (void)_applyStyle:(id)style index:(NSUInteger)index range:(NSRange)range storage:(NSTextStorage*)storage

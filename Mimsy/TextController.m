@@ -248,9 +248,20 @@
 	if (!_closed)
 	{
 		if (_restorer)
-			//if (_restorer && (m_applier.Applied || m_language == null))
-			if ([_restorer onCompletedLayout:layout atEnd:atEnd])
-				_restorer = nil;
+		{
+			// If there is no language then we can attempt to restore the scroll position
+			// immediatelty. Otherwise we need to wait until styles have begun to be
+			// applied (we can't restore scrollers until line heights are correct).
+			if (_language == nil || (_applier && _applier.applied))
+			{
+				// Once some legit styles have been applied we can tell the restorer that
+				// styles have been applied. If true is returned then enough styles have
+				// been applied that the restorer was able to restore (or it decided that
+				// restore wasn't going to work).
+				if ([_restorer onCompletedLayout:layout atEnd:atEnd])
+					_restorer = nil;
+			}
+		}
 		
 //		if (atEnd)
 //		{
