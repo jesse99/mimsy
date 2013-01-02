@@ -3,7 +3,7 @@
 
 typedef id (^ElementToStyle)(NSString* elementName);
 
-typedef void (^ProcessStyleRun)(id style, NSRange range, bool* stop);
+typedef void (^ProcessStyleRun)(NSUInteger elementIndex, id style, NSRange range, bool* stop);
 
 // Style runs computed for a text document. Once constructed it
 // should only be used by the main thread. Note that there will

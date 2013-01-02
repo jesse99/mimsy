@@ -61,7 +61,7 @@
 	{
 		NSUInteger element = _runs.data[_processed].elementIndex;
 		DEBUG_ASSERT(element < _styles.count);
-		block(_styles[element], _runs.data[_processed].range, &stop);
+		block(element, _styles[element], _runs.data[_processed].range, &stop);
 	}
 }
 
