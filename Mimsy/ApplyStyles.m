@@ -7,6 +7,30 @@
 #import "TextStyles.h"
 #import "TextView.h"
 
+// Syntax highlighting is difficult to do well. There are a number of competing factors
+// that make it hard:
+// 1) It has to be fast. There should be little or no degradation in typing speed even
+// for large documents (say 5K lines of source). When the user stops typing styles
+// should be rendered quickly (low tenths of seconds).
+// 2) It needs to be correct. This gets especially obnoxious with stuff like strings
+// which can span multiple lines.
+// 3) The text cannot jump around as styles are applied.
+// 4) It should be simple: it's much easier for problems to crop up with more complex
+// code.
+//
+// Mimsy comes pretty close to meeting these goals. To a first apromiximation the order of
+// operation is as follows:
+// 1) When a text document with a language is changed ApplyStyles addDirtyLocation:reason:
+// is called which queues up a concurrent task to associate all of the document's text
+// with an element name and range.
+// 2) ApplyStyles is called on the main thread with the run information.
+// 3) ApplyStyles skips over any runs that were previously applied. This is much faster
+// than re-applying them.
+// 4) The new runs are applied from the top down using a 50ms window. Conceptually it would
+// make more sense to sort the runs so that the runs closest to what the user is viewing are
+// applied first, but that tends to cause the text to jump around when lines have differing
+// heights.
+// 5) If there are more runs to apply then queue up a block to execute on the main thread.
 @implementation ApplyStyles
 {
 	TextController* _controller;
