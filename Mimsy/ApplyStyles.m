@@ -56,20 +56,30 @@
 }
 
 // Getting 100K runs applied per second on an early 2009 Mac Pro.
+// 138K rust file took 0.23 secs (not counting styler task).
+// 100K rust file took 0.19 secs.
 - (void)_applyRuns:(StyleRuns*)runs
 {
-	NSUInteger count = runs.length;
-	LOG_DEBUG("Text", "Applying %lu runs", count);
+	const double MaxProcessTime = 0.050;
+	
 	NSTextStorage* storage = _controller.textView.textStorage;
 	double startTime = getTime();
 	
+	__block NSUInteger count = 0;
+	__block NSUInteger lastLoc = 0;
 	[storage beginEditing];
 	[runs process:
 		^(id style, NSRange range, bool* stop)
 		{
-			if (range.location + range.length < _firstDirtyLoc)
+			lastLoc = range.location + range.length;
+			if (lastLoc < _firstDirtyLoc)
 			{
 				[self _applyStyle:style range:range storage:storage];
+				
+				if (++count % 1000 == 0 && (getTime() - startTime) > MaxProcessTime)
+				{
+					*stop = true;
+				}
 			}
 			else
 			{
@@ -80,12 +90,22 @@
 	[storage endEditing];
 	
 	double elapsed = getTime() - startTime;
-	LOG_DEBUG("Text", "Finished applying runs, processed %.0f/sec", count/elapsed);
-	
-	_queued = false;
-	if (_firstDirtyLoc != NSNotFound)
+	if (lastLoc >= _firstDirtyLoc)
 	{
+		LOG_DEBUG("Text", "Applied %lu dirty runs (%.0f runs/sec)", count, count/elapsed);
+		_queued = false;
 		[self addDirtyLocation:_firstDirtyLoc reason:@"still dirty"];	// TODO: probably want to do this on a delay
+	}
+	else if (runs.length)
+	{
+		LOG_DEBUG("Text", "Applied %lu runs (%.0f runs/sec)", count, count/elapsed);
+		dispatch_queue_t main = dispatch_get_main_queue();
+		dispatch_async(main, ^{[self _applyRuns:runs];});
+	}
+	else
+	{
+		LOG_DEBUG("Text", "Applied last %lu runs (%.0f runs/sec)", count, count/elapsed);
+		_queued = false;
 	}
 }
 
