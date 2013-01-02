@@ -1,4 +1,4 @@
-// Generated using `./Mimsy/create-vector.py --element=NSUInteger --struct=UIntVector --size=NSUInteger` on 01 January 2013 04:01.
+// Generated using `./Mimsy/create-vector.py --element=NSUInteger --struct=UIntVector --size=NSUInteger` on 01 January 2013 06:58.
 #import "Assert.h"
 #import <stdlib.h>		// for malloc and free
 #import <string.h>		// for memcpy
@@ -34,7 +34,7 @@ static inline void reserveUIntVector(struct UIntVector* vector, NSUInteger capac
 
 	if (capacity > vector->capacity)
 	{
-		NSUInteger* data = malloc(capacity*sizeof(NSUInteger));	
+		NSUInteger* data = calloc(capacity*sizeof(NSUInteger), 1);	
 		memcpy(data, vector->data, vector->count*sizeof(NSUInteger));
 
 		free(vector->data);
@@ -42,10 +42,12 @@ static inline void reserveUIntVector(struct UIntVector* vector, NSUInteger capac
 		vector->capacity = capacity;
 	}
 }
-
-static inline void clearUIntVector(struct UIntVector* vector)
+	
+// If the vector is grown the new elements will be zero initialized.
+static inline void setSizeUIntVector(struct UIntVector* vector, NSUInteger newSize)
 {
-	vector->count = 0;
+	reserveUIntVector(vector, newSize);
+	vector->count = newSize;
 }
 
 static inline void pushUIntVector(struct UIntVector* vector, NSUInteger element)

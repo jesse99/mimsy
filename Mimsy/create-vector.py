@@ -44,7 +44,7 @@ static inline void reserve{NAME}(struct {NAME}* vector, {SIZE} capacity)
 
 	if (capacity > vector->capacity)
 	{
-		{TYPE}* data = malloc(capacity*sizeof({TYPE}));	
+		{TYPE}* data = calloc(capacity*sizeof({TYPE}), 1);	
 		memcpy(data, vector->data, vector->count*sizeof({TYPE}));
 
 		free(vector->data);
@@ -52,10 +52,12 @@ static inline void reserve{NAME}(struct {NAME}* vector, {SIZE} capacity)
 		vector->capacity = capacity;
 	}
 }
-
-static inline void clear{NAME}(struct {NAME}* vector)
+	
+// If the vector is grown the new elements will be zero initialized.
+static inline void setSize{NAME}(struct {NAME}* vector, {SIZE} newSize)
 {
-	vector->count = 0;
+	reserve{NAME}(vector, newSize);
+	vector->count = newSize;
 }
 
 static inline void push{NAME}(struct {NAME}* vector, {TYPE} element)

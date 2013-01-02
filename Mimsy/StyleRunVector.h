@@ -1,4 +1,4 @@
-// Generated using `./Mimsy/create-vector.py --element=struct StyleRun --struct=StyleRunVector --size=NSUInteger --headers=StyleRun.h` on 01 January 2013 04:01.
+// Generated using `./Mimsy/create-vector.py --element=struct StyleRun --struct=StyleRunVector --size=NSUInteger --headers=StyleRun.h` on 01 January 2013 06:58.
 #include "StyleRun.h"
 
 #import "Assert.h"
@@ -36,7 +36,7 @@ static inline void reserveStyleRunVector(struct StyleRunVector* vector, NSUInteg
 
 	if (capacity > vector->capacity)
 	{
-		struct StyleRun* data = malloc(capacity*sizeof(struct StyleRun));	
+		struct StyleRun* data = calloc(capacity*sizeof(struct StyleRun), 1);	
 		memcpy(data, vector->data, vector->count*sizeof(struct StyleRun));
 
 		free(vector->data);
@@ -44,10 +44,12 @@ static inline void reserveStyleRunVector(struct StyleRunVector* vector, NSUInteg
 		vector->capacity = capacity;
 	}
 }
-
-static inline void clearStyleRunVector(struct StyleRunVector* vector)
+	
+// If the vector is grown the new elements will be zero initialized.
+static inline void setSizeStyleRunVector(struct StyleRunVector* vector, NSUInteger newSize)
 {
-	vector->count = 0;
+	reserveStyleRunVector(vector, newSize);
+	vector->count = newSize;
 }
 
 static inline void pushStyleRunVector(struct StyleRunVector* vector, struct StyleRun element)

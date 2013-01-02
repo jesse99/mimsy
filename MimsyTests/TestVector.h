@@ -1,4 +1,4 @@
-// Generated using `./Mimsy/create-vector.py --element=int --struct=TestVector --size=NSUInteger` on 01 January 2013 04:01.
+// Generated using `./Mimsy/create-vector.py --element=int --struct=TestVector --size=NSUInteger` on 01 January 2013 06:58.
 #import "Assert.h"
 #import <stdlib.h>		// for malloc and free
 #import <string.h>		// for memcpy
@@ -34,7 +34,7 @@ static inline void reserveTestVector(struct TestVector* vector, NSUInteger capac
 
 	if (capacity > vector->capacity)
 	{
-		int* data = malloc(capacity*sizeof(int));	
+		int* data = calloc(capacity*sizeof(int), 1);	
 		memcpy(data, vector->data, vector->count*sizeof(int));
 
 		free(vector->data);
@@ -42,10 +42,12 @@ static inline void reserveTestVector(struct TestVector* vector, NSUInteger capac
 		vector->capacity = capacity;
 	}
 }
-
-static inline void clearTestVector(struct TestVector* vector)
+	
+// If the vector is grown the new elements will be zero initialized.
+static inline void setSizeTestVector(struct TestVector* vector, NSUInteger newSize)
 {
-	vector->count = 0;
+	reserveTestVector(vector, newSize);
+	vector->count = newSize;
 }
 
 static inline void pushTestVector(struct TestVector* vector, int element)

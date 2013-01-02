@@ -149,7 +149,7 @@
 	}
 	
 	if (errors.count > oldErrCount)
-		clearUIntVector(&groupToName);
+		setSizeUIntVector(&groupToName, 0);
 	
 	return groupToName;
 }
