@@ -1,7 +1,7 @@
-// Generated using `./Mimsy/create-vector.py --element=int --struct=TestVector --size=NSUInteger` on 27 December 2012 07:20.
-#include "Assert.h"
-#include <stdlib.h>		// for malloc and free
-#include <string.h>		// for memcpy
+// Generated using `./Mimsy/create-vector.py --element=int --struct=TestVector --size=NSUInteger` on 01 January 2013 04:01.
+#import "Assert.h"
+#import <stdlib.h>		// for malloc and free
+#import <string.h>		// for memcpy
 
 struct TestVector
 {
@@ -41,6 +41,11 @@ static inline void reserveTestVector(struct TestVector* vector, NSUInteger capac
 		vector->data = data;
 		vector->capacity = capacity;
 	}
+}
+
+static inline void clearTestVector(struct TestVector* vector)
+{
+	vector->count = 0;
 }
 
 static inline void pushTestVector(struct TestVector* vector, int element)

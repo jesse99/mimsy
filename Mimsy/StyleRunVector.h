@@ -1,13 +1,13 @@
-// Generated using `./Mimsy/create-vector.py --element=struct StyleRun --struct=StyleRunVector --size=NSUInteger --headers=StyleRun.h` on 27 December 2012 07:20.
+// Generated using `./Mimsy/create-vector.py --element=struct StyleRun --struct=StyleRunVector --size=NSUInteger --headers=StyleRun.h` on 01 January 2013 04:01.
 #include "StyleRun.h"
 
-#include "Assert.h"
-#include <stdlib.h>		// for malloc and free
-#include <string.h>		// for memcpy
+#import "Assert.h"
+#import <stdlib.h>		// for malloc and free
+#import <string.h>		// for memcpy
 
 struct StyleRunVector
 {
-	struct StyleRun* data;	// read/write
+	struct StyleRun* data;				// read/write
 	NSUInteger count;		// read-only
 	NSUInteger capacity;	// read-only
 };
@@ -43,6 +43,11 @@ static inline void reserveStyleRunVector(struct StyleRunVector* vector, NSUInteg
 		vector->data = data;
 		vector->capacity = capacity;
 	}
+}
+
+static inline void clearStyleRunVector(struct StyleRunVector* vector)
+{
+	vector->count = 0;
 }
 
 static inline void pushStyleRunVector(struct StyleRunVector* vector, struct StyleRun element)

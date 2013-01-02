@@ -7,9 +7,11 @@ except:
 	sys.stderr.write("This script requires Python 2.7 or later\n")
 	sys.exit(2)
 
-Header = """#include "Assert.h"
-#include <stdlib.h>		// for malloc and free
-#include <string.h>		// for memcpy
+# TODO: Need an --objc switch or something to toggle #imports on
+# (and maybe to add a block enumerate).
+Header = """#import "Assert.h"
+#import <stdlib.h>		// for malloc and free
+#import <string.h>		// for memcpy
 
 struct {NAME}
 {
@@ -49,6 +51,11 @@ static inline void reserve{NAME}(struct {NAME}* vector, {SIZE} capacity)
 		vector->data = data;
 		vector->capacity = capacity;
 	}
+}
+
+static inline void clear{NAME}(struct {NAME}* vector)
+{
+	vector->count = 0;
 }
 
 static inline void push{NAME}(struct {NAME}* vector, {TYPE} element)

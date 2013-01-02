@@ -6,4 +6,5 @@
 # 2) utarray - Likely more efficient than NSArray, but still requires heap allocated elements.
 
 ./Mimsy/create-vector.py --element=int --struct=TestVector --size=NSUInteger > ./MimsyTests/TestVector.h
+./Mimsy/create-vector.py --element=NSUInteger --struct=UIntVector --size=NSUInteger > ./Mimsy/UIntVector.h
 ./Mimsy/create-vector.py --element='struct StyleRun' --struct=StyleRunVector --size=NSUInteger --headers='StyleRun.h' > ./Mimsy/StyleRunVector.h
