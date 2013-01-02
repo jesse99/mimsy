@@ -1,12 +1,13 @@
 #import <Foundation/Foundation.h>
+#import "UIntVector.h"
 
 @class StyleRuns;
 
 // Computes style runs using regexen from a language file.
 @interface RegexStyler : NSObject
 
-// Group N corresponds to elementNames[N] (elementNames[0] is the "Default" style).
-- (id)initWithRegex:(NSRegularExpression*)regex elementNames:(NSArray*)names;
+// The map maps capture group indexes to elementNames indexes.
+- (id)initWithRegex:(NSRegularExpression*)regex elementNames:(NSArray*)names groupToName:(struct UIntVector)map;
 
 - (StyleRuns*)computeStyles:(NSString*)text editCount:(NSUInteger)count;
 

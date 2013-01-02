@@ -88,7 +88,8 @@
 {
 	ASSERT(patterns.count + 1 == names.count);
 	
-	if ([self _preflightPatterns:patterns lines:lines errors:errors])
+	struct UIntVector groupToName = [self _preflightPatterns:patterns lines:lines errors:errors];
+	if (groupToName.count > 0)
 	{
 		NSArray* groups = [Utils mapArray:patterns block:
 			^id (NSString* p) {return [NSString stringWithFormat:@"(%@)", p];}];
@@ -99,7 +100,7 @@
 		NSRegularExpression* re = [[NSRegularExpression alloc] initWithPattern:pattern options:options error:&error];
 		if (!error)
 		{
-			return [[RegexStyler alloc] initWithRegex:re elementNames:names];
+			return [[RegexStyler alloc] initWithRegex:re elementNames:names groupToName:groupToName];
 		}
 		else
 		{
@@ -110,13 +111,18 @@
 	}
 	else
 	{
+		freeUIntVector(&groupToName);
 		return nil;
 	}
 }
 
-- (bool)_preflightPatterns:(NSArray*)patterns lines:(NSArray*)lines errors:(NSMutableArray*)errors
+- (struct UIntVector)_preflightPatterns:(NSArray*)patterns lines:(NSArray*)lines errors:(NSMutableArray*)errors
 {
 	ASSERT(patterns.count == lines.count);
+		
+	struct UIntVector groupToName = newUIntVector();
+	reserveUIntVector(&groupToName, patterns.count);
+	pushUIntVector(&groupToName, 0);					// group 0 (the entire match) doesn't actually map to an element
 	
 	NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
 
@@ -127,18 +133,25 @@
 				
 		NSError* error = nil;
 		NSRegularExpression* re = [[NSRegularExpression alloc] initWithPattern:pattern options:options error:&error];
-		if (error)
+		if (!error)
+		{
+			pushUIntVector(&groupToName, i+1);
+			for (int j = 0; j < re.numberOfCaptureGroups; ++j)
+			{
+				pushUIntVector(&groupToName, i+1);
+			}
+		}
+		else
 		{
 			NSString* reason = [error localizedFailureReason];
 			[errors addObject:[NSString stringWithFormat:@"regex on line %@ failed to parse: %@", lines[i], reason]];
 		}
-		else if (re.numberOfCaptureGroups > 0)
-		{
-			[errors addObject:[NSString stringWithFormat:@"regex on line %@ should use non-capturing parentheses, i.e. (?:pattern)", lines[i]]];
-		}
 	}
 	
-	return oldErrCount == errors.count;
+	if (errors.count > oldErrCount)
+		clearUIntVector(&groupToName);
+	
+	return groupToName;
 }
 
 @end

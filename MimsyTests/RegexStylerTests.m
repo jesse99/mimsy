@@ -13,7 +13,12 @@
 	NSRegularExpression* re = [[NSRegularExpression alloc] initWithPattern:pattern options:options error:&error];
 	STAssertNil(error, nil);
 	
-	RegexStyler* styler = [[RegexStyler alloc] initWithRegex:re elementNames:@[@"Default", @"Keyword", @"String"]];
+	struct UIntVector groupToName = newUIntVector();
+	pushUIntVector(&groupToName, 0);
+	pushUIntVector(&groupToName, 1);
+	pushUIntVector(&groupToName, 2);
+
+	RegexStyler* styler = [[RegexStyler alloc] initWithRegex:re elementNames:@[@"Default", @"Keyword", @"String"] groupToName:groupToName];
 	StyleRuns* styleRuns = [styler computeStyles:@"if (blah) 'x' else 'y';" editCount:0];
 	
 	[styleRuns mapElementsToStyles:^id(NSString* elementName)
