@@ -27,7 +27,7 @@
 		// If nothing is queued then we can apply all the runs.
 		_firstDirtyLoc = NSNotFound;
 		_queued = true;
-		LOG_DEBUG("Text", "Starting up AsyncStyler for %.1fKiB (%s)", _controller.text.length/1024.0, STR(reason));
+		LOG_DEBUG("Text", "Starting up AsyncStyler for %.1f KiB (%s)", _controller.text.length/1024.0, STR(reason));
 		
 		[AsyncStyler computeStylesFor:_controller.language withText:_controller.text editCount:_controller.editCount completion:
 			^(StyleRuns* runs)
@@ -55,11 +55,9 @@
 	}
 }
 
-// Getting 100K runs applied per second on an early 2009 Mac Pro.
-// 138K rust file took 0.23 secs (not counting styler task).
-// 100K rust file took 0.19 secs.
 - (void)_applyRuns:(StyleRuns*)runs
 {
+	// Corresponds to 4K runs on an early 2009 Mac Pro.
 	const double MaxProcessTime = 0.050;
 	
 	NSTextStorage* storage = _controller.textView.textStorage;
@@ -92,9 +90,13 @@
 	double elapsed = getTime() - startTime;
 	if (lastLoc >= _firstDirtyLoc)
 	{
+		// If the user has done an edit there is a very good chance he'll do another
+		// so defer queuing up another styler task.
 		LOG_DEBUG("Text", "Applied %lu dirty runs (%.0f runs/sec)", count, count/elapsed);
 		_queued = false;
-		[self addDirtyLocation:_firstDirtyLoc reason:@"still dirty"];	// TODO: probably want to do this on a delay
+		dispatch_queue_t main = dispatch_get_main_queue();
+		dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 100*1000);	// 0.1s
+		dispatch_after(delay, main, ^{if (!_queued) [self addDirtyLocation:_firstDirtyLoc reason:@"still dirty"];});
 	}
 	else if (runs.length)
 	{
