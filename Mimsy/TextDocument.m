@@ -2,6 +2,7 @@
 
 #import "Assert.h"
 #import "Decode.h"
+#import "InfoController.h"
 #import "TextController.h"
 #import "TextView.h"
 #import "TranscriptController.h"
@@ -141,6 +142,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 @implementation TextDocument
 {
 	TextController* _controller;
+	InfoController* _info;
 	NSURL* _url;
 }
 
@@ -203,6 +205,28 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 + (BOOL)autosavesInPlace
 {
     return YES;	// TODO: make this an option? a setting?
+}
+
+- (void)getInfo:(id)sender
+{
+	(void) sender;
+	if (_info)
+	{
+		[_info showWindow:self];
+	}
+	else
+	{
+		NSString* title = [self.displayName stringByAppendingString:@" Info"];
+		_info = [InfoController openFor:self title:title];	// we have to retain a reference to the window or it will poof
+		[[NSNotificationCenter defaultCenter] addObserverForName:NSWindowWillCloseNotification object:_info.window queue:nil usingBlock:
+			^(NSNotification* notification)
+			{
+				(void) notification;
+				[[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillCloseNotification object:_info.window];
+				_info = nil;
+			}
+		];
+	}
 }
 
 // Continuum popped up a sheet if the ocument was edited and another process had changed it.

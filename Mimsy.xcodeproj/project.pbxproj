@@ -46,6 +46,8 @@
 		37862C651690BC0600DB9E66 /* settings in Resources */ = {isa = PBXBuildFile; fileRef = 37862C641690BC0600DB9E66 /* settings */; };
 		37862C6816912ECB00DB9E66 /* Assert.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C6716912ECB00DB9E66 /* Assert.m */; };
 		37862C6B1692070700DB9E66 /* TextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C6A1692070700DB9E66 /* TextView.m */; };
+		37862C6E1694BE7400DB9E66 /* InfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37862C6D1694BE7300DB9E66 /* InfoWindow.xib */; };
+		37862C711694BFBA00DB9E66 /* InfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C701694BFB900DB9E66 /* InfoController.m */; };
 		37A8C69716758FF400D4DB13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C69616758FF400D4DB13 /* Cocoa.framework */; };
 		37A8C6A116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C69F16758FF400D4DB13 /* InfoPlist.strings */; };
 		37A8C6A316758FF400D4DB13 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6A216758FF400D4DB13 /* main.m */; };
@@ -142,6 +144,9 @@
 		37862C691692070600DB9E66 /* TextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextView.h; sourceTree = "<group>"; };
 		37862C6A1692070700DB9E66 /* TextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextView.m; sourceTree = "<group>"; };
 		37862C6C1693ABF100DB9E66 /* UIntVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIntVector.h; sourceTree = "<group>"; };
+		37862C6D1694BE7300DB9E66 /* InfoWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InfoWindow.xib; sourceTree = "<group>"; };
+		37862C6F1694BFB800DB9E66 /* InfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoController.h; sourceTree = "<group>"; };
+		37862C701694BFB900DB9E66 /* InfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoController.m; sourceTree = "<group>"; };
 		37A8C69216758FF400D4DB13 /* Mimsy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mimsy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37A8C69616758FF400D4DB13 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		37A8C69916758FF400D4DB13 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -255,6 +260,9 @@
 				37862C5A168FCA8300DB9E66 /* ApplyStyles.m */,
 				3759B65E1678376000D3F3B8 /* Decode.h */,
 				3759B65F1678376000D3F3B8 /* Decode.m */,
+				37862C6F1694BFB800DB9E66 /* InfoController.h */,
+				37862C701694BFB900DB9E66 /* InfoController.m */,
+				37862C6D1694BE7300DB9E66 /* InfoWindow.xib */,
 				375140E81684B21B00C329AF /* RestoreView.h */,
 				375140E91684B21B00C329AF /* RestoreView.m */,
 				3759B6551676F01900D3F3B8 /* TextController.h */,
@@ -461,6 +469,7 @@
 				3751410E168CE19000C329AF /* make-vectors.sh in Resources */,
 				37862C60168FF58900DB9E66 /* styles in Resources */,
 				37862C651690BC0600DB9E66 /* settings in Resources */,
+				37862C6E1694BE7400DB9E66 /* InfoWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -519,6 +528,7 @@
 				37862C63169096D000DB9E66 /* Logger.m in Sources */,
 				37862C6816912ECB00DB9E66 /* Assert.m in Sources */,
 				37862C6B1692070700DB9E66 /* TextView.m in Sources */,
+				37862C711694BFBA00DB9E66 /* InfoController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
