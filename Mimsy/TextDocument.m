@@ -216,8 +216,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	}
 	else
 	{
-		NSString* title = [self.displayName stringByAppendingString:@" Info"];
-		_info = [InfoController openFor:self title:title];	// we have to retain a reference to the window or it will poof
+		_info = [InfoController openFor:self];	// we have to retain a reference to the window or it will poof
 		[[NSNotificationCenter defaultCenter] addObserverForName:NSWindowWillCloseNotification object:_info.window queue:nil usingBlock:
 			^(NSNotification* notification)
 			{

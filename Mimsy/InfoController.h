@@ -6,7 +6,7 @@
 // e.g. line ending and language.
 @interface InfoController : NSWindowController
 
-+ (InfoController*)openFor:(TextDocument*)doc title:(NSString*)title;
++ (InfoController*)openFor:(TextDocument*)doc;
 
 @property (weak) IBOutlet NSPopUpButton* lineEndian;
 

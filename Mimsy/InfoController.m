@@ -8,12 +8,14 @@
 	__weak TextDocument* _doc;
 }
 
-- (id)initFor:(TextDocument*)doc title:(NSString*)title
+- (id)initFor:(TextDocument*)doc
 {
 	self = [super initWithWindowNibName:@"InfoWindow"];
 	if (self)
 	{
 		_doc = doc;
+
+		NSString* title = [_doc.displayName stringByAppendingString:@" Info"];
 		[self.window setTitle:title];
 		
 		NSPopUpButton* button = self.lineEndian;
@@ -26,9 +28,9 @@
     return self;
 }
 
-+ (InfoController*)openFor:(TextDocument *)doc title:(NSString*)title
++ (InfoController*)openFor:(TextDocument *)doc
 {
-	return [[InfoController alloc] initFor:doc title:title];
+	return [[InfoController alloc] initFor:doc];
 }
 
 - (void)windowDidLoad
