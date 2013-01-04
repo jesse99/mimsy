@@ -8,6 +8,16 @@ typedef enum LineEndian : NSUInteger
 	WindowsEndian,		// "\r\n"
 } LineEndian;
 
+typedef enum TextFormat : NSUInteger
+{
+	PlainTextFormat,
+	RTFFormat,
+	HTMLFormat,
+	Word97Format,
+	Word2007Format,
+	OpenDocFormat,
+} TextFormat;
+
 // Document object used when editing text documents.
 @interface TextDocument : NSDocument
 
@@ -16,7 +26,8 @@ typedef enum LineEndian : NSUInteger
 
 @property (readonly) NSMutableAttributedString* text;	// note that this will be set to nil once the view is initialized
 @property (readonly) bool binary;						// true if the file is intended to be viewed as binary data
-@property NSStringEncoding encoding;					// will be zero for documents not read as text (e.g. Word)
 @property enum LineEndian endian;
+@property enum TextFormat format;
+@property NSStringEncoding encoding;					// will be nil for documents not read as text (e.g. Word)
 
 @end

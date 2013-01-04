@@ -143,6 +143,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
 	TextController* _controller;
 	InfoController* _info;
+	enum LineEndian _endian;
 	NSURL* _url;
 }
 
@@ -207,28 +208,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
     return YES;	// TODO: make this an option? a setting?
 }
 
-- (void)getInfo:(id)sender
-{
-	(void) sender;
-	if (_info)
-	{
-		[_info showWindow:self];
-	}
-	else
-	{
-		_info = [InfoController openFor:self];	// we have to retain a reference to the window or it will poof
-		[[NSNotificationCenter defaultCenter] addObserverForName:NSWindowWillCloseNotification object:_info.window queue:nil usingBlock:
-			^(NSNotification* notification)
-			{
-				(void) notification;
-				[[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillCloseNotification object:_info.window];
-				_info = nil;
-			}
-		];
-	}
-}
-
-// Continuum popped up a sheet if the ocument was edited and another process had changed it.
+// Continuum popped up a sheet if the document was edited and another process had changed it.
 // However this doesn't appear to be neccesary with autosavesInPlace. (And with autosavesInPlace
 // off the Continuum code doesn't work quite right because when Appkit pops up an annoying
 // alert on save that I haven't figured out how to get rid of).
@@ -282,7 +262,111 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	}
 		
 	return changed;
+}
 
+- (TextFormat)format
+{
+	TextFormat result = PlainTextFormat;
+	
+	NSString* desc = self.fileType;
+	if (desc)
+	{
+		if ([desc hasPrefix:@"Plain Text"] || [desc isEqualToString:@"binary"])
+			result = PlainTextFormat;
+		
+		else if ([desc isEqualToString:@"HTML"])
+			result = HTMLFormat;
+		
+		else if ([desc isEqualToString:@"Rich Text Format (RTF)"])
+			result = RTFFormat;
+		
+		else if ([desc isEqualToString:@"Word 97 Format (doc)"])
+			result = Word97Format;
+		
+		else if ([desc isEqualToString:@"Word 2007 Format (docx)"])
+			result = Word2007Format;
+		
+		else if ([desc isEqualToString:@"Open Document Text (odt)"])
+			result = OpenDocFormat;
+
+		else
+			ASSERT_MESG("unknown file type: %s", STR(desc));
+	}
+	
+	return result;
+}
+
+- (void)setFormat:(enum TextFormat)format
+{
+	if (format != self.format)
+	{
+		switch (format)
+		{
+			case PlainTextFormat:
+				[self setFileType:@"Plain Text, UTF8 Encoded"];
+				break;
+				
+			case RTFFormat:
+				[self setFileType:@"Rich Text Format (RTF)"];
+				break;
+				
+			case HTMLFormat:
+				[self setFileType:@"HTML"];
+				break;
+				
+			case Word97Format:
+				[self setFileType:@"Word 97 Format (doc)"];
+				break;
+				
+			case Word2007Format:
+				[self setFileType:@"Word 2007 Format (docx)"];
+				break;
+				
+			case OpenDocFormat:
+				[self setFileType:@"Open Document Text (odt)"];
+				break;
+				
+			default:
+				ASSERT_MESG("bad format: %lu", format);
+				
+		}
+		[self updateChangeCount:NSChangeDone];
+	}
+}
+
+- (enum LineEndian)endian
+{
+	return _endian;
+}
+
+- (void)setEndian:(enum LineEndian)endian
+{
+	if (endian != _endian)
+	{
+		_endian = endian;
+		[self updateChangeCount:NSChangeDone];
+	}
+}
+
+- (void)getInfo:(id)sender
+{
+	(void) sender;
+	if (_info)
+	{
+		[_info showWindow:self];
+	}
+	else
+	{
+		_info = [InfoController openFor:self];	// we have to retain a reference to the window or it will poof
+		[[NSNotificationCenter defaultCenter] addObserverForName:NSWindowWillCloseNotification object:_info.window queue:nil usingBlock:
+		 ^(NSNotification* notification)
+		 {
+			 (void) notification;
+			 [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillCloseNotification object:_info.window];
+			 _info = nil;
+		 }
+		 ];
+	}
 }
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError

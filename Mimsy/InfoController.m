@@ -22,6 +22,10 @@
 		if (button)
 			[button selectItemAtIndex:(NSInteger)doc.endian];
 		
+		button = self.format;
+		if (button)
+			[button selectItemAtIndex:(NSInteger)doc.format];
+		
 		[self showWindow:self];
 	}
     
@@ -43,6 +47,13 @@
 	TextDocument* doc = _doc;
 	if (doc)
 		doc.endian = (LineEndian) button.selectedTag;
+}
+
+- (IBAction)onFormatChanged:(NSPopUpButton*)button
+{
+	TextDocument* doc = _doc;
+	if (doc)
+		doc.format = (TextFormat) button.selectedTag;
 }
 
 @end
