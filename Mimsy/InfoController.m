@@ -26,10 +26,26 @@
 		if (button)
 			[button selectItemAtIndex:(NSInteger)doc.format];
 		
+		button = self.encoding;
+		if (button)
+			[button selectItemWithTag:(NSInteger)doc.encoding];
+		
+		[self _enableButtons];
 		[self showWindow:self];
 	}
     
     return self;
+}
+
+- (void)_enableButtons
+{
+	NSPopUpButton* button = self.lineEndian;
+	if (button)
+		[button setEnabled:_doc.format == PlainTextFormat];
+
+	button = self.encoding;
+	if (button)
+		[button setEnabled:_doc.format == PlainTextFormat];
 }
 
 + (InfoController*)openFor:(TextDocument *)doc
@@ -47,6 +63,7 @@
 	TextDocument* doc = _doc;
 	if (doc)
 		doc.endian = (LineEndian) button.selectedTag;
+	[self _enableButtons];
 }
 
 - (IBAction)onFormatChanged:(NSPopUpButton*)button
@@ -54,6 +71,15 @@
 	TextDocument* doc = _doc;
 	if (doc)
 		doc.format = (TextFormat) button.selectedTag;
+	[self _enableButtons];
+}
+
+- (IBAction)onEncodingChanged:(NSPopUpButton*)button
+{
+	TextDocument* doc = _doc;
+	if (doc)
+		doc.encoding = (TextFormat) button.selectedTag;
+	[self _enableButtons];
 }
 
 @end

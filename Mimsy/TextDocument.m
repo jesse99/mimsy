@@ -144,6 +144,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	TextController* _controller;
 	InfoController* _info;
 	enum LineEndian _endian;
+	NSStringEncoding _encoding;
 	NSURL* _url;
 }
 
@@ -348,6 +349,20 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	}
 }
 
+- (NSStringEncoding)encoding
+{
+	return _encoding;
+}
+
+- (void)setEncoding:(NSStringEncoding)encoding
+{
+	if (encoding != _encoding)
+	{
+		_encoding = encoding;
+		[self updateChangeCount:NSChangeDone];
+	}
+}
+
 - (void)getInfo:(id)sender
 {
 	(void) sender;
@@ -490,7 +505,11 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	
 	if ([typeName isEqualToString:@"Plain Text, UTF8 Encoded"])
 	{
-		_encoding = NSUTF8StringEncoding;
+		// This is more like the default plain text type: when loading a document that is not
+		// rtf or word or whatever this typename will be chosen via the plist. However the actual
+		// encoding is inferred from the contents of the file (or set via the Get Info panel).
+		if (!_encoding)
+			_encoding = NSUTF8StringEncoding;
 		[self restoreEndian:str];
 		[self checkForControlChars:str];
 		data = [str dataUsingEncoding:self.encoding allowLossyConversion:YES];

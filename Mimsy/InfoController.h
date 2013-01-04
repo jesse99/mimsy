@@ -9,9 +9,11 @@
 + (InfoController*)openFor:(TextDocument*)doc;
 
 @property (weak) IBOutlet NSPopUpButton* lineEndian;
-@property (weak) IBOutlet NSPopUpButton *format;
+@property (weak) IBOutlet NSPopUpButton* format;
+@property (weak) IBOutlet NSPopUpButton* encoding;
 
 - (IBAction)onEndianChanged:(NSPopUpButton*)button;
 - (IBAction)onFormatChanged:(NSPopUpButton*)sender;
+- (IBAction)onEncodingChanged:(NSPopUpButton*)sender;
 
 @end

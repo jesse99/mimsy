@@ -28,6 +28,6 @@ typedef enum TextFormat : NSUInteger
 @property (readonly) bool binary;						// true if the file is intended to be viewed as binary data
 @property enum LineEndian endian;
 @property enum TextFormat format;
-@property NSStringEncoding encoding;					// will be nil for documents not read as text (e.g. Word)
+@property NSStringEncoding encoding;					// will be zero for documents not read as text (e.g. Word)
 
 @end
