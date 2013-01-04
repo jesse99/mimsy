@@ -10,10 +10,10 @@
 // 4) Is easy to set a breakpoint within (although assert, at least, drops you into the debugger when it fires).
 //
 // The macros are:
-// ASSERT(predicate)		assertion that runs in both debug and release
-// ASSERT_MESG(mesg)		assertion that always fails for both debug and release
+// ASSERT(predicate)			assertion that runs in both debug and release
+// ASSERT_MESG(format, ...)		assertion that always fails for both debug and release
 //
-// DEBUG_ASSERT(predicate)	assertion that is compiled out in release
+// DEBUG_ASSERT(predicate)		assertion that is compiled out in release
 #import "Logger.h"
 
 void _assertFailed(const char* fname, const char* file, int line, const char* expr);
