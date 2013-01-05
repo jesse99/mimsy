@@ -28,7 +28,7 @@
 
 	NSMutableArray* styles = [NSMutableArray array];
 	NSMutableArray* locations = [NSMutableArray array];
-	[styleRuns process:^(id style, NSRange range, bool* stop)
+	[styleRuns process:^(NSUInteger elementIndex, id style, NSRange range, bool* stop)
 	 {
 		 [styles addObject:style];
 		 [locations addObject:[NSNumber numberWithUnsignedLong:range.location]];
