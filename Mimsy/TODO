@@ -77,6 +77,8 @@
 	- file with a list of urls/paths
 	- probably a File sub-menu
 	- maybe Mimsy style config file (so we can have better menu item titles)
+* Should have some sort of field to use when toggling between header and C files:
+	- maybe also stuff like .html and .css and .js
 * NSLayoutManager has methods for underlining and striking through character ranges.
 * Would be nice to have a way to create new files:
 	- option-N pops up a list users can choose from

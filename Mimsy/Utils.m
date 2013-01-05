@@ -2,7 +2,6 @@
 
 #import "Assert.h"
 #import "Glob.h"
-#import <sys/xattr.h>
 
 const NSRange NSZeroRange = {0};
 
@@ -158,35 +157,6 @@ static NSString* Replacement = @"\uFFFD";
 			}
 		}
 	}
-}
-
-+ (void)writeMetaDataTo:(NSString*)path named:(NSString*)name with:(id<NSCoding>)object
-{
-	NSData* data = [NSKeyedArchiver archivedDataWithRootObject:object];
-	
-	int result = setxattr(path.UTF8String, name.UTF8String, data.bytes, data.length, 0, 0);
-	if (result < 0)
-		LOG_WARN("Mimsy", "Failed writing %s to %s: %s", STR(name), STR(path), strerror(errno));
-}
-
-+ (id)readMetaDataFrom:(NSString*)path named:(NSString*)name
-{
-	ssize_t length = getxattr(path.UTF8String, name.UTF8String, NULL, 64*1024, 0, 0);
-	if (length > 0)
-	{
-		void* buffer = alloca(length);
-		ssize_t result = getxattr(path.UTF8String, name.UTF8String, buffer, (size_t)length, 0, 0);
-		if (result > 0)
-		{
-			NSData* data = [NSData dataWithBytes:buffer length:(NSUInteger)length];			
-			return [NSKeyedUnarchiver unarchiveObjectWithData:data];
-		}
-		else
-		{
-			LOG_WARN("Mimsy", "Failed reading %s from %s: %s", STR(name), STR(path), strerror(errno));
-		}
-	}
-	return nil;
 }
 
 @end

@@ -3,6 +3,7 @@
 #import "Assert.h"
 #import "Decode.h"
 #import "InfoController.h"
+#import "Metadata.h"
 #import "TextController.h"
 #import "TextView.h"
 #import "TranscriptController.h"
@@ -575,15 +576,24 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	if (!_controller.language)
 	{
 		NSColor* color = _controller.textView.backgroundColor;
-		[Utils writeMetaDataTo:path named:@"mimsy-back-color" with:color];
+		NSError* error = [Metadata writeCriticalDataTo:path named:@"back-color" with:color];
+		if (error)
+		{
+			NSString* reason = [error localizedFailureReason];
+			NSString* mesg = [NSString stringWithFormat:@"Couldn't write metadata to '%@':\n%@.", path, reason];
+			[TranscriptController writeError:mesg];
+		}
 	}
 }
 
 - (void)readMetataDataFrom:(NSString*)path
 {
-	NSColor* color = [Utils readMetaDataFrom:path named:@"mimsy-back-color"];
+	NSError* error = nil;
+	NSColor* color = [Metadata readCriticalDataFrom:path named:@"back-color" outError:&error];
 	if (color)
 		[_controller.textView setBackgroundColor:color];
+	else
+		LOG_DEBUG("Text", "Couldn't read back-color for '%s': %s", STR(path), STR([error localizedFailureReason]));
 }
 
 - (void)restoreEndian:(NSMutableString*)str

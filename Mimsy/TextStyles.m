@@ -2,6 +2,7 @@
 
 #import "Assert.h"
 #import "ConfigParser.h"
+#import "Metadata.h"
 #import "Paths.h"
 #import "TranscriptController.h"
 #import "Utils.h"
@@ -40,8 +41,20 @@ static NSColor* _backColor;
 		map[@"Default"] = _baseAttrs;
 	_attrMap = map;
 	
-	NSColor* color = [Utils readMetaDataFrom:_path named:@"mimsy-back-color"];
-	_backColor = color ? color : [NSColor whiteColor];
+	NSError* error = nil;
+	NSColor* color = [Metadata readCriticalDataFrom:_path named:@"back-color" outError:&error];
+	if (color)
+	{
+		_backColor = color;
+	}
+	else
+	{
+		_backColor = [NSColor whiteColor];
+		
+		NSString* reason = [error localizedFailureReason];
+		NSString* mesg = [NSString stringWithFormat:@"Couldn't read back-color from '%@':\n%@.", _path, reason];
+		[TranscriptController writeError:mesg];
+	}
 }
 
 + (NSDictionary*)fallbackStyle
