@@ -2,6 +2,8 @@
 #
 # The values are log levels and can be ERROR, WARN, INFO, or DEBUG. 
 # Log levels will also log whatever is to their left (so DEBUG logs everything).
+#
+# Logging currently goes to ~/Library/Logs/mimsy.log
 App:     INFO
 Mimsy:   INFO
 Styler:  INFO
