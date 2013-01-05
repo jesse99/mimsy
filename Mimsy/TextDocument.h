@@ -1,5 +1,7 @@
 #import <Cocoa/Cocoa.h>
 
+@class TextController;
+
 typedef enum LineEndian : NSUInteger
 {
 	NoEndian,			// used for documents not read as text (e.g. Word)
@@ -24,6 +26,7 @@ typedef enum TextFormat : NSUInteger
 - (void)controllerDidLoad;
 - (void)reloadIfChanged;
 
+@property (readonly) TextController* controller;					
 @property (readonly) NSMutableAttributedString* text;	// note that this will be set to nil once the view is initialized
 @property (readonly) bool binary;						// true if the file is intended to be viewed as binary data
 @property enum LineEndian endian;

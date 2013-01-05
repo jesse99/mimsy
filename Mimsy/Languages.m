@@ -38,6 +38,28 @@ static NSArray* _languages;
 	return lang;
 }
 
++ (Language*)findWithlangName:(NSString*)name
+{	
+	for (Language* candidate in _languages)
+	{
+		if ([candidate.name isEqualToString:name])
+			return candidate;
+	}
+	
+	return nil;
+}
+
++ (void)enumerate:(void (^)(Language* lang, bool* stop))block
+{
+	bool stop = false;
+	for (Language* lang in _languages)
+	{
+		block(lang, &stop);
+		if (stop)
+			break;
+	}
+}
+
 // This can be a bit expensive so a task would be kind of nice, but we'll
 // almost always want to use the languages immediately so in practice
 // loading them asynchronously won't help much.

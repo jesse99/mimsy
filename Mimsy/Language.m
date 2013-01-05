@@ -24,10 +24,10 @@
 		{
 			if ([entry.key isEqualToString:@"Language"])
 			{
-				if (_language)
+				if (_name)
 					[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
 				
-				_language = entry.value;
+				_name = entry.value;
 			}
 			else if ([entry.key isEqualToString:@"LineComment"])
 			{
@@ -58,7 +58,7 @@
 		}
 	];
 
-	if (!_language)
+	if (!_name)
 		[errors addObject:@"Language key is missing"];
 	if (globs.count == 0)
 		[errors addObject:@"Globs key is missing"];
@@ -81,7 +81,7 @@
 
 - (NSString*)description
 {
-	return _language;
+	return _name;
 }
 
 - (RegexStyler*)_createStyler:(NSArray*)names patterns:(NSArray*)patterns lines:(NSArray*)lines errors:(NSMutableArray*)errors

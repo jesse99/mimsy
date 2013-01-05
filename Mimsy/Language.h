@@ -10,7 +10,7 @@
 // ---- Required Elements -----------------------------------------
 
 // The name of the language, e.g. "c", "python", etc.
-@property (readonly) NSString* language;
+@property (readonly) NSString* name;
 
 // The object used to associated files with this particular language.
 @property (readonly) ConditionalGlob* glob;

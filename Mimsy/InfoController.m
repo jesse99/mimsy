@@ -1,6 +1,9 @@
 #import "InfoController.h"
 
+#import "Language.h"
+#import "Languages.h"
 #import "Logger.h"
+#import "TextController.h"
 #import "TextDocument.h"
 
 @implementation InfoController
@@ -30,6 +33,24 @@
 		if (button)
 			[button selectItemWithTag:(NSInteger)doc.encoding];
 		
+		button = self.language;
+		if (button)
+		{
+			[button addItemWithTitle:@"None"];
+			[Languages enumerate:
+				^(Language* lang, bool* stop)
+				{
+					(void) stop;
+					[button addItemWithTitle:lang.name];
+				}
+			];
+			
+			if (_doc.controller.language)
+				[button selectItemWithTitle:_doc.controller.language.name];
+			else
+				[button selectItemWithTitle:@"None"];
+		}
+		
 		[self _enableButtons];
 		[self showWindow:self];
 	}
@@ -42,8 +63,12 @@
 	NSPopUpButton* button = self.lineEndian;
 	if (button)
 		[button setEnabled:_doc.format == PlainTextFormat];
-
+	
 	button = self.encoding;
+	if (button)
+		[button setEnabled:_doc.format == PlainTextFormat];
+
+	button = self.language;
 	if (button)
 		[button setEnabled:_doc.format == PlainTextFormat];
 }
@@ -79,6 +104,14 @@
 	TextDocument* doc = _doc;
 	if (doc)
 		doc.encoding = (TextFormat) button.selectedTag;
+	[self _enableButtons];
+}
+
+- (IBAction)onLanguageChanged:(NSPopUpButton*)button
+{
+	TextDocument* doc = _doc;
+	if (doc)
+		doc.controller.language = [Languages findWithlangName:button.selectedItem.title];
 	[self _enableButtons];
 }
 
