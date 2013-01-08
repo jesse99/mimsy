@@ -124,6 +124,17 @@ static NSString* Replacement = @"\uFFFD";
 	return result;
 }
 
++ (NSArray*)readLines:(NSString*)path outError:(NSError**)error
+{
+	NSArray* result = nil;
+	
+	NSString* contents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:error];
+	if (!*error)
+		result = [contents componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+	
+	return result;
+}
+
 // Based on some Apple sample code floating around the interwebs.
 + (NSString*)pathForTemporaryFileWithPrefix:(NSString*)prefix
 {	

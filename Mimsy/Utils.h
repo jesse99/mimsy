@@ -23,6 +23,9 @@ extern const NSRange NSZeroRange;
 // Returns a new array with each element mapped using the block.
 + (NSArray*)mapArray:(NSArray*)array block:(id (^)(id element))block;
 
+// Reads a file and returns an array containing each line (without the new lines).
++ (NSArray*)readLines:(NSString*)path outError:(NSError**)error;
+
 // Returns a path to a unique file name in the temporary directory for the current user.
 + (NSString*)pathForTemporaryFileWithPrefix:(NSString *)prefix;
 

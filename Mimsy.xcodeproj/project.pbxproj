@@ -49,6 +49,7 @@
 		37862C6E1694BE7400DB9E66 /* InfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37862C6D1694BE7300DB9E66 /* InfoWindow.xib */; };
 		37862C711694BFBA00DB9E66 /* InfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C701694BFB900DB9E66 /* InfoController.m */; };
 		37862C741698755100DB9E66 /* Metadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C731698755000DB9E66 /* Metadata.m */; };
+		3796F6FE169A8CC900659DBD /* convertVIMFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 3796F6FD169A8CC900659DBD /* convertVIMFiles.m */; };
 		37A8C69716758FF400D4DB13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C69616758FF400D4DB13 /* Cocoa.framework */; };
 		37A8C6A116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C69F16758FF400D4DB13 /* InfoPlist.strings */; };
 		37A8C6A316758FF400D4DB13 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6A216758FF400D4DB13 /* main.m */; };
@@ -150,6 +151,8 @@
 		37862C701694BFB900DB9E66 /* InfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoController.m; sourceTree = "<group>"; };
 		37862C721698754F00DB9E66 /* Metadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Metadata.h; sourceTree = "<group>"; };
 		37862C731698755000DB9E66 /* Metadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Metadata.m; sourceTree = "<group>"; };
+		3796F6FC169A8CC900659DBD /* convertVIMFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = convertVIMFiles.h; sourceTree = "<group>"; };
+		3796F6FD169A8CC900659DBD /* convertVIMFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = convertVIMFiles.m; sourceTree = "<group>"; };
 		37A8C69216758FF400D4DB13 /* Mimsy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mimsy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37A8C69616758FF400D4DB13 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		37A8C69916758FF400D4DB13 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -346,6 +349,8 @@
 			children = (
 				37A8C6A516758FF400D4DB13 /* Credits.rtf */,
 				37A8C69F16758FF400D4DB13 /* InfoPlist.strings */,
+				3796F6FC169A8CC900659DBD /* convertVIMFiles.h */,
+				3796F6FD169A8CC900659DBD /* convertVIMFiles.m */,
 				37A8C6A216758FF400D4DB13 /* main.m */,
 				37A8C69E16758FF400D4DB13 /* Mimsy-Info.plist */,
 				37A8C6A416758FF400D4DB13 /* Mimsy-Prefix.pch */,
@@ -535,6 +540,7 @@
 				37862C6B1692070700DB9E66 /* TextView.m in Sources */,
 				37862C711694BFBA00DB9E66 /* InfoController.m in Sources */,
 				37862C741698755100DB9E66 /* Metadata.m in Sources */,
+				3796F6FE169A8CC900659DBD /* convertVIMFiles.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

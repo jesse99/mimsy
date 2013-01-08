@@ -74,10 +74,10 @@ static NSArray* _languages;
 	
 	NSError* error = nil;
 	[Utils enumerateDir:dir glob:glob error:&error block:
-	 ^(NSString* item)
-	 {
-		 [self _processFile:item languages:languages];
-	 }
+		^(NSString* item)
+		{
+			[self _processFile:item languages:languages];
+		}
 	 ];
 	if (error)
 	{
