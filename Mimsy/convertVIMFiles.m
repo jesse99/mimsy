@@ -1046,8 +1046,11 @@ static NSMutableAttributedString* createText(NSString* path, GlobalStyle* global
 {
 	NSMutableAttributedString* text = [NSMutableAttributedString new];
 	
+	NSArray* keys = global.elements.allKeys;
+	NSArray* sorted = [keys sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+	
 	addComment(text, path, global);
-	for (NSString* name in global.elements)
+	for (NSString* name in sorted)
 	{
 		ElementStyle* style = global.elements[name];
 		NSString* line = [NSString stringWithFormat:@"%@:\n", name];
