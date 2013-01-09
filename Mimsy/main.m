@@ -94,7 +94,8 @@ static struct Options parseArgs(int argc, char* argv[])
 		else if (strstr(argv[i], "--help") == argv[i])	
 			options.help = true;
 
-		else if (strstr(argv[i], "YES") == argv[i] || strstr(argv[i], "-NSDocumentRevisionsDebugMode") == argv[i])
+		// These are present if we run this via the debugger.
+		else if (strstr(argv[i], "-NSDocumentRevisionsDebugMode") == argv[i] || strstr(argv[i], "YES") == argv[i])
 			;
 		
 		else

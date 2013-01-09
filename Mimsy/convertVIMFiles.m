@@ -2,6 +2,7 @@
 
 #import "Assert.h"
 #import "Glob.h"
+#import "Metadata.h"
 #import "Utils.h"
 
 @interface GlobalStyle : NSObject
@@ -839,7 +840,8 @@ static int hexValue(unichar ch)
 	return 0;
 }
 
-// TODO: add doc references
+// Reference for this stuff is at http://vimdoc.sourceforge.net/htmldoc/syntax.html although it doesn't
+// define the grammar and doesn't seem to describe everything (like what hi! means).
 static void processLine(GlobalStyle* global, NSString* line)
 {
 	NSArray* parts = [line componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -950,10 +952,9 @@ static NSColor* getColor(GlobalStyle* global, NSString* arg)
 			
 			color = [NSColor colorWithCalibratedRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1.0];
 		}
-		else if ([arg isEqualToString:@"fg"])
+		else if ([arg isEqualToString:@"fg"] && global)
 		{
-			assert(![global.fgColor isEqualToString:@"fg"]);
-			color = getColor(global, global.fgColor);
+			color = getColor(nil, global.fgColor);
 		}
 		else
 		{
@@ -1056,7 +1057,26 @@ static NSMutableAttributedString* createText(NSString* path, GlobalStyle* global
 	return text;
 }
 
-// TODO: Set backColor
+static NSError* saveMetadata(NSString* path, GlobalStyle* global, NSString* outDir)
+{
+	NSError* error = nil;
+	
+	NSColor* color = getColor(nil, global.bgColor);
+	if (color)
+	{
+		NSString* fname = [[path lastPathComponent] stringByDeletingPathExtension];
+		NSString* outPath = [[outDir stringByAppendingPathComponent:fname] stringByAppendingPathExtension:@"rtf"];
+		NSError* error = [Metadata writeCriticalDataTo:outPath named:@"back-color" with:color];
+		if (error)
+		{
+			NSString* reason = [error localizedFailureReason];
+			printf("   FAILED writing back-color: %s\n", STR(reason));
+		}
+	}
+	
+	return error;
+}
+
 static NSError* saveFile(NSString* path, NSMutableAttributedString* text, NSString* outDir)
 {
 	NSError* error = nil;
@@ -1099,6 +1119,8 @@ static bool convertFile(NSString* path, NSString* outDir)
 		
 		NSMutableAttributedString* text = createText(path, global);
 		error = saveFile(path, text, outDir);
+		if (!error)
+			error = saveMetadata(path, global, outDir);
 	}
 	else
 	{
