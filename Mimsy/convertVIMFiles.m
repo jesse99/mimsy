@@ -841,7 +841,7 @@ static int hexValue(unichar ch)
 }
 
 // Reference for this stuff is at http://vimdoc.sourceforge.net/htmldoc/syntax.html although it doesn't
-// define the grammar and doesn't seem to describe everything (like what hi! means).
+// define the grammar.
 static void processLine(GlobalStyle* global, NSString* line)
 {
 	NSArray* parts = [line componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -856,7 +856,7 @@ static void processLine(GlobalStyle* global, NSString* line)
 		// hi! link MoreMsg Comment
 		if (([parts[i] isEqualToString:@"hi"] || [parts[i] isEqualToString:@"hi!"]) && [parts[i+1] isEqualToString:@"link"])
 		{
-			// TODO: handle this? what does the bang mean?
+			// TODO: handle this? what does the bang mean (see section 13)
 		}
 		
 		// hi clear
@@ -1128,7 +1128,7 @@ static bool convertFile(NSString* path, NSString* outDir)
 		printf("   FAILED to load the file: %s\n", STR(reason));
 	}
 	
-	return error != nil;
+	return error == nil;
 }
 
 void convertVIMFiles(NSString* vimDIR, NSString* outDir)
@@ -1137,21 +1137,33 @@ void convertVIMFiles(NSString* vimDIR, NSString* outDir)
 	__block int failed = 0;
 
 	NSError* error = nil;
+	
+	NSFileManager* fm = [NSFileManager defaultManager];
+	if (![fm fileExistsAtPath:outDir])
+	{
+		[fm createDirectoryAtPath:outDir withIntermediateDirectories:YES attributes:nil error:&error];
+		if (error)
+		{
+			NSString* reason = [error localizedFailureReason];
+			NSString* mesg = [NSString stringWithFormat:@"Couldn't create the '%@' directory: %@", outDir, reason];
+			printf("%s\n", STR(mesg));
+			return;
+		}
+	}
+	
 	Glob* glob = [[Glob alloc] initWithGlob:@"*.vim"];
 	[Utils enumerateDir:vimDIR glob:glob error:&error block:^(NSString* path)
 		{if (convertFile(path, outDir)) ++passed; else ++failed;}];
-	
-	if (!error)
-	{
-		if (failed == 0)
-			printf("Converted %d files with no errors.\n", passed);
-		else
-			printf("Converted %d files with %d errors.\n", passed, failed);
-	}
-	else
+	if (error)
 	{
 		NSString* reason = [error localizedFailureReason];
 		NSString* mesg = [NSString stringWithFormat:@"Couldn't read VIM files from '%@': %@", vimDIR, reason];
 		printf("%s\n", STR(mesg));
+		return;
 	}
+
+	if (failed == 0)
+		printf("Converted %d files with no errors.\n", passed);
+	else
+		printf("Converted %d files with %d errors.\n", passed, failed);
 }
