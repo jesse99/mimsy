@@ -134,6 +134,9 @@
 	- see what the policy is for open source apps
 	- look at Prepare for Mac App Store Submission link
 * Support named bookmarks.
+* Support snippets:
+	- should be per language
+	- maybe both text and script based (or possibly scripts are refactors)
 * History of cursor positions?
 * Release checklist:
 	- might have to add a lame build step to archive build to copy the styles files a second time

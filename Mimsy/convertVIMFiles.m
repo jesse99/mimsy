@@ -4,6 +4,57 @@
 #import "Glob.h"
 #import "Utils.h"
 
+@interface GlobalStyle : NSObject
+	@property NSString* bgColor;
+	@property NSString* fgColor;
+	@property NSMutableDictionary* elements;	// element name => ElementStyle*
+@end
+
+@interface ElementStyle : NSObject
+	@property NSString* bgColor;				// may be nil
+	@property NSString* fgColor;
+	@property NSArray* styles;					// list of bold, underline, undercurl, reverse/inverse, italic, standout, and 7NONE
+@end
+
+@implementation GlobalStyle
+
+- (id)init
+{
+	self.bgColor = @"white";
+	self.fgColor = @"black";
+	
+	self.elements = [NSMutableDictionary new];
+	self.elements[@"Default"] = [ElementStyle new];
+	return self;
+}
+
+- (ElementStyle*)getElement:(NSString*)name
+{
+	ElementStyle* element = self.elements[name];
+	
+	if (!element)
+	{
+		element = [ElementStyle new];
+		self.elements[name] = element;
+	}
+	
+	return element;
+}
+
+@end
+
+@implementation ElementStyle
+
+- (id)init
+{
+	self.bgColor = nil;
+	self.fgColor = @"black";
+	self.styles = @[@"NONE"];
+	return self;
+}
+
+@end
+
 typedef struct GuiColourTable
 {
 	char* name;
@@ -788,83 +839,8 @@ static int hexValue(unichar ch)
 	return 0;
 }
 
-static void addColor(NSMutableAttributedString* text, NSRange range, NSString* arg, NSString* name)
-{
-	NSColor* color = nil;
-	
-	if ([arg hasPrefix:@"#"])
-	{
-		int red   = 16*hexValue([arg characterAtIndex:1]) + hexValue([arg characterAtIndex:2]);
-		int green = 16*hexValue([arg characterAtIndex:3]) + hexValue([arg characterAtIndex:4]);
-		int blue  = 16*hexValue([arg characterAtIndex:5]) + hexValue([arg characterAtIndex:6]);
-		
-		color = [NSColor colorWithCalibratedRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1.0];
-	}
-	else
-	{
-		const char* name = arg.UTF8String;
-		int i = 0;
-		while (colors[i].name)
-		{
-			if (strcasecmp(colors[i].name, name) == 0)
-			{
-				color = [NSColor colorWithCalibratedRed:colors[i].red/255.0 green:colors[i].green/255.0 blue:colors[i].blue/255.0 alpha:1.0];
-				break;
-			}
-			++i;
-		}
-	}
-	
-	if (color)
-		[text addAttribute:name value:color range:range];
-	else
-		printf("   Unknown color: %s\n", STR(arg));
-}
-
-static void addForeColor(NSMutableAttributedString* text, NSRange range, NSString* arg)
-{
-	addColor(text, range, arg, NSForegroundColorAttributeName);
-}
-
-static void addBackColor(NSMutableAttributedString* text, NSRange range, NSString* arg)
-{
-	addColor(text, range, arg, NSBackgroundColorAttributeName);
-}
-
-static void addStyle(NSMutableAttributedString* text, NSRange range, NSString* arg)
-{
-	// TODO: arg is comma seprated
-	if ([arg isEqualToString:@"italic"])
-		[text addAttribute:NSFontAttributeName value:[NSFont fontWithName:@"Menlo-Italic" size:16] range:range];
-
-	else if ([arg isEqualToString:@"underline"])
-		[text addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleSingle] range:range];
-	
-	else if ([arg isEqualToString:@"bold"])
-		[text addAttribute:NSFontAttributeName value:[NSFont fontWithName:@"Menlo-Bold" size:16] range:range];
-	
-	else if ([arg isEqualToString:@"NONE"] || [arg isEqualToString:@"none"] || [arg isEqualToString:@"reverse"])
-		;
-	
-	else
-		printf("   Unknown style: %s\n", STR(arg));
-}
-
-static NSRange addLine(NSMutableAttributedString* text, NSString* line)
-{
-	NSUInteger loc = text.length;
-	
-	NSAttributedString* str = [[NSAttributedString alloc] initWithString:line];
-	[text appendAttributedString:str];
-	
-	NSRange range = NSMakeRange(loc, line.length);
-	[text addAttribute:NSFontAttributeName value:[NSFont fontWithName:@"Menlo" size:16] range:range];
-	
-	return range;
-}
-
 // TODO: add doc references
-static void processLine(NSMutableAttributedString* text, NSString* line)
+static void processLine(GlobalStyle* global, NSString* line)
 {
 	NSArray* parts = [line componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 	
@@ -904,23 +880,21 @@ static void processLine(NSMutableAttributedString* text, NSString* line)
 			if (hasColor)
 			{
 				NSString* group = parts[i+1];
-				NSString* styledLine = [NSString stringWithFormat:@"%@:\n", group];
-				NSRange range = addLine(text, styledLine);
-				(void) range;
 				
+				ElementStyle* element = [global getElement:group];
 				for (NSUInteger j = i+2; j < parts.count; ++j)
 				{
 					if ([parts[j] hasPrefix:@"guifg="])
 					{
-						addForeColor(text, range, [parts[j] substringFromIndex:6]);
+						element.fgColor = [parts[j] substringFromIndex:6];
 					}
 					else if ([parts[j] hasPrefix:@"guibg="])
 					{
-						addBackColor(text, range, [parts[j] substringFromIndex:6]);
+						element.bgColor = [parts[j] substringFromIndex:6];
 					}
 					else if ([parts[j] hasPrefix:@"gui="])
 					{
-						addStyle(text, range, [parts[j] substringFromIndex:4]);
+						element.styles = [[parts[j] substringFromIndex:4] componentsSeparatedByString:@","];
 					}
 				}
 			}
@@ -929,7 +903,20 @@ static void processLine(NSMutableAttributedString* text, NSString* line)
 		// set background=dark
 		else if ([parts[i] hasPrefix:@"set"] || [parts[i] hasPrefix:@":set"])
 		{
-			// TODO: handle this somehow
+			if ([parts[i+1] isEqualToString:@"background=dark"] || [parts[i+1] isEqualToString:@"bg=dark"])
+			{
+				global.bgColor = @"black";
+				global.fgColor = @"white";
+			}
+			else if ([parts[i+1] isEqualToString:@"background=light"] || [parts[i+1] isEqualToString:@"bg=light"] || [parts[i+1] isEqualToString:@"bg&"])
+			{
+				global.bgColor = @"white";
+				global.fgColor = @"black";
+			}
+			else
+			{
+				printf("   Unknown set: %s\n", STR(line));
+			}
 		}
 		
 		// " Last Change:	2003 May 02
@@ -944,11 +931,132 @@ static void processLine(NSMutableAttributedString* text, NSString* line)
 
 		else
 		{
-			printf("   Unknown: %s\n", STR(line));
+			printf("   Unknown line: %s\n", STR(line));
 		}
 	}
 }
 
+static NSColor* getColor(GlobalStyle* global, NSString* arg)
+{
+	NSColor* color = nil;
+	
+	if (arg)
+	{
+		if ([arg hasPrefix:@"#"])
+		{
+			int red   = 16*hexValue([arg characterAtIndex:1]) + hexValue([arg characterAtIndex:2]);
+			int green = 16*hexValue([arg characterAtIndex:3]) + hexValue([arg characterAtIndex:4]);
+			int blue  = 16*hexValue([arg characterAtIndex:5]) + hexValue([arg characterAtIndex:6]);
+			
+			color = [NSColor colorWithCalibratedRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1.0];
+		}
+		else if ([arg isEqualToString:@"fg"])
+		{
+			assert(![global.fgColor isEqualToString:@"fg"]);
+			color = getColor(global, global.fgColor);
+		}
+		else
+		{
+			const char* name = arg.UTF8String;
+			int i = 0;
+			while (colors[i].name)
+			{
+				if (strcasecmp(colors[i].name, name) == 0)
+				{
+					color = [NSColor colorWithCalibratedRed:colors[i].red/255.0 green:colors[i].green/255.0 blue:colors[i].blue/255.0 alpha:1.0];
+					break;
+				}
+				++i;
+			}
+		}
+		
+		if (!color)
+			printf("   Unknown color: %s\n", STR(arg));
+	}
+	
+	return color;
+}
+
+// We ignore the standout style.
+static NSDictionary* getAttributes(GlobalStyle* global, ElementStyle* style)
+{
+	NSMutableDictionary* attrs = [NSMutableDictionary new];
+	
+	NSString* fontName;
+	if ([style.styles containsObject:@"bold"] && [style.styles containsObject:@"italic"])
+		fontName = @"Menlo-Bold-Italic";
+	else if ([style.styles containsObject:@"bold"])
+		fontName = @"Menlo-Bold";
+	else if ([style.styles containsObject:@"italic"])
+		fontName = @"Menlo-Italic";
+	else
+		fontName = @"Menlo";
+	attrs[NSFontAttributeName] = [NSFont fontWithName:fontName size:16];
+	
+	if ([style.styles containsObject:@"underline"])
+		attrs[NSUnderlineStyleAttributeName] = [NSNumber numberWithInt:NSUnderlineStyleSingle];
+	else if ([style.styles containsObject:@"undercurl"])
+		attrs[NSUnderlineStyleAttributeName] = [NSNumber numberWithInt:NSUnderlineStyleDouble];
+
+	NSColor* fgColor = getColor(global, style.fgColor);
+	NSColor* bgColor = getColor(global, style.bgColor);
+	if ([style.styles containsObject:@"reverse"] || [style.styles containsObject:@"inverse"])
+	{
+		if (fgColor)
+			attrs[NSBackgroundColorAttributeName] = fgColor;
+		if (bgColor)
+			attrs[NSForegroundColorAttributeName] = bgColor;
+	}
+	else
+	{
+		if (fgColor)
+			attrs[NSForegroundColorAttributeName] = fgColor;
+		if (bgColor)
+			attrs[NSBackgroundColorAttributeName] = bgColor;
+	}
+	
+	return attrs;
+}
+
+static void addLine(NSMutableAttributedString* text, GlobalStyle* global, NSString* line, ElementStyle* style)
+{
+	NSUInteger loc = text.length;
+	NSAttributedString* str = [[NSAttributedString alloc] initWithString:line];
+	[text appendAttributedString:str];
+	NSRange range = NSMakeRange(loc, line.length);
+	
+	NSDictionary* attrs = getAttributes(global, style);
+	[text setAttributes:attrs range:range];
+	
+}
+
+static void addComment(NSMutableAttributedString* text, NSString* path, GlobalStyle* global)
+{
+	ElementStyle* comment = [ElementStyle new];
+	comment.fgColor = @"#EF122E";
+	comment.styles = @[@"italic"];
+	
+	NSArray* args = [[NSProcessInfo processInfo] arguments];
+	NSString* line = [NSString stringWithFormat:@"# Generated by %@\n# Original file was at %@\n\n", [args componentsJoinedByString:@" "], path];
+	addLine(text, global, line, comment);
+}
+
+static NSMutableAttributedString* createText(NSString* path, GlobalStyle* global)
+{
+	NSMutableAttributedString* text = [NSMutableAttributedString new];
+	
+	addComment(text, path, global);
+	for (NSString* name in global.elements)
+	{
+		ElementStyle* style = global.elements[name];
+		NSString* line = [NSString stringWithFormat:@"%@:\n", name];
+		addLine(text, global, line, style);
+	}
+	
+	return text;
+}
+
+// TODO: Set backColor
 static NSError* saveFile(NSString* path, NSMutableAttributedString* text, NSString* outDir)
 {
 	NSError* error = nil;
@@ -983,19 +1091,13 @@ static bool convertFile(NSString* path, NSString* outDir)
 	NSArray* lines = [Utils readLines:path outError:&error];
 	if (!error)
 	{
-		NSMutableAttributedString* text = [NSMutableAttributedString new];
-		
-		NSArray* args = [[NSProcessInfo processInfo] arguments];
-		NSString* line = [NSString stringWithFormat:@"# Generated by %@\n# Original file was at %@\n\n", [args componentsJoinedByString:@" "], path];
-		NSRange range = addLine(text, line);
-		addForeColor(text, range, @"#EF122E");
-		addStyle(text, range, @"italic");
-
+		GlobalStyle* global = [GlobalStyle new];
 		for (NSString* line in lines)
 		{
-			processLine(text, line);
+			processLine(global, line);
 		}
 		
+		NSMutableAttributedString* text = createText(path, global);
 		error = saveFile(path, text, outDir);
 	}
 	else

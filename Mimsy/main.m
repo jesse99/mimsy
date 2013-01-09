@@ -91,8 +91,11 @@ static struct Options parseArgs(int argc, char* argv[])
 		else if (strstr(argv[i], "--out=") == argv[i])
 			options.outDir = argv[i] + strlen("--out=");
 		
-		else if (strstr(argv[i], "--help") == argv[i])
+		else if (strstr(argv[i], "--help") == argv[i])	
 			options.help = true;
+
+		else if (strstr(argv[i], "YES") == argv[i] || strstr(argv[i], "-NSDocumentRevisionsDebugMode") == argv[i])
+			;
 		
 		else
 			options.unknown = argv[i];
