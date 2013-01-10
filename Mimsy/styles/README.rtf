@@ -6,4 +6,77 @@
 
 \f0\fs36 \cf0 The styles files define the text attributes and the background color used together with the language files to do syntax highlighting. Changes to a style file take effect when the file is saved (assuming it's the one in use).\
 \
-Note that the back color is stored as extended metadata. It will not be visible and may not be preserved if the file is edited by applications other than Mimsy.}
+Note that the back color is stored as extended metadata. It will not be visible and may not be preserved if the file is edited by applications other than Mimsy.\
+\
+The standard elements are listed below. These are the from VIM 7.3 with the following additions: Argument and DocComment. If an element is missing the associated element in bold is used. If there is no bold element or it is also missing then the Normal style is used.\
+\
+
+\b Comment
+\b0 		any comment\
+\pard\pardeftab480\pardirnatural
+\cf0 DocComment	comment used to generate documentation\
+\pard\pardeftab480\pardirnatural
+\cf0 \
+
+\b Constant
+\b0 			any constant\
+\pard\pardeftab480\pardirnatural
+\cf0 Argument		formal argument\
+Boolean			a boolean constant: TRUE, false\
+Character			a character constant: 'c', '\\n'\
+Float				a floating point constant: 2.3e10\
+Number			a number constant: 234, 0xff\
+\pard\pardeftab480\pardirnatural
+\cf0 String				a string constant: "this is a string"\
+\
+
+\b Identifier
+\b0 		any variable name\
+Function			function name (also: methods for classes)\
+\
+
+\b Statement
+\b0 		any statement\
+Conditional		if, then, else, endif, switch, etc.\
+\pard\pardeftab480\pardirnatural
+\cf0 Exception		try, catch, throw\
+Keyword			any other keyword\
+Label				case, default, etc.\
+Operator			"sizeof", "+", "*", etc.\
+\pard\pardeftab480\pardirnatural
+\cf0 Repeat			for, do, while, etc.\
+\
+
+\b PreProc
+\b0 			generic Preprocessor\
+\pard\pardeftab480\pardirnatural
+\cf0 Define				preprocessor #define\
+\pard\pardeftab480\pardirnatural
+\cf0 Include			preprocessor #include\
+Macro				same as Define\
+PreCondit		preprocessor #if, #else, #endif, etc.\
+\
+
+\b Type
+\b0 				int, long, char, etc.\
+StorageClass		static, register, volatile, etc.\
+Structure			struct, union, enum, etc.\
+Typedef			a typedef\
+\
+
+\b Special
+\b0 			any special symbol\
+\pard\pardeftab480\pardirnatural
+\cf0 Debug				debugging statements\
+Delimiter			character that needs attention\
+\pard\pardeftab480\pardirnatural
+\cf0 SpecialChar		special character in a constant\
+SpecialComment	special things inside a comment\
+\
+\pard\pardeftab480\pardirnatural
+\cf0 Error				any erroneous construct\
+Normal			used when nothing else matches\
+\pard\pardeftab480\pardirnatural
+\cf0 Underlined		text that stands out, HTML links\
+Todo				anything that needs extra attention; mostly the keywords TODO FIXME and XXX\
+}

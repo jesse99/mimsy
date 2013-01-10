@@ -60,6 +60,7 @@
 		37A8C6C116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C6BF16758FF400D4DB13 /* InfoPlist.strings */; };
 		37A8C6C416758FF400D4DB13 /* DecodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6C316758FF400D4DB13 /* DecodeTests.m */; };
 		37A8C6CE167590E700D4DB13 /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C6CD167590E700D4DB13 /* TODO */; };
+		37F2C58B169E7B92009C5355 /* ArrayCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 37F2C58A169E7B92009C5355 /* ArrayCategory.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -171,6 +172,8 @@
 		37A8C6C216758FF400D4DB13 /* DecodeTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DecodeTests.h; sourceTree = "<group>"; };
 		37A8C6C316758FF400D4DB13 /* DecodeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DecodeTests.m; sourceTree = "<group>"; };
 		37A8C6CD167590E700D4DB13 /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
+		37F2C589169E7B92009C5355 /* ArrayCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArrayCategory.h; sourceTree = "<group>"; };
+		37F2C58A169E7B92009C5355 /* ArrayCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArrayCategory.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,6 +211,8 @@
 		375140D91682352000C329AF /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				37F2C589169E7B92009C5355 /* ArrayCategory.h */,
+				37F2C58A169E7B92009C5355 /* ArrayCategory.m */,
 				37862C6616912ECA00DB9E66 /* Assert.h */,
 				37862C6716912ECB00DB9E66 /* Assert.m */,
 				37862C4C168DE83D00DB9E66 /* ConditionalGlob.h */,
@@ -541,6 +546,7 @@
 				37862C711694BFBA00DB9E66 /* InfoController.m in Sources */,
 				37862C741698755100DB9E66 /* Metadata.m in Sources */,
 				3796F6FE169A8CC900659DBD /* convertVIMFiles.m in Sources */,
+				37F2C58B169E7B92009C5355 /* ArrayCategory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

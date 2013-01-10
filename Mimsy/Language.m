@@ -1,5 +1,6 @@
 #import "Language.h"
 
+#import "ArrayCategory.h"
 #import "Assert.h"
 #import "ConditionalGlob.h"
 #import "ConfigParser.h"
@@ -91,7 +92,7 @@
 	struct UIntVector groupToName = [self _preflightPatterns:patterns lines:lines errors:errors];
 	if (groupToName.count > 0)
 	{
-		NSArray* groups = [Utils mapArray:patterns block:
+		NSArray* groups = [patterns map:
 			^id (NSString* p) {return [NSString stringWithFormat:@"(%@)", p];}];
 		NSString* pattern = [groups componentsJoinedByString:@"|"];
 

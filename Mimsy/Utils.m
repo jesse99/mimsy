@@ -32,6 +32,20 @@ static NSString* Replacement = @"\uFFFD";
 	return result;
 }
 
++ (NSArray*)splitChars:(NSString*)str by:(NSCharacterSet*)chars
+{
+	NSArray* tmp = [str componentsSeparatedByCharactersInSet:chars];
+	
+	NSMutableArray* result = [[NSMutableArray alloc] initWithCapacity:tmp.count];
+	for (NSString* s in tmp)
+	{
+		if (s.length > 0)
+			[result addObject:s];
+	}
+	
+	return result;
+}
+
 + (NSString*)titleCase:(NSString*)str
 {
 	NSString* result = str;
@@ -107,18 +121,6 @@ static NSString* Replacement = @"\uFFFD";
 		
 		i += 16;
 		[result appendString:@"\n"];
-	}
-	
-	return result;
-}
-
-+ (NSArray*)mapArray:(NSArray*)array block:(id (^)(id element))block
-{
-	NSMutableArray* result = [[NSMutableArray alloc] initWithCapacity:array.count];
-	
-	for (id element in array)
-	{
-		[result addObject:block(element)];
 	}
 	
 	return result;

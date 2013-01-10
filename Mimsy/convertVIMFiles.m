@@ -1,5 +1,6 @@
 #import "convertVIMFiles.h"
 
+#import "ArrayCategory.h"
 #import "Assert.h"
 #import "Glob.h"
 #import "Metadata.h"
@@ -9,12 +10,14 @@
 	@property NSString* bgColor;
 	@property NSString* fgColor;
 	@property NSMutableDictionary* elements;	// element name => ElementStyle*
+	@property NSArray* ignoredGroups;
+	@property NSArray* standardGroups;
 @end
 
 @interface ElementStyle : NSObject
 	@property NSString* bgColor;				// may be nil
 	@property NSString* fgColor;
-	@property NSArray* styles;					// list of bold, underline, undercurl, reverse/inverse, italic, standout, and 7NONE
+	@property NSArray* styles;					// list of bold, underline, undercurl, reverse/inverse, italic, standout, and NONE
 @end
 
 @implementation GlobalStyle
@@ -25,7 +28,63 @@
 	self.fgColor = @"black";
 	
 	self.elements = [NSMutableDictionary new];
-	self.elements[@"Default"] = [ElementStyle new];
+	self.elements[@"Normal"] = [ElementStyle new];
+					
+	self.ignoredGroups = @[
+		// TODO: We may in the future use some of these.
+		@"Directory",		// directory names (and other special names in listings)
+		@"SpecialKey",		// used to show unprintable characters in the text. Generally: text that is displayed differently from what it really is.
+		@"CursorLine",		// the screen line that the cursor is in when 'cursorline' is set
+		@"Conceal",			// placeholder characters substituted for concealed text
+		@"Folded",			// line used for closed folds
+		@"FoldColumn",		
+		@"Cursor",			// the character under the cursor
+		@"NonText",			// characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line)
+		@"LineNr",			// Line number for ":number" and ":#" commands
+								  
+		// Don't think that we will ever use these.
+		@"Ignore",			// left blank, hidden
+		@"MatchParen",		// The character under the cursor or just before it, if it is a paired bracket, and its match
+		@"ColorColumn",
+		@"CursorIM",		// like Cursor, but used when in IME mode
+		@"VertSplit",		// the column separating vertically split windows
+		@"SignColumn",
+		@"IncSearch",		// 'incsearch' highlighting
+		@"ModeMsg",			// 'showmode' message
+		@"MoreMsg",
+		@"Pmenu",			// Popup menu: normal item
+		@"PmenuSel",		// Popup menu: selected item
+		@"PmenuSbar",		// Popup menu: scrollbar
+		@"PmenuThumb",		// Popup menu: Thumb of the scrollbar
+		@"Question",		// prompt and yes/no questions
+		@"Search",			// Last search pattern highlighting
+		@"SpellBad",		// Word that is not recognized by the spellchecker
+		@"SpellCap",		// Word that should start with a capital
+		@"SpellLocal",		// Word that is recognized by the spellchecker as one that is used in another region
+		@"SpellRare",		// Word that is recognized by the spellchecker as one that is hardly ever used
+		@"StatusLine",
+		@"StatusLineNC",
+		@"TabLine",
+		@"TabLineFill",
+		@"TabLineSel",
+		@"Tag",				// you can use CTRL-] on this
+		@"Title",			// titles for output
+		@"Visual",			// Visual mode selection
+		@"VisualNOS",		// Visual mode selection when vim is "Not Owning the Selection"
+		@"WildMenu",		// WildMenu	current match in 'wildmenu' completion
+
+		// Not sure what these are (maybe buggy color files)
+		@"cIf0",
+		@"lCursor",
+		@"Scrollbar",
+		@"SpellErrors"
+	];
+	
+	self.standardGroups = @[@"Comment", @"DocComment", @"Constant", @"Argument", @"Boolean", @"Character", @"Float", @"Number",
+		@"String", @"Identifier", @"Function", @"Statement", @"Conditional", @"Exception", @"Keyword", @"Label", @"Operator",
+		@"Repeat", @"PreProc", @"Define", @"Include", @"Macro", @"PreCondit", @"Type", @"StorageClass", @"Structure", @"Typedef",
+		@"Special", @"Debug", @"Delimiter", @"SpecialChar", @"SpecialComment", @"Error", @"Normal", @"Underlined", @"Todo"];
+	
 	return self;
 }
 
@@ -840,11 +899,33 @@ static int hexValue(unichar ch)
 	return 0;
 }
 
+// Color files sometimes use lower case group names.
+static NSString* sanitizeGroup(GlobalStyle* global, NSString* name)
+{
+	NSUInteger index = [global.standardGroups indexOfObjectPassingTest:
+		^BOOL(NSString* candidate, NSUInteger index, BOOL* stop)
+		{
+			(void) index;
+			(void) stop;
+			return [name caseInsensitiveCompare:candidate] == NSOrderedSame;
+		}
+	];
+	
+	if (index != NSNotFound)
+	{
+		return global.standardGroups[index];
+	}
+	else
+	{
+		return name;
+	}
+}
+
 // Reference for this stuff is at http://vimdoc.sourceforge.net/htmldoc/syntax.html although it doesn't
 // define the grammar.
 static void processLine(GlobalStyle* global, NSString* line)
 {
-	NSArray* parts = [line componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+	NSArray* parts = [Utils splitChars:line by:[NSCharacterSet whitespaceCharacterSet]];
 	
 	NSUInteger i = 0;
 	while (i < parts.count && [parts[i] length] == 0)
@@ -881,7 +962,7 @@ static void processLine(GlobalStyle* global, NSString* line)
 			
 			if (hasColor)
 			{
-				NSString* group = parts[i+1];
+				NSString* group = sanitizeGroup(global, parts[i+1]);
 				
 				ElementStyle* element = [global getElement:group];
 				for (NSUInteger j = i+2; j < parts.count; ++j)
@@ -985,11 +1066,11 @@ static NSDictionary* getAttributes(GlobalStyle* global, ElementStyle* style)
 	
 	NSString* fontName;
 	if ([style.styles containsObject:@"bold"] && [style.styles containsObject:@"italic"])
-		fontName = @"Menlo-Bold-Italic";
+		fontName = @"Menlo Bold Italic";
 	else if ([style.styles containsObject:@"bold"])
-		fontName = @"Menlo-Bold";
+		fontName = @"Menlo Bold";
 	else if ([style.styles containsObject:@"italic"])
-		fontName = @"Menlo-Italic";
+		fontName = @"Menlo Italic";
 	else
 		fontName = @"Menlo";
 	attrs[NSFontAttributeName] = [NSFont fontWithName:fontName size:16];
@@ -1028,7 +1109,6 @@ static void addLine(NSMutableAttributedString* text, GlobalStyle* global, NSStri
 	
 	NSDictionary* attrs = getAttributes(global, style);
 	[text setAttributes:attrs range:range];
-	
 }
 
 static void addComment(NSMutableAttributedString* text, NSString* path, GlobalStyle* global)
@@ -1052,9 +1132,50 @@ static NSMutableAttributedString* createText(NSString* path, GlobalStyle* global
 	addComment(text, path, global);
 	for (NSString* name in sorted)
 	{
-		ElementStyle* style = global.elements[name];
-		NSString* line = [NSString stringWithFormat:@"%@:\n", name];
-		addLine(text, global, line, style);
+		if ([global.ignoredGroups indexOfObjectPassingTest:
+			 ^BOOL(NSString* candidate, NSUInteger index, BOOL* stop)
+			 {
+				 (void) index;
+				 (void) stop;
+				 return [name caseInsensitiveCompare:candidate] == NSOrderedSame;
+			 }] == NSNotFound)
+		{
+			ElementStyle* style = global.elements[name];
+			NSString* line = [NSString stringWithFormat:@"%@:\n", name];
+			addLine(text, global, line, style);
+		}
+	}
+	[text appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
+	ElementStyle* style = global.elements[@"Constant"];
+	if (style)
+	{
+		// Argument is Mimsy specific
+		style.styles = [style.styles arrayByAddingObject:@"italic"];
+		style.styles = [style.styles arrayByRemovingObject:@"bold"];
+		addLine(text, global, @"Argument:\n", style);
+	}
+
+	style = global.elements[@"String"];
+	if (style && [sorted indexOfObject:@"Character"] == NSNotFound)
+	{
+		// Treat Character like String if it is missing
+		addLine(text, global, @"Character:\n", style);
+	}
+	
+	style = global.elements[@"Comment"];
+	if (style)
+	{
+		// DocComment is Mimsy specific
+		style.styles = [style.styles arrayByAddingObject:@"bold"];
+		addLine(text, global, @"DocComment:\n", style);
+	}
+		
+	style = global.elements[@"Identifier"];
+	if (style && [sorted indexOfObject:@"Function"] == NSNotFound)
+	{
+		// Function is really nice to have, so we'll add it if it's missing
+		style.styles = [style.styles arrayByAddingObject:@"bold"];
+		addLine(text, global, @"Function:\n", style);
 	}
 	
 	return text;

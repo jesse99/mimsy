@@ -10,6 +10,9 @@ extern const NSRange NSZeroRange;
 // Like componentsSeparatedByString: except that empty strings are not returned.
 + (NSArray*)splitString:(NSString*)str by:(NSString*)separator;
 
+// Like componentsSeparatedByString: except that empty strings are not returned.
++ (NSArray*)splitChars:(NSString*)str by:(NSCharacterSet*)chars;
+
 // Capitilizes the first character in the string.
 + (NSString*)titleCase:(NSString*)str;
 
@@ -19,9 +22,6 @@ extern const NSRange NSZeroRange;
 // Returns a `hexdump -C` sort of string except that unicode symbols are
 // used for control characters.
 + (NSString*)bufferToStr:(const void*)buffer length:(NSUInteger)length;
-
-// Returns a new array with each element mapped using the block.
-+ (NSArray*)mapArray:(NSArray*)array block:(id (^)(id element))block;
 
 // Reads a file and returns an array containing each line (without the new lines).
 + (NSArray*)readLines:(NSString*)path outError:(NSError**)error;
