@@ -6,18 +6,38 @@
 #import "Metadata.h"
 #import "Utils.h"
 
+@interface Group : NSObject
+@property NSString* name;				// eg "Conditional"
+@property NSString* description;		// eg "if, then, else, endif, switch, etc."
+@property NSString* parent;				// eg "Statement" (will be nil for "Normal")
+@end
+
 @interface GlobalStyle : NSObject
-	@property NSString* bgColor;
-	@property NSString* fgColor;
-	@property NSMutableDictionary* elements;	// element name => ElementStyle*
-	@property NSArray* ignoredGroups;
-	@property NSArray* standardGroups;
+@property NSString* bgColor;
+@property NSString* fgColor;
+@property NSMutableDictionary* elements;	// element name => ElementStyle*
+@property NSArray* ignoredGroups;
+@property NSArray* standardGroups;
 @end
 
 @interface ElementStyle : NSObject
-	@property NSString* bgColor;				// may be nil
-	@property NSString* fgColor;
-	@property NSArray* styles;					// list of bold, underline, undercurl, reverse/inverse, italic, standout, and NONE
+@property NSString* bgColor;				// may be nil
+@property NSString* fgColor;
+@property NSArray* styles;					// list of bold, underline, undercurl, reverse/inverse, italic, standout, and NONE
+@property bool processed;
+@end
+
+@implementation Group
++ (id)group:(NSString*)name description:(NSString*)description parent:(NSString*)parent
+{
+	Group* group = [Group new];
+	
+	group.name = name;
+	group.description = description;
+	group.parent = parent;
+	
+	return group;
+}
 @end
 
 @implementation GlobalStyle
@@ -68,10 +88,15 @@
 		@"TabLineFill",
 		@"TabLineSel",
 		@"Tag",				// you can use CTRL-] on this
+		@"title",			// titles for output
+		@"ErrorMsg",		// error messages on the command line
+		@"WarningMsg",		// warning messages
+		@"Menu",			// Current font, background and foreground colors of the menus.
 		@"Title",			// titles for output
 		@"Visual",			// Visual mode selection
 		@"VisualNOS",		// Visual mode selection when vim is "Not Owning the Selection"
 		@"WildMenu",		// WildMenu	current match in 'wildmenu' completion
+		@"CursorColumn",	// the screen column that the cursor is in
 
 		// Not sure what these are (maybe buggy color files)
 		@"cIf0",
@@ -79,11 +104,66 @@
 		@"Scrollbar",
 		@"SpellErrors"
 	];
+				
+	self.standardGroups = @[
+		[Group group:@"Type" description:@"int, long, char, etc." parent:@"Normal"],
+		[Group group:@"StorageClass" description:@"static, register, volatile, etc." parent:@"Type"],
+		[Group group:@"Structure" description:@"struct, union, enum, etc." parent:@"Type"],
+		[Group group:@"Typedef" description:@"a typedef" parent:@"Type"],
+		[Group group:nil description:nil parent:nil],
 	
-	self.standardGroups = @[@"Comment", @"DocComment", @"Constant", @"Argument", @"Boolean", @"Character", @"Float", @"Number",
-		@"String", @"Identifier", @"Function", @"Statement", @"Conditional", @"Exception", @"Keyword", @"Label", @"Operator",
-		@"Repeat", @"PreProc", @"Define", @"Include", @"Macro", @"PreCondit", @"Type", @"StorageClass", @"Structure", @"Typedef",
-		@"Special", @"Debug", @"Delimiter", @"SpecialChar", @"SpecialComment", @"Error", @"Normal", @"Underlined", @"Todo"];
+		[Group group:@"Identifier" description:@"any variable name" parent:@"Normal"],
+		[Group group:@"Function" description:@"function name (also: methods for classes)" parent:@"Identifier"],
+		[Group group:nil description:nil parent:nil],
+	
+		[Group group:@"Statement" description:@"any statement" parent:@"Normal"],
+		[Group group:@"Conditional" description:@"if, then, else, endif, switch, etc." parent:@"Statement"],
+		[Group group:@"Exception" description:@"try, catch, throw" parent:@"Statement"],
+		[Group group:@"Keyword" description:@"any other keyword" parent:@"Statement"],
+		[Group group:@"Label" description:@"case, default, etc." parent:@"Statement"],
+		[Group group:@"Operator" description:@"\"sizeof\", \"+\", \"*\", etc." parent:@"Statement"],
+		[Group group:@"Repeat" description:@"for, do, while, etc." parent:@"Statement"],
+		[Group group:nil description:nil parent:nil],
+	
+		[Group group:@"Constant" description:@"any constant" parent:@"Normal"],
+		[Group group:@"Argument" description:@"formal argument" parent:@"Constant"],
+		[Group group:@"Boolean" description:@"a boolean constant: TRUE, false" parent:@"Constant"],
+		[Group group:@"Character" description:@"a character constant: 'c', '\\n'" parent:@"Constant"],
+		[Group group:@"Float" description:@"a floating point constant: 2.3e10" parent:@"Constant"],
+		[Group group:@"Number" description:@"a number constant: 234, 0xff" parent:@"Constant"],
+		[Group group:@"String" description:@"a string constant: \"this is a string\"" parent:@"Constant"],
+		[Group group:nil description:nil parent:nil],
+	
+		[Group group:@"Comment" description:@"any comment" parent:@"Normal"],
+		[Group group:@"DocComment" description:@"comment used to generate documentation" parent:@"Comment"],
+		[Group group:nil description:nil parent:nil],
+	
+		[Group group:@"PreProc" description:@"generic Preprocessor" parent:@"Normal"],
+		[Group group:@"Define" description:@"preprocessor #define" parent:@"PreProc"],
+		[Group group:@"Include" description:@"preprocessor #include" parent:@"PreProc"],
+		[Group group:@"Macro" description:@"same as Define" parent:@"PreProc"],
+		[Group group:@"PreCondit" description:@"preprocessor #if, #else, #endif, etc." parent:@"PreProc"],
+		[Group group:nil description:nil parent:nil],
+	
+		[Group group:@"Special" description:@"any special symbol" parent:@"Normal"],
+		[Group group:@"Debug" description:@"debugging statements" parent:@"Special"],
+		[Group group:@"Delimiter" description:@"character that needs attention" parent:@"Special"],
+		[Group group:@"SpecialChar" description:@"special character in a constant" parent:@"Special"],
+		[Group group:@"SpecialComment" description:@"special things inside a comment" parent:@"Special"],
+		[Group group:@"Attribute" description:@"e.g. in C#, Rust, Python (decorator)" parent:@"Special"],
+		[Group group:nil description:nil parent:nil],
+	
+		[Group group:@"Error" description:@"any erroneous construct" parent:@"Normal"],
+		[Group group:@"Underlined" description:@"text that stands out, HTML links" parent:@"Normal"],
+		[Group group:@"Todo" description:@"anything that needs extra attention; mostly the keywords TODO FIXME and XXX" parent:@"Normal"],
+		[Group group:nil description:nil parent:nil],
+	
+		[Group group:@"DiffAdd" description:@"added line" parent:@"Normal"],
+		[Group group:@"DiffChange" description:@"changed line" parent:@"Normal"],
+		[Group group:@"DiffDelete" description:@"deleted line" parent:@"Normal"],
+		[Group group:@"DiffText" description:@"changed text within a changed line" parent:@"Normal"],
+		[Group group:@"Normal" description:@"normal text" parent:nil]
+	];
 	
 	return self;
 }
@@ -111,6 +191,39 @@
 	self.fgColor = @"black";
 	self.styles = @[@"NONE"];
 	return self;
+}
+
+- (ElementStyle*)changeFg:(NSString*)color
+{
+	ElementStyle* result = [ElementStyle new];
+	
+	result.fgColor = color;
+	result.bgColor = self.bgColor;
+	result.styles = self.styles;
+	
+	return result;
+}
+
+- (ElementStyle*)addStyle:(NSString*)name
+{
+	ElementStyle* result = [ElementStyle new];
+	
+	result.fgColor = self.fgColor;
+	result.bgColor = self.bgColor;
+	result.styles = [self.styles arrayByAddingObject:name];
+	
+	return result;
+}
+
+- (ElementStyle*)removeStyle:(NSString*)name
+{
+	ElementStyle* result = [ElementStyle new];
+	
+	result.fgColor = self.fgColor;
+	result.bgColor = self.bgColor;
+	result.styles = [self.styles arrayByRemovingObject:name];
+	
+	return result;
 }
 
 @end
@@ -879,6 +992,7 @@ static GuiColourTable colors[] =
 	{"light green", 144, 238, 144},
 	{"LightGreen", 144, 238, 144},
 	{"LightRed", 0xFF, 0xA0, 0xA0},
+	{"Lightmagenta", 0xEE, 0x82, 0xEE},
 	{NULL,	     0x00, 0x00, 0x00},
 };
 
@@ -903,17 +1017,17 @@ static int hexValue(unichar ch)
 static NSString* sanitizeGroup(GlobalStyle* global, NSString* name)
 {
 	NSUInteger index = [global.standardGroups indexOfObjectPassingTest:
-		^BOOL(NSString* candidate, NSUInteger index, BOOL* stop)
+		^BOOL(Group* candidate, NSUInteger index, BOOL* stop)
 		{
 			(void) index;
 			(void) stop;
-			return [name caseInsensitiveCompare:candidate] == NSOrderedSame;
+			return [name caseInsensitiveCompare:candidate.name] == NSOrderedSame;
 		}
 	];
 	
 	if (index != NSNotFound)
 	{
-		return global.standardGroups[index];
+		return [global.standardGroups[index] name];
 	}
 	else
 	{
@@ -952,7 +1066,7 @@ static void processLine(GlobalStyle* global, NSString* line)
 			bool hasColor = false;
 			for (NSUInteger j = i+2; j < parts.count && !hasColor; ++j)
 			{
-				if ([parts[j] hasPrefix:@"guifg="])
+				if ([parts[j] hasPrefix:@"guifg="] || [parts[j] hasPrefix:@"guibg="] || [parts[j] hasPrefix:@"gui="])
 				{
 					NSString* name = [parts[j] substringFromIndex:6];
 					if (![name isEqualToString:@"NONE"] && ![name isEqualToString:@"bg"] && ![name isEqualToString:@"fg"])
@@ -1122,60 +1236,132 @@ static void addComment(NSMutableAttributedString* text, NSString* path, GlobalSt
 	addLine(text, global, line, comment);
 }
 
+static bool addSpecialMissingElement(NSMutableAttributedString* text, NSString* name, GlobalStyle* global)
+{
+	if ([name isEqualToString:@"Argument"])
+	{
+		ElementStyle* style = global.elements[@"Constant"];
+		if (style)
+		{
+			// Argument is Mimsy specific
+			style = [style addStyle:@"italic"];
+			style = [style removeStyle:@"bold"];
+			addLine(text, global, @"Argument: formal argument\n", style);
+			return true;
+		}
+	}
+	else if ([name isEqualToString:@"DocComment"])
+	{
+		ElementStyle* style = global.elements[@"Comment"];
+		if (style)
+		{
+			// DocComment is Mimsy specific
+			style = [style addStyle:@"bold"];
+			addLine(text, global, @"DocComment: comment used to generate documentation\n", style);
+			return true;
+		}
+	}
+	// Attribute is also Mimsy specific but there doesn't seem to be an obvious way to synthesize it.
+	else if ([name isEqualToString:@"Character"])
+	{
+		ElementStyle* style = global.elements[@"String"];
+		if (style)
+		{
+			// Treat Character like String if it is missing
+			addLine(text, global, @"Character: a character constant: 'c', '\\n'\n", style);
+			return true;
+		}
+	}
+	else if ([name isEqualToString:@"Function"])
+	{
+		ElementStyle* style = global.elements[@"Identifier"];
+		if (!style)
+			style = global.elements[@"Normal"];
+
+		// Function is really nice to have, so we'll add it if it's missing
+		style = [style addStyle:@"bold"];
+		addLine(text, global, @"Function: function name (also: methods for classes)\n", style);
+		return true;
+	}
+	else if ([name isEqualToString:@"Error"])
+	{
+		// Red should work with pretty much every background.
+		ElementStyle* style = global.elements[@"Normal"];
+		style = [style changeFg:@"red"];
+		addLine(text, global, @"Error: any erroneous construct\n", style);
+		return true;
+	}
+	else if ([name isEqualToString:@"Underlined"])
+	{
+		// Underlining is always OK.
+		ElementStyle* style = global.elements[@"Normal"];
+		style = [style addStyle:@"underline"];
+		addLine(text, global, @"Underlined: text that stands out, HTML links\n", style);
+		return true;
+	}
+	else if ([name isEqualToString:@"Todo"])
+	{
+		ElementStyle* style = global.elements[@"Comment"];
+		if (style)
+		{
+			// TODOs should appear in comments so we'll use that style
+			style = [style addStyle:@"underline"];
+			addLine(text, global, @"Todo: anything that needs extra attention; mostly the keywords TODO FIXME and XXX\n", style);
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+static void addMissingElement(NSMutableAttributedString* text, Group* group, GlobalStyle* global)
+{
+	ElementStyle* element = global.elements[group.parent];
+	if (!element)
+		element = global.elements[@"Normal"];
+	assert(element);
+
+	NSString* line = [NSString stringWithFormat:@"%@: %@\n", group.name, group.description];
+	addLine(text, global, line, element);
+}
+
 static NSMutableAttributedString* createText(NSString* path, GlobalStyle* global)
 {
 	NSMutableAttributedString* text = [NSMutableAttributedString new];
-	
-	NSArray* keys = global.elements.allKeys;
-	NSArray* sorted = [keys sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-	
 	addComment(text, path, global);
-	for (NSString* name in sorted)
+	
+	for (Group* group in global.standardGroups)
 	{
-		if ([global.ignoredGroups indexOfObjectPassingTest:
-			 ^BOOL(NSString* candidate, NSUInteger index, BOOL* stop)
-			 {
-				 (void) index;
-				 (void) stop;
-				 return [name caseInsensitiveCompare:candidate] == NSOrderedSame;
-			 }] == NSNotFound)
+		if (group.name)
 		{
-			ElementStyle* style = global.elements[name];
-			NSString* line = [NSString stringWithFormat:@"%@:\n", name];
-			addLine(text, global, line, style);
+			ElementStyle* element = global.elements[group.name];
+			if (element)
+			{
+				NSString* line = [NSString stringWithFormat:@"%@: %@\n", group.name, group.description];
+				addLine(text, global, line, element);
+				element.processed = true;
+			}
+			else
+			{
+				if (!addSpecialMissingElement(text, group.name, global))
+					addMissingElement(text, group, global);
+			}
+		}
+		else
+		{
+			NSAttributedString* str = [[NSAttributedString alloc] initWithString:@"\n"];
+			[text appendAttributedString:str];
 		}
 	}
-	[text appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
-	ElementStyle* style = global.elements[@"Constant"];
-	if (style)
-	{
-		// Argument is Mimsy specific
-		style.styles = [style.styles arrayByAddingObject:@"italic"];
-		style.styles = [style.styles arrayByRemovingObject:@"bold"];
-		addLine(text, global, @"Argument:\n", style);
-	}
-
-	style = global.elements[@"String"];
-	if (style && [sorted indexOfObject:@"Character"] == NSNotFound)
-	{
-		// Treat Character like String if it is missing
-		addLine(text, global, @"Character:\n", style);
-	}
 	
-	style = global.elements[@"Comment"];
-	if (style)
+	for (NSString* name in global.elements)
 	{
-		// DocComment is Mimsy specific
-		style.styles = [style.styles arrayByAddingObject:@"bold"];
-		addLine(text, global, @"DocComment:\n", style);
-	}
-		
-	style = global.elements[@"Identifier"];
-	if (style && [sorted indexOfObject:@"Function"] == NSNotFound)
-	{
-		// Function is really nice to have, so we'll add it if it's missing
-		style.styles = [style.styles arrayByAddingObject:@"bold"];
-		addLine(text, global, @"Function:\n", style);
+		if ([global.ignoredGroups indexOfObject:name] == NSNotFound)
+		{
+			ElementStyle* style = global.elements[name];
+			if (!style.processed)
+				printf("   Unknown group: %s\n", STR(name));
+		}
 	}
 	
 	return text;
