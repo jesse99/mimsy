@@ -6,12 +6,13 @@ Comment: // .* $
 Comment: /\* (?: . | \r | \n)*? \*/
 Conditional: \b(?: case | else | if | switch)\b
 Exception: \b(?: __except | __finally | __leave | __try)\b
-Keyword: \b(?: break | continue | const | default | enum | false | goto | return | struct | true | typedef | union | __asm__ | asm | NULL)\b
+Keyword: \b(?: break | continue | const | default | enum | goto | return | struct | typedef | union | __asm__ | asm | NULL)\b
 Operator: \b(?: sizeof | typeof | __typeof__)\b
 Repeat: \b(?: do | for | while)\b
 StorageClass: \b(?:  auto | extern | register | static | volatile | __cdecl | __declspec |  | __fastcall | __inline__ | __inline | __stdcall | dllexport2 | dllimport2 | inline)\b
 Type: \b(?:  bool | char | double | float | int | long | short | signed | unsigned | void | __int16 | __int32 | __int64 | __int8)\b
 
+Boolean: \b(?: false | true)\b
 Float: \W (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)? [fFlL]?) \W
 Float: \W (\. [\d_]+ (?: [eE] [+-]? [\d_]+)? [fFlL]?) \W
 Number: \W (\d+ (?: [luLU]{0, 2})) \W

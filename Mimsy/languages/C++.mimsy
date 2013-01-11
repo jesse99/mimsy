@@ -7,15 +7,18 @@ Comment: // .* $
 Comment: /\* (?: . | \r | \n)*? \*/
 Conditional: \b(?: case | else | if | switch)\b
 Exception: \b(?: catch | throw | try)\b
-Keyword: \b(?: break | const | continue | default | enum | goto | return | struct | typedef | union | asm | class | const_cast | constexpr | decltype | delete | dynamic_cast | false | friend | namespace | new | nullptr | operator | private | protected | public | reinterpret_cast | static_assert | static_cast | template | this | true | typeid | typename | using | NULL)\b
+Keyword: \b(?: break | const | continue | default | enum | goto | return | struct | typedef | union | asm | class | const_cast | constexpr | decltype | delete | dynamic_cast | friend | namespace | new | nullptr | operator | private | protected | public | reinterpret_cast | static_assert | static_cast | template | this | typeid | typename | using | NULL)\b
 Operator: \b(?: sizeof)\b
 Repeat: \b(?: do | for | while)\b
 StorageClass: \b(?: auto | extern | register | static | volatile | explicit | inline | mutable | virtual)\b
 Type: \b(?: char | double | float | int | long | short | signed | unsigned | void | bool | wchar_t | list | map | multi_map | multi_set | set | std | string | vector)\b
+
+Boolean: \b(?: false | true)\b
 Float: \W (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)? [fFlL]?) \W
 Float: \W (\. [\d_]+ (?: [eE] [+-]? [\d_]+)? [fFlL]?) \W
 Number: \W (\d+ (?: [luLU]{0, 2})) \W
 Number: \W (0x [0-9a-fA-f]+ (?: [luLU]{0, 2})) \W
+
 PreProc: \x23 \s* (?: define | undef | warning | error | line | pragma)
 PreCondit: \x23 \s* (?: ifdef | ifndef | if | else | elif | endif)
 Include: \x23 \s* include

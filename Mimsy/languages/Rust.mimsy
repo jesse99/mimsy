@@ -10,12 +10,14 @@ Comment: // .* $
 Comment: /\* (?: . | \r | \n)*? \*/
 Conditional: \b(?: else | if | loop | match)\b
 Exception: \b(?: fail)\b
-Keyword: \b(?: once | as | assert | break | do | enum | false | fn | impl | let | log | mod | return | struct | trait | true | type | use)\b
+Keyword: \b(?: once | as | assert | break | do | enum | fn | impl | let | log | mod | return | struct | trait | type | use)\b
 Operator: \b(?: copy | move)\b
 Repeat: \b(?: for | while)\b
 StorageClass: \b(?: const | extern | mut | priv | pub | pure | ref | static | unsafe)\b
 Macro: \b(?: macro_rules)\b
 Type: \b(?: Const | Copy | Durable | Send | Owned | binary32 | binary64 | bool | char | f32 | f64 | float | i16 | i32 | i64 | i8 | int | self | str | u16 | u32 | u64 | u8 | uint) (?! \w | \( )
+
+Boolean: \b(?: false | true)\b
 String: " (?: [^"\\] | \\. | \\\n | \\\r)* "
 Character: ' (?: [^'\r\n\\] | \\.)* '
 Float: \W (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)? (?: f \d+)?) \W
@@ -24,6 +26,7 @@ Number: \W (0b [01_]+ (?: [uif] \d*)?) \W
 Number: \W (0x [0-9A-Fa-f_]+ (?: [uif] \d*)?) \W
 Number: \W ([\d_]+ (?: [uif] \d*)?) \W
 Float: \W ([eE] [+-]? [\d_]+ (?: f \d+)?) \W
+
 Attribute: ^ \s* \x23 \s* \[ (\w+)
 Argument: \b(?: (?<! (?: let | impl | struct) \s) \s* [&+]? (\w+) \s* : (?! :))
 Struct: (?<= enum) \s+ (\w+)
