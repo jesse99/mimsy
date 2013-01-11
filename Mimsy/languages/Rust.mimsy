@@ -8,25 +8,31 @@ DocComment: /\*! (?: . | \r | \n)*? \*/
 DocComment: /\*\* (?: . | \r | \n)*? \*/
 Comment: // .* $
 Comment: /\* (?: . | \r | \n)*? \*/
-Keyword: \b(?: macro_rules | once | as | assert | break | const | copy | do | else | enum | extern | fail | false | fn | for | if | impl | let | log | loop | match | mod | move | mut | priv | pub | pure | ref | return | static | struct | trait | true | type | unsafe | use | while)\b
-Keyword2: \b(?: Const | Copy | Durable | Send | Owned | binary32 | binary64 | bool | char | f32 | f64 | float | i16 | i32 | i64 | i8 | int | self | str | u16 | u32 | u64 | u8 | uint) (?! \w | \( )
+Conditional: \b(?: else | if | loop | match)\b
+Exception: \b(?: fail)\b
+Keyword: \b(?: once | as | assert | break | do | enum | false | fn | impl | let | log | mod | return | struct | trait | true | type | use)\b
+Operator: \b(?: copy | move)\b
+Repeat: \b(?: for | while)\b
+StorageClass: \b(?: const | extern | mut | priv | pub | pure | ref | static | unsafe)\b
+Macro: \b(?: macro_rules)\b
+Type: \b(?: Const | Copy | Durable | Send | Owned | binary32 | binary64 | bool | char | f32 | f64 | float | i16 | i32 | i64 | i8 | int | self | str | u16 | u32 | u64 | u8 | uint) (?! \w | \( )
 String: " (?: [^"\\] | \\. | \\\n | \\\r)* "
-String: ' (?: [^'\r\n\\] | \\.)* '
-Number: \W (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)? (?: f \d+)?) \W
-Number: \W (\. [\d_]+ (?: [eE] [+-]? [\d_]+)? (?: f \d+)?) \W
+Character: ' (?: [^'\r\n\\] | \\.)* '
+Float: \W (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)? (?: f \d+)?) \W
+Float: \W (\. [\d_]+ (?: [eE] [+-]? [\d_]+)? (?: f \d+)?) \W
 Number: \W (0b [01_]+ (?: [uif] \d*)?) \W
 Number: \W (0x [0-9A-Fa-f_]+ (?: [uif] \d*)?) \W
 Number: \W ([\d_]+ (?: [uif] \d*)?) \W
-Number: \W ([eE] [+-]? [\d_]+ (?: f \d+)?) \W
+Float: \W ([eE] [+-]? [\d_]+ (?: f \d+)?) \W
 Attribute: ^ \s* \x23 \s* \[ (\w+)
 Argument: \b(?: (?<! (?: let | impl | struct) \s) \s* [&+]? (\w+) \s* : (?! :))
-Type: (?<= enum) \s+ (\w+)
-Type: (?<= trait) (?: (?: \s* < [\w:\s,]+ > \s*) | \s+) ([\w@~&]+)
-Type: (?<= impl) (?: (?: \s* < [\w:\s,]+ > \s*) | \s+) ([\w@~&]+)
-Type: (?<= struct) \s+ ([\w]+)
-Type: (?<= type) \s+ ([\w]+)
-Member: (?<= \s fn) \s+ ([\w_]+) \s* (?= \(|<)
-Member: ^ \s* (new) \s*  \(
-Member: ^ \s* (drop) \s*  \{
+Struct: (?<= enum) \s+ (\w+)
+Struct: (?<= trait) (?: (?: \s* < [\w:\s,]+ > \s*) | \s+) ([\w@~&]+)
+Struct: (?<= impl) (?: (?: \s* < [\w:\s,]+ > \s*) | \s+) ([\w@~&]+)
+Struct: (?<= struct) \s+ ([\w]+)
+Struct: (?<= type) \s+ ([\w]+)
+Function: (?<= \s fn) \s+ ([\w_]+) \s* (?= \(|<)
+Function: ^ \s* (new) \s*  \(
+Function: ^ \s* (drop) \s*  \{
 Operator: \s+ (\&\& | \|\|) \s+
-Variable: \$ \w+
+Identifier: \$ \w+
