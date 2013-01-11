@@ -8,7 +8,7 @@ typedef void (^ProcessStyleRun)(NSUInteger elementIndex, id style, NSRange range
 // Style runs computed for a text document. Once constructed it
 // should only be used by the main thread. Note that there will
 // be a style for every piece of text (text that doesn't match
-// a language regex will be given the "Default" style).
+// a language regex will be given the "Normal" style).
 @interface StyleRuns : NSObject
 
 - (id)initWithElementNames:(NSArray*)names runs:(struct StyleRunVector)runs editCount:(NSUInteger)count;

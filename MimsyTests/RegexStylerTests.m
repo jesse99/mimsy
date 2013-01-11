@@ -18,7 +18,7 @@
 	pushUIntVector(&groupToName, 1);
 	pushUIntVector(&groupToName, 2);
 
-	RegexStyler* styler = [[RegexStyler alloc] initWithRegex:re elementNames:@[@"Default", @"Keyword", @"String"] groupToName:groupToName];
+	RegexStyler* styler = [[RegexStyler alloc] initWithRegex:re elementNames:@[@"Normal", @"Keyword", @"String"] groupToName:groupToName];
 	StyleRuns* styleRuns = [styler computeStyles:@"if (blah) 'x' else 'y';" editCount:0];
 	
 	[styleRuns mapElementsToStyles:^id(NSString* elementName)
@@ -51,7 +51,7 @@
 	STAssertEqualObjects(locations[0], @0, nil);
 
 	// " (blah) "	2
-	STAssertEqualObjects(styles[1], @"Default style", nil);
+	STAssertEqualObjects(styles[1], @"Normal style", nil);
 	STAssertEqualObjects(locations[1], @2, nil);
 	
 	// "'x'"		10
@@ -59,7 +59,7 @@
 	STAssertEqualObjects(locations[2], @10, nil);
 	
 	// " "			13
-	STAssertEqualObjects(styles[3], @"Default style", nil);
+	STAssertEqualObjects(styles[3], @"Normal style", nil);
 	STAssertEqualObjects(locations[3], @13, nil);
 	
 	// "else"		14
@@ -67,7 +67,7 @@
 	STAssertEqualObjects(locations[4], @14, nil);
 	
 	// " "			18
-	STAssertEqualObjects(styles[5], @"Default style", nil);
+	STAssertEqualObjects(styles[5], @"Normal style", nil);
 	STAssertEqualObjects(locations[5], @18, nil);
 	
 	// "'y'"		19
@@ -75,7 +75,7 @@
 	STAssertEqualObjects(locations[6], @19, nil);
 
 	// ";"			22
-	STAssertEqualObjects(styles[7], @"Default style", nil);
+	STAssertEqualObjects(styles[7], @"Normal style", nil);
 	STAssertEqualObjects(locations[7], @22, nil);
 }
 

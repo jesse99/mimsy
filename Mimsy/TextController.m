@@ -187,7 +187,7 @@
 {
 	if (_language)
 	{
-		[self.textView setTypingAttributes:[TextStyles attributesForElement:@"Default"]];
+		[self.textView setTypingAttributes:[TextStyles attributesForElement:@"Normal"]];
 	}
 	else
 	{

@@ -38,7 +38,7 @@ static NSColor* _backColor;
 	NSMutableDictionary* map = [NSMutableDictionary new];
 	NSAttributedString* text = [TextStyles _loadStyles];
 	if (!text || ![TextStyles _parseStyles:text attrMap:map])
-		map[@"Default"] = _baseAttrs;
+		map[@"Normal"] = _baseAttrs;
 	_attrMap = map;
 	
 	NSError* error = nil;
@@ -68,7 +68,7 @@ static NSColor* _backColor;
 	if (!result)
 	{
 		LOG_WARN("Styler", "Couldn't find element %s in the styles file", STR(name));
-		result = _attrMap[@"Default"];
+		result = _attrMap[@"Normal"];
 		_attrMap[name] = result;
 	}
 	
@@ -123,11 +123,11 @@ static NSColor* _backColor;
 		}
 	];
 	
-	if (!map[@"Default"])
+	if (!map[@"Normal"])
 	{
-		NSString* mesg = [[NSString alloc] initWithFormat:@"Styles file at '%@' is missing a Default style.", _path];
+		NSString* mesg = [[NSString alloc] initWithFormat:@"Styles file at '%@' is missing a Normal style.", _path];
 		[TranscriptController writeError:mesg];
-		map[@"Default"] = _baseAttrs;
+		map[@"Normal"] = _baseAttrs;
 	}
 	return true;
 }

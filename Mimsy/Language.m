@@ -18,7 +18,7 @@
 	NSMutableArray* patterns = [NSMutableArray new];
 	NSMutableArray* lines = [NSMutableArray new];
 	
-	[names addObject:@"Default"];
+	[names addObject:@"Normal"];
 	
 	[parser enumerate:
 		^(ConfigParserEntry* entry)

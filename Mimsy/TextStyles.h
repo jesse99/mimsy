@@ -9,7 +9,7 @@
 + (NSDictionary*)fallbackStyle;
 
 // If name is not present in the styles file then the attributes
-// for the "Default" style are returned.
+// for the "Normal" style are returned.
 + (NSDictionary*)attributesForElement:(NSString*)name;
 
 + (NSColor*)backColor;
