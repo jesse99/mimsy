@@ -1,101 +1,106 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-{\fonttbl\f0\fnil\fcharset0 Menlo-Bold;\f1\fnil\fcharset0 Menlo-Regular;\f2\fnil\fcharset0 Menlo-Italic;
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;\f1\fnil\fcharset0 Menlo-Bold;\f2\fnil\fcharset0 Menlo-Italic;
 \f3\fnil\fcharset0 Menlo-BoldItalic;}
-{\colortbl;\red255\green255\blue255;\red32\green78\blue51;\red104\green0\blue254;\red0\green0\blue255;
-\red240\green0\blue31;\red0\green72\blue255;\red118\green118\blue118;\red6\green29\blue255;\red108\green1\blue56;
-\red255\green0\blue0;\red140\green83\blue65;\red0\green64\blue128;\red161\green33\blue108;\red128\green0\blue128;
-\red156\green63\blue252;}
+{\colortbl;\red255\green255\blue255;\red0\green72\blue255;\red128\green0\blue128;\red104\green0\blue254;
+\red161\green33\blue108;\red140\green83\blue65;\red240\green0\blue31;\red118\green118\blue118;\red32\green78\blue51;
+\red255\green0\blue0;\red215\green121\blue43;\red0\green128\blue0;\red1\green0\blue180;\red128\green0\blue0;
+}
 \deftab480
 \pard\pardeftab480\pardirnatural
 
-\f0\b\fs28 \cf2 Ascii: binary\
-Attribute: c#\cf3 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
-\cf0 \shad0 Bold:\
+\f0\fs34 \cf0 Normal:				normal text\
 
-\f1\b0 \cf4 Command:\
-Command2:\
+\fs24 \
 
-\f2\i \cf5 Comment:\
-Comment2:\
+\fs34 \cf2 Type:				built-in type: int, long, char, etc.\
 
-\f1\i0 \cf6 CssSelector:\cf5 \
+\f1\b\fs42 \cf0 \shad\shadx21\shady-22\shadr38\shado77 \shadc0 Structure:	name in a struct or class declaration\
 
-\f0\b \cf2 CssProperty:\cf3 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
+\f0\b0\fs34 \cf2 \shad0 UserType:			user defined type name\
+\cf0 \
+\cf3 Identifier:		any variable name\
 
-\f1\b0 \cf7 \shad0 Debug:\
+\f2\i \cf2 Argument:			formal argument\
 
-\f0\b \cf0 Default:\
-\cf3 DiffFile:\
-DiffOldFile:\
-DiffNewFile:\
-DiffLineNum:\
-\cf8 DiffNew:\
-\cf9 DiffOld:\
+\f1\i0\b \cf0 Function:			function name (also: methods for classes)\
 
-\f3\i \cf5 DocComment:
-\f1\i0\b0 \
-\cf10 Error:\
+\f0\b0 \cf4 Macro:				name of a macro: NDEBUG, __FILE, MIN, etc\
+\pard\pardeftab480\pardirnatural
 
-\f0\b\fs48 \cf3 Header1:\
+\fs36 \cf0 \
+\pard\pardeftab480\pardirnatural
 
-\fs36 Header2:\
+\fs34 \cf0 Statement:		any statement\
 
-\fs28 Header3:\
-Header4:\
+\f1\b \cf2 Conditional:	if, then, else, endif, switch, etc.\
+Exception:		try, catch, throw\
+Keyword:			any other keyword\
 
-\f2\i\b0 \cf0 Italic:\
+\f0\b0 \cf4 Label:				target of a goto or a case in a switch statement\
+\cf2 Operator:			"sizeof", "+", "*", etc.\
 
-\f0\i0\b \cf6 Keyword:\
+\f1\b Repeat:				for, do, while, etc.\
+StorageClass:	static, register, volatile, etc.\
 
-\f1\b0 \cf3 Keyword2:\cf6 \
+\f0\b0 \cf0 \
+Constant:			any constant\
 
-\f0\b \cf2 Markup:\cf5 \
+\f1\b \cf2 Boolean:			a boolean constant: TRUE, false, etc.\
 
-\f1\b0 \cf0 MonoSpaced:\
-\cf11 Number:\cf2 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
-\cf12 \shad0 Prerequisite:\cf0 \
-\cf13 String:\
-String2:\
+\f0\b0 \cf5 Character:		a character constant: 'c', '\\n'\
+\cf6 Float:				a floating point constant: 2.3e10\
+Number:				a number constant: 234, 0xff\
+\cf5 String:				a string constant: "this is a string"\
+\cf0 \
 
-\f0\b \cf2 ShellVariable: HOME, PATH, LANG, etc\
-Target: make\
+\f2\i \cf7 Comment:			any comment\
 
-\f1\b0 \cf14 Variable:\cf0 \
-\cf14 Variable2:\cf0 \
-\cf15 Warn:\
+\f3\b DocComment:		comment used to generate documentation\
+\pard\pardeftab480\pardirnatural
 
-\f0\b \cf6 XmlElement:\
-XmlDec: <!name> sort of thing\
-XmlAttribute:\
+\f0\i0\b0\fs36 \cf0 \
+\pard\pardeftab480\pardirnatural
 
-\f1\b0 \cf5 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
+\f1\b\fs34 \cf2 PreProc:			generic Preprocessor\
+Define:				preprocessor #define\
+Include:			preprocessor #include\
 
-\f3\i\b\fs36 \cf3 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 Preprocess:\
-Region: c#\
+\f3\i\fs42 \cf4 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 PreCondit:	preprocessor #if, #else, #endif, etc.\
+\pard\pardeftab480\pardirnatural
 
-\f1\i0\b0\fs28 \cf5 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
+\f0\i0\b0\fs36 \cf0 \shad0 \
+\pard\pardeftab480\pardirnatural
 
-\f0\b\fs36 \cf0 \shad\shadx21\shady-22\shadr20\shado85 \shadc0 Type:\
-Class:\
+\fs34 \cf0 Special:			any special symbol\
 
-\f1\b0\fs28 \shad0 Delegate:\
-Enum:\
+\fs28 \cf8 Debug:				debugging statements\
 
-\f0\b\fs36 \shad\shadx21\shady-22\shadr20\shado85 \shadc0 Interface:\
-Struct:\
+\fs34 \cf0 Delimiter:		character that needs attention\
+SpecialChar:	special character in a constant\
+\pard\pardeftab480\pardirnatural
 
-\f1\b0 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
+\f2\i \cf7 \ul \ulc7 SpecialComment:special things inside a comment\
+\pard\pardeftab480\pardirnatural
 
-\f2\i\fs28 \cf6 \shad0 Argument:\cf0 \
+\f1\i0\b \cf9 \ulnone Attribute: 		e.g. in C#, Rust, Python (decorator)
+\f0\b0 \cf4 \shad\shadx21\shady-22\shadr0\shado85 \shadc0 \
+\pard\pardeftab480\pardirnatural
+\cf0 \shad0 \
 
-\f0\i0\b Member:\
-Event:\
-Field:\
-Indexer:\
-Method:\
+\fs28 \cf10 Error:				any erroneous construct\
 
-\f1\b0 \cf6 Operator:\cf0 \
-Operator2:\
+\fs34 \cf0 \ul \ulc0 Underlined:		text that stands out, HTML links\
+\pard\pardeftab480\pardirnatural
 
-\f0\b Property:\
+\fs28 \cf11 \ulnone Warning:			a problem which may not be an error\
+\pard\pardeftab480\pardirnatural
+
+\fs24 \cf0 \
+\pard\pardeftab480\pardirnatural
+
+\f1\b\fs34 \cf12 DiffAdd:			added line \
+\pard\pardeftab480\pardirnatural
+\cf13 DiffChange:		changed line\
+\cf14 DiffDelete:		deleted line\
+\cf13 DiffText:			changed text within a changed line\
 }
