@@ -62,7 +62,8 @@
 		@"NonText",			// characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line)
 		@"LineNr",			// Line number for ":number" and ":#" commands
 		@"Typedef",			// A typedef
-								  
+		@"Todo",			// anything that needs extra attention; mostly the keywords TODO FIXME and XXX
+				
 		// Don't think that we will ever use these.
 		@"Ignore",			// left blank, hidden
 		@"MatchParen",		// The character under the cursor or just before it, if it is a paired bracket, and its match
@@ -158,7 +159,6 @@
 		[Group group:nil description:nil parent:nil],
 	
 		[Group group:@"Error" description:@"any erroneous construct" parent:@"Normal"],
-		[Group group:@"Todo" description:@"anything that needs extra attention; mostly the keywords TODO FIXME and XXX" parent:@"Normal"],
 		[Group group:@"Underlined" description:@"text that stands out, HTML links" parent:@"Normal"],
 		[Group group:@"Warning" description:@"a problem which may not be an error" parent:@"Normal"],
 		[Group group:nil description:nil parent:nil],
@@ -1310,17 +1310,6 @@ static bool addSpecialMissingElement(NSMutableAttributedString* text, NSString* 
 		style = [style addStyle:@"underline"];
 		addLine(text, global, @"Underlined: text that stands out, HTML links\n", style);
 		return true;
-	}
-	else if ([name isEqualToString:@"Todo"])
-	{
-		ElementStyle* style = global.elements[@"Comment"];
-		if (style)
-		{
-			// TODOs should appear in comments so we'll use that style
-			style = [style addStyle:@"underline"];
-			addLine(text, global, @"Todo: anything that needs extra attention; mostly the keywords TODO FIXME and XXX\n", style);
-			return true;
-		}
 	}
 	
 	return false;
