@@ -40,6 +40,7 @@
 	- for find could document most common regex options and link to more complete reference
 	- mimsy files could also show regex help file (maybe via a ConditionalHelp key)
 * Add an icon.
+* Open selection should be able to open directories.
 * Language files should have support for a run key:
 	- value is command line used to run a single file (or *.c file for C based languages)
 	- probably triggered by option-R
@@ -102,6 +103,13 @@
 	- would be nice to do something for SCCSs
 * Work on directory editor.
 * git modified file indicator is nice.
+* Experiment with code folding:
+	- need a language regex or string to indicate range start and end
+	- probably want to just toggle folding on and off
+	- doesn't appear to be a good way to do this just by mucking with visuals
+	- one possibility is to switch to a 1pt font
+	  would preserve line numbers and make it simple to do things like search or process the text
+	- show range (eg for find) would need to auto-unfold
 * Do something with the About box.
 * The suggestions that XCode provides when there are errors are pretty cool.
 * Do something special with file rename when a SCCS is present.
@@ -121,6 +129,9 @@
 	- backspace gobbles N spaces where possible
 	- would this work with proportional fonts?
 	- optionally allow tabs at the start of lines
+* Would be nice if there was a way to hide "chrome":
+	- mostly helper windows, like find panels and recent files
+	- maybe also directory windows
 * Can we support references somehow?
 	- ideally per language
 * Maybe also a short view:

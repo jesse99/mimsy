@@ -10,20 +10,21 @@
 @property NSString* name;				// eg "Conditional"
 @property NSString* description;		// eg "if, then, else, endif, switch, etc."
 @property NSString* parent;				// eg "Statement" (will be nil for "Normal")
+@property NSString* link;				// nil unless hi link was used
 @end
 
 @interface GlobalStyle : NSObject
 @property NSString* bgColor;
 @property NSString* fgColor;
-@property NSMutableDictionary* elements;	// element name => ElementStyle*
+@property NSMutableDictionary* elements;// element name => ElementStyle*
 @property NSArray* ignoredGroups;
 @property NSArray* standardGroups;
 @end
 
 @interface ElementStyle : NSObject
-@property NSString* bgColor;				// may be nil
+@property NSString* bgColor;			// may be nil
 @property NSString* fgColor;
-@property NSArray* styles;					// list of bold, underline, undercurl, reverse/inverse, italic, standout, and NONE
+@property NSArray* styles;				// list of bold, underline, undercurl, reverse/inverse, italic, standout, and NONE
 @property bool processed;
 @end
 
@@ -35,6 +36,7 @@
 	group.name = name;
 	group.description = description;
 	group.parent = parent;
+	group.link = nil;
 	
 	return group;
 }
@@ -170,6 +172,13 @@
 	];
 	
 	return self;
+}
+
+- (bool)hasElement:(NSString*)name
+{
+	ElementStyle* element = self.elements[name];
+		
+	return element != nil;
 }
 
 - (ElementStyle*)getElement:(NSString*)name
@@ -1017,8 +1026,7 @@ static int hexValue(unichar ch)
 	return 0;
 }
 
-// Color files sometimes use lower case group names.
-static NSString* sanitizeGroup(GlobalStyle* global, NSString* name)
+static Group* findGroup(GlobalStyle* global, NSString* name)
 {
 	NSUInteger index = [global.standardGroups indexOfObjectPassingTest:
 		^BOOL(Group* candidate, NSUInteger index, BOOL* stop)
@@ -1031,11 +1039,11 @@ static NSString* sanitizeGroup(GlobalStyle* global, NSString* name)
 	
 	if (index != NSNotFound)
 	{
-		return [global.standardGroups[index] name];
+		return global.standardGroups[index];
 	}
 	else
 	{
-		return name;
+		return [Group group:name description:@"ignored" parent:@"Normal"];
 	}
 }
 
@@ -1052,10 +1060,19 @@ static void processLine(GlobalStyle* global, NSString* line)
 	if (i < parts.count)
 	{
 		// hi link Number	Constant
-		// hi! link MoreMsg Comment
-		if (([parts[i] isEqualToString:@"hi"] || [parts[i] isEqualToString:@"hi!"]) && [parts[i+1] isEqualToString:@"link"])
+		if (([parts[i] isEqualToString:@"highlight"] || [parts[i] isEqualToString:@"hi"]) && [parts[i+1] isEqualToString:@"link"])
 		{
-			// TODO: handle this? what does the bang mean (see section 13)
+			Group* group = findGroup(global, parts[i+2]);
+			
+			if (!group.link)
+				group.link = [findGroup(global, parts[i+3]) name];
+		}
+		
+		// hi! link MoreMsg Comment
+		else if (([parts[i] isEqualToString:@"highlight!"] || [parts[i] isEqualToString:@"hi!"]) && [parts[i+1] isEqualToString:@"link"])
+		{
+			Group* group = findGroup(global, parts[i+2]);
+			group.link = [findGroup(global, parts[i+3]) name];
 		}
 		
 		// hi clear
@@ -1080,9 +1097,9 @@ static void processLine(GlobalStyle* global, NSString* line)
 			
 			if (hasColor)
 			{
-				NSString* group = sanitizeGroup(global, parts[i+1]);
+				Group* group = findGroup(global, parts[i+1]);
 				
-				ElementStyle* element = [global getElement:group];
+				ElementStyle* element = [global getElement:group.name];
 				for (NSUInteger j = i+2; j < parts.count; ++j)
 				{
 					if ([parts[j] hasPrefix:@"guifg="])
@@ -1328,15 +1345,43 @@ static bool addSpecialMissingElement(NSMutableAttributedString* text, NSString* 
 	return false;
 }
 
+static ElementStyle* findMissingElement(GlobalStyle* global, Group* group)
+{
+	ElementStyle* element = nil;
+	
+	NSUInteger nesting = 0;
+	while (group)
+	{
+		element = global.elements[group.name];
+		if (element)
+			break;
+		
+		if (group.link)
+			group = findGroup(global, group.link);
+		else if (group.parent)
+			group = findGroup(global, group.parent);
+		else
+			break;
+		
+		++nesting;
+		assert(nesting < 100);
+	}
+	
+	return element;
+}
+
 static void addMissingElement(NSMutableAttributedString* text, Group* group, GlobalStyle* global)
 {
-	ElementStyle* element = global.elements[group.parent];
-	if (!element)
-		element = global.elements[@"Normal"];
-	assert(element);
-
-	NSString* line = [NSString stringWithFormat:@"%@: %@\n", group.name, group.description];
-	addLine(text, global, line, group.name, element);
+	ElementStyle* element = findMissingElement(global, group);
+	if (element)
+	{
+		NSString* line = [NSString stringWithFormat:@"%@: %@\n", group.name, group.description];
+		addLine(text, global, line, group.name, element);
+	}
+	else
+	{
+		printf("   couldn't find an element for %s\n", STR(group.name));
+	}
 }
 
 static NSMutableAttributedString* createText(NSString* path, GlobalStyle* global)
