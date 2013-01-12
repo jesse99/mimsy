@@ -1108,7 +1108,10 @@ static void processLine(GlobalStyle* global, NSString* line)
 					}
 					else if ([parts[j] hasPrefix:@"guibg="])
 					{
-						element.bgColor = [parts[j] substringFromIndex:6];
+						if ([group.name isEqualToString:@"Normal"])
+							global.bgColor = [parts[j] substringFromIndex:6];
+						else
+							element.bgColor = [parts[j] substringFromIndex:6];
 					}
 					else if ([parts[j] hasPrefix:@"gui="])
 					{
