@@ -19,10 +19,11 @@ Float: \W (\. [\d_]+ (?: [eE] [+-]? [\d_]+)? [fFlL]?) \W
 Number: \W (\d+ (?: [luLU]{0, 2})) \W
 Number: \W (0x [0-9a-fA-f]+ (?: [luLU]{0, 2})) \W
 
-PreProc: \x23 \s* (?: define | undef | warning | error | line | pragma)
-PreCondit: \x23 \s* (?: ifdef | ifndef | if | else | elif | endif)
+PreProc: \x23 \s* (?: define | undef) .* $
+PreProc: \x23 \s* (?: warning | error | line | pragma)
+PreCondit: \x23 \s* (?: ifdef | ifndef | if | else | elif | endif) .* $
 Include: \x23 \s* include
 
 String: " (?: [^"\r\n\\] | \\.)* "
 Character: ' (?: [^'\r\n\\] | \\.)* '
-String: \x23 include \s+ (< (?: [^>\r\n\\] | \\.)* >)
+String: (?<= \x23 include) \s+ (< (?: [^>\r\n\\] | \\.)* >)

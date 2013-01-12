@@ -14,9 +14,8 @@ Keyword: \b(?: once | as | assert | break | do | enum | fn | impl | let | log | 
 Operator: \b(?: copy | move)\b
 Repeat: \b(?: for | while)\b
 StorageClass: \b(?: const | extern | mut | priv | pub | pure | ref | static | unsafe)\b
-Macro: \b(?: macro_rules)\b
 Type: \b(?: Const | Copy | Durable | Send | Owned | binary32 | binary64 | bool | char | f32 | f64 | float | i16 | i32 | i64 | i8 | int | self | str | u16 | u32 | u64 | u8 | uint) (?! \w | \( )
-Macro: \b(?: fmt! | error! | warn! | info! | debug! | env! | stringify! | proto! | include! | include_str! | include_bin! | log_syntax! | trace_macros! | ident_to_str! | concat_idents!)\b
+Macro: \b(?: fmt\! | error! | warn\! | info\! | debug\! | env\! | stringify\! | proto\! | include\! | include_str\! | include_bin\! | log_syntax\! | trace_macros\! | ident_to_str\! | concat_idents\!)
 
 Boolean: \b(?: false | true)\b
 String: " (?: [^"\\] | \\. | \\\n | \\\r)* "
