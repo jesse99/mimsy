@@ -46,7 +46,7 @@
 
 - (id)init
 {
-	self.bgColor = @"white";
+	self.bgColor = @"gray97";
 	self.fgColor = @"black";
 	
 	self.elements = [NSMutableDictionary new];
@@ -1131,7 +1131,7 @@ static void processLine(GlobalStyle* global, NSString* line)
 			}
 			else if ([parts[i+1] isEqualToString:@"background=light"] || [parts[i+1] isEqualToString:@"bg=light"] || [parts[i+1] isEqualToString:@"bg&"])
 			{
-				global.bgColor = @"white";
+				global.bgColor = @"gray97";
 				global.fgColor = @"black";
 			}
 			else
