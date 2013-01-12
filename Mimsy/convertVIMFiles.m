@@ -61,6 +61,7 @@
 		@"Cursor",			// the character under the cursor
 		@"NonText",			// characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line)
 		@"LineNr",			// Line number for ":number" and ":#" commands
+		@"Typedef",			// A typedef
 								  
 		// Don't think that we will ever use these.
 		@"Ignore",			// left blank, hidden
@@ -106,28 +107,32 @@
 	];
 				
 	self.standardGroups = @[
+		[Group group:@"Normal" description:@"normal text" parent:nil],
+		[Group group:nil description:nil parent:nil],
+
 		[Group group:@"Type" description:@"int, long, char, etc." parent:@"Normal"],
-		[Group group:@"StorageClass" description:@"static, register, volatile, etc." parent:@"Type"],
-		[Group group:@"Structure" description:@"struct, union, enum, etc." parent:@"Type"],
-		[Group group:@"Typedef" description:@"a typedef" parent:@"Type"],
+		[Group group:@"Structure" description:@"name in a struct or class declaration" parent:@"Type"],
+		[Group group:@"UserType" description:@"a user defined type name" parent:@"Type"],
 		[Group group:nil description:nil parent:nil],
 	
 		[Group group:@"Identifier" description:@"any variable name" parent:@"Normal"],
+		[Group group:@"Argument" description:@"formal argument" parent:@"Constant"],	// think Constant parent looks a bit better
 		[Group group:@"Function" description:@"function name (also: methods for classes)" parent:@"Identifier"],
+		[Group group:@"Macro" description:@"name of a macro: NDEBUG, __FILE, MIN, etc" parent:@"Identifier"],
 		[Group group:nil description:nil parent:nil],
 	
 		[Group group:@"Statement" description:@"any statement" parent:@"Normal"],
 		[Group group:@"Conditional" description:@"if, then, else, endif, switch, etc." parent:@"Statement"],
 		[Group group:@"Exception" description:@"try, catch, throw" parent:@"Statement"],
 		[Group group:@"Keyword" description:@"any other keyword" parent:@"Statement"],
-		[Group group:@"Label" description:@"case, default, etc." parent:@"Statement"],
+		[Group group:@"Label" description:@"target of a goto or a case in a switch statement" parent:@"Statement"],
 		[Group group:@"Operator" description:@"\"sizeof\", \"+\", \"*\", etc." parent:@"Statement"],
 		[Group group:@"Repeat" description:@"for, do, while, etc." parent:@"Statement"],
+		[Group group:@"StorageClass" description:@"static, register, volatile, etc." parent:@"Statement"],
 		[Group group:nil description:nil parent:nil],
 	
 		[Group group:@"Constant" description:@"any constant" parent:@"Normal"],
-		[Group group:@"Argument" description:@"formal argument" parent:@"Constant"],
-		[Group group:@"Boolean" description:@"a boolean constant: TRUE, false" parent:@"Constant"],
+		[Group group:@"Boolean" description:@"a boolean constant: TRUE, false, etc." parent:@"Constant"],
 		[Group group:@"Character" description:@"a character constant: 'c', '\\n'" parent:@"Constant"],
 		[Group group:@"Float" description:@"a floating point constant: 2.3e10" parent:@"Constant"],
 		[Group group:@"Number" description:@"a number constant: 234, 0xff" parent:@"Constant"],
@@ -141,7 +146,6 @@
 		[Group group:@"PreProc" description:@"generic Preprocessor" parent:@"Normal"],
 		[Group group:@"Define" description:@"preprocessor #define" parent:@"PreProc"],
 		[Group group:@"Include" description:@"preprocessor #include" parent:@"PreProc"],
-		[Group group:@"Macro" description:@"same as Define" parent:@"PreProc"],
 		[Group group:@"PreCondit" description:@"preprocessor #if, #else, #endif, etc." parent:@"PreProc"],
 		[Group group:nil description:nil parent:nil],
 	
@@ -154,15 +158,15 @@
 		[Group group:nil description:nil parent:nil],
 	
 		[Group group:@"Error" description:@"any erroneous construct" parent:@"Normal"],
-		[Group group:@"Underlined" description:@"text that stands out, HTML links" parent:@"Normal"],
 		[Group group:@"Todo" description:@"anything that needs extra attention; mostly the keywords TODO FIXME and XXX" parent:@"Normal"],
+		[Group group:@"Underlined" description:@"text that stands out, HTML links" parent:@"Normal"],
+		[Group group:@"Warning" description:@"a problem which may not be an error" parent:@"Normal"],
 		[Group group:nil description:nil parent:nil],
 	
 		[Group group:@"DiffAdd" description:@"added line" parent:@"Normal"],
 		[Group group:@"DiffChange" description:@"changed line" parent:@"Normal"],
 		[Group group:@"DiffDelete" description:@"deleted line" parent:@"Normal"],
-		[Group group:@"DiffText" description:@"changed text within a changed line" parent:@"Normal"],
-		[Group group:@"Normal" description:@"normal text" parent:nil]
+		[Group group:@"DiffText" description:@"changed text within a changed line" parent:@"Normal"]
 	];
 	
 	return self;
@@ -1289,6 +1293,14 @@ static bool addSpecialMissingElement(NSMutableAttributedString* text, NSString* 
 		ElementStyle* style = global.elements[@"Normal"];
 		style = [style changeFg:@"red"];
 		addLine(text, global, @"Error: any erroneous construct\n", style);
+		return true;
+	}
+	else if ([name isEqualToString:@"Warning"])
+	{
+		// Light salmon will probably work with pretty much every background.
+		ElementStyle* style = global.elements[@"Normal"];
+		style = [style changeFg:@"light salmon"];
+		addLine(text, global, @"Warning: a problem which may not be an error\n", style);
 		return true;
 	}
 	else if ([name isEqualToString:@"Underlined"])
