@@ -1196,12 +1196,22 @@ static NSDictionary* getAttributes(GlobalStyle* global, NSString* name, ElementS
 		size *= 1.25;
 	attrs[NSFontAttributeName] = [NSFont fontWithName:fontName size:size];
 	
+	NSColor* fgColor = getColor(global, style.fgColor);
+	if ([name isEqualToString:@"Structure"])				// TODO: not sure we really want to do this
+	{
+		NSShadow* shadow = [NSShadow new];
+		[shadow setShadowColor:[fgColor colorWithAlphaComponent:0.2]];
+		[shadow setShadowOffset:NSMakeSize(1.0, -2.02)];
+		[shadow setShadowBlurRadius:1.0];
+		
+		attrs[NSShadowAttributeName] = shadow;
+	}
+	
 	if ([style.styles containsObject:@"underline"])
 		attrs[NSUnderlineStyleAttributeName] = [NSNumber numberWithInt:NSUnderlineStyleSingle];
 	else if ([style.styles containsObject:@"undercurl"])
 		attrs[NSUnderlineStyleAttributeName] = [NSNumber numberWithInt:NSUnderlineStyleDouble];
 
-	NSColor* fgColor = getColor(global, style.fgColor);
 	NSColor* bgColor = getColor(global, style.bgColor);
 	if ([style.styles containsObject:@"reverse"] || [style.styles containsObject:@"inverse"])
 	{
