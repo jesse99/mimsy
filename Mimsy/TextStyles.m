@@ -19,7 +19,7 @@ static NSColor* _backColor;
 	ASSERT(_baseAttrs == nil);
 	
 	NSString* dir = [Paths installedDir:@"styles"];
-	_path = [dir stringByAppendingPathComponent:@"Default.rtf"];
+	_path = [dir stringByAppendingPathComponent:@"mimsy/pastel-proportional.rtf"];
 	LOG_DEBUG("Styler", "Loading styles from %s", STR(_path));
 
 	// This should include everything which might be applied from a style run.
