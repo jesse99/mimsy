@@ -62,6 +62,7 @@ static SelectStyleController* _controller;
 		__weak id this = self;
 		[temp setDelegate:this];
 		[temp setDataSource:this];
+		[temp setDoubleAction:@selector(onDoubleClick:)];
 		
 		[self _loadStyleNames];
 		[self _loadSettings];
@@ -89,6 +90,23 @@ static SelectStyleController* _controller;
 	if (temp)
 		[temp reloadData];
 	[_writeTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:5.0]];
+}
+
+- (void)onDoubleClick:(NSTableView*)sender
+{
+	StyleRowObject* object = _rows[(NSUInteger)sender.clickedRow];
+
+	NSURL* url = [[NSURL alloc] initFileURLWithPath:object.path];
+	[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES completionHandler:
+		^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
+		{
+			(void) document;
+			(void) documentWasAlreadyOpen;
+			
+			NSString* reason = [error localizedFailureReason];
+			NSString* mesg = [NSString stringWithFormat:@"Couldn't open %@: %@", object.path, reason];
+			[TranscriptController writeError:mesg];
+		}];
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView* )view
@@ -200,6 +218,7 @@ static SelectStyleController* _controller;
 	[view reloadData];
 }
 
+// TODO: need to watch the styles directory so that we can reload these
 - (void)_loadStyleNames
 {
 	NSMutableArray* rows = [NSMutableArray new];
