@@ -3,14 +3,17 @@
 #import "Glob.h"
 #import "Logger.h"
 #import "Paths.h"
+#import "TextController.h"
 #import "TranscriptController.h"
 #import "Utils.h"
 
-static SetStyleController* _window;
+static SetStyleController* _controller;
 
 @implementation SetStyleController
 {
 	NSArray* _styleNames;
+	NSArray* _stylePaths;
+	bool emittedError;
 }
 
 - (id)init
@@ -27,10 +30,11 @@ static SetStyleController* _window;
 
 + (SetStyleController*)open
 {
-	if (!_window)
-		_window = [SetStyleController new];
-	[_window showWindow:NSApp];
-	return _window;
+	if (!_controller)
+		_controller = [SetStyleController new];
+	[_controller showWindow:NSApp];
+	_controller->emittedError = false;
+	return _controller;
 }
 
 - (void)windowDidLoad
@@ -74,9 +78,34 @@ static SetStyleController* _window;
 	}
 }
 
+- (void)tableViewSelectionDidChange:(NSNotification*)notification
+{
+	(void) notification;
+	
+	if (_table.window.isVisible)
+	{
+		NSUInteger row = (NSUInteger) _table.selectedRow;
+		if (row < _stylePaths.count)
+		{
+			TextController* controller = [TextController frontmost];
+			if (controller)
+			{
+				[controller changeStyle:_stylePaths[row]];
+			}
+			else if (!emittedError)
+			{
+				NSString* mesg = @"To see what the style looks like open a document with syntax highlighting enabled.";
+				[TranscriptController writeError:mesg];
+				emittedError = true;
+			}
+		}
+	}
+}
+
 - (void)_loadStyleNames
 {
 	NSMutableArray* names = [NSMutableArray new];
+	NSMutableArray* paths = [NSMutableArray new];
 	
 	NSString* dir = [Paths installedDir:@"styles"];
 	Glob* glob = [[Glob alloc] initWithGlob:@"*.rtf"];
@@ -89,6 +118,7 @@ static SetStyleController* _window;
 		 {
 			 NSString* suffix = [path substringFromIndex:dir.length+1];
 			 [names addObject:suffix];
+			 [paths addObject:path];
 		 }
 	 }
 	 ];
@@ -97,6 +127,7 @@ static SetStyleController* _window;
 		[TranscriptController writeError:[error localizedFailureReason]];
 
 	_styleNames = names;
+	_stylePaths = paths;
 }
 
 @end

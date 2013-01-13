@@ -7,37 +7,39 @@
 #import "TranscriptController.h"
 #import "Utils.h"
 
-static NSString* _path;					// path to the styles file
-static NSDictionary* _baseAttrs;		// attributes
-static NSMutableDictionary* _attrMap;	// element name => attributes
-static NSColor* _backColor;
+static NSDictionary* _baseAttrs;
 
 @implementation TextStyles
-
-+ (void)setup
 {
-	ASSERT(_baseAttrs == nil);
-	
-	NSString* dir = [Paths installedDir:@"styles"];
-	_path = [dir stringByAppendingPathComponent:@"mimsy/pastel-proportional.rtf"];
-	LOG_DEBUG("Styler", "Loading styles from %s", STR(_path));
+	NSString* _path;					// path to the styles file
+	NSMutableDictionary* _attrMap;		// element name => attributes
+	NSColor* _backColor;
+}
 
-	// This should include everything which might be applied from a style run.
-	NSMutableDictionary* attrs = [NSMutableDictionary new];
-	attrs[NSFontAttributeName]               = [NSFont fontWithName:@"Times" size:17];	// TODO: use a pref for this
-	attrs[NSForegroundColorAttributeName]    = [NSColor blackColor];
-	attrs[NSUnderlineStyleAttributeName]     = @0;
-	attrs[NSLigatureAttributeName]           = @1;
-	attrs[NSBaselineOffsetAttributeName]     = @0.0;
-	attrs[NSStrokeWidthAttributeName]        = @0;
-	attrs[NSStrikethroughStyleAttributeName] = @0;
-	attrs[NSObliquenessAttributeName]        = @0;
-	attrs[NSExpansionAttributeName]          = @0.0;
-	_baseAttrs = attrs;
+- (id)initWithPath:(NSString*)path
+{
+	if (_baseAttrs == nil)
+	{
+		// This should include everything which might be applied from a style run.
+		NSMutableDictionary* attrs = [NSMutableDictionary new];
+		attrs[NSFontAttributeName]               = [NSFont fontWithName:@"Times" size:17];	// TODO: use a pref for this
+		attrs[NSForegroundColorAttributeName]    = [NSColor blackColor];
+		attrs[NSUnderlineStyleAttributeName]     = @0;
+		attrs[NSLigatureAttributeName]           = @1;
+		attrs[NSBaselineOffsetAttributeName]     = @0.0;
+		attrs[NSStrokeWidthAttributeName]        = @0;
+		attrs[NSStrikethroughStyleAttributeName] = @0;
+		attrs[NSObliquenessAttributeName]        = @0;
+		attrs[NSExpansionAttributeName]          = @0.0;
+		_baseAttrs = attrs;
+	}
+	
+	_path = path;
+	LOG_DEBUG("Styler", "Loading styles from %s", STR(_path));
 	
 	NSMutableDictionary* map = [NSMutableDictionary new];
-	NSAttributedString* text = [TextStyles _loadStyles];
-	if (!text || ![TextStyles _parseStyles:text attrMap:map])
+	NSAttributedString* text = [self _loadStyles];
+	if (!text || ![self _parseStyles:text attrMap:map])
 		map[@"Normal"] = _baseAttrs;
 	_attrMap = map;
 	
@@ -55,6 +57,8 @@ static NSColor* _backColor;
 		NSString* mesg = [NSString stringWithFormat:@"Couldn't read back-color from '%@':\n%@.", _path, reason];
 		[TranscriptController writeError:mesg];
 	}
+	
+	return self;
 }
 
 + (NSDictionary*)fallbackStyle
@@ -62,7 +66,7 @@ static NSColor* _backColor;
 	return _baseAttrs;
 }
 
-+ (NSDictionary*)attributesForElement:(NSString*)name
+- (NSDictionary*)attributesForElement:(NSString*)name
 {
 	NSDictionary* result = _attrMap[name];
 	if (!result)
@@ -75,12 +79,12 @@ static NSColor* _backColor;
 	return result;
 }
 
-+ (NSColor*)backColor
+- (NSColor*)backColor
 {
 	return _backColor;
 }
 
-+ (NSAttributedString*)_loadStyles
+- (NSAttributedString*)_loadStyles
 {
 	NSURL* url = [NSURL fileURLWithPath:_path];
 	
@@ -100,7 +104,7 @@ static NSColor* _backColor;
 	}
 }
 
-+ (bool)_parseStyles:(NSAttributedString*)text attrMap:(NSMutableDictionary*)map
+- (bool)_parseStyles:(NSAttributedString*)text attrMap:(NSMutableDictionary*)map
 {
 	ASSERT(map.count == 0);		// can't modify attributes once they have been applied
 	
@@ -119,7 +123,7 @@ static NSColor* _backColor;
 			NSMutableDictionary* attrs = [NSMutableDictionary new];
 			[attrs addEntriesFromDictionary:_baseAttrs];
 			[attrs addEntriesFromDictionary:[text fontAttributesInRange:NSMakeRange(entry.offset, 1)]];
-			[TextStyles setStyleName:entry.key attrMap:map attrs:attrs];
+			[self _setStyleName:entry.key attrMap:map attrs:attrs];
 		}
 	];
 	
@@ -132,7 +136,7 @@ static NSColor* _backColor;
 	return true;
 }
 
-+ (void)setStyleName:(NSString*)name attrMap:(NSMutableDictionary*)map attrs:(NSDictionary*)attrs
+- (void)_setStyleName:(NSString*)name attrMap:(NSMutableDictionary*)map attrs:(NSDictionary*)attrs
 {
 	if (!map[name])
 	{

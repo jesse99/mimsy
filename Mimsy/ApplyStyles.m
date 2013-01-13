@@ -46,6 +46,14 @@
 	return self;
 }
 
+- (void)resetStyles
+{
+	NSTextStorage* storage = _controller.textView.textStorage;
+	[storage setAttributes:[_controller.styles attributesForElement:@"Normal"] range:NSMakeRange(0, storage.length)];
+	 
+	[self addDirtyLocation:0 reason:@"reset styles"];
+}
+
 - (void)addDirtyLocation:(NSUInteger)loc reason:(NSString*)reason
 {
 	if (!_queued)
@@ -61,12 +69,13 @@
 				[runs mapElementsToStyles:
 					^id(NSString* name)
 					{
-						return [TextStyles attributesForElement:name];
+						return [_controller.styles attributesForElement:name];
 					}
 				];
-				[_controller.textView setBackgroundColor:[TextStyles backColor]];
+				[_controller.textView setBackgroundColor:_controller.styles.backColor];
 
-				[self _skipApplied:runs];
+				if (loc > 0)
+					[self _skipApplied:runs];
 				[self _applyRuns:runs];
 			}
 		 ];

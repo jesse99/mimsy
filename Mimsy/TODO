@@ -1,12 +1,7 @@
 * Get first cut at language styles working:
-	- scroll to saved position after styles are applied
-	  but don't scroll if the user has already scrolled
 	- cache styles for files (use a pretty large cache, maybe 100 files)
 	  might want some sort of cache size logging, maybe when various thresholds are breached
 * Work on styling:
-	- get color files working
-		` probably want to add some of the VIM groups, 
-		  see http://vimdoc.sourceforge.net/htmldoc/syntax.html NAMING CONVENTIONS
 	- add some VIM style color files, vimcolorschemetest.googlecode.com
 	- add mimsy language
 	- maybe Lua can be used for config (and other stuff)

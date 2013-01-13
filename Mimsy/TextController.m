@@ -4,6 +4,7 @@
 #import "Language.h"
 #import "Languages.h"
 #import "Logger.h"
+#import "Paths.h"
 #import "RestoreView.h"
 #import "TextView.h"
 #import "TextDocument.h"
@@ -17,6 +18,7 @@
 	bool _wordWrap;
 	NSUInteger _editCount;
 	Language* _language;
+	TextStyles* _styles;
 	ApplyStyles* _applier;
 }
 
@@ -114,6 +116,19 @@
 	//DoSetTabSettings();
 }
 
++ (TextController*)frontmost
+{
+	for (NSWindow* window in [NSApp orderedWindows])
+	{
+		if (window.isVisible || window.isMiniaturized)
+			if (window.windowController)
+				if ([window.windowController isKindOfClass:[TextController class]])
+					return window.windowController;
+	}
+	
+	return nil;
+}
+
 - (NSAttributedString*)attributedText
 {
 	return self.textView.textStorage;
@@ -140,11 +155,21 @@
 
 - (void)setLanguage:(Language*)lang
 {
-
 	if (lang != _language)
 	{
 		_language = lang;
 		LOG_INFO("Text", "Set language for %s to %s", STR([self.path lastPathComponent]), STR(lang));
+		
+		if (_language && !_styles)
+		{
+			NSString* dir = [Paths installedDir:@"styles"];
+			NSString* path = [dir stringByAppendingPathComponent:@"mimsy/pastel-proportional.rtf"];
+			_styles = [[TextStyles alloc] initWithPath:path];
+		}
+		else if (!_language && _styles)
+		{
+			_styles = nil;
+		}
 		
 		if (_language && !_applier)
 			_applier = [[ApplyStyles alloc] init:self];
@@ -155,6 +180,14 @@
 		if (_applier)
 			[_applier addDirtyLocation:0 reason:@"set language"];
 	}
+}
+
+- (void)changeStyle:(NSString*)path
+{
+	assert(_language);
+	_styles = [[TextStyles alloc] initWithPath:path];
+	if (_applier)
+		[_applier resetStyles];
 }
 
 - (NSString*)path
@@ -187,7 +220,7 @@
 {
 	if (_language)
 	{
-		[self.textView setTypingAttributes:[TextStyles attributesForElement:@"Normal"]];
+		[self.textView setTypingAttributes:[_styles attributesForElement:@"Normal"]];
 	}
 	else
 	{
