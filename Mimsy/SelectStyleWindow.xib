@@ -52,7 +52,7 @@
 				<nil key="NSUserInterfaceItemIdentifier"/>
 				<string key="NSWindowContentMinSize">{64, 64}</string>
 				<object class="NSView" key="NSWindowView" id="1006">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSScrollView" id="724274987">
@@ -69,7 +69,7 @@
 											<array class="NSMutableArray" key="NSSubviews"/>
 											<string key="NSFrameSize">{480, 472}</string>
 											<reference key="NSSuperview" ref="59242435"/>
-											<reference key="NSNextKeyView" ref="521933062"/>
+											<reference key="NSNextKeyView" ref="275664217"/>
 											<string key="NSReuseIdentifierKey">_NS:13</string>
 											<bool key="NSEnabled">YES</bool>
 											<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -149,6 +149,11 @@
 													<int key="NSResizingMask">3</int>
 													<bool key="NSIsResizeable">YES</bool>
 													<reference key="NSTableView" ref="436816622"/>
+													<object class="NSSortDescriptor" key="NSSortDescriptorPrototype">
+														<string key="NSKey">name</string>
+														<bool key="NSAscending">YES</bool>
+														<string key="NSSelector">caseInsensitiveCompare:</string>
+													</object>
 												</object>
 												<object class="NSTableColumn" id="1015140909">
 													<string key="NSIdentifier">1</string>
@@ -176,6 +181,11 @@
 													<bool key="NSIsResizeable">YES</bool>
 													<bool key="NSIsEditable">YES</bool>
 													<reference key="NSTableView" ref="436816622"/>
+													<object class="NSSortDescriptor" key="NSSortDescriptorPrototype">
+														<string key="NSKey">rating</string>
+														<bool key="NSAscending">NO</bool>
+														<string key="NSSelector">caseInsensitiveCompare:</string>
+													</object>
 												</object>
 												<object class="NSTableColumn" id="30331493">
 													<string key="NSIdentifier">2</string>
@@ -211,6 +221,11 @@
 													<bool key="NSIsResizeable">YES</bool>
 													<bool key="NSIsEditable">YES</bool>
 													<reference key="NSTableView" ref="436816622"/>
+													<object class="NSSortDescriptor" key="NSSortDescriptorPrototype">
+														<string key="NSKey">comment</string>
+														<bool key="NSAscending">YES</bool>
+														<string key="NSSelector">caseInsensitiveCompare:</string>
+													</object>
 												</object>
 											</array>
 											<double key="NSIntercellSpacingWidth">3</double>
@@ -288,13 +303,14 @@
 							</array>
 							<string key="NSFrame">{{-1, 63}, {482, 490}}</string>
 							<reference key="NSSuperview" ref="1006"/>
-							<reference key="NSNextKeyView" ref="59242435"/>
+							<reference key="NSNextKeyView" ref="521933062"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<int key="NSsFlags">133682</int>
 							<reference key="NSVScroller" ref="275664217"/>
 							<reference key="NSHScroller" ref="537231719"/>
 							<reference key="NSContentView" ref="59242435"/>
 							<reference key="NSHeaderClipView" ref="521933062"/>
+							<reference key="NSCornerView" ref="123525135"/>
 							<bytes key="NSScrollAmts">QSAAAEEgAABBmAAAQZgAAA</bytes>
 							<double key="NSMinMagnification">0.25</double>
 							<double key="NSMaxMagnification">4</double>
@@ -305,6 +321,7 @@
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{343, 13}, {123, 32}}</string>
 							<reference key="NSSuperview" ref="1006"/>
+							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="1034004779">
@@ -325,6 +342,7 @@
 						</object>
 					</array>
 					<string key="NSFrameSize">{480, 552}</string>
+					<reference key="NSSuperview"/>
 					<reference key="NSNextKeyView" ref="724274987"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1680, 1028}}</string>

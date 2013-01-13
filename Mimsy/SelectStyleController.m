@@ -11,23 +11,29 @@
 
 static SelectStyleController* _controller;
 
+@interface StyleRowObject : NSObject
+@property NSString* name;
+@property NSString* path;
+@property NSString* rating;
+@property NSString* comment;
+@end
+
+@implementation StyleRowObject
+@end
+
 @implementation SelectStyleController
 {
-	NSArray* _styleNames;
-	NSArray* _stylePaths;
-	NSMutableDictionary* _ratings;
-	NSMutableDictionary* _comments;
+	NSMutableArray* _rows;
 	NSString* _default;
-	bool emittedError;
 	NSTimer* _writeTimer;
+	bool emittedError;
 }
 
 - (id)init
 {
 	self = [super initWithWindowNibName:@"SelectStyleWindow"];
 	
-	_ratings = [NSMutableDictionary new];
-	_comments = [NSMutableDictionary new];
+	_rows = [NSMutableArray new];
 	
 	// We use this to schedule a write to the settings file after edits. By default it
 	// fires every year (it needs to repeat so that we can adjust the fire time after
@@ -67,14 +73,14 @@ static SelectStyleController* _controller;
 {
 	(void) sender;
 	
-	_default = _styleNames[(NSUInteger)_table.selectedRow];
-	NSString* path = _stylePaths[(NSUInteger)_table.selectedRow];
+	StyleRowObject* object = _rows[(NSUInteger)_table.selectedRow];
+	_default = object.name;
 	[TextController enumerate:
 		^(TextController* controller)
 		{
 			if (controller && controller.language)
 			{
-				[controller changeStyle:path];
+				[controller changeStyle:object.path];
 			}
 		}
 	];
@@ -89,7 +95,7 @@ static SelectStyleController* _controller;
 {
 	(void) view;
 	
-	return (NSInteger) _styleNames.count;
+	return (NSInteger) _rows.count;
 }
 
 - (id)tableView:(NSTableView* )view objectValueForTableColumn:(NSTableColumn*)column row:(NSInteger)row
@@ -98,19 +104,18 @@ static SelectStyleController* _controller;
 	
 	id value = nil;
 
+	StyleRowObject* object = _rows[(NSUInteger)row];
 	if ([column.identifier isEqualToString:@"0"])
 	{
-		value = _styleNames[(NSUInteger)row];
+		value = object.name;
 	}
 	else if ([column.identifier isEqualToString:@"1"])
 	{
-		NSString* name = _styleNames[(NSUInteger)row];
-		value = _ratings[name];
+		value = object.rating;
 	}
 	else if ([column.identifier isEqualToString:@"2"])
 	{
-		NSString* name = _styleNames[(NSUInteger)row];
-		value = _comments[name];
+		value = object.comment;
 	}
 	else
 	{
@@ -118,7 +123,7 @@ static SelectStyleController* _controller;
 	}
 	
 	// Render text on the default row with bold.
-	if (value && [_styleNames[(NSUInteger)row] isEqualToString:_default])
+	if (value && [object.name isEqualToString:_default])
 	{
 		NSMutableAttributedString* str = [[NSMutableAttributedString alloc] initWithString:value];
 		[str setAttributes:@{NSStrokeWidthAttributeName:@-3.0} range:NSMakeRange(0, [value length])];
@@ -128,18 +133,17 @@ static SelectStyleController* _controller;
 	return value;
 }
 
-- (void)tableView:(NSTableView*)view setObjectValue:(id)object forTableColumn:(NSTableColumn*)column row:(NSInteger)row
+- (void)tableView:(NSTableView*)view setObjectValue:(id)newValue forTableColumn:(NSTableColumn*)column row:(NSInteger)row
 {
 	(void) view;
 	
-	NSString* name = _styleNames[(NSUInteger)row];
-	
+	StyleRowObject* object = _rows[(NSUInteger)row];	
 	if ([column.identifier isEqualToString:@"1"])
 	{
 		// For ease of sorting we only allow asterisks in the rating column.
 		// To avoid confusion about what the user can type we'll simply map
 		// anything they type to asterisks.
-		_ratings[name] = [[object description] map:
+		object.rating = [[newValue description] map:
 			^unichar(unichar ch)
 			{
 				(void) ch;
@@ -150,7 +154,7 @@ static SelectStyleController* _controller;
 	}
 	else if ([column.identifier isEqualToString:@"2"])
 	{
-		_comments[name] = object;
+		object.comment = newValue;
 		[_writeTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:5.0]];
 	}
 	else
@@ -166,12 +170,13 @@ static SelectStyleController* _controller;
 	if (_table.window.isVisible)
 	{
 		NSUInteger row = (NSUInteger) _table.selectedRow;
-		if (row < _stylePaths.count)
+		StyleRowObject* object = _rows[(NSUInteger)row];
+		if (row < _rows.count)
 		{
 			TextController* controller = [TextController frontmost];
 			if (controller && controller.language)
 			{
-				[controller changeStyle:_stylePaths[row]];
+				[controller changeStyle:object.path];
 			}
 			else if (!emittedError)
 			{
@@ -183,14 +188,21 @@ static SelectStyleController* _controller;
 		
 		NSButton* button = _makeDefaultButton;
 		if (button)
-			[button setEnabled:![_styleNames[row] isEqualToString:_default]];
+			[button setEnabled:![object.name isEqualToString:_default]];
 	}
+}
+
+- (void)tableView:(NSTableView*)view sortDescriptorsDidChange:(NSArray*)oldDescriptors
+{
+	(void) oldDescriptors;
+	
+	[_rows sortUsingDescriptors:[view sortDescriptors]];
+	[view reloadData];
 }
 
 - (void)_loadStyleNames
 {
-	NSMutableArray* names = [NSMutableArray new];
-	NSMutableArray* paths = [NSMutableArray new];
+	NSMutableArray* rows = [NSMutableArray new];
 	
 	NSString* dir = [Paths installedDir:@"styles"];
 	Glob* glob = [[Glob alloc] initWithGlob:@"*.rtf"];
@@ -201,25 +213,21 @@ static SelectStyleController* _controller;
 	 {
 		 if (![path hasSuffix:@"README.rtf"])
 		 {
-			 NSString* suffix = [path substringFromIndex:dir.length+1];
-			 [names addObject:suffix];
-			 [paths addObject:path];
+			 StyleRowObject* object = [StyleRowObject new];
+			 object.name = [path substringFromIndex:dir.length+1];
+			 object.path = path;
+			 [rows addObject:object];
 		 }
 	 }
 	 ];
-	LOG_INFO("Mimsy", "loaded %lu styles", names.count);
 	if (error)
 		[TranscriptController writeError:[error localizedFailureReason]];
 
-	_styleNames = names;
-	_stylePaths = paths;
+	_rows = rows;
 }
 
 - (void)_loadSettings
 {
-	[_ratings removeAllObjects];
-	[_comments removeAllObjects];
-
 	NSString* dir = [Paths installedDir:@"settings"];
 	NSString* path = [dir stringByAppendingPathComponent:@"styles.mimsy"];
 
@@ -239,11 +247,22 @@ static SelectStyleController* _controller;
 					NSArray* parts = [entry.value componentsSeparatedByString:@"|"];
 					if (parts.count == 2)
 					{
-						if ([parts[0] length])
-							_ratings[entry.key] = parts[0];
+						NSUInteger i = [_rows indexOfObjectPassingTest:
+							^BOOL(StyleRowObject* obj, NSUInteger index, BOOL* stop)
+							{
+								(void) stop;
+								(void) index;
+								return [obj.name isEqualToString:entry.key];
+							}];
 						
-						if ([parts[1] length])
-							_comments[entry.key] = parts[1];
+						if (i != NSNotFound)
+						{
+							if ([parts[0] length])
+								[_rows[i] setRating:parts[0]];
+							
+							if ([parts[1] length])
+								[_rows[i] setComment:parts[1]];
+						}
 					}
 					else
 					{
@@ -272,13 +291,13 @@ static SelectStyleController* _controller;
 	[str appendFormat:@"Default: %@\n", _default];
 	[str appendString:@"\n"];
 	
-	for (NSString* name in _styleNames)
+	for (StyleRowObject* object in _rows)
 	{
-		NSString* rating = _ratings[name];
-		NSString* comment = _comments[name];
-		if (rating || comment)
+		if (object.rating || object.comment)
 		{
-			[str appendFormat:@"%@: %@|%@\n", name, rating ? rating : @"", comment ? comment : @""];
+			[str appendFormat:@"%@: %@|%@\n", object.name,
+				object.rating ? object.rating : @"",
+				object.comment ? object.comment : @""];
 		}
 	}
 	

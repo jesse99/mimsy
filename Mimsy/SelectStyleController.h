@@ -14,5 +14,6 @@
 - (NSInteger)numberOfRowsInTableView:(NSTableView* )view;
 - (id)tableView:(NSTableView* )view objectValueForTableColumn:(NSTableColumn*)column row:(NSInteger)row;
 - (void)tableView:(NSTableView*)view setObjectValue:(id)object forTableColumn:(NSTableColumn*)column row:(NSInteger)row;
+- (void)tableView:(NSTableView*)view sortDescriptorsDidChange:(NSArray*)oldDescriptors;
 
 @end
