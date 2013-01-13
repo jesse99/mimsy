@@ -2,7 +2,7 @@
 
 @interface ConfigParserEntry : NSObject
 @property NSString* key;
-@property NSString* value;		// whitespace will be trimmed from either end
+@property NSString* value;		// whitespace will be trimmed from both ends
 @property NSUInteger offset;
 @property NSUInteger line;
 @end

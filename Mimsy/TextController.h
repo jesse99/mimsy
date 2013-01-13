@@ -11,6 +11,7 @@
 - (void)resetAttributes;
 - (void)changeStyle:(NSString*)path;
 + (TextController*)frontmost;
++ (void)enumerate:(void (^)(TextController* controller))block;
 
 @property IBOutlet TextView* textView;
 @property IBOutlet NSScrollView *scrollView;

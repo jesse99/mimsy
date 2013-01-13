@@ -4,6 +4,7 @@
 #import "Assert.h"
 #import "Glob.h"
 #import "Metadata.h"
+#import "StringCategory.h"
 #import "Utils.h"
 
 @interface Group : NSObject
@@ -1051,7 +1052,7 @@ static Group* findGroup(GlobalStyle* global, NSString* name)
 // define the grammar.
 static void processLine(GlobalStyle* global, NSString* line)
 {
-	NSArray* parts = [Utils splitChars:line by:[NSCharacterSet whitespaceCharacterSet]];
+	NSArray* parts = [line splitByChars:[NSCharacterSet whitespaceCharacterSet]];
 	
 	NSUInteger i = 0;
 	while (i < parts.count && [parts[i] length] == 0)

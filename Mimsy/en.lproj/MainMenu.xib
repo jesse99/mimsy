@@ -81,9 +81,9 @@
 									<reference key="NSOnImage" ref="1033313550"/>
 									<reference key="NSMixedImage" ref="310636482"/>
 								</object>
-								<object class="NSMenuItem" id="476948091">
+								<object class="NSMenuItem" id="987821792">
 									<reference key="NSMenu" ref="110575045"/>
-									<string key="NSTitle">Set Style</string>
+									<string key="NSTitle">Select Style</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="1033313550"/>
@@ -1706,7 +1706,7 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">setStyle:</string>
 						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="476948091"/>
+						<reference key="destination" ref="987821792"/>
 					</object>
 					<int key="connectionID">606</int>
 				</object>
@@ -2082,7 +2082,7 @@
 							<reference ref="1046388886"/>
 							<reference ref="1056857174"/>
 							<reference ref="342932134"/>
-							<reference ref="476948091"/>
+							<reference ref="987821792"/>
 						</array>
 						<reference key="parent" ref="694149608"/>
 					</object>
@@ -2621,7 +2621,7 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">605</int>
-						<reference key="object" ref="476948091"/>
+						<reference key="object" ref="987821792"/>
 						<reference key="parent" ref="110575045"/>
 					</object>
 				</array>

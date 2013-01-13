@@ -5,6 +5,7 @@
 #import "ConditionalGlob.h"
 #import "ConfigParser.h"
 #import "RegexStyler.h"
+#import "StringCategory.h"
 #import "Utils.h"
 
 @implementation Language
@@ -47,7 +48,7 @@
 			
 			else if ([entry.key isEqualToString:@"Globs"])
 			{
-				[globs addObjectsFromArray:[Utils splitString:entry.value by:@" "]];
+				[globs addObjectsFromArray:[entry.value splitByString:@" "]];
 			}
 			else
 			{
@@ -72,7 +73,7 @@
 	if (errors.count > 0)
 	{
 		NSString* mesg = [errors componentsJoinedByString:@", "];
-		mesg = [Utils titleCase:mesg];
+		mesg = [mesg titleCase];
 		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
 		*error = [NSError errorWithDomain:@"mimsy" code:4 userInfo:dict];
 	}

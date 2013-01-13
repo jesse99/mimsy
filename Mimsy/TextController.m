@@ -1,6 +1,7 @@
 #import "TextController.h"
 
 #import "ApplyStyles.h"
+#import "ConfigParser.h"
 #import "Language.h"
 #import "Languages.h"
 #import "Logger.h"
@@ -9,6 +10,7 @@
 #import "TextView.h"
 #import "TextDocument.h"
 #import "TextStyles.h"
+#import "TranscriptController.h"
 #import "WindowsDatabase.h"
 
 @implementation TextController
@@ -129,6 +131,17 @@
 	return nil;
 }
 
++ (void)enumerate:(void (^)(TextController*))block
+{
+	for (NSWindow* window in [NSApp orderedWindows])
+	{
+		if (window.isVisible || window.isMiniaturized)
+			if (window.windowController)
+				if ([window.windowController isKindOfClass:[TextController class]])
+					block(window.windowController);
+	}
+}
+
 - (NSAttributedString*)attributedText
 {
 	return self.textView.textStorage;
@@ -153,6 +166,36 @@
 	return _language;
 }
 
+- (NSString*)_getDefaultStyleName
+{
+	NSString* name = nil;
+	
+	NSString* dir = [Paths installedDir:@"settings"];
+	NSString* path = [dir stringByAppendingPathComponent:@"styles.mimsy"];
+	
+	NSError* error = nil;
+	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
+	if (!error)
+	{
+		name = [parser valueForKey:@"Default"];
+		if (!name)
+		{
+			NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't find Default key in %@:\n", path];
+			[TranscriptController writeError:mesg];
+		}
+	}
+	else
+	{
+		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load %@:\n%@", path, [error localizedFailureReason]];
+		[TranscriptController writeError:mesg];
+	}
+	
+	if (!name)
+		name = @"mimsy/pastel-proportional.rtf";
+	
+	return name;
+}
+
 - (void)setLanguage:(Language*)lang
 {
 	if (lang != _language)
@@ -163,7 +206,7 @@
 		if (_language && !_styles)
 		{
 			NSString* dir = [Paths installedDir:@"styles"];
-			NSString* path = [dir stringByAppendingPathComponent:@"mimsy/pastel-proportional.rtf"];
+			NSString* path = [dir stringByAppendingPathComponent:self._getDefaultStyleName];
 			_styles = [[TextStyles alloc] initWithPath:path];
 		}
 		else if (!_language && _styles)

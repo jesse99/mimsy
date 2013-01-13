@@ -18,48 +18,6 @@ static NSString* Replacement = @"\uFFFD";
 
 @implementation Utils
 
-+ (NSArray*)splitString:(NSString*)str by:(NSString*)separator
-{
-	NSArray* tmp = [str componentsSeparatedByString:separator];
-	
-	NSMutableArray* result = [[NSMutableArray alloc] initWithCapacity:tmp.count];
-	for (NSString* s in tmp)
-	{
-		if (s.length > 0)
-			[result addObject:s];
-	}
-	
-	return result;
-}
-
-+ (NSArray*)splitChars:(NSString*)str by:(NSCharacterSet*)chars
-{
-	NSArray* tmp = [str componentsSeparatedByCharactersInSet:chars];
-	
-	NSMutableArray* result = [[NSMutableArray alloc] initWithCapacity:tmp.count];
-	for (NSString* s in tmp)
-	{
-		if (s.length > 0)
-			[result addObject:s];
-	}
-	
-	return result;
-}
-
-+ (NSString*)titleCase:(NSString*)str
-{
-	NSString* result = str;
-	
-	if (result.length > 0)
-	{
-		NSString* prefix = [[str substringToIndex:1] uppercaseString];
-		NSString* suffix = [str substringFromIndex:1];
-		result = [prefix stringByAppendingString:suffix];
-	}
-	
-	return str;
-}
-
 + (NSString*)bytesToStr:(NSUInteger)bytes
 {
 	if (bytes > 1024*1024*1024)
