@@ -30,6 +30,8 @@
 		37514104168BFF8C00C329AF /* Languages.m in Sources */ = {isa = PBXBuildFile; fileRef = 37514103168BFF8C00C329AF /* Languages.m */; };
 		3751410C168CE15600C329AF /* create-vector.py in Resources */ = {isa = PBXBuildFile; fileRef = 3751410B168CE15600C329AF /* create-vector.py */; };
 		3751410E168CE19000C329AF /* make-vectors.sh in Resources */ = {isa = PBXBuildFile; fileRef = 3751410D168CE19000C329AF /* make-vectors.sh */; };
+		3752CC1116A1F25E00B623F5 /* SetStyle.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3752CC1016A1F25E00B623F5 /* SetStyle.xib */; };
+		3752CC1516A1F2B400B623F5 /* SetStyleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3752CC1416A1F2B400B623F5 /* SetStyleController.m */; };
 		3759B6571676F01900D3F3B8 /* TextController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3759B6561676F01900D3F3B8 /* TextController.m */; };
 		3759B6601678376000D3F3B8 /* Decode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3759B65F1678376000D3F3B8 /* Decode.m */; };
 		37862C3E168D20FD00DB9E66 /* VectorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C3D168D20FD00DB9E66 /* VectorTests.m */; };
@@ -113,6 +115,9 @@
 		37514103168BFF8C00C329AF /* Languages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Languages.m; sourceTree = "<group>"; };
 		3751410B168CE15600C329AF /* create-vector.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "create-vector.py"; sourceTree = "<group>"; };
 		3751410D168CE19000C329AF /* make-vectors.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "make-vectors.sh"; sourceTree = "<group>"; };
+		3752CC1016A1F25E00B623F5 /* SetStyle.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SetStyle.xib; sourceTree = "<group>"; };
+		3752CC1316A1F2B400B623F5 /* SetStyleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetStyleController.h; sourceTree = "<group>"; };
+		3752CC1416A1F2B400B623F5 /* SetStyleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetStyleController.m; sourceTree = "<group>"; };
 		3759B6551676F01900D3F3B8 /* TextController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextController.h; sourceTree = "<group>"; };
 		3759B6561676F01900D3F3B8 /* TextController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextController.m; sourceTree = "<group>"; };
 		3759B65E1678376000D3F3B8 /* Decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Decode.h; sourceTree = "<group>"; };
@@ -249,6 +254,9 @@
 				37514103168BFF8C00C329AF /* Languages.m */,
 				375140FF168BFF8000C329AF /* RegexStyler.h */,
 				37514100168BFF8000C329AF /* RegexStyler.m */,
+				3752CC1316A1F2B400B623F5 /* SetStyleController.h */,
+				3752CC1416A1F2B400B623F5 /* SetStyleController.m */,
+				3752CC1016A1F25E00B623F5 /* SetStyle.xib */,
 				37862C3F168D259500DB9E66 /* StyleRun.h */,
 				375140FC168BFA7800C329AF /* StyleRuns.h */,
 				375140FD168BFA7800C329AF /* StyleRuns.m */,
@@ -485,6 +493,7 @@
 				37862C60168FF58900DB9E66 /* styles in Resources */,
 				37862C651690BC0600DB9E66 /* settings in Resources */,
 				37862C6E1694BE7400DB9E66 /* InfoWindow.xib in Resources */,
+				3752CC1116A1F25E00B623F5 /* SetStyle.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,6 +556,7 @@
 				37862C741698755100DB9E66 /* Metadata.m in Sources */,
 				3796F6FE169A8CC900659DBD /* convertVIMFiles.m in Sources */,
 				37F2C58B169E7B92009C5355 /* ArrayCategory.m in Sources */,
+				3752CC1516A1F2B400B623F5 /* SetStyleController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

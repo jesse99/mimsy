@@ -31,7 +31,10 @@ extern const NSRange NSZeroRange;
 
 // Iterates over all items in the directory that match the glob. Hidden files are
 // returned (except '.' and '..'). If glob is nil all the items are returned.
-// Note that this does not enumerate sub-directories.
+// The block is called with full paths to each item.
 + (void)enumerateDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item))block;
+
+// Just like the above except that sub-directories are searched.
++ (void)enumerateDeepDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item))block;
 
 @end

@@ -172,4 +172,50 @@ static NSString* Replacement = @"\uFFFD";
 	}
 }
 
++ (void)enumerateDeepDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item))block
+{
+	NSFileManager* fm = [NSFileManager new];
+	NSMutableArray* errors = [NSMutableArray new];
+	
+	NSURL* at = [NSURL fileURLWithPath:path isDirectory:YES];
+	NSArray* keys = @[NSURLNameKey, NSURLIsDirectoryKey, NSURLPathKey];
+	NSDirectoryEnumerator* enumerator = [fm enumeratorAtURL:at includingPropertiesForKeys:keys options:NSDirectoryEnumerationSkipsHiddenFiles errorHandler:
+			^BOOL(NSURL* url, NSError* error)
+			{
+				NSString* reason = [error localizedFailureReason];
+				NSString* mesg = [NSString stringWithFormat:@"Couldn't process %s: %s", STR(url), STR(reason)];
+				[errors addObject:mesg];
+
+				return YES;
+			}
+	];
+	
+	for (NSURL* url in enumerator)
+	{		
+		NSNumber* isDirectory;
+		NSError* error = nil;
+		[url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:&error];
+
+		if (!error && !isDirectory.boolValue)		// note that NSDirectoryEnumerationSkipsHiddenFiles also skips hidden directories
+		{
+			NSString* candidate = url.path;
+			if (!glob || [glob matchName:candidate])
+				block(candidate);
+		}
+		else if (error)
+		{
+			NSString* reason = [error localizedFailureReason];
+			NSString* mesg = [NSString stringWithFormat:@"Couldn't check for is directory for %s: %s", STR(url), STR(reason)];
+			[errors addObject:mesg];
+		}
+	}
+	
+	if (errors.count)
+	{
+		NSString* mesg = [errors componentsJoinedByString:@"\n"];
+		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
+		*error = [NSError errorWithDomain:@"mimsy" code:4 userInfo:dict];
+	}
+}
+
 @end

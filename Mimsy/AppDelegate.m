@@ -2,6 +2,7 @@
 
 #import "Assert.h"
 #import "Languages.h"
+#import "SetStyleController.h"
 #import "TextStyles.h"
 #import "WindowsDatabase.h"
 
@@ -40,6 +41,12 @@
 		if ([doc respondsToSelector:@selector(reloadIfChanged)])
 			[doc reloadIfChanged];
 	}
+}
+
+- (IBAction)setStyle:(id)sender
+{
+	(void) sender;
+	[SetStyleController open];
 }
 
 - (IBAction)openAsBinary:(id)sender
