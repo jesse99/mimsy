@@ -1087,7 +1087,7 @@ static void processLine(GlobalStyle* global, NSString* line)
 			bool hasColor = false;
 			for (NSUInteger j = i+2; j < parts.count && !hasColor; ++j)
 			{
-				if ([parts[j] hasPrefix:@"guifg="] || [parts[j] hasPrefix:@"guibg="] || [parts[j] hasPrefix:@"gui="])
+				if ([parts[j] hasPrefix:@"guifg="] || [parts[j] hasPrefix:@"guibg="] || ([parts[j] hasPrefix:@"gui="] && ![parts[j] isEqualToString:@"gui=NONE"]))
 				{
 					NSString* name = [parts[j] substringFromIndex:6];
 					if (![name isEqualToString:@"NONE"] && ![name isEqualToString:@"bg"] && ![name isEqualToString:@"fg"])
