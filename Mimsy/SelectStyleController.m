@@ -1,4 +1,4 @@
-#import "SetStyleController.h"
+#import "SelectStyleController.h"
 
 #import "ConfigParser.h"
 #import "Glob.h"
@@ -9,9 +9,9 @@
 #import "TranscriptController.h"
 #import "Utils.h"
 
-static SetStyleController* _controller;
+static SelectStyleController* _controller;
 
-@implementation SetStyleController
+@implementation SelectStyleController
 {
 	NSArray* _styleNames;
 	NSArray* _stylePaths;
@@ -24,7 +24,7 @@ static SetStyleController* _controller;
 
 - (id)init
 {
-	self = [super initWithWindowNibName:@"SetStyle"];
+	self = [super initWithWindowNibName:@"SelectStyleWindow"];
 	
 	_ratings = [NSMutableDictionary new];
 	_comments = [NSMutableDictionary new];
@@ -37,10 +37,10 @@ static SetStyleController* _controller;
     return self;
 }
 
-+ (SetStyleController*)open
++ (SelectStyleController*)open
 {
 	if (!_controller)
-		_controller = [SetStyleController new];
+		_controller = [SelectStyleController new];
 	[_controller showWindow:NSApp];
 	_controller->emittedError = false;
 	return _controller;

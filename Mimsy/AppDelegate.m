@@ -2,7 +2,7 @@
 
 #import "Assert.h"
 #import "Languages.h"
-#import "SetStyleController.h"
+#import "SelectStyleController.h"
 #import "WindowsDatabase.h"
 
 @implementation AppDelegate
@@ -44,7 +44,7 @@
 - (IBAction)setStyle:(id)sender
 {
 	(void) sender;
-	[SetStyleController open];
+	[SelectStyleController open];
 }
 
 - (IBAction)openAsBinary:(id)sender
