@@ -1,6 +1,6 @@
 # This is used to control which style file is the default and to contain the ratings and
 # comments for style files. You can edit it manually, but more commonly it is edited via
-# the Select Style menu option in the Mimsy menu. 
+# the Select Style menu option in the Mimsy menu.
 Default: vim73/morning.rtf
 
 mimsy/pastel-fixed.rtf: *|monospace version of the default Continuum style
