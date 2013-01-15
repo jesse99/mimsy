@@ -47,6 +47,9 @@ static SelectStyleController* _controller;
 {
 	if (!_controller)
 		_controller = [SelectStyleController new];
+	if (_controller.isWindowLoaded)
+		[_controller _selectDefault];
+	
 	[_controller showWindow:NSApp];
 	_controller->emittedError = false;
 	return _controller;
@@ -67,6 +70,7 @@ static SelectStyleController* _controller;
 		[self _loadStyleNames];
 		[self _loadSettings];
 		[temp reloadData];
+		[self _selectDefault];
 	}
 }
 
@@ -216,6 +220,29 @@ static SelectStyleController* _controller;
 	
 	[_rows sortUsingDescriptors:[view sortDescriptors]];
 	[view reloadData];
+}
+
+- (void)_selectDefault
+{
+	NSUInteger i = [_rows indexOfObjectPassingTest:
+		^BOOL(StyleRowObject* obj, NSUInteger index, BOOL* stop)
+		{
+			(void) stop;
+			(void) index;
+			return [obj.name isEqualToString:_default];
+		}];
+
+	NSTableView* temp = _table;
+	if (i != NSNotFound && temp)
+	{
+		NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:i];
+		[temp selectRowIndexes:indexes byExtendingSelection:NO];
+		[temp scrollRowToVisible:(NSInteger)i];
+	}
+
+	NSButton* button = _makeDefaultButton;
+	if (button)
+		[button setEnabled:i == NSNotFound || !temp];
 }
 
 // TODO: need to watch the styles directory so that we can reload these
