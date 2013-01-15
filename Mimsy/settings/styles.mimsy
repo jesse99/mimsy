@@ -1,7 +1,25 @@
 # This is used to control which style file is the default and to contain the ratings and
 # comments for style files. You can edit it manually, but more commonly it is edited via
 # the Select Style menu option in the Mimsy menu.
-Default: vim73/morning.rtf
+Default: mimsy/moria.rtf
 
-mimsy/pastel-fixed.rtf: *|monospace version of the default Continuum style
-mimsy/pastel-proportional.rtf: *|based on the default Continuum style
+mimsy/continuum.rtf: ***|
+mimsy/continuum-times.rtf: ***|proportional font
+mimsy/moria-times.rtf: ***|proportional font
+mimsy/moria.rtf: ***|tweaked version of vim-light/moria.rtf
+vim-light/moria.rtf: ***|
+vim-dark/desertEx.rtf: **|
+vim-dark/chance-of-storm.rtf: **|
+vim-dark/xoria256.rtf: **|
+vim-light/chela_light.rtf: **|
+vim-dark/deveiate.rtf: *|
+vim-dark/fnaqevan.rtf: *|
+vim-dark/graywh.rtf: *|
+vim-dark/jhdark.rtf: *|
+vim-dark/manuscript.rtf: *|
+vim-dark/rastafari.rtf: *|
+vim-dark/sorcerer.rtf: *|
+vim-light/earendel.rtf: *|
+vim-light/github.rtf: *|
+vim-light/vc.rtf: *|
+vim73/peachpuff.rtf: *|
