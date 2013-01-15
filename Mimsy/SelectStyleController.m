@@ -221,6 +221,13 @@ static SelectStyleController* _controller;
 {
 	(void) oldDescriptors;
 	
+	// sortUsingDescriptors is a stable sort so sorting first by name is helpful.
+	[_rows sortUsingComparator:
+		^NSComparisonResult(StyleRowObject* lhs, StyleRowObject* rhs)
+		{
+			return [lhs.name compare:rhs.name options:NSCaseInsensitiveSearch];
+		}
+	];
 	[_rows sortUsingDescriptors:[view sortDescriptors]];
 	[view reloadData];
 }
