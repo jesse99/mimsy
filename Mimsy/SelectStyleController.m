@@ -107,9 +107,12 @@ static SelectStyleController* _controller;
 			(void) document;
 			(void) documentWasAlreadyOpen;
 			
-			NSString* reason = [error localizedFailureReason];
-			NSString* mesg = [NSString stringWithFormat:@"Couldn't open %@: %@", object.path, reason];
-			[TranscriptController writeError:mesg];
+			if (error)
+			{
+				NSString* reason = [error localizedFailureReason];
+				NSString* mesg = [NSString stringWithFormat:@"Couldn't open %@: %@", object.path, reason];
+				[TranscriptController writeError:mesg];
+			}
 		}];
 }
 
