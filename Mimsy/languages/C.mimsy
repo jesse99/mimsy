@@ -1,6 +1,8 @@
 Language: c
 Globs: *.c
 LineComment: //
+Help: [C Library]http://www.cplusplus.com/reference/clibrary/
+Help: [C Language]http://www.gnu.org/software/gnu-c-manual/gnu-c-manual.html
 
 Comment: // .* $
 Comment: /\* (?: . | \r | \n)*? \*/
