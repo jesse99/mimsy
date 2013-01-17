@@ -35,6 +35,9 @@
 	- for find could document most common regex options and link to more complete reference
 	- mimsy files could also show regex help file (maybe via a ConditionalHelp key)
 * Add an icon.
+* Might want a windows help context:
+	- talk about window navigation
+	- update help readme
 * Open selection should be able to open directories.
 * Language files should have support for a run key:
 	- value is command line used to run a single file (or *.c file for C based languages)
@@ -118,6 +121,7 @@
 	- :: to something
 	- probably would also have to do this during editing
 * Make sure builds call reloadIfChanged
+* Find in files needs to be able to search rtf files (so search in help works).
 * Info window should have a popup to override default styler file.
 * Maybe could have an option to get rid of tabs altogether
 	- tab adds enough spaces to offset to a modulo-N column
