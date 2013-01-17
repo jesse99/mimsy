@@ -11,6 +11,11 @@
 	__weak TextDocument* _doc;
 }
 
+- (NSArray*)getHelpContext
+{
+	return @[@"info"];
+}
+
 - (id)initFor:(TextDocument*)doc
 {
 	self = [super initWithWindowNibName:@"InfoWindow"];

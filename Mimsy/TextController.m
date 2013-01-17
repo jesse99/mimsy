@@ -142,6 +142,17 @@
 	}
 }
 
+- (NSArray*)getHelpContext
+{
+	NSMutableArray* result = [NSMutableArray new];
+	
+	if (_language)
+		[result addObject:_language.name];
+	[result addObject:@"text editor"];
+	
+	return result;
+}
+
 - (NSAttributedString*)attributedText
 {
 	return self.textView.textStorage;

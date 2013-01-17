@@ -21,23 +21,35 @@
 	ASSERT([NSThread isMultiThreaded]);
 	LOG_DEBUG("App", "Finished launching");
 
+	__weak AppDelegate* this = self;
+	[[NSApp helpMenu] setDelegate:this];
+
 	[WindowsDatabase setup];
 	[Languages setup];
 }
 
-- (void) applicationDidBecomeActive:(NSNotification*)notification
+- (void)applicationDidBecomeActive:(NSNotification*)notification
 {
 	(void) notification;
 	
 	[self reloadIfChanged];
 }
 
-- (void) reloadIfChanged
+- (void)reloadIfChanged
 {
 	for (id doc in [[NSDocumentController sharedDocumentController] documents])
 	{
 		if ([doc respondsToSelector:@selector(reloadIfChanged)])
 			[doc reloadIfChanged];
+	}
+}
+
+- (void)menuNeedsUpdate:(NSMenu*)menu
+{
+	if (menu == [NSApp helpMenu])
+	{
+		NSArray* contexts = [self _buildHelpContext];
+		LOG_INFO("Mimsy", "context: %s", STR(contexts));
 	}
 }
 
@@ -67,7 +79,7 @@
 	}
 }
 
-- (void) openBinary:(NSURL*)url
+- (void)openBinary:(NSURL*)url
 {
 	NSDocumentController* controller = [NSDocumentController sharedDocumentController];
 	
@@ -87,6 +99,36 @@
 	}
 	
 	[doc showWindows];
+}
+
+// This isn't used (the app is part of the responder chain, but not the app delegate).
+// But we need a getHelpContext declaration to shut the compiler up.
+- (NSArray*)getHelpContext
+{
+	return @[];
+}
+
+- (NSArray*)_buildHelpContext
+{
+	NSMutableArray* result = [NSMutableArray new];
+	
+	id target = [NSApp targetForAction:@selector(getHelpContext)];
+	while (target)
+	{
+		if ([target respondsToSelector:@selector(getHelpContext)])
+		{
+			id tmp = target;
+			[result addObjectsFromArray:[tmp getHelpContext]];
+		}
+		
+		if ([target respondsToSelector:@selector(nextResponder)])
+			target = [target nextResponder];
+		else
+			target = nil;
+	}
+	[result addObject:@"app"];
+	
+	return result;
 }
 
 @end

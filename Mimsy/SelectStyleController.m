@@ -74,6 +74,11 @@ static SelectStyleController* _controller;
 	}
 }
 
+- (NSArray*)getHelpContext
+{
+	return @[@"select style"];
+}
+
 - (IBAction)setDefault:(id)sender
 {
 	(void) sender;

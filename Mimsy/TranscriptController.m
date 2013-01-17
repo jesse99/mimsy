@@ -31,6 +31,11 @@ static TranscriptController* controller;
 	return controller;
 }
 
+- (NSArray*)getHelpContext
+{
+	return @[@"transcript"];
+}
+
 + (void)writeCommand:(NSString*)text
 {
 	NSAttributedString* str = [[NSAttributedString alloc] initWithString:text];

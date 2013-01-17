@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface AppDelegate : NSObject <NSApplicationDelegate>
+@interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate>
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
 
