@@ -151,6 +151,7 @@
 * History of cursor positions?
 * Release checklist:
 	- might have to add a lame build step to archive build to copy the styles files a second time
+	- make sure that the binary works on someone elses mac (especially one without lua)
 	- increment support files version number
 	- ship the release version
 	
