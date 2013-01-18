@@ -4,14 +4,13 @@
 \deftab480
 \pard\pardeftab480\pardirnatural
 
-\f0\fs36 \cf0 These files along with the Help values from language files are used to populate the Help menu according to the current context. The current context includes the context for the frontmost window (e.g. "transcript") as well as inherited contexts (e.g. "app").\
+\f0\fs36 \cf0 These files are used to populate the Help menu according to the current context. The current context includes the context for the frontmost window (e.g. "transcript") as well as inherited contexts (e.g. "app").\
 \
 The file names are formatted as a list of context names separated by dashes, a dash, and a name to be used when populating the Help menu. The contents of the files may be freely edited and new files may be added. Note that there is also a settings/context-help.mimsy file which is handy for help which references web sites or documents that Mimsy can't open (like a PDF file).\
 \
 The context names are:\
 \'95 app (all contexts include this)\
-\pard\pardeftab480\pardirnatural
-\cf0 \'95 help (if the frontmost window is within the help directory)\
+\'95 help (if the frontmost window is within the help directory)\
 \'95 languages (if the frontmost window is within the languages directory)\
 \'95 settings (if the frontmost window is within the settings directory)\
 \'95 styles (if the frontmost window is within the styles directory)\
@@ -20,4 +19,5 @@ The context names are:\
 \'95 text editor \
 \'95 <language name> (for text editor windows using a language file)\
 \'95 transcript\
-}
+\
+The Help menu is also populated using Help entries from Language files and from the settings/help.mimsy file. If you want to add new help menu items it's best to do that using the settings file. If you want to remove existing help menu items you can delete the files or edit language files, but the later can make upgrading Mimsy a bit annoying.}

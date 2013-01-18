@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 
 #import "Assert.h"
+#import "ConfigParser.h"
 #import "Glob.h"
 #import "Language.h"
 #import "Languages.h"
@@ -54,8 +55,9 @@
 	if (menu == [NSApp helpMenu])
 	{
 		NSArray* contexts = [self _buildHelpContext];
-		NSArray* items = [self _getHelpFileItems:contexts];
+		NSArray* items = [self _getHelpSettingsItems:contexts];
 		items = [items arrayByAddingObjectsFromArray:[self _getHelpLangItems:contexts]];
+		items = [items arrayByAddingObjectsFromArray:[self _getHelpFileItems:contexts]];
 		
 		[menu removeAllItems];
 		for (NSMenuItem* item in items)
@@ -170,7 +172,86 @@
 	return result;
 }
 
+- (NSArray*)_getHelpSettingsItems:(NSArray*)context
+{
+	NSMutableArray* items = [NSMutableArray new];
+	
+	__block NSError* error = nil;
+	NSString* helpDir = [Paths installedDir:@"settings"];
+	NSString* path = [helpDir stringByAppendingPathComponent:@"help.mimsy"];
+	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
+	if (!error)
+	{
+		__block NSMutableDictionary* helpDict = [NSMutableDictionary new];
+		
+		[parser enumerate:
+			 ^(ConfigParserEntry* entry)
+			 {
+				 NSMutableArray* help = helpDict[entry.key];
+				 if (!help)
+				 {
+					 help = [NSMutableArray new];
+					 helpDict[entry.key] = help;
+				 }
+				 
+				 if (![Language parseHelp:entry.value help:help] && !error)
+				 {
+					 NSString* mesg = [NSString stringWithFormat:@"malformed help on line %ld: expected '[<title>]<url or full path>'", entry.line];
+					 NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
+					 error = [NSError errorWithDomain:@"mimsy" code:4 userInfo:dict];
+				 }
+			 }
+		 ];
+		
+		if (!error)
+		{
+			for (NSString* name in context)
+			{
+				NSArray* help = helpDict[name];
+				if (help)
+					[self _processHelpLangItems:items help:help];
+			}
+		}
+	}
+	
+	if (error)
+	{
+		NSString* reason = [error localizedFailureReason];
+		NSString* mesg = [NSString stringWithFormat:@"Couldn't load settings/help.mimsy: %@", reason];
+		[TranscriptController writeError:mesg];
+	}
+	
+	return items;
+}
+
 - (NSArray*)_getHelpLangItems:(NSArray*)context
+{
+	NSMutableArray* items = [NSMutableArray new];
+	
+	for (NSString* name in context)
+	{
+		Language* lang = [Languages findWithlangName:name];
+		if (lang && lang.help)
+			[self _processHelpLangItems:items help:lang.help];
+	}
+	
+	return items;
+}
+
+- (void)_processHelpLangItems:(NSMutableArray*)items help:(NSArray*)help
+{
+	for (NSUInteger i = 0; i < help.count;)
+	{
+		NSString* title = help[i++];
+		NSURL* url = help[i++];
+		
+		NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(openHelpFile:) keyEquivalent:@""];
+		[item setRepresentedObject:url];
+		[items addObject:item];
+	}
+}
+
+- (NSArray*)_getHelpFileItems:(NSArray*)context
 {
 	__block NSMutableArray* items = [NSMutableArray new];
 	
@@ -195,30 +276,6 @@
 		{
 			NSString* reason = [error localizedFailureReason];
 			LOG_ERROR("Mimsy", "Error building help menu: %s\n", STR(reason));
-		}
-	}
-	
-	return items;
-}
-
-- (NSArray*)_getHelpFileItems:(NSArray*)context
-{
-	NSMutableArray* items = [NSMutableArray new];
-	
-	for (NSString* name in context)
-	{
-		Language* lang = [Languages findWithlangName:name];
-		if (lang && lang.help)
-		{
-			for (NSUInteger i = 0; i < lang.help.count;)
-			{
-				NSString* title = lang.help[i++];
-				NSURL* url = lang.help[i++];
-
-				NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(openHelpFile:) keyEquivalent:@""];
-				[item setRepresentedObject:url];
-				[items addObject:item];
-			}
 		}
 	}
 	

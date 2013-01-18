@@ -7,6 +7,8 @@
 
 - (id)initWithParser:(ConfigParser*)parser outError:(NSError**)error;
 
++ (bool)parseHelp:(NSString*)value help:(NSMutableArray*)help;
+
 // ---- Required Elements -----------------------------------------
 
 // The name of the language, e.g. "c", "python", etc.

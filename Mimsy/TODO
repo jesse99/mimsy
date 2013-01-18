@@ -121,7 +121,8 @@
 	- :: to something
 	- probably would also have to do this during editing
 * Make sure builds call reloadIfChanged
-* Find in files needs to be able to search rtf files (so search in help works).
+* Find in files needs to be able to search rtf files.
+* Get searching in help files working.
 * Info window should have a popup to override default styler file.
 * Maybe could have an option to get rid of tabs altogether
 	- tab adds enough spaces to offset to a modulo-N column

@@ -41,7 +41,7 @@
 			}
 			else if ([entry.key isEqualToString:@"Help"])
 			{
-				if (![self _parseHelp:entry.value help:help])
+				if (![Language parseHelp:entry.value help:help])
 					[errors addObject:[NSString stringWithFormat:@"malformed help on line %ld: expected '[<title>]<url or full path>'", entry.line]];
 			}
 			else if ([entry.key isEqualToString:@"Word"])	// TODO: reserved
@@ -94,7 +94,7 @@
 }
 
 // value is formatted as: [C Library]http://www.cplusplus.com/reference/clibrary/
-- (bool)_parseHelp:(NSString*)value help:(NSMutableArray*)help
++ (bool)parseHelp:(NSString*)value help:(NSMutableArray*)help
 {
 	bool parsed = false;
 	

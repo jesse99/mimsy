@@ -90,14 +90,14 @@
 	}
 }
 
-// key := [^\s:]+
+// key := [^\n\r:]+
 - (NSString*)parseKey:(NSString*)contents
 {
 	NSUInteger begin = _index;
 	while (_index < _length)
 	{
 		unichar ch = [contents characterAtIndex:_index];
-		if ([_whitespace characterIsMember:ch] || ch == ':')
+		if (ch == '\r' || ch == '\r' || ch == ':')
 			break;
 		else
 			_index += 1;
