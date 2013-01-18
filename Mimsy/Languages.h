@@ -12,6 +12,7 @@
 // nil if a language was not found.
 + (Language*)findWithFileName:(NSString*)name contents:(NSString*)text;
 
+// Returns nil if a language was not found.
 + (Language*)findWithlangName:(NSString*)name;
 
 + (void)enumerate:(void (^)(Language* lang, bool* stop))block;

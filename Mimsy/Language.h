@@ -24,4 +24,7 @@
 // like commenting out selections.
 @property (readonly) NSString* lineComment;
 
+// Sequence of menu item titles and url pairs.
+@property (readonly) NSArray* help;
+
 @end

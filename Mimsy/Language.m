@@ -18,6 +18,7 @@
 	NSMutableArray* names = [NSMutableArray new];
 	NSMutableArray* patterns = [NSMutableArray new];
 	NSMutableArray* lines = [NSMutableArray new];
+	NSMutableArray* help = [NSMutableArray new];
 	
 	[names addObject:@"Normal"];
 	
@@ -37,6 +38,11 @@
 					[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
 				
 				_lineComment = entry.value;
+			}
+			else if ([entry.key isEqualToString:@"Help"])
+			{
+				if (![self _parseHelp:entry.value help:help])
+					[errors addObject:[NSString stringWithFormat:@"malformed help on line %ld: expected '[<title>]<url or full path>'", entry.line]];
 			}
 			else if ([entry.key isEqualToString:@"Word"])	// TODO: reserved
 			{
@@ -69,6 +75,7 @@
 	
 	_glob = [[ConditionalGlob alloc] initWithGlobs:globs];
 	_styler = [self _createStyler:names patterns:patterns lines:lines errors:errors];
+	_help = help;
 
 	if (errors.count > 0)
 	{
@@ -84,6 +91,28 @@
 - (NSString*)description
 {
 	return _name;
+}
+
+// value is formatted as: [C Library]http://www.cplusplus.com/reference/clibrary/
+- (bool)_parseHelp:(NSString*)value help:(NSMutableArray*)help
+{
+	bool parsed = false;
+	
+	NSRange r1 = [value rangeOfString:@"["];
+	NSRange r2 = [value rangeOfString:@"]"];
+	if (r1.location != NSNotFound && r2.location != NSNotFound && r2.location > r1.location)
+	{
+		NSString* title = [value substringWithRange:NSMakeRange(r1.location+1, r2.location-r1.location-1)];
+		NSString* loc = [value substringFromIndex:r2.location+1];
+		[help addObject:title];
+		if ([loc rangeOfString:@"://"].location != NSNotFound)
+			[help addObject:[NSURL URLWithString:loc]];
+		else
+			[help addObject:[NSURL fileURLWithPath:loc]];
+		parsed = true;
+	}
+	
+	return parsed;
 }
 
 - (RegexStyler*)_createStyler:(NSArray*)names patterns:(NSArray*)patterns lines:(NSArray*)lines errors:(NSMutableArray*)errors

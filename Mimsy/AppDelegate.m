@@ -2,6 +2,7 @@
 
 #import "Assert.h"
 #import "Glob.h"
+#import "Language.h"
 #import "Languages.h"
 #import "Paths.h"
 #import "SelectStyleController.h"
@@ -53,7 +54,8 @@
 	if (menu == [NSApp helpMenu])
 	{
 		NSArray* contexts = [self _buildHelpContext];
-		NSArray* items = [self _getHelpItems:contexts];
+		NSArray* items = [self _getHelpFileItems:contexts];
+		items = [items arrayByAddingObjectsFromArray:[self _getHelpLangItems:contexts]];
 		
 		[menu removeAllItems];
 		for (NSMenuItem* item in items)
@@ -65,21 +67,29 @@
 
 - (void)openHelpFile:(id)sender
 {
-	NSURL* url = [NSURL fileURLWithPath:[sender representedObject]];
+	NSURL* url = [sender representedObject];
 	
-	[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES completionHandler:
-		^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
-		{
-			(void) document;
-			(void) documentWasAlreadyOpen;
-			if (error)
+	if ([url isFileURL])
+	{
+		[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES completionHandler:
+			^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
 			{
-				NSString* reason = [error localizedFailureReason];
-				NSString* mesg = [NSString stringWithFormat:@"Couldn't open '%@': %@", url, reason];
-				[TranscriptController writeError:mesg];
+				(void) document;
+				(void) documentWasAlreadyOpen;
+				if (error)
+				{
+					NSString* reason = [error localizedFailureReason];
+					NSString* mesg = [NSString stringWithFormat:@"Couldn't open '%@': %@", url, reason];
+					[TranscriptController writeError:mesg];
+				}
 			}
-		}
-	];
+		];
+	}
+	else
+	{
+		if (![[NSWorkspace sharedWorkspace] openURL:url])
+			NSBeep();
+	}
 }
 
 - (IBAction)setStyle:(id)sender
@@ -160,7 +170,7 @@
 	return result;
 }
 
-- (NSArray*)_getHelpItems:(NSArray*)context
+- (NSArray*)_getHelpLangItems:(NSArray*)context
 {
 	__block NSMutableArray* items = [NSMutableArray new];
 	
@@ -172,19 +182,43 @@
 		
 		NSError* error = nil;
 		[Utils enumerateDir:helpDir glob:glob error:&error block:
-			^(NSString* path)
-			{
-				// file names look like "app-Overview.rtf"
-				NSMenuItem* item = [self _createHelpItem:path];
-				if (item)
-					[items addObject:item];
-			}
+		 ^(NSString* path)
+		 {
+			 // file names look like "app-Overview.rtf"
+			 NSMenuItem* item = [self _createHelpItem:path];
+			 if (item)
+				 [items addObject:item];
+		 }
 		 ];
 		
 		if (error)
 		{
 			NSString* reason = [error localizedFailureReason];
 			LOG_ERROR("Mimsy", "Error building help menu: %s\n", STR(reason));
+		}
+	}
+	
+	return items;
+}
+
+- (NSArray*)_getHelpFileItems:(NSArray*)context
+{
+	NSMutableArray* items = [NSMutableArray new];
+	
+	for (NSString* name in context)
+	{
+		Language* lang = [Languages findWithlangName:name];
+		if (lang && lang.help)
+		{
+			for (NSUInteger i = 0; i < lang.help.count;)
+			{
+				NSString* title = lang.help[i++];
+				NSURL* url = lang.help[i++];
+
+				NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(openHelpFile:) keyEquivalent:@""];
+				[item setRepresentedObject:url];
+				[items addObject:item];
+			}
 		}
 	}
 	
@@ -201,7 +235,9 @@
 	{
 		NSString* title = [[fileName stringByDeletingPathExtension] substringFromIndex:range.location+1];
 		item = [[NSMenuItem alloc] initWithTitle:title action:@selector(openHelpFile:) keyEquivalent:@""];
-		[item setRepresentedObject:path];
+
+		NSURL* url = [NSURL fileURLWithPath:path];
+		[item setRepresentedObject:url];
 	}
 	else
 	{
