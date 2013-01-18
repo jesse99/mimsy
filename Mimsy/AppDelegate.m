@@ -1,8 +1,12 @@
 #import "AppDelegate.h"
 
 #import "Assert.h"
+#import "Glob.h"
 #import "Languages.h"
+#import "Paths.h"
 #import "SelectStyleController.h"
+#import "TranscriptController.h"
+#import "Utils.h"
 #import "WindowsDatabase.h"
 
 @implementation AppDelegate
@@ -49,8 +53,33 @@
 	if (menu == [NSApp helpMenu])
 	{
 		NSArray* contexts = [self _buildHelpContext];
-		LOG_INFO("Mimsy", "context: %s", STR(contexts));
+		NSArray* items = [self _getHelpItems:contexts];
+		
+		[menu removeAllItems];
+		for (NSMenuItem* item in items)
+		{
+			[menu addItem:item];
+		}
 	}
+}
+
+- (void)openHelpFile:(id)sender
+{
+	NSURL* url = [NSURL fileURLWithPath:[sender representedObject]];
+	
+	[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES completionHandler:
+		^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
+		{
+			(void) document;
+			(void) documentWasAlreadyOpen;
+			if (error)
+			{
+				NSString* reason = [error localizedFailureReason];
+				NSString* mesg = [NSString stringWithFormat:@"Couldn't open '%@': %@", url, reason];
+				[TranscriptController writeError:mesg];
+			}
+		}
+	];
 }
 
 - (IBAction)setStyle:(id)sender
@@ -129,6 +158,57 @@
 	[result addObject:@"app"];
 	
 	return result;
+}
+
+- (NSArray*)_getHelpItems:(NSArray*)context
+{
+	__block NSMutableArray* items = [NSMutableArray new];
+	
+	NSString* helpDir = [Paths installedDir:@"help"];
+	for (NSString* name in context)
+	{
+		NSString* pattern = [NSString stringWithFormat:@"%@-*.rtf", name];
+		Glob* glob = [[Glob alloc] initWithGlob:pattern];
+		
+		NSError* error = nil;
+		[Utils enumerateDir:helpDir glob:glob error:&error block:
+			^(NSString* path)
+			{
+				// file names look like "app-Overview.rtf"
+				NSMenuItem* item = [self _createHelpItem:path];
+				if (item)
+					[items addObject:item];
+			}
+		 ];
+		
+		if (error)
+		{
+			NSString* reason = [error localizedFailureReason];
+			LOG_ERROR("Mimsy", "Error building help menu: %s\n", STR(reason));
+		}
+	}
+	
+	return items;
+}
+
+- (NSMenuItem*)_createHelpItem:(NSString*)path
+{
+	NSMenuItem* item = nil;
+	
+	NSString* fileName = [path lastPathComponent];
+	NSRange range = [fileName rangeOfString:@"-"];
+	if (range.location != NSNotFound)
+	{
+		NSString* title = [[fileName stringByDeletingPathExtension] substringFromIndex:range.location+1];
+		item = [[NSMenuItem alloc] initWithTitle:title action:@selector(openHelpFile:) keyEquivalent:@""];
+		[item setRepresentedObject:path];
+	}
+	else
+	{
+		LOG_WARN("Mimsy", "'%s' is in the help directory, but not formatted as '<context>-<item name>.rtf", STR(fileName));
+	}
+	
+	return item;
 }
 
 @end

@@ -8,7 +8,7 @@
 + (NSString*)caches;
 
 // Path to a directory of (dynamically) installed files in the current
-// user's home directory, e.g. "languages".
+// user's home directory, e.g. "languages". Name may be nil.
 + (NSString*)installedDir:(NSString*)name;
 
 @end

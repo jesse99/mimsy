@@ -44,8 +44,11 @@ static bool _triedCaches;
 // bundle and use the install directory instead.
 + (NSString*)installedDir:(NSString*)name
 {
-	NSString* resources = NSBundle.mainBundle.resourcePath;
-	return [resources stringByAppendingPathComponent:name];
+	NSString* installed = NSBundle.mainBundle.resourcePath;
+	if (name)
+		return [installed stringByAppendingPathComponent:name];
+	else
+		return installed;
 	
 }
 

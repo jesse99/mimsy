@@ -148,9 +148,31 @@
 	
 	if (_language)
 		[result addObject:_language.name];
+	
+	NSString* path = [self path];
+	if (path)
+		[self _addInstalledContexts:result forPath:path];
+	
 	[result addObject:@"text editor"];
 	
 	return result;
+}
+
+- (void)_addInstalledContexts:(NSMutableArray*)result forPath:(NSString*)path
+{
+	NSString* dir = [Paths installedDir:nil];
+	if (dir && ![dir hasSuffix:@"/"])
+		dir = [dir stringByAppendingString:@"/"];
+	
+	if ([path hasPrefix:dir])
+	{
+		NSString* name = [path substringFromIndex:dir.length];
+		NSArray* parts = [name pathComponents];
+		if (parts.count > 1)
+		{
+			[result addObject:parts[0]];
+		}
+	}
 }
 
 - (NSAttributedString*)attributedText
