@@ -10,6 +10,6 @@
 + (void)writeStderr:(NSString*)text;	// typically stderr from a tool run via a build
 + (void)writeStdout:(NSString*)text;	// typically stfout from a tool run via a build
 
-+ (void)writeError:(NSString*)text;		// Mimsy error
++ (void)writeError:(NSString*)text;		// Mimsy error (unlike the others this appends a new-line)
 
 @end

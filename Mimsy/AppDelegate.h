@@ -6,4 +6,7 @@
 
 - (IBAction)openAsBinary:(id)sender;
 
+- (void)runFTest:(id)sender;
+- (void)runFTests:(id)sender;
+
 @end

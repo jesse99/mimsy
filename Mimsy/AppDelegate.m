@@ -2,6 +2,7 @@
 
 #import "Assert.h"
 #import "ConfigParser.h"
+#import "FunctionalTest.h"
 #import "Glob.h"
 #import "Language.h"
 #import "Languages.h"
@@ -32,6 +33,8 @@
 
 	[WindowsDatabase setup];
 	[Languages setup];
+	
+	initFunctionalTests();
 }
 
 - (void)applicationDidBecomeActive:(NSNotification*)notification
@@ -65,6 +68,17 @@
 			[menu addItem:item];
 		}
 	}
+}
+
+- (void)runFTests:(id)sender
+{
+	(void) sender;
+	runFunctionalTests();
+}
+
+- (void)runFTest:(id)sender
+{
+	runFunctionalTest([sender representedObject]);
 }
 
 - (void)openHelpFile:(id)sender
