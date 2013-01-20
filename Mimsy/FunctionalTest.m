@@ -1,5 +1,8 @@
 #import "FunctionalTest.h"
 
+#include <lua.h>
+#include <lauxlib.h>
+
 #import "AppDelegate.h"
 #import "Assert.h"
 #import "Glob.h"
@@ -10,6 +13,7 @@
 static const char* _ftestPath;
 static NSString* _failure;
 
+// ---- Internal Functions -------------------------------------------------
 static void addTestItems(NSMenu* testMenu)
 {
 	NSString* dir = [NSString stringWithUTF8String:_ftestPath];
@@ -49,13 +53,43 @@ static void createMenu()
 	[menu insertItem:subitem atIndex:[menu numberOfItems]-1];
 }
 
+static int failed(lua_State* state)
+{
+	const char* reason = lua_tostring(state, 1);
+	_failure = [NSString stringWithUTF8String:reason];
+	
+	return 0;
+}
+
+static lua_State* createLua()
+{
+	lua_State* state = luaL_newstate();
+	//luaL_openlibs(state);
+	lua_register(state, "failed", failed);
+	
+	return state;
+}
+
+static void destroyLua(lua_State* state)
+{
+	lua_close(state);
+}
+
 static void runTest(NSString* path)
 {
 	NSError* error = nil;
 	NSString* script = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
 	if (error == nil)
 	{
-		LOG_INFO("Mimsy", "%s", STR(script));
+		lua_State* state = createLua();		// not sure how expensive this is, but it should be possible to create it once
+		int err = luaL_dostring(state, script.UTF8String);
+		if (err)
+		{
+			if (!_failure)
+				_failure = [NSString stringWithUTF8String:lua_tostring(state, -1)];
+			lua_pop(state, 1);
+		}
+		destroyLua(state);
 	}
 	else
 	{
@@ -64,11 +98,12 @@ static void runTest(NSString* path)
 	}
 }
 
+// ---- Public Functions -------------------------------------------------
 void initFunctionalTests(void)
 {
 	ASSERT(!_ftestPath);
 	
-	_ftestPath = getenv("MIMSY_FTEST"); 
+	_ftestPath = getenv("MIMSY_FTEST");
 	if (_ftestPath)
 		createMenu();
 }
@@ -102,6 +137,8 @@ void runFunctionalTests(void)
 		[TranscriptController writeStdout:[NSString stringWithFormat:@"All %d tests passed.\n", numPassed]];
 	else if (numPassed == 0)
 		[TranscriptController writeStdout:[NSString stringWithFormat:@"All %d tests FAILED.\n", numFailed]];
+	else if (numFailed == 1)
+		[TranscriptController writeStdout:[NSString stringWithFormat:@"%d tests passed and 1 test FAILED.\n", numPassed]];
 	else
 		[TranscriptController writeStdout:[NSString stringWithFormat:@"%d tests passed and %d tests FAILED.\n", numPassed, numFailed]];
 }
