@@ -19,7 +19,10 @@ static bool isValidUTF8(unsigned char b)
 {
 	bool valid = true;
 	
-	if (b == 0xC0 || b == 0xC1)
+	if (b == 0x00)				// technically this is valid UTF-8
+		valid = false;
+	
+	else if (b == 0xC0 || b == 0xC1)
 		valid = false;
 	
 	else if (b >= 0xF5)
