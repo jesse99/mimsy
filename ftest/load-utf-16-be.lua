@@ -1,12 +1,25 @@
--- ftest global is implicitly added
--- probably others too like app or workspace or whatever
+-- Verify that Mimsy is able to load text documents formatted as utf-16
+-- big endian.
+function openedDoc(doc)
+	local data = doc:data()
+	doc:close()
+	
+	if data == 'hello\226\128\162world' then
+		ftest:passed()
+	else
+		ftest:failed(string.format('expected "hello\226\128\162world" but found %q', data))
+	end
+end
 
--- write utf-16 out to a temporary file
--- app.load(file name)
--- if front_window.text == whatever then
---    ftest.passed()
--- else
---    ftest.failed("the reason)
--- close front window (don't fail for this)
+function openFailed(reason)
+	ftest:failed(reason)
+end
 
-failed('argh')
+-- can't use tmpfile because we need a file name
+-- also lua doesn't support hex escape codes
+local fname = '/tmp/utf-16-be.txt'
+local file = io.open(fname, 'w')
+file:write('\0h\0e\0l\0l\0o\32\34\0w\0o\0r\0l\0d')
+file:close(file)
+
+app:openfile(fname, 'openedDoc', 'openFailed')

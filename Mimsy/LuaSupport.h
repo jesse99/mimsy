@@ -1,13 +1,24 @@
-//
-//  LuaSupport.h
-//  Mimsy
-//
-//  Created by Jesse Jones on 1/19/13.
-//  Copyright (c) 2013 Jesse Jones. All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
 
-@interface LuaSupport : NSObject
+struct lua_State;
 
-@end
+// These are the methods we make available to lua scripting code (FunctionalTest
+// also provides a few methods in the ftest global). All of the methods are provided
+// in tables which contain a target entry whose value represents an NSObject pointer
+// (e.g. NSApplication*, NSDocument*, etc).
+//
+// See the XXX help file for information about the methods.
+
+void initMethods(struct lua_State* state);
+
+// ---- App --------------------------------------------------------------------
+int app_openfile(struct lua_State* state);
+int app_log(struct lua_State* state);
+
+// ---- Document ---------------------------------------------------------------
+int doc_close(struct lua_State* state);
+
+// ---- Text Document ----------------------------------------------------------
+int textdoc_data(struct lua_State* state);
+
+

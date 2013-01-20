@@ -65,6 +65,7 @@
 		37A8C6C116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C6BF16758FF400D4DB13 /* InfoPlist.strings */; };
 		37A8C6C416758FF400D4DB13 /* DecodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6C316758FF400D4DB13 /* DecodeTests.m */; };
 		37A8C6CE167590E700D4DB13 /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C6CD167590E700D4DB13 /* TODO */; };
+		37CF062616AB998A00069A20 /* LuaSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF062516AB998A00069A20 /* LuaSupport.m */; };
 		37EECF4D16A64A9E00BEB493 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 37EECF4C16A64A9E00BEB493 /* help */; };
 		37F2C58B169E7B92009C5355 /* ArrayCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 37F2C58A169E7B92009C5355 /* ArrayCategory.m */; };
 /* End PBXBuildFile section */
@@ -186,6 +187,8 @@
 		37A8C6C216758FF400D4DB13 /* DecodeTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DecodeTests.h; sourceTree = "<group>"; };
 		37A8C6C316758FF400D4DB13 /* DecodeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DecodeTests.m; sourceTree = "<group>"; };
 		37A8C6CD167590E700D4DB13 /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
+		37CF062416AB998A00069A20 /* LuaSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaSupport.h; sourceTree = "<group>"; };
+		37CF062516AB998A00069A20 /* LuaSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LuaSupport.m; sourceTree = "<group>"; };
 		37EECF4C16A64A9E00BEB493 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
 		37F2C589169E7B92009C5355 /* ArrayCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArrayCategory.h; sourceTree = "<group>"; };
 		37F2C58A169E7B92009C5355 /* ArrayCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArrayCategory.m; sourceTree = "<group>"; };
@@ -320,6 +323,8 @@
 				37979FEC16AAEEC1009D9944 /* FunctionalTest.h */,
 				37979FED16AAEEC1009D9944 /* FunctionalTest.m */,
 				37A8C6AE16758FF400D4DB13 /* MainMenu.xib */,
+				37CF062416AB998A00069A20 /* LuaSupport.h */,
+				37CF062516AB998A00069A20 /* LuaSupport.m */,
 			);
 			name = App;
 			sourceTree = "<group>";
@@ -585,6 +590,7 @@
 				3752CC1516A1F2B400B623F5 /* SelectStyleController.m in Sources */,
 				3752CC1816A2F7EA00B623F5 /* StringCategory.m in Sources */,
 				37979FEE16AAEEC1009D9944 /* FunctionalTest.m in Sources */,
+				37CF062616AB998A00069A20 /* LuaSupport.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

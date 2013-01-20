@@ -1,17 +1,24 @@
 #import "FunctionalTest.h"
 
-#include <lua.h>
+#include <lualib.h>
 #include <lauxlib.h>
 
 #import "AppDelegate.h"
 #import "Assert.h"
 #import "Glob.h"
 #import "Logger.h"
+#import "LuaSupport.h"
 #import "TranscriptController.h"
 #import "Utils.h"
 
 static const char* _ftestPath;
-static NSString* _failure;
+//static NSString* _failure;
+
+static lua_State* _state;
+static NSArray* _tests;
+static NSUInteger _nextTest;
+static int _numPassed;
+static int _numFailed;
 
 // ---- Internal Functions -------------------------------------------------
 static void addTestItems(NSMenu* testMenu)
@@ -53,49 +60,109 @@ static void createMenu()
 	[menu insertItem:subitem atIndex:[menu numberOfItems]-1];
 }
 
-static int failed(lua_State* state)
+static void startNextTest()
 {
-	const char* reason = lua_tostring(state, 1);
-	_failure = [NSString stringWithUTF8String:reason];
+	if (_nextTest < _tests.count)
+	{
+		NSString* path = _tests[_nextTest++];
+		
+		NSError* error = nil;
+		NSString* script = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
+		if (error == nil)
+		{
+			NSString* name = [[path lastPathComponent] stringByDeletingPathExtension];
+			if (_tests.count > 1)
+				[TranscriptController writeStdout:@"   "];
+			[TranscriptController writeStdout:name];
+			[TranscriptController writeStdout:@"..."];
+			
+			int err = luaL_dostring(_state, script.UTF8String);
+			if (err)
+			{
+				[TranscriptController writeStderr:[NSString stringWithUTF8String:lua_tostring(_state, -1)]];
+				lua_pop(_state, 1);
+			}
+		}
+		else
+		{
+			NSString* reason = [error localizedFailureReason];
+			[TranscriptController writeStderr:[NSString stringWithFormat:@"failed to load '%@': %@", path, reason]];
+		}
+	}
+	else
+	{
+		if (_tests.count > 1)
+		{
+			if (_numFailed == 0)
+				[TranscriptController writeStdout:[NSString stringWithFormat:@"All %d tests passed.\n\n", _numPassed]];
+			else if (_numPassed == 0)
+				[TranscriptController writeStdout:[NSString stringWithFormat:@"All %d tests FAILED.\n\n", _numFailed]];
+			else if (_numFailed == 1)
+				[TranscriptController writeStdout:[NSString stringWithFormat:@"%d tests passed and 1 test FAILED.\n\n", _numPassed]];
+			else
+				[TranscriptController writeStdout:[NSString stringWithFormat:@"%d tests passed and %d tests FAILED.\n\n", _numPassed, _numFailed]];
+		}
+		_tests = nil;
+	}
+}
+
+// passed(ftest)
+static int ftest_passed()
+{
+	_numPassed++;
+	[TranscriptController writeStdout:@"ok\n"];
+	
+	dispatch_queue_t main = dispatch_get_main_queue();
+	dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 0);
+	dispatch_after(delay, main, ^{startNextTest();});	// defer the next test so that lua has a chance to pop the stack for the old test
+
+	return 0;
+}
+
+// failed(ftest, reason)
+static int ftest_failed()
+{
+	_numFailed++;
+	
+	const char* failure = lua_tostring(_state, 2);
+	[TranscriptController writeStderr:[NSString stringWithUTF8String:failure]];
+	[TranscriptController writeStdout:@"\n"];
+	
+	dispatch_queue_t main = dispatch_get_main_queue();
+	dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 0);
+	dispatch_after(delay, main, ^{startNextTest();});	// defer the next test so that lua has a chance to pop the stack for the old test
 	
 	return 0;
+}
+
+static void initFTestMethods(lua_State* state)
+{
+	luaL_Reg methods[] =
+	{
+		{"passed", ftest_passed},
+		{"failed", ftest_failed},
+		{NULL, NULL}
+	};
+	luaL_register(state, "ftest", methods);
+		
+	lua_setglobal(state, "ftest");
 }
 
 static lua_State* createLua()
 {
 	lua_State* state = luaL_newstate();
-	//luaL_openlibs(state);
-	lua_register(state, "failed", failed);
+	initFTestMethods(state);
+	initMethods(state);
 	
+	lua_pushcfunction(state, luaopen_string);
+	lua_pushliteral(state, LUA_STRLIBNAME);
+	lua_call(state, 1, 0);						// 1 arg, no result
+	
+	lua_pushcfunction(state, luaopen_io);
+	lua_pushliteral(state, LUA_IOLIBNAME);
+	lua_call(state, 1, 0);						// 1 arg, no result
+
 	return state;
-}
-
-static void destroyLua(lua_State* state)
-{
-	lua_close(state);
-}
-
-static void runTest(NSString* path)
-{
-	NSError* error = nil;
-	NSString* script = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
-	if (error == nil)
-	{
-		lua_State* state = createLua();		// not sure how expensive this is, but it should be possible to create it once
-		int err = luaL_dostring(state, script.UTF8String);
-		if (err)
-		{
-			if (!_failure)
-				_failure = [NSString stringWithUTF8String:lua_tostring(state, -1)];
-			lua_pop(state, 1);
-		}
-		destroyLua(state);
-	}
-	else
-	{
-		NSString* reason = [error localizedFailureReason];
-		_failure = [NSString stringWithFormat:@"failed to load '%@': %@", path, reason];
-	}
 }
 
 // ---- Public Functions -------------------------------------------------
@@ -105,60 +172,64 @@ void initFunctionalTests(void)
 	
 	_ftestPath = getenv("MIMSY_FTEST");
 	if (_ftestPath)
+	{
 		createMenu();
+		_state = createLua();
+	}
 }
 
+// Unfortunately a lot of the functional tests want to do stuff like open windows
+// which require event loop processing. So we need to kick off each test, return
+// to the event loop, and wait until the test tells us it is finished.
 void runFunctionalTests(void)
 {
-	NSString* dir = [NSString stringWithUTF8String:_ftestPath];
-	Glob* glob = [[Glob alloc] initWithGlob:@"*.lua"];
-	
-	__block int numPassed = 0;
-	__block int numFailed = 0;
-	[TranscriptController writeCommand:@"Running functional tests:\n"];
-	
-	NSError* error = nil;
-	[Utils enumerateDeepDir:dir glob:glob error:&error block:
-	 ^(NSString* path)
-	 {
-		 [TranscriptController writeStdout:@"   "];
-		 runFunctionalTest(path);
-		 
-		 if (_failure)
-			 ++numFailed;
-		 else
-			 ++numPassed;
-	 }
-	 ];
-	if (error)
-		[TranscriptController writeError:[error localizedFailureReason]];
-	
-	if (numFailed == 0)
-		[TranscriptController writeStdout:[NSString stringWithFormat:@"All %d tests passed.\n", numPassed]];
-	else if (numPassed == 0)
-		[TranscriptController writeStdout:[NSString stringWithFormat:@"All %d tests FAILED.\n", numFailed]];
-	else if (numFailed == 1)
-		[TranscriptController writeStdout:[NSString stringWithFormat:@"%d tests passed and 1 test FAILED.\n", numPassed]];
+	if (!_tests)
+	{
+		__block NSMutableArray* tests = [NSMutableArray new];
+		NSString* dir = [NSString stringWithUTF8String:_ftestPath];
+		Glob* glob = [[Glob alloc] initWithGlob:@"*.lua"];
+				
+		NSError* error = nil;
+		[Utils enumerateDeepDir:dir glob:glob error:&error block:
+			 ^(NSString* path)
+			 {
+				 [tests addObject:path];
+			 }
+		 ];
+		if (!error)
+		{
+			_tests = tests;
+			_nextTest = 0;
+			_numPassed = 0;
+			_numFailed = 0;
+			
+			[TranscriptController writeCommand:@"Running functional tests:\n"];			
+			startNextTest();
+		}
+		else
+		{
+			[TranscriptController writeError:[error localizedFailureReason]];
+		}
+	}
 	else
-		[TranscriptController writeStdout:[NSString stringWithFormat:@"%d tests passed and %d tests FAILED.\n", numPassed, numFailed]];
+	{
+		[TranscriptController writeError:@"A functional test is already running."];
+	}
 }
 
 void runFunctionalTest(NSString* path)
 {
-	NSString* name = [[path lastPathComponent] stringByDeletingPathExtension];
-	[TranscriptController writeStdout:name];
-	[TranscriptController writeStdout:@"..."];
-	
-	_failure = NULL;
-	runTest(path);
-	
-	if (_failure)
+	if (!_tests)
 	{
-		[TranscriptController writeStderr:_failure];
+		_tests = @[path];
+		_nextTest = 0;
+		_numPassed = 0;
+		_numFailed = 0;
+		
+		startNextTest();
 	}
 	else
 	{
-		[TranscriptController writeStdout:@"ok"];
+		[TranscriptController writeError:@"A functional test is already running."];
 	}
-	[TranscriptController writeStdout:@"\n"];
 }
