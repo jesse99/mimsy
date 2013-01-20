@@ -327,7 +327,7 @@ static SelectStyleController* _controller;
 					}
 					else
 					{
-						NSString* mesg = [[NSString alloc] initWithFormat:@"Expected a value formatted as rating|comment in %@ on line %lu\n", path, entry.line];
+						NSString* mesg = [[NSString alloc] initWithFormat:@"Expected a value formatted as rating|comment in %@ on line %lu", path, entry.line];
 						[TranscriptController writeError:mesg];
 					}
 				}
