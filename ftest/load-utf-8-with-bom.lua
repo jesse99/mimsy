@@ -1,4 +1,4 @@
--- Verify that Mimsy is able to load text documents formatted as utf-16 big endian.
+-- Verify that Mimsy is able to load text documents formatted as utf-8 with a bom.
 function openedDoc(doc)
 	local data = doc:data()
 	doc:close()
@@ -16,7 +16,7 @@ end
 
 -- can't use tmpfile because we need a file name
 -- also lua doesn't support hex escape codes
-local fname = '/tmp/utf-16-be.txt'
+local fname = '/tmp/utf-8-bom.txt'
 local file = io.open(fname, 'w')
 file:write('\239\187\191Hello\226\128\162World')	-- 'Hello World' with a bullet
 file:close(file)

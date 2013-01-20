@@ -16,7 +16,7 @@ end
 
 -- can't use tmpfile because we need a file name
 -- also lua doesn't support hex escape codes
-local fname = '/tmp/utf-16-be.txt'
+local fname = '/tmp/utf-16-le.txt'
 local file = io.open(fname, 'w')
 file:write('H\0e\0l\0l\0o\0\34\32W\0o\0r\0l\0d\0')	-- 'Hello World' with a bullet
 file:close(file)
