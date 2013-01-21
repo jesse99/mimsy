@@ -17,8 +17,7 @@ int app_log(struct lua_State* state);
 
 // ---- Document ---------------------------------------------------------------
 int doc_close(struct lua_State* state);
+int doc_saveas(struct lua_State* state);
 
 // ---- Text Document ----------------------------------------------------------
 int textdoc_data(struct lua_State* state);
-
-

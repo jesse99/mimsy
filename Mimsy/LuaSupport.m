@@ -10,8 +10,9 @@ static void pushTextDoc(struct lua_State* state, NSDocument* doc)
 {
 	luaL_Reg methods[] =
 	{
-		{"data", textdoc_data},
 		{"close", doc_close},
+		{"saveas", doc_saveas},
+		{"data", textdoc_data},
 		{NULL, NULL}
 	};
 	luaL_register(state, "doc", methods);
@@ -79,10 +80,53 @@ int app_openfile(struct lua_State* state)
 }
 
 // log(app, mesg)
+// TODO: might want to stick a log method on all tables (so we get better categories)
 int app_log(struct lua_State* state)
 {
 	const char* mesg = lua_tostring(state, 2);
 	LOG_INFO("Mimsy", "%s", mesg);
+	return 0;
+}
+
+// close(doc)
+int doc_close(struct lua_State* state)
+{
+	lua_getfield(state, 1, "target");
+	NSDocument* doc = (__bridge NSDocument*) lua_touserdata(state, -1);
+	[doc close];		// doesn't ask to save changes
+	return 0;
+}
+
+// saveas(doc, path, type = nil, success = nil, failure = nil)
+int doc_saveas(struct lua_State* state)
+{
+	lua_getfield(state, 1, "target");
+	NSDocument* doc = (__bridge NSDocument*) lua_touserdata(state, -1);
+	const char* path = lua_tostring(state, 2);
+	const char* type = luaL_optstring(state, 3, "Plain Text, UTF8 Encoded");
+	const char* success = luaL_optstring(state, 4, NULL);
+	const char* failure = luaL_optstring(state, 5, NULL);
+	
+	NSURL* url = [NSURL fileURLWithPath:[NSString stringWithUTF8String:path]];
+	[doc saveToURL:url ofType:[NSString stringWithUTF8String:type] forSaveOperation:NSSaveAsOperation completionHandler:
+		^(NSError* error)
+		{
+			if (error && failure)
+			{
+				NSString* reason = [error localizedFailureReason];
+				
+				lua_getglobal(state, failure);
+				lua_pushstring(state, reason.UTF8String);
+				lua_call(state, 1, 0);						// 1 arg, no result
+			}
+			else if (!error && success)
+			{
+				lua_getglobal(state, success);
+				lua_pushvalue(state, 1);
+				lua_call(state, 1, 0);						// 1 arg, no result
+			}
+		}
+	];
 	return 0;
 }
 
@@ -95,13 +139,4 @@ int textdoc_data(struct lua_State* state)
 	LOG_INFO("Mimsy", "data = %s", doc.controller.text.UTF8String);
 	lua_pushstring(state, doc.controller.text.UTF8String);
 	return 1;
-}
-
-// close(doc)
-int doc_close(struct lua_State* state)
-{
-	lua_getfield(state, 1, "target");
-	NSDocument* doc = (__bridge NSDocument*) lua_touserdata(state, -1);
-	[doc close];		// doesn't ask to save changes
-	return 0;
 }
