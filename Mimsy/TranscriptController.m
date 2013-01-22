@@ -1,4 +1,6 @@
 #import "TranscriptController.h"
+
+#import "FunctionalTest.h"
 #import "Logger.h"
 
 static TranscriptController* controller;
@@ -57,8 +59,17 @@ static TranscriptController* controller;
 + (void)writeError:(NSString*)text
 {
 	LOG_ERROR("Mimsy", "%s", STR(text));
-	NSAttributedString* str = [[NSAttributedString alloc] initWithString:[text stringByAppendingString:@"\n"]];
-	[[[TranscriptController getInstance].view textStorage] appendAttributedString:str];
+	
+	if (!functionalTestsAreRunning())
+	{
+		NSAttributedString* str = [[NSAttributedString alloc] initWithString:[text stringByAppendingString:@"\n"]];
+		[[[TranscriptController getInstance].view textStorage] appendAttributedString:str];
+	}
+	else
+	{
+		NSString* str = [[NSString alloc] initWithString:[text stringByAppendingString:@"\n"]];
+		recordFunctionalError(str);
+	}
 }
 
 @end

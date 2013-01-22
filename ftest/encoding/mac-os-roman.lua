@@ -4,7 +4,7 @@ function openedDoc(doc)
 	doc:close()
 	
 	if data == 'Hello\226\128\162World' then
-		ftest:passed()
+		ftest:expecterror('Read the file as Mac OS Roman')
 	else
 		ftest:failed(string.format('expected "Hello\226\128\162World" but found %q', data))
 	end

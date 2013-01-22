@@ -5,3 +5,6 @@ void initFunctionalTests(void);
 
 void runFunctionalTest(NSString* path);
 void runFunctionalTests(void);
+
+bool functionalTestsAreRunning(void);
+void recordFunctionalError(NSString* mesg);

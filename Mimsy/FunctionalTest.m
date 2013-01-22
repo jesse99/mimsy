@@ -18,6 +18,7 @@ static NSArray* _tests;
 static NSUInteger _nextTest;
 static int _numPassed;
 static int _numFailed;
+static NSMutableString* _error;
 
 // ---- Internal Functions -------------------------------------------------
 static void addTestItems(NSMenu* testMenu)
@@ -74,6 +75,7 @@ static void startNextTest()
 			[TranscriptController writeStdout:name];
 			[TranscriptController writeStdout:@"..."];
 			
+			_error = [NSMutableString new];
 			int err = luaL_dostring(_state, script.UTF8String);
 			if (err)
 			{
@@ -107,9 +109,17 @@ static void startNextTest()
 // passed(ftest)
 static int ftest_passed()
 {
-	_numPassed++;
-	[TranscriptController writeStdout:@"ok\n"];
-	
+	if (_error.length == 0)
+	{
+		_numPassed++;
+		[TranscriptController writeStdout:@"ok\n"];
+	}
+	else
+	{
+		_numFailed++;
+		[TranscriptController writeStderr:[NSString stringWithFormat:@"FAILED...%@", _error]];
+	}
+		
 	dispatch_queue_t main = dispatch_get_main_queue();
 	dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 0);
 	dispatch_after(delay, main, ^{startNextTest();});	// defer the next test so that lua has a chance to pop the stack for the old test
@@ -122,8 +132,8 @@ static int ftest_failed()
 {
 	_numFailed++;
 	
-	const char* failure = lua_tostring(_state, 2);
-	[TranscriptController writeStderr:[NSString stringWithUTF8String:failure]];
+	NSString* failure = [NSString stringWithUTF8String:lua_tostring(_state, 2)];
+	[TranscriptController writeStderr:[NSString stringWithFormat:@"FAILED...%@", failure]];
 	[TranscriptController writeStdout:@"\n"];
 	
 	dispatch_queue_t main = dispatch_get_main_queue();
@@ -133,12 +143,38 @@ static int ftest_failed()
 	return 0;
 }
 
+// expecterror(ftest, mesg)
+static int ftest_expecterror()
+{
+	NSString* mesg = [NSString stringWithUTF8String:lua_tostring(_state, 2)];
+	NSRange range = [_error rangeOfString:mesg];
+	if (range.location != NSNotFound)
+	{
+		// Bit lame in that we'll pass if one error out of potentially a whole slew is found.
+		_numPassed++;
+		[TranscriptController writeStdout:@"ok\n"];
+	}
+	else
+	{
+		_numFailed++;
+		[TranscriptController writeStderr:[NSString stringWithFormat:@"FAILED...expected error '%@' but found '%@'", mesg, _error]];
+		[TranscriptController writeStdout:@"\n"];
+	}
+	
+	dispatch_queue_t main = dispatch_get_main_queue();
+	dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 0);
+	dispatch_after(delay, main, ^{startNextTest();});	// defer the next test so that lua has a chance to pop the stack for the old test
+		
+	return 0;
+}
+
 static void initFTestMethods(lua_State* state)
 {
 	luaL_Reg methods[] =
 	{
 		{"passed", ftest_passed},
 		{"failed", ftest_failed},
+		{"expecterror", ftest_expecterror},
 		{NULL, NULL}
 	};
 	luaL_register(state, "ftest", methods);
@@ -178,6 +214,11 @@ void initFunctionalTests(void)
 		createMenu();
 		_state = createLua();
 	}
+}
+
+bool functionalTestsAreRunning(void)
+{
+	return _tests != nil;
 }
 
 // Unfortunately a lot of the functional tests want to do stuff like open windows
@@ -233,4 +274,9 @@ void runFunctionalTest(NSString* path)
 	{
 		[TranscriptController writeError:@"A functional test is already running."];
 	}
+}
+
+void recordFunctionalError(NSString* mesg)
+{
+	[_error appendString:mesg];
 }
