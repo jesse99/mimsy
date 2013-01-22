@@ -11,8 +11,7 @@
 #import "TranscriptController.h"
 #import "Utils.h"
 
-static const char* _ftestPath;
-//static NSString* _failure;
+static NSString* _ftestPath;
 
 static lua_State* _state;
 static NSArray* _tests;
@@ -23,14 +22,13 @@ static int _numFailed;
 // ---- Internal Functions -------------------------------------------------
 static void addTestItems(NSMenu* testMenu)
 {
-	NSString* dir = [NSString stringWithUTF8String:_ftestPath];
 	Glob* glob = [[Glob alloc] initWithGlob:@"*.lua"];
 	
 	NSError* error = nil;
-	[Utils enumerateDeepDir:dir glob:glob error:&error block:
+	[Utils enumerateDeepDir:_ftestPath glob:glob error:&error block:
 		 ^(NSString* path)
 		 {
-			 NSString* name = [[path lastPathComponent] stringByDeletingPathExtension];
+			 NSString* name = [[path substringFromIndex:_ftestPath.length] stringByDeletingPathExtension];
 			 NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:name action:@selector(runFTest:) keyEquivalent:@""];
 			 [item setRepresentedObject:path];
 			 [testMenu addItem:item];
@@ -70,7 +68,7 @@ static void startNextTest()
 		NSString* script = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
 		if (error == nil)
 		{
-			NSString* name = [[path lastPathComponent] stringByDeletingPathExtension];
+			NSString* name = [[path substringFromIndex:_ftestPath.length] stringByDeletingPathExtension];
 			if (_tests.count > 1)
 				[TranscriptController writeStdout:@"   "];
 			[TranscriptController writeStdout:name];
@@ -170,9 +168,13 @@ void initFunctionalTests(void)
 {
 	ASSERT(!_ftestPath);
 	
-	_ftestPath = getenv("MIMSY_FTEST");
-	if (_ftestPath)
+	const char* path = getenv("MIMSY_FTEST");
+	if (path)
 	{
+		_ftestPath = [NSString stringWithUTF8String:path];
+		if (![_ftestPath hasSuffix:@"/"])
+			_ftestPath = [_ftestPath stringByAppendingString:@"/"];
+		
 		createMenu();
 		_state = createLua();
 	}
@@ -186,11 +188,10 @@ void runFunctionalTests(void)
 	if (!_tests)
 	{
 		__block NSMutableArray* tests = [NSMutableArray new];
-		NSString* dir = [NSString stringWithUTF8String:_ftestPath];
 		Glob* glob = [[Glob alloc] initWithGlob:@"*.lua"];
 				
 		NSError* error = nil;
-		[Utils enumerateDeepDir:dir glob:glob error:&error block:
+		[Utils enumerateDeepDir:_ftestPath glob:glob error:&error block:
 			 ^(NSString* path)
 			 {
 				 [tests addObject:path];
