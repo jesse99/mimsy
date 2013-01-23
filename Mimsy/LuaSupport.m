@@ -47,33 +47,33 @@ int app_openfile(struct lua_State* state)
 	NSURL* url = [NSURL fileURLWithPath:[NSString stringWithUTF8String:path]];
 	
 	[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES completionHandler:
-	 ^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
-	 {
-		 (void) documentWasAlreadyOpen;
-		 if (error && failure)
+		 ^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
 		 {
-			 NSString* reason = [error localizedFailureReason];
-			 
-			 lua_getglobal(state, failure);
-			 lua_pushstring(state, reason.UTF8String);
-			 lua_call(state, 1, 0);						// 1 arg, no result
-		 }
-		 else if (!error && success)
-		 {
-			 if ([document isKindOfClass:[TextDocument class]])
+			 (void) documentWasAlreadyOpen;
+			 if (error && failure)
 			 {
-				 lua_getglobal(state, success);
-				 pushTextDoc(state, document);
-				 lua_call(state, 1, 0);					// 1 arg, no result
-			 }
-			 else
-			 {
+				 NSString* reason = [error localizedFailureReason];
+				 
 				 lua_getglobal(state, failure);
-				 lua_pushstring(state, "Document isn't a text document");
-				 lua_call(state, 1, 0);					// 1 arg, no result
+				 lua_pushstring(state, reason.UTF8String);
+				 lua_call(state, 1, 0);						// 1 arg, no result
+			 }
+			 else if (!error && success)
+			 {
+				 if ([document isKindOfClass:[TextDocument class]])
+				 {
+					 lua_getglobal(state, success);
+					 pushTextDoc(state, document);
+					 lua_call(state, 1, 0);					// 1 arg, no result
+				 }
+				 else
+				 {
+					 lua_getglobal(state, failure);
+					 lua_pushstring(state, "Document isn't a text document");
+					 lua_call(state, 1, 0);					// 1 arg, no result
+				 }
 			 }
 		 }
-	 }
 	 ];
 	
 	return 0;
@@ -135,8 +135,6 @@ int textdoc_data(struct lua_State* state)
 {
 	lua_getfield(state, 1, "target");
 	TextDocument* doc = (__bridge TextDocument*) lua_touserdata(state, -1);
-	LOG_INFO("Mimsy", "doc = %s", STR(doc));
-	LOG_INFO("Mimsy", "data = %s", doc.controller.text.UTF8String);
 	lua_pushstring(state, doc.controller.text.UTF8String);
 	return 1;
 }
