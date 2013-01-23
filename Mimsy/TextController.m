@@ -2,6 +2,7 @@
 
 #import "ApplyStyles.h"
 #import "ConfigParser.h"
+#import "FunctionalTest.h"
 #import "Language.h"
 #import "Languages.h"
 #import "Logger.h"
@@ -151,7 +152,10 @@
 	
 	NSString* path = [self path];
 	if (path)
+	{
 		[self _addInstalledContexts:result forPath:path];
+		addFunctionalTestHelpContext(result, path);
+	}
 	
 	[result addObject:@"text editor"];
 	

@@ -280,3 +280,14 @@ void recordFunctionalError(NSString* mesg)
 {
 	[_error appendString:mesg];
 }
+
+void addFunctionalTestHelpContext(NSMutableArray* result, NSString* path)
+{
+	if (_ftestPath)
+	{
+		if ([path hasPrefix:_ftestPath])
+		{
+			[result addObject:@"ftest"];
+		}
+	}
+}

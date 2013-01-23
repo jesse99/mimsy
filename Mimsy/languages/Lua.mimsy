@@ -1,0 +1,28 @@
+Language: lua
+Globs: *.lua
+LineComment: --
+Help: [Lua Wiki]http://lua-users.org/wiki/
+Help: [Lua Tech Notes]http://www.lua.org/notes/
+Help: [Lua Reference Manual]http://www.lua.org/manual/5.1/
+
+Function: (?<=\b function) \s+ (\w+)
+
+Conditional: \b(?: else | elseif | if)\b
+Keyword: \b(?: break | do | end | function | in | nil | return | then)\b
+Operator:  \x23 | \.\. | \b(?: and | not | or)\b
+Repeat: \b(?: for | repeat | until | while)\b
+StorageClass: \b(?: local)\b
+Identifier: \b(?: assert | collectgarbage | dofile | error | getfenv | getmetatable | ipairs | load | loadfile | loadstring | next | pairs | pcall | print | rawequal | rawget | rawset | select | setfenv | setmetatable | tonumber | tostring | type | unpack | xpcall)\b
+Comment: -- .* $
+Macro: \b(?: _G |  | _VERSION)\b
+
+Boolean: \b(?: false | true)\b
+Float: \W (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)?) \W
+Float: \W (\. [\d_]+ (?: [eE] [+-]? [\d_]+)?) \W
+Number: \W (\d+) \W
+Number: \W (0x [0-9a-fA-f]+) \W
+
+String: " (?: [^"\r\n\\] | \\.)* "
+String: ' (?: [^'\r\n\\] | \\.)* '
+String: \[=*\[ (?: . | \r | \n)*? \]=*\]
+
