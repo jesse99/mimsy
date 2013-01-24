@@ -2,6 +2,8 @@
 
 #include <lualib.h>
 #include <lauxlib.h>
+#include <mach/task.h>
+#include <mach/task_info.h>
 
 #import "AppDelegate.h"
 #import "Assert.h"
@@ -168,6 +170,18 @@ static int ftest_expecterror()
 	return 0;
 }
 
+// getresidentbytes(ftest) -> int
+static int ftest_getresidentbytes()
+{
+	struct mach_task_basic_info info;
+	mach_msg_type_number_t count = MACH_TASK_BASIC_INFO_COUNT;
+	if (task_info(mach_task_self(), MACH_TASK_BASIC_INFO, (task_info_t) &info, &count) != KERN_SUCCESS)
+		info.resident_size = 0;
+
+	lua_pushinteger(_state, (lua_Integer) info.resident_size);
+	return 1;
+}
+
 static void initFTestMethods(lua_State* state)
 {
 	luaL_Reg methods[] =
@@ -175,6 +189,7 @@ static void initFTestMethods(lua_State* state)
 		{"passed", ftest_passed},
 		{"failed", ftest_failed},
 		{"expecterror", ftest_expecterror},
+		{"getresidentbytes", ftest_getresidentbytes},
 		{NULL, NULL}
 	};
 	luaL_register(state, "ftest", methods);

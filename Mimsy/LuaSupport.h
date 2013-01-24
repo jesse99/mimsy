@@ -12,8 +12,10 @@ struct lua_State;
 void initMethods(struct lua_State* state);
 
 // ---- App --------------------------------------------------------------------
-int app_openfile(struct lua_State* state);
 int app_log(struct lua_State* state);
+int app_newdoc(struct lua_State* state);
+int app_openfile(struct lua_State* state);
+int app_schedule(struct lua_State* state);
 
 // ---- Document ---------------------------------------------------------------
 int doc_close(struct lua_State* state);

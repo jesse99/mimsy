@@ -10,10 +10,38 @@
 \
 Mimsy adds a global called 'app' to all Lua environments. The other tables listed below are available directly or indirectly via the app global.\
 \
+\pard\pardeftab480\pardirnatural
 
-\b\fs72 app\
+\b\fs72 \cf0 app\
+\pard\pardeftab480\pardirnatural
 
-\b0\fs36 \
+\b0\fs36 \cf0 \
+\pard\pardeftab480\pardirnatural
+
+\f1\b\fs32 \cf0 function
+\f2\b0  
+\f1\b \cf2 log
+\f2\b0 \cf0 (
+\f3\i \cf3 app, mesg
+\f2\i0 \cf0 )\
+\pard\pardeftab480\pardirnatural
+
+\f0\fs36 \cf0 Writes a message to the log using the \cf4 'Mimsy'\cf0  topic and Info level.\
+\
+\pard\pardeftab480\pardirnatural
+
+\f1\b\fs32 \cf0 function
+\f2\b0  
+\f1\b \cf2 newdoc
+\f2\b0 \cf0 (
+\f3\i \cf3 app
+\f2\i0 \cf0 ) -> 
+\f1\b \cf5 textdoc
+\f2\b0 \cf0 \
+\pard\pardeftab480\pardirnatural
+
+\f0\fs36 \cf0 Opens a new untitled text document.\
+\
 \pard\pardeftab480\pardirnatural
 
 \f1\b\fs32 \cf0 function
@@ -34,19 +62,25 @@ Mimsy adds a global called 'app' to all Lua environments. The other tables liste
 \f0\fs36 \cf0 Attempts to open the file specified by path as a Mimsy document. If successful and success is not nil then it is called with a textdoc argument. If the document could not be opened and failure is not nil then it is called with a string explaining why.\
 \
 Note that, in general, the callbacks will not be invoked until the event loop is re-entered (this applies to all the methods that take success and failure callbacks).\
-\
+\pard\pardeftab480\pardirnatural
+\cf0 \
 \pard\pardeftab480\pardirnatural
 
 \f1\b\fs32 \cf0 function
 \f2\b0  
-\f1\b \cf2 log
+\f1\b \cf2 schedule
 \f2\b0 \cf0 (
-\f3\i \cf3 app, mesg
+\f3\i \cf3 app
+\f2\i0 \cf0 , 
+\f3\i \cf3 secs
+\f2\i0 \cf0 , 
+\f3\i \cf3 callback
 \f2\i0 \cf0 )\
 \pard\pardeftab480\pardirnatural
 
-\f0\fs36 \cf0 Writes a message to the log using the \cf4 'Mimsy'\cf0  topic and Info level.\
-\
+\f0\fs36 \cf0 Calls callback after the specified number of seconds have elapsed. Secs can be an integer or a float, callback must be the name of a function.\
+\pard\pardeftab480\pardirnatural
+\cf0 \
 \pard\pardeftab480\pardirnatural
 
 \b\fs72 \cf0 textdoc\
@@ -67,7 +101,22 @@ Note that, in general, the callbacks will not be invoked until the event loop is
 \pard\pardeftab480\pardirnatural
 
 \f1\b\fs32 \cf0 \
-function
+\pard\pardeftab480\pardirnatural
+\cf0 function
+\f2\b0  
+\f1\b \cf2 data
+\f2\b0 \cf0 (
+\f3\i \cf3 textdoc
+\f2\i0 \cf0 ) -> 
+\f1\b \cf5 str
+\f2\b0 \cf0 \
+\pard\pardeftab480\pardirnatural
+
+\f0\fs36 \cf0 Returns the text of the document as a UTF-8 string. \
+\
+\pard\pardeftab480\pardirnatural
+
+\f1\b\fs32 \cf0 function
 \f2\b0  
 \f1\b \cf2 saveas
 \f2\b0 \cf0 (
@@ -96,17 +145,4 @@ function
 \'95\'a0\cf4 'Word 2007 Format (docx)'\cf0 \
 \'95\'a0\cf4 'Open Document Text (odt)'\cf0 \
 \
-\pard\pardeftab480\pardirnatural
-
-\f1\b\fs32 \cf0 function
-\f2\b0  
-\f1\b \cf2 data
-\f2\b0 \cf0 (
-\f3\i \cf3 textdoc
-\f2\i0 \cf0 ) -> 
-\f1\b \cf5 str
-\f2\b0 \cf0 \
-\pard\pardeftab480\pardirnatural
-
-\f0\fs36 \cf0 Returns the text of the document as a UTF-8 string. \
 }

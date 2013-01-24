@@ -1,7 +1,8 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
 \cocoascreenfonts1{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\fnil\fcharset0 Menlo-Bold;\f2\fnil\fcharset0 Menlo-Regular;
 \f3\fnil\fcharset0 Menlo-Italic;\f4\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;\red153\green0\blue0;\red23\green127\blue128;}
+{\colortbl;\red255\green255\blue255;\red153\green0\blue0;\red23\green127\blue128;\red72\green83\blue135;
+}
 \deftab480
 \pard\pardeftab480\pardirnatural
 
@@ -15,7 +16,7 @@ Functional tests often interact with the GUI by doing things like opening and cl
 \
 Standard tables are provided to interact with Mimsy (see Lua Scripting) but functional tests have an additional table available via the ftest global:\
 \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\pard\pardeftab480\pardirnatural
 
 \f1\b\fs32 \cf0 function
 \f2\b0  
@@ -27,7 +28,7 @@ Standard tables are provided to interact with Mimsy (see Lua Scripting) but func
 
 \f0\fs36 \cf0 If no errors were written to the transcript then the test successfully completes. Otherwise it completes with an error.\
 \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\pard\pardeftab480\pardirnatural
 
 \f1\b\fs32 \cf0 function
 \f2\b0  
@@ -39,7 +40,7 @@ Standard tables are provided to interact with Mimsy (see Lua Scripting) but func
 
 \f0\fs36 \cf0 Indicates that the test has completed with an error.\
 \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\pard\pardeftab480\pardirnatural
 
 \f1\b\fs32 \cf0 function
 \f2\b0  
@@ -54,5 +55,23 @@ Standard tables are provided to interact with Mimsy (see Lua Scripting) but func
 \f0\fs36 Otherwise it completes with an error
 \f4\fs24 .
 \f0\fs36 \
-\
+\pard\pardeftab480\pardirnatural
+\cf0 \
+\pard\pardeftab480\pardirnatural
+
+\f1\b\fs32 \cf0 function
+\f2\b0  
+\f1\b \cf2 residentbytes
+\f2\b0 \cf0 (
+\f3\i \cf3 ftest
+\f2\i0 \cf0 ) -> 
+\f1\b \cf4 int
+\f2\b0 \cf0 \
+\pard\pardeftab480\pardirnatural
+
+\f0\fs36 \cf0 Returns the current number of bytes resident in memory for the Mimsy process
+\f4\fs24 .
+\f0\fs36 \
+\pard\pardeftab480\pardirnatural
+\cf0 \
 }

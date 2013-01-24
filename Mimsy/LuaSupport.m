@@ -2,7 +2,7 @@
 
 #include <lauxlib.h>
 
-#import "Logger.h"
+#import "Assert.h"
 #import "TextController.h"
 #import "TextDocument.h"
 
@@ -11,8 +11,8 @@ static void pushTextDoc(struct lua_State* state, NSDocument* doc)
 	luaL_Reg methods[] =
 	{
 		{"close", doc_close},
-		{"saveas", doc_saveas},
 		{"data", textdoc_data},
+		{"saveas", doc_saveas},
 		{NULL, NULL}
 	};
 	luaL_register(state, "doc", methods);
@@ -25,8 +25,10 @@ void initMethods(struct lua_State* state)
 {
 	luaL_Reg methods[] =
 	{
-		{"openfile", app_openfile},
 		{"log", app_log},
+		{"newdoc", app_newdoc},
+		{"openfile", app_openfile},
+		{"schedule", app_schedule},
 		{NULL, NULL}
 	};
 	luaL_register(state, "app", methods);
@@ -47,36 +49,73 @@ int app_openfile(struct lua_State* state)
 	NSURL* url = [NSURL fileURLWithPath:[NSString stringWithUTF8String:path]];
 	
 	[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES completionHandler:
-		 ^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
+	 ^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
+	 {
+		 (void) documentWasAlreadyOpen;
+		 if (error && failure)
 		 {
-			 (void) documentWasAlreadyOpen;
-			 if (error && failure)
+			 NSString* reason = [error localizedFailureReason];
+			 
+			 lua_getglobal(state, failure);
+			 lua_pushstring(state, reason.UTF8String);
+			 lua_call(state, 1, 0);						// 1 arg, no result
+		 }
+		 else if (!error && success)
+		 {
+			 if ([document isKindOfClass:[TextDocument class]])
 			 {
-				 NSString* reason = [error localizedFailureReason];
-				 
-				 lua_getglobal(state, failure);
-				 lua_pushstring(state, reason.UTF8String);
-				 lua_call(state, 1, 0);						// 1 arg, no result
+				 lua_getglobal(state, success);
+				 pushTextDoc(state, document);
+				 lua_call(state, 1, 0);					// 1 arg, no result
 			 }
-			 else if (!error && success)
+			 else
 			 {
-				 if ([document isKindOfClass:[TextDocument class]])
-				 {
-					 lua_getglobal(state, success);
-					 pushTextDoc(state, document);
-					 lua_call(state, 1, 0);					// 1 arg, no result
-				 }
-				 else
-				 {
-					 lua_getglobal(state, failure);
-					 lua_pushstring(state, "Document isn't a text document");
-					 lua_call(state, 1, 0);					// 1 arg, no result
-				 }
+				 lua_getglobal(state, failure);
+				 lua_pushstring(state, "Document isn't a text document");
+				 lua_call(state, 1, 0);					// 1 arg, no result
 			 }
 		 }
+	 }
 	 ];
 	
 	return 0;
+}
+
+// schedule(app, secs, callback)
+int app_schedule(struct lua_State* state)
+{
+	double secs = lua_tonumber(state, 2);
+	NSString* callback = [NSString stringWithUTF8String:lua_tostring(state, 3)];	// NSString to ensure the memory doesn't go away when we return and pop the stack
+	
+	dispatch_queue_t main = dispatch_get_main_queue();
+	dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, (int64_t) (secs*1.0e9));
+	dispatch_after(delay, main,
+		^{
+			// TODO: It would be nice to support calling lua closures, but I'm not
+			// quite sure how to do that (e.g. how do we prevent the closure from
+			// being GCed?).
+			lua_getglobal(state, callback.UTF8String);
+			lua_call(state, 0, 0);					// 0 args, no result
+		}
+	);
+
+	return 0;
+}
+
+// newdoc(app) -> textdoc
+int app_newdoc(struct lua_State* state)
+{
+	NSError* error = nil;
+	NSDocument* doc = [[NSDocumentController sharedDocumentController] makeUntitledDocumentOfType:@"Plain Text, UTF8 Encoded" error:&error];
+	ASSERT(!error);
+	
+	[[NSDocumentController sharedDocumentController] addDocument:doc];
+	[doc makeWindowControllers];
+	[doc showWindows];
+		
+	pushTextDoc(state, doc);
+	
+	return 1;
 }
 
 // log(app, mesg)
