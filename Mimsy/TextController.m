@@ -113,7 +113,10 @@
 
 - (void)open
 {
-	LOG_INFO("Text", "Window for %s opened", STR([self.path lastPathComponent]));
+	if (self.path)
+		LOG_INFO("Text", "Window for %s opened", STR([self.path lastPathComponent]));
+	else
+		LOG_INFO("Text", "Untitled window opened");
 	// TODO: need to do this stuff
 	//Broadcaster.Invoke("opening document window", m_boss);
 	
