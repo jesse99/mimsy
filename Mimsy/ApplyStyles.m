@@ -48,37 +48,46 @@
 
 - (void)resetStyles
 {
-	NSTextStorage* storage = _controller.textView.textStorage;
-	[storage setAttributes:[_controller.styles attributesForElement:@"Normal"] range:NSMakeRange(0, storage.length)];
-	 
-	[self addDirtyLocation:0 reason:@"reset styles"];
+	TextController* tmp = _controller;
+	if (tmp)
+	{
+		NSTextStorage* storage = tmp.textView.textStorage;
+		[storage setAttributes:[tmp.styles attributesForElement:@"Normal"] range:NSMakeRange(0, storage.length)];
+		 
+		[self addDirtyLocation:0 reason:@"reset styles"];
+	}
 }
 
 - (void)addDirtyLocation:(NSUInteger)loc reason:(NSString*)reason
 {
-	if (!_queued)
+	TextController* tmp = _controller;
+	if (tmp && !_queued)
 	{
 		// If nothing is queued then we can apply all the runs.
 		_firstDirtyLoc = NSNotFound;
 		_queued = true;
-		LOG_DEBUG("Styler", "Starting up AsyncStyler for %.1f KiB (%s)", _controller.text.length/1024.0, STR(reason));
+		LOG_DEBUG("Styler", "Starting up AsyncStyler for %.1f KiB (%s)", tmp.text.length/1024.0, STR(reason));
 		
-		[AsyncStyler computeStylesFor:_controller.language withText:_controller.text editCount:_controller.editCount completion:
+		[AsyncStyler computeStylesFor:tmp.language withText:tmp.text editCount:tmp.editCount completion:
 			^(StyleRuns* runs)
 			{
-				[runs mapElementsToStyles:
-					^id(NSString* name)
-					{
-						return [_controller.styles attributesForElement:name];
-					}
-				];
-				NSTextView* textv = _controller.textView;
-				if (textv)
-					[textv setBackgroundColor:_controller.styles.backColor];
+				TextController* tmp2 = _controller;
+				if (tmp2)
+				{
+					[runs mapElementsToStyles:
+						^id(NSString* name)
+						{
+							return [tmp2.styles attributesForElement:name];
+						}
+					];
+					NSTextView* textv = tmp2.textView;
+					if (textv)
+						[textv setBackgroundColor:tmp2.styles.backColor];
 
-				if (loc > 0)
-					[self _skipApplied:runs];
-				[self _applyRuns:runs];
+					if (loc > 0)
+						[self _skipApplied:runs];
+					[self _applyRuns:runs];
+				}
 			}
 		 ];
 	}
