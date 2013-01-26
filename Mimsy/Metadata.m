@@ -45,7 +45,7 @@
 	
 	NSError* error = nil;
 	NSString* fpath = [Metadata criticalPath:path named:name outError:&error];
-	if (!error)
+	if (fpath)
 		[data writeToFile:fpath options:NSDataWritingAtomic error:&error];
 	
 	return error;
@@ -54,10 +54,10 @@
 + (id)readCriticalDataFrom:(NSString*)path named:(NSString*)name outError:(NSError**)error
 {	
 	NSString* fpath = [Metadata criticalPath:path named:name outError:error];
-	if (!*error)
+	if (fpath)
 	{
 		NSData* data = [NSData dataWithContentsOfFile:fpath options:0 error:error];
-		if (!*error)
+		if (data)
 		{
 			NSKeyedUnarchiver* archiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
 			return [archiver decodeObject];

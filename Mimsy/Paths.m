@@ -22,8 +22,8 @@ static bool _triedCaches;
 			if (![fm fileExistsAtPath:_caches])
 			{
 				NSError* error = nil;
-				[fm createDirectoryAtPath:_caches withIntermediateDirectories:YES attributes:nil error:&error];
-				if (error)
+				BOOL created = [fm createDirectoryAtPath:_caches withIntermediateDirectories:YES attributes:nil error:&error];
+				if (!created)
 				{
 					LOG_ERROR("Mimsy", "Couldn't create '%s': %s", STR(_caches), STR([error localizedFailureReason]));
 					_caches = nil;

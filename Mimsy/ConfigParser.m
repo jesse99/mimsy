@@ -29,7 +29,7 @@
 - (id)initWithPath:(NSString*)path outError:(NSError**)error
 {
 	NSString* contents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:error];
-	if (contents != nil)
+	if (contents)
 		self = [self initWithContent:contents outError:error];
 	else
 		self = nil;

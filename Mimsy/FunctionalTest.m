@@ -71,7 +71,7 @@ static void startNextTest()
 		
 		NSError* error = nil;
 		NSString* script = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
-		if (error == nil)
+		if (script)
 		{
 			NSString* name = [[path substringFromIndex:_ftestPath.length] stringByDeletingPathExtension];
 			if (_tests.count > 1)

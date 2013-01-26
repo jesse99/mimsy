@@ -258,7 +258,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		
 		NSError* error = nil;
 		NSDictionary* attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:url.path error:&error];
-		if (error == nil)
+		if (attrs)
 		{
 			NSDate* fileTime = attrs[NSFileModificationDate];
 			

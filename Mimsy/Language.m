@@ -129,7 +129,7 @@
 		NSError* error = nil;
 		NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
 		NSRegularExpression* re = [[NSRegularExpression alloc] initWithPattern:pattern options:options error:&error];
-		if (!error)
+		if (re)
 		{
 			return [[RegexStyler alloc] initWithRegex:re elementNames:names groupToName:groupToName];
 		}
@@ -164,7 +164,7 @@
 				
 		NSError* error = nil;
 		NSRegularExpression* re = [[NSRegularExpression alloc] initWithPattern:pattern options:options error:&error];
-		if (!error)
+		if (re)
 		{
 			pushUIntVector(&groupToName, i+1);
 			for (int j = 0; j < re.numberOfCaptureGroups; ++j)

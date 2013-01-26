@@ -31,7 +31,7 @@ static void destroy()
 	{
 		NSString* path = [Paths.caches stringByAppendingPathComponent:@"Windows.db"];
 		self->_db = [[Database alloc] initWithPath:path error:&error];
-		if (error)
+		if (!self->_db)
 			goto err;
 		
 		[self->_db update:

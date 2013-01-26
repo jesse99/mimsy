@@ -130,11 +130,14 @@
 * Would be nice if there was a way to hide "chrome":
 	- mostly helper windows, like find panels and recent files
 	- maybe also directory windows
+	- maybe all the chrome could be toggled via control key, then could use control-k to toggle chrome
 * Can we support references somehow?
 	- ideally per language
 * Maybe also a short view:
 	- remove function bodies
 	- possibly format doc comments
+* Would be cool if there was a way to configure command keys:
+	- maybe mimsy file or lua script
 * Would be nice to have some sort of indication of dirty files:
 	- probably from git's perspective
 * XCode and (I guess) TextMate have a bunch of macros:

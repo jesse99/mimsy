@@ -91,7 +91,7 @@ static NSDictionary* _baseAttrs;
 	NSError* error = nil;
 	NSUInteger options = NSFileWrapperReadingImmediate | NSFileWrapperReadingWithoutMapping;
 	NSFileWrapper* file = [[NSFileWrapper alloc] initWithURL:url options:options error:&error];
-	if (!error)
+	if (file)
 	{
 		NSData* data = file.regularFileContents;
 		return [[NSAttributedString alloc] initWithRTF:data documentAttributes:NULL];
@@ -110,7 +110,7 @@ static NSDictionary* _baseAttrs;
 	
 	NSError* error = nil;
 	ConfigParser* parser = [[ConfigParser alloc] initWithContent:text.string outError:&error];
-	if (error)
+	if (!parser)
 	{
 		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't parse the styles file at %@:\n%@.", _path, [error localizedFailureReason]];
 		[TranscriptController writeError:mesg];

@@ -121,6 +121,7 @@ int app_newdoc(struct lua_State* state)
 {
 	NSError* error = nil;
 	NSDocument* doc = [[NSDocumentController sharedDocumentController] makeUntitledDocumentOfType:@"Plain Text, UTF8 Encoded" error:&error];
+	ASSERT(doc);
 	ASSERT(!error);
 	
 	[[NSDocumentController sharedDocumentController] addDocument:doc];

@@ -38,7 +38,7 @@ static void initLogging(void)
 	
 	NSError* error = nil;
 	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
-	if (!error)
+	if (parser)
 	{
 		[parser enumerate:
 			^(ConfigParserEntry* entry)

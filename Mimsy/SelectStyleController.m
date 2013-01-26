@@ -294,7 +294,7 @@ static SelectStyleController* _controller;
 
 	NSError* error = nil;
 	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
-	if (!error)
+	if (parser)
 	{
 		[parser enumerate:
 			^(ConfigParserEntry* entry)
@@ -371,8 +371,8 @@ static SelectStyleController* _controller;
 	NSString* path = [dir stringByAppendingPathComponent:@"styles.mimsy"];
 	
 	NSError* error = nil;
-	[content writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:&error];
-	if (error)
+	BOOL written = [content writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:&error];
+	if (!written)
 	{
 		NSString* reason = [error localizedFailureReason];
 		NSString* mesg = [NSString stringWithFormat:@"Failed to write %@: %@", path, reason];

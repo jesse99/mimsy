@@ -218,7 +218,7 @@
 	
 	NSError* error = nil;
 	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
-	if (!error)
+	if (parser)
 	{
 		name = [parser valueForKey:@"Default"];
 		if (!name)

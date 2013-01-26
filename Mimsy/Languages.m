@@ -97,7 +97,7 @@ static NSArray* _languages;
 	
 	NSError* error = nil;
 	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
-	if (!error)
+	if (parser)
 	{
 		lang = [[Language alloc] initWithParser:parser outError:&error];
 	}

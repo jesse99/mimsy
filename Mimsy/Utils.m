@@ -117,7 +117,7 @@ static NSString* Replacement = @"\uFFFD";
 {
 	NSFileManager* fm = [NSFileManager new];
 	NSArray* candidates = [fm contentsOfDirectoryAtPath:path error:error];
-	if (!*error)
+	if (candidates)
 	{
 		for (NSString* candidate in candidates)
 		{
@@ -152,9 +152,9 @@ static NSString* Replacement = @"\uFFFD";
 	{		
 		NSNumber* isDirectory;
 		NSError* error = nil;
-		[url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:&error];
+		BOOL populated = [url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:&error];
 
-		if (!error && !isDirectory.boolValue)		// note that NSDirectoryEnumerationSkipsHiddenFiles also skips hidden directories
+		if (populated && !isDirectory.boolValue)		// note that NSDirectoryEnumerationSkipsHiddenFiles also skips hidden directories
 		{
 			NSString* candidate = url.path;
 			if (!glob || [glob matchName:candidate])

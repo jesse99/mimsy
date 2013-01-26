@@ -2082,12 +2082,12 @@ static NSError* saveFile(NSString* path, NSMutableAttributedString* text, NSStri
 	
 	NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSRTFTextDocumentType};
 	NSData* data = [text dataFromRange:NSMakeRange(0, text.length) documentAttributes:attrs error:&error];
-	if (!error)
+	if (data)
 	{
 		NSString* fname = [[path lastPathComponent] stringByDeletingPathExtension];
 		NSString* outPath = [[outDir stringByAppendingPathComponent:fname] stringByAppendingPathExtension:@"rtf"];
-		[data writeToFile:outPath options:0 error:&error];
-		if (error)
+		BOOL succeed = [data writeToFile:outPath options:0 error:&error];
+		if (!succeed)
 		{
 			NSString* reason = [error localizedFailureReason];
 			printf("   FAILED writing RTF: %s\n", STR(reason));
@@ -2120,7 +2120,7 @@ static bool convertFile(NSString* path, NSString* outDir)
 	
 	printf("Converting %s\n", STR(path));
 	NSArray* lines = [Utils readLines:path outError:&error];
-	if (!error)
+	if (lines)
 	{
 		GlobalStyle* global = [GlobalStyle new];
 		for (NSString* line in lines)
@@ -2159,8 +2159,8 @@ void convertVIMFiles(NSString* vimDIR, NSString* outDir)
 	NSFileManager* fm = [NSFileManager defaultManager];
 	if (![fm fileExistsAtPath:outDir])
 	{
-		[fm createDirectoryAtPath:outDir withIntermediateDirectories:YES attributes:nil error:&error];
-		if (error)
+		BOOL created = [fm createDirectoryAtPath:outDir withIntermediateDirectories:YES attributes:nil error:&error];
+		if (!created)
 		{
 			NSString* reason = [error localizedFailureReason];
 			NSString* mesg = [NSString stringWithFormat:@"Couldn't create the '%@' directory: %@", outDir, reason];

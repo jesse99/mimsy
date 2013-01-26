@@ -143,7 +143,7 @@
 	{
 		NSError* error = nil;
 		doc = [controller makeDocumentWithContentsOfURL:url ofType:@"binary" error:&error];
-		if (error)
+		if (!doc)
 		{
 			[NSAlert alertWithError:error];
 			return;
