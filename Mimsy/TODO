@@ -149,6 +149,9 @@
 * Support snippets:
 	- should be per language
 	- maybe both text and script based (or possibly scripts are refactors)
+* Could replace Mimsy files with lua config files:
+	- regex would be a little annoying, probably would need to use long brackets to avoid escaping
+	- maybe a little annoying to edit too: lua is simple but not as simple as the Mimsy format
 * History of cursor positions?
 * Release checklist:
 	- might have to add a lame build step to archive build to copy the styles files a second time
