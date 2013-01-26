@@ -2,6 +2,7 @@
 
 #import "Assert.h"
 #import "Decode.h"
+#import "FunctionalTest.h"
 #import "InfoController.h"
 #import "Metadata.h"
 #import "TextController.h"
@@ -155,8 +156,14 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
     if (self)
 	{
 		_endian = UnixEndian;
+		updateInstanceCount(@"TextDocument", +1);
     }
     return self;
+}
+
+- (void) dealloc
+{
+	updateInstanceCount(@"TextDocument", -1);
 }
 
 - (void)makeWindowControllers
@@ -500,61 +507,65 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError
 {	
 	NSData* data = nil;
-	NSTextStorage* storage = [_controller.textView textStorage];
-	NSMutableString* str = [storage mutableString];
-	LOG_INFO("Text", "Saving document to %s", STR(self.fileURL));
-	
-	if ([typeName isEqualToString:@"Plain Text, UTF8 Encoded"])
+	NSTextView* textv = _controller.textView;
+	if (textv)
 	{
-		// This is more like the default plain text type: when loading a document that is not
-		// rtf or word or whatever this typename will be chosen via the plist. However the actual
-		// encoding is inferred from the contents of the file (or set via the Get Info panel).
-		if (!_encoding)
-			_encoding = NSUTF8StringEncoding;
-		[self restoreEndian:str];
-		[self checkForControlChars:str];
-		data = [str dataUsingEncoding:self.encoding allowLossyConversion:YES];
-	}
-	else if ([typeName isEqualToString:@"Plain Text, UTF16 Encoded"])
-	{
-		// This case is only used when the user selects save as and then the utf16 encoding.
-		_encoding = NSUTF16LittleEndianStringEncoding;
-		[self restoreEndian:str];
-		[self checkForControlChars:str];
-		data = [str dataUsingEncoding:self.encoding allowLossyConversion:YES];
-	}
-	else if ([typeName isEqualToString:@"HTML"])
-	{
-		NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType};
-		[self restoreEndian:str];
-		[self checkForControlChars:str];
-		data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
-	}
-	else if ([typeName isEqualToString:@"Rich Text Format (RTF)"])
-	{
-		NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSRTFTextDocumentType};
-		data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
-	}
-	else if ([typeName isEqualToString:@"Word 97 Format (doc)"])
-	{
-		NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSDocFormatTextDocumentType};
-		data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
-	}
-	else if ([typeName isEqualToString:@"Word 2007 Format (docx)"])
-	{
-		NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSOfficeOpenXMLTextDocumentType};
-		data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
-	}
-	else if ([typeName isEqualToString:@"Open Document Text (odt)"])
-	{
-		NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSOpenDocumentTextDocumentType};
-		data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
-	}
-	else
-	{
-		ASSERT_MESG("bad typeName: %s", STR(typeName));
-	}
+		NSTextStorage* storage = [textv textStorage];
+		NSMutableString* str = [storage mutableString];
+		LOG_INFO("Text", "Saving document to %s", STR(self.fileURL));
 		
+		if ([typeName isEqualToString:@"Plain Text, UTF8 Encoded"])
+		{
+			// This is more like the default plain text type: when loading a document that is not
+			// rtf or word or whatever this typename will be chosen via the plist. However the actual
+			// encoding is inferred from the contents of the file (or set via the Get Info panel).
+			if (!_encoding)
+				_encoding = NSUTF8StringEncoding;
+			[self restoreEndian:str];
+			[self checkForControlChars:str];
+			data = [str dataUsingEncoding:self.encoding allowLossyConversion:YES];
+		}
+		else if ([typeName isEqualToString:@"Plain Text, UTF16 Encoded"])
+		{
+			// This case is only used when the user selects save as and then the utf16 encoding.
+			_encoding = NSUTF16LittleEndianStringEncoding;
+			[self restoreEndian:str];
+			[self checkForControlChars:str];
+			data = [str dataUsingEncoding:self.encoding allowLossyConversion:YES];
+		}
+		else if ([typeName isEqualToString:@"HTML"])
+		{
+			NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType};
+			[self restoreEndian:str];
+			[self checkForControlChars:str];
+			data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
+		}
+		else if ([typeName isEqualToString:@"Rich Text Format (RTF)"])
+		{
+			NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSRTFTextDocumentType};
+			data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
+		}
+		else if ([typeName isEqualToString:@"Word 97 Format (doc)"])
+		{
+			NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSDocFormatTextDocumentType};
+			data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
+		}
+		else if ([typeName isEqualToString:@"Word 2007 Format (docx)"])
+		{
+			NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSOfficeOpenXMLTextDocumentType};
+			data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
+		}
+		else if ([typeName isEqualToString:@"Open Document Text (odt)"])
+		{
+			NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSOpenDocumentTextDocumentType};
+			data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
+		}
+		else
+		{
+			ASSERT_MESG("bad typeName: %s", STR(typeName));
+		}
+	}
+	
 	return data;
 }
 
@@ -590,8 +601,9 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
 	NSError* error = nil;
 	NSColor* color = [Metadata readCriticalDataFrom:path named:@"back-color" outError:&error];
-	if (color)
-		[_controller.textView setBackgroundColor:color];
+	NSTextView* textv = _controller.textView;
+	if (color && textv)
+		[textv setBackgroundColor:color];
 	else
 		LOG_DEBUG("Text", "Couldn't read back-color for '%s': %s", STR(path), STR([error localizedFailureReason]));
 }

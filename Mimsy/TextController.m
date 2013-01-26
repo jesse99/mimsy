@@ -34,9 +34,15 @@
 
 		// This will be set to nil once the view has been restored.
 		_restorer = [[RestoreView alloc] init:self];
-    }
+ 		updateInstanceCount(@"TextController", +1);
+   }
     
     return self;
+}
+
+- (void)dealloc
+{
+	updateInstanceCount(@"TextController", -1);
 }
 
 - (void)windowDidLoad

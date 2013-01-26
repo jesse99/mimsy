@@ -3,8 +3,10 @@
 #include <lauxlib.h>
 
 #import "Assert.h"
+#import "FunctionalTest.h"
 #import "TextController.h"
 #import "TextDocument.h"
+#import "TranscriptController.h"
 
 static void pushTextDoc(struct lua_State* state, NSDocument* doc)
 {
@@ -95,7 +97,19 @@ int app_schedule(struct lua_State* state)
 			// quite sure how to do that (e.g. how do we prevent the closure from
 			// being GCed?).
 			lua_getglobal(state, callback.UTF8String);
-			lua_call(state, 0, 0);					// 0 args, no result
+			int err = lua_pcall(state, 0, 0, 0);		// 0 args, no result
+			if (err)
+			{
+				if (functionalTestsAreRunning())
+				{
+					lua_pushvalue(state, -1);
+					ftest_failed(state);
+				}
+				else
+				{
+					[TranscriptController writeStderr:[NSString stringWithUTF8String:lua_tostring(state, -1)]];
+				}
+			}
 		}
 	);
 

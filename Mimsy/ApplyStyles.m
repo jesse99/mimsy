@@ -33,7 +33,7 @@
 // 5) If there are more runs to apply then queue up a block to execute on the main thread.
 @implementation ApplyStyles
 {
-	TextController* _controller;
+	__weak TextController* _controller;
 	NSUInteger _firstDirtyLoc;
 	struct StyleRunVector _appliedRuns;
 	bool _queued;
@@ -72,7 +72,9 @@
 						return [_controller.styles attributesForElement:name];
 					}
 				];
-				[_controller.textView setBackgroundColor:_controller.styles.backColor];
+				NSTextView* textv = _controller.textView;
+				if (textv)
+					[textv setBackgroundColor:_controller.styles.backColor];
 
 				if (loc > 0)
 					[self _skipApplied:runs];
@@ -165,7 +167,10 @@
 		if (count > 0)
 			LOG_DEBUG("Styler", "Applied %lu dirty runs (%.0fK runs/sec)", count, (count/1000.0)/elapsed);
 		_queued = false;
-		[_controller resetAttributes];
+		
+		TextController* tmp = _controller;
+		if (tmp)
+			[tmp resetAttributes];
 		
 		dispatch_queue_t main = dispatch_get_main_queue();
 		dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 100*1000);	// 0.1s

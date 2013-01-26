@@ -8,8 +8,8 @@
 
 - (IBAction)setDefault:(id)sender;
 
-@property (weak) IBOutlet NSTableView *table;
-@property (weak) IBOutlet NSButton *makeDefaultButton;
+@property (weak) IBOutlet NSTableView* table;
+@property (weak) IBOutlet NSButton* makeDefaultButton;
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView* )view;
 - (id)tableView:(NSTableView* )view objectValueForTableColumn:(NSTableColumn*)column row:(NSInteger)row;

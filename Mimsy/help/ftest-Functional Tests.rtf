@@ -34,7 +34,9 @@ Standard tables are provided to interact with Mimsy (see Lua Scripting) but func
 \f2\b0  
 \f1\b \cf2 failed
 \f2\b0 \cf0 (
-\f3\i \cf3 ftest, reason
+\f3\i \cf3 ftest
+\f2\i0 \cf0 , 
+\f3\i \cf3 reason
 \f2\i0 \cf0 )\
 \pard\pardeftab480\pardirnatural
 
@@ -46,7 +48,9 @@ Standard tables are provided to interact with Mimsy (see Lua Scripting) but func
 \f2\b0  
 \f1\b \cf2 expecterror
 \f2\b0 \cf0 (
-\f3\i \cf3 ftest, mesg
+\f3\i \cf3 ftest
+\f2\i0 \cf0 , 
+\f3\i \cf3 mesg
 \f2\i0 \cf0 )\
 \pard\pardeftab480\pardirnatural
 
@@ -55,23 +59,41 @@ Standard tables are provided to interact with Mimsy (see Lua Scripting) but func
 \f0\fs36 Otherwise it completes with an error
 \f4\fs24 .
 \f0\fs36 \
-\pard\pardeftab480\pardirnatural
-\cf0 \
+\
 \pard\pardeftab480\pardirnatural
 
 \f1\b\fs32 \cf0 function
 \f2\b0  
-\f1\b \cf2 residentbytes
+\f1\b \cf2 mallocstats
 \f2\b0 \cf0 (
 \f3\i \cf3 ftest
+\f2\i0 \cf0 ) -> 
+\f1\b \cf4 int
+\f2\b0 \cf0 , 
+\f1\b \cf4 int
+\f2\b0 \cf0 , 
+\f1\b \cf4 int
+\f2\b0 \cf0 \
+\pard\pardeftab480\pardirnatural
+
+\f0\fs36 \cf0 Returns the number of malloc allocated blocks, the number of allocated bytes, and the maximum number of allocated bytes.\
+\
+\pard\pardeftab480\pardirnatural
+
+\f1\b\fs32 \cf0 function
+\f2\b0  
+\f1\b \cf2 instancecount
+\f2\b0 \cf0 (
+\f3\i \cf3 ftest
+\f2\i0 \cf0 , 
+\f3\i \cf3 name
 \f2\i0 \cf0 ) -> 
 \f1\b \cf4 int
 \f2\b0 \cf0 \
 \pard\pardeftab480\pardirnatural
 
-\f0\fs36 \cf0 Returns the current number of bytes resident in memory for the Mimsy process
+\f0\fs36 \cf0 Returns the number of instantiated objects with the specified name. Name can be 'TextController' or 'TextDocument'. If no objects with the specified name were created zero is returned
 \f4\fs24 .
 \f0\fs36 \
-\pard\pardeftab480\pardirnatural
-\cf0 \
+\
 }

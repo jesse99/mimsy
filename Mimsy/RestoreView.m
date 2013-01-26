@@ -8,7 +8,7 @@
 
 @implementation RestoreView
 {
-	TextController* _controller;
+	__weak TextController* _controller;
 	struct WindowInfo _info;
 	NSRange _visible;
 	NSRange _deferred;
@@ -28,7 +28,11 @@
 		if ([WindowsDatabase getInfo:&_info forPath:path])
 		{
 			if (_info.wordWrap)
-				[_controller toggleWordWrap];
+			{
+				TextController* tmp = _controller;
+				if (tmp)
+					[tmp toggleWordWrap];
+			}
 		}
 	}
 }
@@ -57,37 +61,43 @@
 	
 	if (atEnd || (NSEqualPoints(_info.origin, NSZeroPoint) && [layout firstUnlaidCharacterIndex] > _info.selection.location + 100))
 	{
-		if (_info.length == -1 || _info.length == _controller.text.length)	// only restore the view if it has not changed since we last had it open
+		TextController* controller = _controller;
+		if (controller)
 		{
-			NSClipView* clip = _controller.scrollView.contentView;
-			NSPoint origin = clip.bounds.origin;
-			if (NSEqualPoints(origin, NSZeroPoint))		// don't scroll if the user has already scrolled
+			NSScrollView* scrollerv = controller.scrollView;
+			NSTextView* textv = controller.textView;
+			if (_info.length == -1 || _info.length == controller.text.length)	// only restore the view if it has not changed since we last had it open
 			{
-				if (!NSEqualPoints(_info.origin, NSZeroPoint))
+				NSClipView* clip = scrollerv.contentView;
+				NSPoint origin = clip.bounds.origin;
+				if (NSEqualPoints(origin, NSZeroPoint))		// don't scroll if the user has already scrolled
 				{
-					LOG_DEBUG("Text", "Scrolling to saved origin");
-					[clip scrollToPoint:_info.origin];
-					[_controller.scrollView reflectScrolledClipView:clip];
-					
-					if (!NSEqualRanges(_info.selection, NSZeroRange))
-						[_controller.textView setSelectedRange:_info.selection];
-				}
-				else if (!NSEqualRanges(_info.selection, NSZeroRange) && _info.selection.location + _info.selection.length <= _controller.text.length)
-				{
-					LOG_DEBUG("Text", "Scrolling to saved selection");
-					[_controller.textView setSelectedRange:_info.selection];
-					[_controller.textView scrollRangeToVisible:_visible];
-					
-					[_controller.textView showFindIndicatorForRange:_deferred];
-				}
-				else
-				{
-					LOG_DEBUG("Text", "Not scrolling to saved selection");
+					if (!NSEqualPoints(_info.origin, NSZeroPoint))
+					{
+						LOG_DEBUG("Text", "Scrolling to saved origin");
+						[clip scrollToPoint:_info.origin];
+						[scrollerv reflectScrolledClipView:clip];
+						
+						if (!NSEqualRanges(_info.selection, NSZeroRange))
+							[textv setSelectedRange:_info.selection];
+					}
+					else if (!NSEqualRanges(_info.selection, NSZeroRange) && _info.selection.location + _info.selection.length <= controller.text.length)
+					{
+						LOG_DEBUG("Text", "Scrolling to saved selection");
+						[textv setSelectedRange:_info.selection];
+						[textv scrollRangeToVisible:_visible];
+						
+						[textv showFindIndicatorForRange:_deferred];
+					}
+					else
+					{
+						LOG_DEBUG("Text", "Not scrolling to saved selection");
+					}
 				}
 			}
+			
+			finished = true;
 		}
-		
-		finished = true;
 	}
 	
 	return finished;

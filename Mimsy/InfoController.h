@@ -11,7 +11,7 @@
 @property (weak) IBOutlet NSPopUpButton* lineEndian;
 @property (weak) IBOutlet NSPopUpButton* format;
 @property (weak) IBOutlet NSPopUpButton* encoding;
-@property (weak) IBOutlet NSPopUpButton *language;
+@property (weak) IBOutlet NSPopUpButton* language;
 
 - (IBAction)onEndianChanged:(NSPopUpButton*)button;
 - (IBAction)onFormatChanged:(NSPopUpButton*)sender;
