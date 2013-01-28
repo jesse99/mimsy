@@ -137,7 +137,8 @@ static NSString* Replacement = @"\uFFFD";
 	
 	NSURL* at = [NSURL fileURLWithPath:path isDirectory:YES];
 	NSArray* keys = @[NSURLNameKey, NSURLIsDirectoryKey, NSURLPathKey];
-	NSDirectoryEnumerator* enumerator = [fm enumeratorAtURL:at includingPropertiesForKeys:keys options:NSDirectoryEnumerationSkipsHiddenFiles errorHandler:
+	NSDirectoryEnumerationOptions options = glob ? NSDirectoryEnumerationSkipsHiddenFiles : 0;
+	NSDirectoryEnumerator* enumerator = [fm enumeratorAtURL:at includingPropertiesForKeys:keys options:options errorHandler:
 			^BOOL(NSURL* url, NSError* error)
 			{
 				NSString* reason = [error localizedFailureReason];
@@ -174,6 +175,42 @@ static NSString* Replacement = @"\uFFFD";
 		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
 		*error = [NSError errorWithDomain:@"mimsy" code:4 userInfo:dict];
 	}
+}
+
++ (bool)copySrcFile:(NSString*)srcPath dstFile:(NSString*)dstPath outError:(NSError**)outError
+{
+	NSError* error = nil;
+	NSFileManager* fm = [NSFileManager defaultManager];
+	
+	if ([fm fileExistsAtPath:dstPath] && ![fm removeItemAtPath:dstPath error:&error])
+	{
+		NSString* reason = [error localizedFailureReason];
+		NSString* mesg = [NSString stringWithFormat:@"Failed to remove old '%@': %@", dstPath, reason];
+		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
+		*outError = [NSError errorWithDomain:@"mimsy" code:4 userInfo:dict];
+		return false;
+	}
+	
+	NSString* dstDir = [dstPath stringByDeletingLastPathComponent];
+	if (![fm createDirectoryAtPath:dstDir withIntermediateDirectories:YES attributes:nil error:&error])
+	{
+		NSString* reason = [error localizedFailureReason];
+		NSString* mesg = [NSString stringWithFormat:@"Failed to create directories for '%@': %@", dstPath, reason];
+		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
+		*outError = [NSError errorWithDomain:@"mimsy" code:4 userInfo:dict];
+		return false;
+	}
+	
+	if (![fm copyItemAtPath:srcPath toPath:dstPath error:&error])
+	{
+		NSString* reason = [error localizedFailureReason];
+		NSString* mesg = [NSString stringWithFormat:@"Failed to copy '%@' to '%@': %@", srcPath, dstPath, reason];
+		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
+		*outError = [NSError errorWithDomain:@"mimsy" code:4 userInfo:dict];
+		return false;
+	}
+	
+	return true;
 }
 
 @end

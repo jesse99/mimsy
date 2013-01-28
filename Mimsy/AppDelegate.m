@@ -4,6 +4,7 @@
 #import "ConfigParser.h"
 #import "FunctionalTest.h"
 #import "Glob.h"
+#import "InstallFiles.h"
 #import "Language.h"
 #import "Languages.h"
 #import "Paths.h"
@@ -30,7 +31,8 @@
 
 	__weak AppDelegate* this = self;
 	[[NSApp helpMenu] setDelegate:this];
-
+	
+	[self _installFiles];
 	[WindowsDatabase setup];
 	[Languages setup];
 	
@@ -316,6 +318,30 @@
 	}
 	
 	return item;
+}
+
+- (void)_installFiles
+{
+	NSFileManager* fm = [NSFileManager defaultManager];
+	NSArray* urls = [fm URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask];
+	if (urls.count > 0)
+	{
+		NSString* path = [urls[0] path];
+		path = [path stringByAppendingPathComponent:@"Mimsy"];
+		
+		InstallFiles* installer = [InstallFiles new];
+		[installer initWithDstPath:path];
+		[installer addSourceItem:@"help"];
+		[installer addSourceItem:@"languages"];
+		[installer addSourceItem:@"settings"];
+		[installer addSourceItem:@"styles"];
+		[installer install];
+	}
+	else
+	{
+		NSString* mesg = @"Failed to install support files: URLsForDirectory:NSApplicationSupportDirectory failed to find any directories.";
+		[TranscriptController writeError:mesg];
+	}
 }
 
 @end

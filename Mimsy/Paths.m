@@ -40,16 +40,18 @@ static bool _triedCaches;
 	return _caches;
 }
 
-// TODO: This is not right. We need to support installing files from the
-// bundle and use the install directory instead.
 + (NSString*)installedDir:(NSString*)name
 {
-	NSString* installed = NSBundle.mainBundle.resourcePath;
-	if (name)
-		return [installed stringByAppendingPathComponent:name];
-	else
-		return installed;
+	NSFileManager* fm = [NSFileManager defaultManager];
+	NSArray* urls = [fm URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask];
 	
+	NSString* path = [urls[0] path];
+	path = [path stringByAppendingPathComponent:@"Mimsy"];
+
+	if (name)
+		return [path stringByAppendingPathComponent:name];
+	else
+		return path;
 }
 
 @end

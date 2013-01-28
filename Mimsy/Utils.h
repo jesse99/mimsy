@@ -17,6 +17,10 @@ extern const NSRange NSZeroRange;
 // Reads a file and returns an array containing each line (without the new lines).
 + (NSArray*)readLines:(NSString*)path outError:(NSError**)error;
 
+// This will create destination directories as needed and overwrite the destination
+// file if it exists.
++ (bool)copySrcFile:(NSString*)srcPath dstFile:(NSString*)dstPath outError:(NSError**)outError;
+
 // Returns a path to a unique file name in the temporary directory for the current user.
 + (NSString*)pathForTemporaryFileWithPrefix:(NSString *)prefix;
 
