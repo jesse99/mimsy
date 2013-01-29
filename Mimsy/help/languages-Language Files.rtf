@@ -1,7 +1,6 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
 \cocoascreenfonts1{\fonttbl\f0\froman\fcharset0 Times-Roman;}
-{\colortbl;\red255\green255\blue255;\red24\green123\blue11;\red24\green123\blue11;\red255\green0\blue0;
-}
+{\colortbl;\red255\green255\blue255;\red24\green123\blue11;\red255\green0\blue0;}
 \deftab480
 \pard\pardeftab480\pardirnatural
 
@@ -15,12 +14,20 @@ The settings are:\
 \b \cf0 Language
 \b0 : is the name of the language. By convention this is lower case. This is a required setting.\
 \
+\pard\pardeftab480\pardirnatural
 
-\b Globs
+\b \cf0 Globs
 \b0 : is a space separated list of file name globs associated with the language. This is a required setting.\
 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
 
-\b IgnoreWhitespace
+\b \cf0 ConditionalGlob
+\b0 : consists of a glob, followed by a space, followed by a regex. Files will use the language if the glob matches the file name and the regex matches something in the contents. Languages where a ConditionalGlob matches will be used instead of languages where just a Glob matches.\
+\pard\pardeftab480\pardirnatural
+\cf0 \
+\pard\pardeftab480\pardirnatural
+
+\b \cf0 IgnoreWhitespace
 \b0 : if this is true then leading and trailing whitespace is not highlighted. Defaults to false.\
 \
 
@@ -41,7 +48,7 @@ The settings are:\
 \
 
 \b Word
-\b0 : a regex that indicates what a word (aka identifier) means in the language. Generally this only needs to be used if the language which allow Unicode or unusual characters (like \cf2 '-'\cf0  or \cf2 ':'\cf0 ) in identifiers. Note that regular expressions like \cf3 \\w [\\w-]*\cf0  should be written as \cf2 [\\w-]+\cf0  because double clicking in the middle of a word will keep extending the selection one character at a time until the regex fails to match.\
+\b0 : a regex that indicates what a word (aka identifier) means in the language. Generally this only needs to be used if the language which allow Unicode or unusual characters (like \cf2 '-'\cf0  or \cf2 ':'\cf0 ) in identifiers. Note that regular expressions like \cf2 \\w [\\w-]*\cf0  should be written as \cf2 [\\w-]+\cf0  because double clicking in the middle of a word will keep extending the selection one character at a time until the regex fails to match.\
 \
 Elements may have arbitrary names and use NSRegularExpression. If the element matches source code then that source code is styled using the font attributes from the associated element in one of the Styles rtf files. All regexen use the following options: NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines (whitespace is ignored within patterns and ^/$ match the start/end of lines).\
 \
@@ -65,5 +72,5 @@ The requirement that look behind assertions must be bounded can cause problems, 
 	\
 Changes to language files are dynamic: the prefs panel and text documents will both update when a lang file is saved. \
 \
-\cf4 A lot of this isn't implemented yet.\cf0 \
+\cf3 A lot of this isn't implemented yet.\cf0 \
 }

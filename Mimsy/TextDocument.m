@@ -161,7 +161,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
     return self;
 }
 
-- (void) dealloc
+- (void)dealloc
 {
 	updateInstanceCount(@"TextDocument", -1);
 }
@@ -177,13 +177,13 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	ASSERT([_controller textView]);
 
 	_url = [self fileURL];
-	[_controller onPathChanged];
 	
 	if (self.text)
 	{
 		[_controller setAttributedText:self.text];
 		_text = nil;
 	}
+	[_controller onPathChanged];		// have to do this after getting text
 	[self readMetataDataFrom:self.fileURL.path];
 	
 	[_controller open];
@@ -221,7 +221,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 // However this doesn't appear to be neccesary with autosavesInPlace. (And with autosavesInPlace
 // off the Continuum code doesn't work quite right because when Appkit pops up an annoying
 // alert on save that I haven't figured out how to get rid of).
-- (void) reloadIfChanged
+- (void)reloadIfChanged
 {
 	if ([self hasChangedOnDisk])
 	{
@@ -229,7 +229,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	}
 }
 
-- (void) reload
+- (void)reload
 {
 	NSString* type = [self fileType];
 	NSURL* url = [self fileURL];

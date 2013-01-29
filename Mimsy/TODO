@@ -40,6 +40,7 @@
 	- would be nice to do something for SCCSs
 * Work on directory editor.
 * git modified file indicator is nice.
+* Need to add support for a bunch more languages.
 * Experiment with code folding:
 	- need a language regex or string to indicate range start and end
 	- probably want to just toggle folding on and off

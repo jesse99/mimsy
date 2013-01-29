@@ -1,5 +1,5 @@
 Language: c
-Globs: *.c
+Globs: *.c *.h
 LineComment: //
 Help: [C Library]http://www.cplusplus.com/reference/clibrary/
 Help: [C Language]http://www.gnu.org/software/gnu-c-manual/gnu-c-manual.html

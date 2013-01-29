@@ -1,6 +1,6 @@
 Language: objective-c
 Globs: *.m
-ConditionalGlob: .h (@end) | (^ \s* \x23 \s* import \s+)
+ConditionalGlob: *.h (@end) | (^ \s* \x23 \s* import \s+)
 Word: [\w_:]+
 LineComment: //
 Help: [Objective-C]https://developer.apple.com/search/index.php?q=objective-c

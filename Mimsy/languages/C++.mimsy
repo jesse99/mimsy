@@ -1,5 +1,6 @@
 Language: c++
-Globs: *.cpp *.hpp *.cxx *.cc *.hxx *.h algorithm bitset cassert cctype cerrno cfloat ciso646 climits clocale cmath complex csetjmp csignal cstdarg cstddef cstdio cstdlib cstring ctime cwchar cwctype cxxabi.h deque exception fstream functional iomanip ios iosfwd iostream istream iterator limits list locale map memory new numeric ostream queue set sstream stack stdexcept streambuf string typeinfo utility valarray vector
+Globs: *.cpp *.hpp *.cxx *.cc *.hxx algorithm bitset cassert cctype cerrno cfloat ciso646 climits clocale cmath complex csetjmp csignal cstdarg cstddef cstdio cstdlib cstring ctime cwchar cwctype cxxabi.h deque exception fstream functional iomanip ios iosfwd iostream istream iterator limits list locale map memory new numeric ostream queue set sstream stack stdexcept streambuf string typeinfo utility valarray vector
+ConditionalGlob: *.h (std::) | (public:) | (virtual) | (^ \s* \x23 \s* include \s+ < \w+ >)
 Word: [\w_~]+
 LineComment: //
 Help: [C++ Library]http://www.cplusplus.com/reference/

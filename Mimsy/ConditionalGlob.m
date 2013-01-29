@@ -1,5 +1,7 @@
 #import "ConditionalGlob.h"
+
 #import <fnmatch.h>
+#import "Logger.h"
 
 @implementation ConditionalGlob
 {
@@ -34,9 +36,6 @@
 
 - (int)matchName:(NSString*)name contents:(NSString*)contents
 {
-	if ([super matchName:name])
-		return 1;
-
 	for (NSUInteger i = 0; i < _conditionals.count; ++i)
 	{
 		if (fnmatch([_conditionals[i] UTF8String], [name UTF8String], FNM_CASEFOLD) == 0)
@@ -48,7 +47,10 @@
 			}
 		}
 	}
-
+	
+	if ([super matchName:name])
+		return 1;
+	
 	return 0;
 }
 

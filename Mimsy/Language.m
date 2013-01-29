@@ -13,6 +13,8 @@
 - (id)initWithParser:(ConfigParser*)parser outError:(NSError**)error
 {
 	NSMutableArray* globs = [NSMutableArray new];
+	NSMutableArray* regexen = [NSMutableArray new];
+	NSMutableArray* conditionals = [NSMutableArray new];
 	NSMutableArray* errors = [NSMutableArray new];
 	
 	NSMutableArray* names = [NSMutableArray new];
@@ -56,6 +58,32 @@
 			{
 				[globs addObjectsFromArray:[entry.value splitByString:@" "]];
 			}
+			else if ([entry.key isEqualToString:@"ConditionalGlob"])
+			{
+				NSRange range = [entry.value rangeOfString:@" "];
+				if (range.location != NSNotFound)
+				{
+					NSString* glob = [entry.value substringToIndex:range.location];
+					NSString* pattern = [entry.value substringFromIndex:range.location+1];
+
+					NSError* error = nil;
+					NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
+					NSRegularExpression* re = [[NSRegularExpression alloc] initWithPattern:pattern options:options error:&error];
+					if (re)
+					{
+						[regexen addObject:re];
+						[conditionals addObject:glob];
+					}
+					else
+					{
+						[errors addObject:[NSString stringWithFormat:@"regex on line %ld failed to parse: %@", entry.line, error.localizedFailureReason]];
+					}
+				}
+				else
+				{
+					[errors addObject:[NSString stringWithFormat:@"expected space separating a glob from a regex on line %ld", entry.line]];
+				}
+			}
 			else
 			{
 				// Note that it is OK to use the same element name multiple times.
@@ -73,7 +101,7 @@
 	if (patterns.count == 0)
 		[errors addObject:@"failed to find a language element"];
 	
-	_glob = [[ConditionalGlob alloc] initWithGlobs:globs];
+	_glob = [[ConditionalGlob alloc] initWithGlobs:globs regexen:regexen conditionals:conditionals];
 	_styler = [self _createStyler:names patterns:patterns lines:lines errors:errors];
 	_help = help;
 
