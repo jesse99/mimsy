@@ -128,6 +128,22 @@
 	//DoSetTabSettings();
 }
 
+- (void)removeStyle:(id)sender
+{
+	(void) sender;
+	
+	NSRange range = self.textView.selectedRange;
+	if (range.length > 0)
+	{
+		NSTextStorage* storage = self.textView.textStorage;
+		[storage setAttributes:[TextStyles fallbackStyle] range:range];
+	}
+	else
+	{
+		[self.textView setTypingAttributes:[TextStyles fallbackStyle]];
+	}
+}
+
 + (TextController*)frontmost
 {
 	for (NSWindow* window in [NSApp orderedWindows])

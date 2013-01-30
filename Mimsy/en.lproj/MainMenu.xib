@@ -1023,6 +1023,14 @@
 									<reference key="NSOnImage" ref="1033313550"/>
 									<reference key="NSMixedImage" ref="310636482"/>
 								</object>
+								<object class="NSMenuItem" id="890004837">
+									<reference key="NSMenu" ref="892078337"/>
+									<string key="NSTitle">Remove Style</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
 							</array>
 						</object>
 					</object>
@@ -1662,6 +1670,14 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
+						<string key="label">removeStyle:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="890004837"/>
+					</object>
+					<int key="connectionID">611</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
 						<string key="label">addFontTrait:</string>
 						<reference key="source" ref="739804602"/>
 						<reference key="destination" ref="994630407"/>
@@ -2227,6 +2243,7 @@
 							<reference ref="908073884"/>
 							<reference ref="962245883"/>
 							<reference ref="949208447"/>
+							<reference ref="890004837"/>
 						</array>
 						<reference key="parent" ref="470804886"/>
 					</object>
@@ -2546,6 +2563,11 @@
 						<reference key="object" ref="987821792"/>
 						<reference key="parent" ref="110575045"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">609</int>
+						<reference key="object" ref="890004837"/>
+						<reference key="parent" ref="892078337"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -2666,6 +2688,7 @@
 				<string key="601.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="602.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="605.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="609.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="72.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="73.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="74.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2682,7 +2705,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">608</int>
+			<int key="maxID">611</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2693,6 +2716,7 @@
 						<string key="changeForeColor:">id</string>
 						<string key="duplicateDocument:">id</string>
 						<string key="getInfo:">id</string>
+						<string key="removeStyle:">id</string>
 						<string key="setStyle:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
@@ -2710,6 +2734,10 @@
 						</object>
 						<object class="IBActionInfo" key="getInfo:">
 							<string key="name">getInfo:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="removeStyle:">
+							<string key="name">removeStyle:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="setStyle:">
