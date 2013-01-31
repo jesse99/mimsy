@@ -46,6 +46,13 @@
 	[self reloadIfChanged];
 }
 
+// Don't open a new unitled window when we are activated and don't have a window open.
+- (BOOL)applicationShouldOpenUntitledFile:(NSApplication*)sender
+{
+	(void) sender;
+	return NO;
+}
+
 - (void)reloadIfChanged
 {
 	for (id doc in [[NSDocumentController sharedDocumentController] documents])
