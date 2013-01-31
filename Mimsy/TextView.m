@@ -7,11 +7,23 @@
 {
 	__weak TextController* _controller;
 	bool _changingBackColor;
+	bool _restored;
 }
 
 - (void)onOpened:(TextController*)controller
 {
 	_controller = controller;
+}
+
+- (void)restoreStateWithCoder:(NSCoder*)coder
+{
+	[super restoreStateWithCoder:coder];
+	_restored = true;
+}
+
+- (bool)restored
+{
+	return _restored;
 }
 
 - (BOOL)validateUserInterfaceItem:(id<NSValidatedUserInterfaceItem>)item

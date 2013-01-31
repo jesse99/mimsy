@@ -7,4 +7,6 @@
 
 - (void)onOpened:(TextController*)controller;
 
+@property (readonly) bool restored;
+
 @end

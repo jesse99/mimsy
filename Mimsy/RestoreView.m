@@ -65,12 +65,12 @@
 		if (controller)
 		{
 			NSScrollView* scrollerv = controller.scrollView;
-			NSTextView* textv = controller.textView;
+			TextView* textv = controller.textView;
 			if (_info.length == -1 || _info.length == controller.text.length)	// only restore the view if it has not changed since we last had it open
 			{
 				NSClipView* clip = scrollerv.contentView;
 				NSPoint origin = clip.bounds.origin;
-				if (NSEqualPoints(origin, NSZeroPoint))		// don't scroll if the user has already scrolled
+				if (NSEqualPoints(origin, NSZeroPoint) || textv.restored)		// don't scroll if the user has already scrolled
 				{
 					if (!NSEqualPoints(_info.origin, NSZeroPoint))
 					{
