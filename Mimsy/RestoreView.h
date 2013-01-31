@@ -8,6 +8,11 @@
 // text is laid out so that restoring the selection or calling scrollRangeToVisible
 // works correctly. (Using a class here makes it easier to do nothing once the
 // view has ben restored).
+//
+// Lion introduced window restore which is similar to what we're doing here. However
+// restore is used to restore an app to the state it was when it quit. And that's
+// not exactly what we're doing here: instead of restore on app restart we restore
+// on window open.
 @interface RestoreView : NSObject
 
 - (id)init:(TextController*)controller;
