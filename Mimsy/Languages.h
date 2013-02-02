@@ -7,6 +7,8 @@
 
 + (void)setup;
 
++ (void)languagesChanged;
+
 // Attempts to find a styler for the given file name and file contents (some languages
 // peek into the file contents to determine if the language is applicable). Returns
 // nil if a language was not found.

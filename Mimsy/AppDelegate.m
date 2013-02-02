@@ -2,18 +2,48 @@
 
 #import "Assert.h"
 #import "ConfigParser.h"
+#import "DirectoryWatcher.h"
 #import "FunctionalTest.h"
 #import "Glob.h"
 #import "InstallFiles.h"
 #import "Language.h"
 #import "Languages.h"
+#import "Logger.h"
 #import "Paths.h"
 #import "SelectStyleController.h"
 #import "TranscriptController.h"
 #import "Utils.h"
 #import "WindowsDatabase.h"
 
+void initLogLevels(void)
+{
+	NSString* path = [Paths installedDir:@"settings"];
+	path = [path stringByAppendingPathComponent:@"logging.mimsy"];
+	
+	NSError* error = nil;
+	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
+	if (parser)
+	{
+		[parser enumerate:
+		 ^(ConfigParserEntry* entry)
+		 {
+			 setTopicLevel(entry.key.UTF8String, entry.value.UTF8String);
+		 }
+		 ];
+	}
+	else
+	{
+		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load %@:\n%@.", path, [error localizedFailureReason]];
+		LOG_ERROR("Mimsy", "%s", STR(mesg));
+	}
+}
+
 @implementation AppDelegate
+{
+	DirectoryWatcher* _languagesWatcher;
+	DirectoryWatcher* _settingsWatcher;
+	DirectoryWatcher* _stylesWatcher;
+}
 
 // Note that windows will still be open when this is called.
 - (void)applicationWillTerminate:(NSNotification *)notification
@@ -33,6 +63,7 @@
 	[[NSApp helpMenu] setDelegate:this];
 	
 	[self _installFiles];
+	[self _watchInstalledFiles];
 	[WindowsDatabase setup];
 	[Languages setup];
 	
@@ -349,6 +380,40 @@
 		NSString* mesg = @"Failed to install support files: URLsForDirectory:NSApplicationSupportDirectory failed to find any directories.";
 		[TranscriptController writeError:mesg];
 	}
+}
+
+- (void)_watchInstalledFiles
+{
+	// files in the help directory are loaded when used so no need to watch those
+	
+	NSString* dir = [Paths installedDir:@"languages"];
+	_languagesWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
+		^(NSArray* paths)
+		{
+			(void) paths;
+			[Languages languagesChanged];
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"LanguagesChanged" object:self];
+		}
+	];
+
+	dir = [Paths installedDir:@"settings"];
+	_settingsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
+		^(NSArray* paths)
+		{
+			(void) paths;
+			initLogLevels();
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
+		}
+	];
+
+	dir = [Paths installedDir:@"styles"];
+	_stylesWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
+		^(NSArray* paths)
+		{
+			(void) paths;
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"StylesChanged" object:self];
+		}
+	];
 }
 
 @end

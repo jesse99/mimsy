@@ -39,7 +39,10 @@ static SelectStyleController* _controller;
 	// fires every year (it needs to repeat so that we can adjust the fire time after
 	// edits).
 	_writeTimer = [NSTimer scheduledTimerWithTimeInterval:32000.0 target:self selector:@selector(_saveSettings) userInfo:nil repeats:YES];
-    
+	
+ 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stylesChanged:) name:@"StylesChanged" object:nil];
+ 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stylesChanged:) name:@"SettingsChanged" object:nil];
+   
     return self;
 }
 
@@ -58,7 +61,7 @@ static SelectStyleController* _controller;
 - (void)windowDidLoad
 {
     [super windowDidLoad];
-
+	
 	NSTableView* temp = self.table;
 	if (temp)
 	{
@@ -67,11 +70,15 @@ static SelectStyleController* _controller;
 		[temp setDataSource:this];
 		[temp setDoubleAction:@selector(onDoubleClick:)];
 		
-		[self _loadStyleNames];
-		[self _loadSettings];
-		[temp reloadData];
-		[self _selectDefault];
+		[self _reloadStyles];
 	}
+}
+
+- (void)stylesChanged:(NSNotification*)notification
+{
+	(void) notification;
+	
+	[self _reloadStyles];
 }
 
 - (NSArray*)getHelpContext
@@ -237,6 +244,18 @@ static SelectStyleController* _controller;
 	[view reloadData];
 }
 
+- (void)_reloadStyles
+{
+	NSTableView* temp = self.table;
+	if (temp)
+	{
+		[self _loadStyleNames];
+		[self _loadSettings];
+		[temp reloadData];
+		[self _selectDefault];
+	}
+}
+
 - (void)_selectDefault
 {
 	NSUInteger i = [_rows indexOfObjectPassingTest:
@@ -260,7 +279,6 @@ static SelectStyleController* _controller;
 		[button setEnabled:i == NSNotFound || !temp];
 }
 
-// TODO: need to watch the styles directory so that we can reload these
 - (void)_loadStyleNames
 {
 	NSMutableArray* rows = [NSMutableArray new];

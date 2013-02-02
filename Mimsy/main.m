@@ -1,5 +1,6 @@
 #import <Cocoa/Cocoa.h>
 
+#import "AppDelegate.h"
 #import "Assert.h"
 #import "ConfigParser.h"
 #import "convertVIMFiles.h"
@@ -33,25 +34,7 @@ static void initLogging(void)
 	setupLogging(path.UTF8String);
 	
 	// Figure out which levels the user wants to log the various topics at.
-	path = [Paths installedDir:@"settings"];
-	path = [path stringByAppendingPathComponent:@"logging.mimsy"];
-	
-	NSError* error = nil;
-	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
-	if (parser)
-	{
-		[parser enumerate:
-			^(ConfigParserEntry* entry)
-			{
-				setTopicLevel(entry.key.UTF8String, entry.value.UTF8String);
-			}
-		];
-	}
-	else
-	{
-		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load %@:\n%@.", path, [error localizedFailureReason]];
-		LOG_ERROR("Mimsy", "%s", STR(mesg));
-	}
+	initLogLevels();
 }
 
 static void setupInfrastructure(void)

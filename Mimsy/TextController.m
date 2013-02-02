@@ -35,14 +35,18 @@
 		// This will be set to nil once the view has been restored.
 		_restorer = [[RestoreView alloc] init:self];
  		updateInstanceCount(@"TextController", +1);
-   }
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(languagesChanged:) name:@"LanguagesChanged" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stylesChanged:) name:@"StylesChanged" object:nil];
+	}
     
-    return self;
+	return self;
 }
 
 - (void)dealloc
 {
 	updateInstanceCount(@"TextController", -1);
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)windowDidLoad
@@ -284,6 +288,26 @@
 		[self resetAttributes];
 		if (_applier)
 			[_applier addDirtyLocation:0 reason:@"set language"];
+	}
+}
+
+- (void)languagesChanged:(NSNotification*)notification
+{
+	(void) notification;
+	
+	if (_language)
+		[self setLanguage:[Languages findWithlangName:_language.name]];
+}
+
+- (void)stylesChanged:(NSNotification*)notification
+{
+	(void) notification;
+	
+	if (_styles)
+	{
+		_styles = [[TextStyles alloc] initWithPath:_styles.path];
+		if (_applier)
+			[_applier resetStyles];
 	}
 }
 

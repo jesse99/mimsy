@@ -1,5 +1,7 @@
 #import <Foundation/Foundation.h>
 
+void initLogLevels(void);
+
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate>
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification;

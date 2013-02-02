@@ -4,6 +4,7 @@
 #import "ConfigParser.h"
 #import "ConditionalGlob.h"
 #import "Language.h"
+#import "Logger.h"
 #import "Paths.h"
 #import "RegexStyler.h"
 #import "TranscriptController.h"
@@ -16,6 +17,11 @@ static NSArray* _languages;
 + (void)setup
 {
 	[self _processFiles];
+}
+
++ (void)languagesChanged
+{
+	[Languages _processFiles];
 }
 
 + (Language*)findWithFileName:(NSString*)name contents:(NSString*)text
@@ -64,9 +70,7 @@ static NSArray* _languages;
 // almost always want to use the languages immediately so in practice
 // loading them asynchronously won't help much.
 + (void)_processFiles
-{
-	ASSERT(_languages == nil);
-	
+{	
 	NSMutableArray* languages = [NSMutableArray new];
 	
 	NSString* dir = [Paths installedDir:@"languages"];

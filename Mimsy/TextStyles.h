@@ -15,4 +15,6 @@
 
 - (NSColor*)backColor;
 
+@property (readonly) NSString* path;
+
 @end
