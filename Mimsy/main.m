@@ -81,6 +81,10 @@ static struct Options parseArgs(int argc, char* argv[])
 		else if (strstr(argv[i], "-NSDocumentRevisionsDebugMode") == argv[i] || strstr(argv[i], "YES") == argv[i])
 			;
 		
+		// These are present if we run this via unit tests.
+		else if (strstr(argv[i], "-SenTest") == argv[i] || strstr(argv[i], "All") == argv[i])
+			;
+		
 		else
 			options.unknown = argv[i];
 	}

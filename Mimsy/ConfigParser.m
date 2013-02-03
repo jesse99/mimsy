@@ -97,7 +97,7 @@
 	while (_index < _length)
 	{
 		unichar ch = [contents characterAtIndex:_index];
-		if (ch == '\r' || ch == '\r' || ch == ':')
+		if (ch == '\r' || ch == '\r' || ch == '\t' || ch == ' ' || ch == ':')
 			break;
 		else
 			_index += 1;
