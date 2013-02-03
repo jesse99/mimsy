@@ -37,6 +37,8 @@
 		3759B6601678376000D3F3B8 /* Decode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3759B65F1678376000D3F3B8 /* Decode.m */; };
 		376407E816B8CB05000B7AE3 /* tophat.icns in Resources */ = {isa = PBXBuildFile; fileRef = 376407E716B8CB05000B7AE3 /* tophat.icns */; };
 		376407EB16BB60D4000B7AE3 /* DirectoryWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 376407EA16BB60D4000B7AE3 /* DirectoryWatcher.m */; };
+		376407EE16BEB856000B7AE3 /* ColorCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 376407ED16BEB856000B7AE3 /* ColorCategory.m */; };
+		376407F116BECC7E000B7AE3 /* ColorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 376407F016BECC7E000B7AE3 /* ColorTests.m */; };
 		37862C3E168D20FD00DB9E66 /* VectorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C3D168D20FD00DB9E66 /* VectorTests.m */; };
 		37862C44168D2D1300DB9E66 /* StyleRunsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C43168D2D1300DB9E66 /* StyleRunsTest.m */; };
 		37862C48168D4AF700DB9E66 /* RegexStylerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C47168D4AF700DB9E66 /* RegexStylerTests.m */; };
@@ -138,6 +140,10 @@
 		376407E716B8CB05000B7AE3 /* tophat.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = tophat.icns; sourceTree = "<group>"; };
 		376407E916BB60D4000B7AE3 /* DirectoryWatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryWatcher.h; sourceTree = "<group>"; };
 		376407EA16BB60D4000B7AE3 /* DirectoryWatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryWatcher.m; sourceTree = "<group>"; };
+		376407EC16BEB856000B7AE3 /* ColorCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorCategory.h; sourceTree = "<group>"; };
+		376407ED16BEB856000B7AE3 /* ColorCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorCategory.m; sourceTree = "<group>"; };
+		376407EF16BECC7E000B7AE3 /* ColorTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorTests.h; sourceTree = "<group>"; };
+		376407F016BECC7E000B7AE3 /* ColorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorTests.m; sourceTree = "<group>"; };
 		37862C3B168D20B200DB9E66 /* TestVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestVector.h; sourceTree = "<group>"; };
 		37862C3C168D20FD00DB9E66 /* VectorTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VectorTests.h; sourceTree = "<group>"; };
 		37862C3D168D20FD00DB9E66 /* VectorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VectorTests.m; sourceTree = "<group>"; };
@@ -244,6 +250,8 @@
 				37F2C58A169E7B92009C5355 /* ArrayCategory.m */,
 				37862C6616912ECA00DB9E66 /* Assert.h */,
 				37862C6716912ECB00DB9E66 /* Assert.m */,
+				376407EC16BEB856000B7AE3 /* ColorCategory.h */,
+				376407ED16BEB856000B7AE3 /* ColorCategory.m */,
 				37862C4C168DE83D00DB9E66 /* ConditionalGlob.h */,
 				37862C4D168DE83D00DB9E66 /* ConditionalGlob.m */,
 				375140D216800FFD00C329AF /* ConfigParser.h */,
@@ -425,6 +433,8 @@
 		37A8C6BC16758FF400D4DB13 /* MimsyTests */ = {
 			isa = PBXGroup;
 			children = (
+				376407EF16BECC7E000B7AE3 /* ColorTests.h */,
+				376407F016BECC7E000B7AE3 /* ColorTests.m */,
 				37862C4F168DEA7200DB9E66 /* ConditionalGLobTests.h */,
 				37862C50168DEA7200DB9E66 /* ConditionalGLobTests.m */,
 				375140D616801A4800C329AF /* ConfigParserTests.h */,
@@ -609,6 +619,7 @@
 				3712631F16B4AA53007AF3BF /* InstallFiles.m in Sources */,
 				3712632316B5A079007AF3BF /* DataCategory.m in Sources */,
 				376407EB16BB60D4000B7AE3 /* DirectoryWatcher.m in Sources */,
+				376407EE16BEB856000B7AE3 /* ColorCategory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -624,6 +635,7 @@
 				37862C44168D2D1300DB9E66 /* StyleRunsTest.m in Sources */,
 				37862C48168D4AF700DB9E66 /* RegexStylerTests.m in Sources */,
 				37862C51168DEA7200DB9E66 /* ConditionalGLobTests.m in Sources */,
+				376407F116BECC7E000B7AE3 /* ColorTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -819,6 +831,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = "MimsyTests/MimsyTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_AFTER_BUILD = YES;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
@@ -834,6 +847,7 @@
 				GCC_PREFIX_HEADER = "Mimsy/Mimsy-Prefix.pch";
 				INFOPLIST_FILE = "MimsyTests/MimsyTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_AFTER_BUILD = YES;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
