@@ -79,6 +79,12 @@ static NSDictionary* _baseAttrs;
 	return result;
 }
 
+- (NSDictionary*)attributesForOnlyElement:(NSString*)name
+{
+	NSDictionary* result = _attrMap[name];
+	return result;
+}
+
 - (NSColor*)backColor
 {
 	return _backColor;

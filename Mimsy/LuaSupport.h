@@ -7,7 +7,7 @@ struct lua_State;
 // in tables which contain a target entry whose value represents an NSObject pointer
 // (e.g. NSApplication*, NSDocument*, etc).
 //
-// See the XXX help file for information about the methods.
+// See the help/lua-Lua Scripting.rtf help file for information about the methods.
 
 void initMethods(struct lua_State* state);
 
@@ -23,3 +23,6 @@ int doc_saveas(struct lua_State* state);
 
 // ---- Text Document ----------------------------------------------------------
 int textdoc_data(struct lua_State* state);
+int textdoc_getselection(struct lua_State* state);
+int textdoc_setselection(struct lua_State* state);
+int textdoc_setunderline(struct lua_State* state);

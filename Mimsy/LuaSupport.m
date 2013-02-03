@@ -1,12 +1,45 @@
 #import "LuaSupport.h"
 
-#include <lauxlib.h>
+#import <lauxlib.h>
 
 #import "Assert.h"
+#import "ColorCategory.h"
 #import "FunctionalTest.h"
 #import "TextController.h"
 #import "TextDocument.h"
+#import "TextStyles.h"
+#import "TextView.h"
 #import "TranscriptController.h"
+
+static NSColor* textColor(TextDocument* doc, NSString* name)
+{
+	NSColor* color = nil;
+	
+	if (doc.controller.styles && [name hasSuffix:@"color"])
+	{
+		name = [name stringByReplacingOccurrencesOfString:@" " withString:@""];
+		name = [name lowercaseString];
+		
+		if ([name isEqualToString:@"backcolor"])
+		{
+			color = doc.controller.styles.backColor;
+		}
+		else
+		{
+			NSString* element = [name substringToIndex:name.length - 5];
+			NSDictionary* attrs = [doc.controller.styles attributesForOnlyElement:element];
+			if (attrs)
+			{
+				color = attrs[NSForegroundColorAttributeName];
+			}
+		}
+	}
+	
+	if (!color)
+		color = [NSColor colorWithMimsyName:name];
+	
+	return color;
+}
 
 static void pushTextDoc(struct lua_State* state, NSDocument* doc)
 {
@@ -14,7 +47,10 @@ static void pushTextDoc(struct lua_State* state, NSDocument* doc)
 	{
 		{"close", doc_close},
 		{"data", textdoc_data},
+		{"getselection", textdoc_getselection},
 		{"saveas", doc_saveas},
+		{"setselection", textdoc_setselection},
+		{"setunderline", textdoc_setunderline},
 		{NULL, NULL}
 	};
 	luaL_register(state, "doc", methods);
@@ -184,11 +220,110 @@ int doc_saveas(struct lua_State* state)
 	return 0;
 }
 
-// data(doc) -> str
+// data(textdoc) -> text
 int textdoc_data(struct lua_State* state)
 {
 	lua_getfield(state, 1, "target");
 	TextDocument* doc = (__bridge TextDocument*) lua_touserdata(state, -1);
 	lua_pushstring(state, doc.controller.text.UTF8String);
 	return 1;
+}
+
+// getselection(textdoc) -> loc, len
+int textdoc_getselection(struct lua_State* state)
+{
+	lua_getfield(state, 1, "target");
+	TextDocument* doc = (__bridge TextDocument*) lua_touserdata(state, -1);
+	
+	NSRange selection = doc.controller.textView.selectedRange;
+	lua_pushinteger(state, (lua_Integer)selection.location);
+	lua_pushinteger(state, (lua_Integer)selection.length);
+	
+	return 2;
+}
+
+// setselection(textdoc, loc, len)
+int textdoc_setselection(struct lua_State* state)
+{
+	lua_getfield(state, 1, "target");
+	TextDocument* doc = (__bridge TextDocument*) lua_touserdata(state, -1);
+	lua_Integer loc = lua_tointeger(state, 2);
+	lua_Integer len = lua_tointeger(state, 3);
+	
+	NSTextView* view = doc.controller.textView;
+	luaL_argcheck(state, loc >= 0, 2, "negative");
+	luaL_argcheck(state, loc < view.textStorage.length, 2, "negative");
+	
+	luaL_argcheck(state, len >= 0, 3, "negative");
+	luaL_argcheck(state, loc + len <= view.textStorage.length, 3, "loc+len is oor");
+	
+	[view setSelectedRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+
+	return 0;
+}
+
+// setunderline(textdoc, loc, len, style = 'single', pattern = 'solid, color = nil)
+int textdoc_setunderline(struct lua_State* state)
+{
+	lua_getfield(state, 1, "target");
+	TextDocument* doc = (__bridge TextDocument*) lua_touserdata(state, -1);
+	lua_Integer loc = lua_tointeger(state, 2);
+	lua_Integer len = lua_tointeger(state, 3);
+	const char* style = luaL_optstring(state, 4, "single");
+	const char* pattern = luaL_optstring(state, 5, "solid");
+	const char* cname = luaL_optstring(state, 6, NULL);
+	
+	NSTextStorage* storage = doc.controller.textView.textStorage;
+	if (loc >= 0 && len >= 0 && loc + len <= storage.length)
+	{
+		NSMutableDictionary* attrs = [NSMutableDictionary new];
+		
+		int value = 0;
+		if (strcmp(style, "none") == 0)			// TODO: may also want to support NSUnderlineByWordMask
+			value |= NSUnderlineStyleNone;
+		else if (strcmp(style, "single") == 0)
+			value |= NSUnderlineStyleSingle;
+		else if (strcmp(style, "thick") == 0)
+			value |= NSUnderlineStyleThick;
+		else if (strcmp(style, "double") == 0)
+			value |= NSUnderlineStyleDouble;
+		else
+			luaL_error(state, "bad style: %s", style);
+
+		if (strcmp(pattern, "solid") == 0)
+			value |= NSUnderlinePatternSolid;
+		else if (strcmp(pattern, "dot") == 0)
+			value |= NSUnderlinePatternDot;
+		else if (strcmp(pattern, "dash") == 0)
+			value |= NSUnderlinePatternDash;
+		else if (strcmp(pattern, "dashdot") == 0)
+			value |= NSUnderlinePatternDashDot;
+		else if (strcmp(pattern, "dashdotdot") == 0)
+			value |= NSUnderlinePatternDashDotDot;
+		else
+			luaL_error(state, "bad pattern: %s", pattern);
+		attrs[NSUnderlineStyleAttributeName] = [NSNumber numberWithInt:value];
+		
+		if (cname)
+		{
+			NSColor* color = textColor(doc, [NSString stringWithUTF8String:cname]);
+			if (color)
+			{
+				attrs[NSUnderlineColorAttributeName] = color;
+			}
+			else
+			{
+				luaL_error(state, "bad color: %s", cname);
+			}
+		}
+		
+		NSRange range = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
+		[storage addAttributes:attrs range:range];
+	}
+	else
+	{
+		luaL_error(state, "bad range: loc=%d, len=%d", loc, len);
+	}
+	
+	return 0;
 }

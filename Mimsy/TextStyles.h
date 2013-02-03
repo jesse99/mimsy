@@ -13,6 +13,10 @@
 // for the "Normal" style are returned.
 - (NSDictionary*)attributesForElement:(NSString*)name;
 
+// Like attributesForElement except that nil is returned if name
+// is not present.
+- (NSDictionary*)attributesForOnlyElement:(NSString*)name;
+
 - (NSColor*)backColor;
 
 @property (readonly) NSString* path;
