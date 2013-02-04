@@ -117,14 +117,18 @@
 				 _appliedRuns.data[numApplied].range.location == range.location &&
 				 _appliedRuns.data[numApplied].range.length == range.length)
 			 {
-				 ++numApplied;
+				 ++numApplied; 
 			 }
 			 else
 			 {
 				 setSizeStyleRunVector(&_appliedRuns, numApplied);
 				 
-				 NSTextStorage* storage = _controller.textView.textStorage;
-				 [self _applyStyle:style index:elementIndex range:range storage:storage];
+				 TextController* tmp = _controller;
+				 if (tmp)
+				 {
+					 NSTextStorage* storage = tmp.textView.textStorage;
+					[self _applyStyle:style index:elementIndex range:range storage:storage];
+				 }
 				 *stop = true;
 			 }
 		 }
@@ -139,65 +143,68 @@
 	// Corresponds to 4K runs on an early 2009 Mac Pro.
 	const double MaxProcessTime = 0.050;
 	
-	NSTextStorage* storage = _controller.textView.textStorage;
-	double startTime = getTime();
-		
-	__block NSUInteger count = 0;
-	__block NSUInteger lastLoc = 0;
-	[storage beginEditing];
-	[runs process:
-		^(NSUInteger elementIndex, id style, NSRange range, bool* stop)
-		{
-			(void) elementIndex;
+	TextController* tmp = _controller;
+	if (tmp)
+	{
+		NSTextStorage* storage = tmp.textView.textStorage;
+		double startTime = getTime();
 			
-			lastLoc = range.location + range.length;
-			if (lastLoc < _firstDirtyLoc)
+		__block NSUInteger count = 0;
+		__block NSUInteger lastLoc = 0;
+		[storage beginEditing];
+		[runs process:
+			^(NSUInteger elementIndex, id style, NSRange range, bool* stop)
 			{
-				[self _applyStyle:style index:elementIndex range:range storage:storage];
+				(void) elementIndex;
 				
-				if (++count % 1000 == 0 && (getTime() - startTime) > MaxProcessTime)
+				lastLoc = range.location + range.length;
+				if (lastLoc < _firstDirtyLoc)
+				{
+					[self _applyStyle:style index:elementIndex range:range storage:storage];
+					
+					if (++count % 1000 == 0 && (getTime() - startTime) > MaxProcessTime)
+					{
+						*stop = true;
+					}
+				}
+				else
 				{
 					*stop = true;
 				}
 			}
-			else
-			{
-				*stop = true;
-			}
+		];
+		[storage endEditing];
+		
+		double elapsed = getTime() - startTime;
+		if (lastLoc >= _firstDirtyLoc)
+		{
+			// If the user has done an edit there is a very good chance he'll do another
+			// so defer queuing up another styler task.
+			if (count > 0)
+				LOG_DEBUG("Styler", "Applied %lu dirty runs (%.0fK runs/sec)", count, (count/1000.0)/elapsed);
+			_queued = false;
+			
+			TextController* tmp = _controller;
+				[tmp resetAttributes];
+			
+			dispatch_queue_t main = dispatch_get_main_queue();
+			dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 100*1000);	// 0.1s
+			dispatch_after(delay, main, ^{if (!_queued) [self addDirtyLocation:_firstDirtyLoc reason:@"still dirty"];});
 		}
-	];
-	[storage endEditing];
-	
-	double elapsed = getTime() - startTime;
-	if (lastLoc >= _firstDirtyLoc)
-	{
-		// If the user has done an edit there is a very good chance he'll do another
-		// so defer queuing up another styler task.
+		else if (runs.length)
+		{
+			LOG_DEBUG("Styler", "Applied %lu runs (%.0fK runs/sec)", count, (count/1000.0)/elapsed);
+			dispatch_queue_t main = dispatch_get_main_queue();
+			dispatch_async(main, ^{[self _applyRuns:runs];});
+		}
+		else
+		{
+			LOG_DEBUG("Styler", "Applied last %lu runs (%.0fK runs/sec)", count, (count/1000.0)/elapsed);
+			_queued = false;
+		}
 		if (count > 0)
-			LOG_DEBUG("Styler", "Applied %lu dirty runs (%.0fK runs/sec)", count, (count/1000.0)/elapsed);
-		_queued = false;
-		
-		TextController* tmp = _controller;
-		if (tmp)
-			[tmp resetAttributes];
-		
-		dispatch_queue_t main = dispatch_get_main_queue();
-		dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 100*1000);	// 0.1s
-		dispatch_after(delay, main, ^{if (!_queued) [self addDirtyLocation:_firstDirtyLoc reason:@"still dirty"];});
+			_applied = true;
 	}
-	else if (runs.length)
-	{
-		LOG_DEBUG("Styler", "Applied %lu runs (%.0fK runs/sec)", count, (count/1000.0)/elapsed);
-		dispatch_queue_t main = dispatch_get_main_queue();
-		dispatch_async(main, ^{[self _applyRuns:runs];});
-	}
-	else
-	{
-		LOG_DEBUG("Styler", "Applied last %lu runs (%.0fK runs/sec)", count, (count/1000.0)/elapsed);
-		_queued = false;
-	}
-	if (count > 0)
-		_applied = true;
 }
 
 - (void)_applyStyle:(id)style index:(NSUInteger)index range:(NSRange)range storage:(NSTextStorage*)storage

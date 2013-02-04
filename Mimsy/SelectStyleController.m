@@ -90,22 +90,24 @@ static SelectStyleController* _controller;
 {
 	(void) sender;
 	
-	StyleRowObject* object = _rows[(NSUInteger)_table.selectedRow];
-	_default = object.name;
-	[TextController enumerate:
-		^(TextController* controller)
-		{
-			if (controller && controller.language)
-			{
-				[controller changeStyle:object.path];
-			}
-		}
-	];
-
-	NSTableView* temp = self.table;
+	NSTableView* temp = _table;
 	if (temp)
+	{
+		StyleRowObject* object = _rows[(NSUInteger)temp.selectedRow];
+		_default = object.name;
+		[TextController enumerate:
+			^(TextController* controller)
+			{
+				if (controller && controller.language)
+				{
+					[controller changeStyle:object.path];
+				}
+			}
+		];
+
 		[temp reloadData];
-	[_writeTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:5.0]];
+		[_writeTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:5.0]];
+	}
 }
 
 - (void)onDoubleClick:(NSTableView*)sender
@@ -204,28 +206,32 @@ static SelectStyleController* _controller;
 {
 	(void) notification;
 	
-	if (_table.window.isVisible)
+	NSTableView* temp = _table;
+	if (temp)
 	{
-		NSUInteger row = (NSUInteger) _table.selectedRow;
-		StyleRowObject* object = _rows[(NSUInteger)row];
-		if (row < _rows.count)
+		if (temp.window.isVisible)
 		{
-			TextController* controller = [TextController frontmost];
-			if (controller && controller.language)
+			NSUInteger row = (NSUInteger) temp.selectedRow;
+			StyleRowObject* object = _rows[(NSUInteger)row];
+			if (row < _rows.count)
 			{
-				[controller changeStyle:object.path];
+				TextController* controller = [TextController frontmost];
+				if (controller && controller.language)
+				{
+					[controller changeStyle:object.path];
+				}
+				else if (!emittedError)
+				{
+					NSString* mesg = @"To see what the style looks like open a document with syntax highlighting enabled.";
+					[TranscriptController writeError:mesg];
+					emittedError = true;
+				}
 			}
-			else if (!emittedError)
-			{
-				NSString* mesg = @"To see what the style looks like open a document with syntax highlighting enabled.";
-				[TranscriptController writeError:mesg];
-				emittedError = true;
-			}
+			
+			NSButton* button = _makeDefaultButton;
+			if (button)
+				[button setEnabled:![object.name isEqualToString:_default]];
 		}
-		
-		NSButton* button = _makeDefaultButton;
-		if (button)
-			[button setEnabled:![object.name isEqualToString:_default]];
 	}
 }
 

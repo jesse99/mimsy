@@ -76,9 +76,12 @@
 		// the old text is loaded.
 		if (![self.document isDocumentEdited])
 		{
+			NSScrollView* sv = self.scrollView;
+			
 			struct WindowInfo info;
 			info.length    = (NSInteger) self.text.length;
-			info.origin    = self.scrollView.contentView.bounds.origin;
+			if (sv)
+				info.origin = sv.contentView.bounds.origin;
 			info.selection = self.textView.selectedRange;
 			info.wordWrap  = self->_wordWrap;
 
@@ -372,9 +375,13 @@
 	// If this is not done the text (usually) does not wrap.
 	if (_wordWrap)
 	{
-		NSSize contentSize = _scrollView.contentView.bounds.size;
-		[_textView.textContainer setContainerSize:NSMakeSize(contentSize.width, HUGE_VAL)];
-		[_textView.textContainer setWidthTracksTextView:YES];
+		NSScrollView* tmp = _scrollView;
+		if (tmp)
+		{
+			NSSize contentSize = tmp.contentView.bounds.size;
+			[_textView.textContainer setContainerSize:NSMakeSize(contentSize.width, HUGE_VAL)];
+			[_textView.textContainer setWidthTracksTextView:YES];
+		}
 	}
 	else
 	{

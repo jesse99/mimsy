@@ -23,7 +23,7 @@
 	{
 		_doc = doc;
 
-		NSString* title = [_doc.displayName stringByAppendingString:@" Info"];
+		NSString* title = [doc.displayName stringByAppendingString:@" Info"];
 		[self.window setTitle:title];
 		
 		NSPopUpButton* button = self.lineEndian;
@@ -50,8 +50,8 @@
 				}
 			];
 			
-			if (_doc.controller.language)
-				[button selectItemWithTitle:_doc.controller.language.name];
+			if (doc.controller.language)
+				[button selectItemWithTitle:doc.controller.language.name];
 			else
 				[button selectItemWithTitle:@"None"];
 		}
@@ -65,17 +65,21 @@
 
 - (void)_enableButtons
 {
-	NSPopUpButton* button = self.lineEndian;
-	if (button)
-		[button setEnabled:_doc.format == PlainTextFormat];
-	
-	button = self.encoding;
-	if (button)
-		[button setEnabled:_doc.format == PlainTextFormat];
+	TextDocument* tmp = _doc;
+	if (tmp)
+	{
+		NSPopUpButton* button = self.lineEndian;
+		if (button)
+			[button setEnabled:tmp.format == PlainTextFormat];
+		
+		button = self.encoding;
+		if (button)
+			[button setEnabled:tmp.format == PlainTextFormat];
 
-	button = self.language;
-	if (button)
-		[button setEnabled:_doc.format == PlainTextFormat];
+		button = self.language;
+		if (button)
+			[button setEnabled:tmp.format == PlainTextFormat];
+	}
 }
 
 + (InfoController*)openFor:(TextDocument *)doc

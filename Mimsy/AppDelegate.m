@@ -216,7 +216,7 @@ void initLogLevels(void)
 			[result addObjectsFromArray:[tmp getHelpContext]];
 		}
 		
-		if ([target respondsToSelector:@selector(nextResponder)])
+		if ([target isKindOfClass:[NSResponder class]])	// using isKindOfClass because @selector(nextResponder) didn't work with Xcode 4.6
 			target = [target nextResponder];
 		else
 			target = nil;

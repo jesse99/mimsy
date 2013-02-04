@@ -14,7 +14,7 @@
 + (void)enumerate:(void (^)(TextController* controller))block;
 
 @property IBOutlet TextView* textView;
-@property IBOutlet __weak NSScrollView *scrollView;
+@property IBOutlet __weak NSScrollView* scrollView;
 @property NSAttributedString* attributedText;
 @property (readonly) NSString* text;
 @property (readonly) NSUInteger editCount;

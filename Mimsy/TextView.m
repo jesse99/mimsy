@@ -35,7 +35,7 @@
 		// If the document has a language then the back color is set by a styles file.
 		TextController* controller = _controller;
 		if (controller)
-			valid = _controller.language == nil;
+			valid = controller.language == nil;
 	}
 	else if ([self respondsToSelector:item.action])
 	{
@@ -88,9 +88,13 @@
 	{
 		if (_changingBackColor)
 		{
-			NSColor* color = [sender color];
-			[self setBackgroundColor:color];
-			[_controller.document updateChangeCount:NSChangeDone | NSChangeDiscardable];
+			TextController* controller = _controller;
+			if (controller)
+			{
+				NSColor* color = [sender color];
+				[self setBackgroundColor:color];
+				[controller.document updateChangeCount:NSChangeDone | NSChangeDiscardable];
+			}
 		}
 		else
 		{
