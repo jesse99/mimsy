@@ -90,21 +90,22 @@
 	}
 }
 
-// key := [^\n\r:]+
+// key := [^\n\r: ]+
 - (NSString*)parseKey:(NSString*)contents
 {
 	NSUInteger begin = _index;
 	while (_index < _length)
 	{
 		unichar ch = [contents characterAtIndex:_index];
-		if (ch == '\r' || ch == '\r' || ch == '\t' || ch == ' ' || ch == ':')
+		if (ch == '\r' || ch == '\r' || ch == '\t' || ch == ':')
 			break;
 		else
 			_index += 1;
 	}
 	
 	ASSERT(begin < _index);
-	return [contents substringWithRange:NSMakeRange(begin, _index - begin)];
+	NSString* key = [contents substringWithRange:NSMakeRange(begin, _index - begin)];
+	return [key stringByTrimmingCharactersInSet:_whitespace];
 }
 
 // colon := [ \t]* ':'
