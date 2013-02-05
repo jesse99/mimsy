@@ -76,6 +76,26 @@ static NSMutableDictionary* _hooks;		// hook name => [lua function names]
 	}
 }
 
++ (void)invokeTextSelectionChanged:(NSDocument*)doc slocation:(NSUInteger)loc slength:(NSUInteger)len
+{
+	NSMutableArray* names = _hooks[@"text selection changed"];
+	if (names)
+	{
+		for (NSString* fname in names)
+		{
+			lua_getglobal(_state, fname.UTF8String);
+			pushTextDoc(_state, doc);
+			lua_pushinteger(_state, (lua_Integer) (loc+1));
+			lua_pushinteger(_state, (lua_Integer) len);
+			int err = lua_pcall(_state, 3, 0, 0);		// 3 args, no result
+			if (err)
+			{
+				[TranscriptController writeStderr:[NSString stringWithUTF8String:lua_tostring(_state, -1)]];
+			}
+		}
+	}
+}
+
 + (void)_loadScript:(NSString*)path
 {
 	if (luaL_dofile(_state, path.UTF8String))

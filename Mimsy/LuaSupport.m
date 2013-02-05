@@ -49,6 +49,7 @@ void pushTextDoc(struct lua_State* state, NSDocument* doc)
 		{"close", doc_close},
 		{"data", textdoc_data},
 		{"getselection", textdoc_getselection},
+		{"resetstyle", textdoc_resetstyle},
 		{"saveas", doc_saveas},
 		{"setselection", textdoc_setselection},
 		{"setunderline", textdoc_setunderline},
@@ -251,6 +252,15 @@ int textdoc_getselection(struct lua_State* state)
 	lua_pushinteger(state, (lua_Integer) selection.length);
 	
 	return 2;
+}
+
+// resetstyle(textdoc)
+int textdoc_resetstyle(struct lua_State* state)
+{
+	lua_getfield(state, 1, "target");
+	TextDocument* doc = (__bridge TextDocument*) lua_touserdata(state, -1);
+	[doc.controller resetStyles];
+	return 0;
 }
 
 // setselection(textdoc, loc, len)

@@ -8,6 +8,7 @@
 #import "Logger.h"
 #import "Paths.h"
 #import "RestoreView.h"
+#import "StartupScripts.h"
 #import "TextView.h"
 #import "TextDocument.h"
 #import "TextStyles.h"
@@ -56,6 +57,7 @@
 	[self.textView onOpened:self];
 
 	__weak id this = self;
+	[self.textView setDelegate:this];
 	[self.textView.textStorage setDelegate:this];
 	[self.textView.layoutManager setDelegate:this];
 	[self.textView.layoutManager setBackgroundLayoutEnabled:YES];
@@ -214,6 +216,12 @@
 - (NSAttributedString*)attributedText
 {
 	return self.textView.textStorage;
+}
+
+- (void)resetStyles
+{
+	if (_applier)
+		[_applier addDirtyLocation:0 reason:@"resetStyles"];
 }
 
 - (void)setAttributedText:(NSAttributedString*)text
@@ -390,6 +398,14 @@
 	}
 	
 	[_textView sizeToFit];
+}
+
+- (void)textViewDidChangeSelection:(NSNotification*)notification
+{
+	(void) notification;
+	
+	NSRange range = _textView.selectedRange;
+	[StartupScripts invokeTextSelectionChanged:self.document slocation:range.location slength:range.length];
 }
 
 // Note that this is called for every key stroke.

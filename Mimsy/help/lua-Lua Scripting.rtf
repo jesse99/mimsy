@@ -31,12 +31,22 @@ Used to install a lua function to be called by Mimsy at various times. The hook 
 \'95\'a0\cf4 'apply styles'\cf0  
 \f1\b\fs28 \cf5 function
 \b0 \cf0  
-\b underline
+\b hook
 \b0 (textdoc, loc, len)
+\f2\fs24 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\f0\fs36 \cf0 This is called after a batch of styles have been applied. The styles will have been applied to [loc, loc + len). This will only be called for text documents with a language.\
+\pard\pardeftab480\pardirnatural
+\cf0 \'95\'a0\cf4 'text selection changed'\cf0  
+\f1\b\fs28 \cf5 function
+\b0 \cf0  
+\b hook
+\b0 (textdoc, sloc, slen)
 \f2\fs24 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
 
-\f0\fs36 \cf0 This is called after a batch of styles have been applied. The styles will have been applied to [loc, loc + len). This will only be called for text documents with a language.\
+\f0\fs36 \cf0 This is called when the selection changes within a text document. The new selection range is passed into sloc and slen.\
 \pard\pardeftab480\pardirnatural
 \cf0 \
 \pard\pardeftab480\pardirnatural
@@ -116,8 +126,9 @@ function
 \i0 \cf0 \
 Returns the text of the document as a UTF-8 string. \
 \
+\pard\pardeftab480\pardirnatural
 
-\b function
+\b \cf0 function
 \b0  
 \b \cf2 getselection
 \b0 \cf0 (
@@ -129,6 +140,16 @@ Returns the text of the document as a UTF-8 string. \
 \i\b0 \cf3 len
 \i0 \cf0 \
 Returns the location and length of the current selection (or insertion point if there is no selection). \
+\
+\pard\pardeftab480\pardirnatural
+
+\b \cf0 function
+\b0  
+\b \cf2 resetstyle
+\b0 \cf0 (
+\i \cf3 textdoc
+\i0 \cf0 )\
+Re-apply language styles. Can be used to clear styles applied by scripts.\
 \
 
 \b function

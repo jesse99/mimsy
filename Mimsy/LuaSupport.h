@@ -27,4 +27,5 @@ int doc_saveas(struct lua_State* state);
 int textdoc_data(struct lua_State* state);
 int textdoc_getselection(struct lua_State* state);
 int textdoc_setselection(struct lua_State* state);
+int textdoc_resetstyle(struct lua_State* state);
 int textdoc_setunderline(struct lua_State* state);

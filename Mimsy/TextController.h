@@ -10,6 +10,7 @@
 - (void)toggleWordWrap;
 - (void)resetAttributes;
 - (void)changeStyle:(NSString*)path;
+- (void)resetStyles;
 + (TextController*)frontmost;
 + (void)enumerate:(void (^)(TextController* controller))block;
 
