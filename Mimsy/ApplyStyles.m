@@ -2,6 +2,7 @@
 
 #import "AsyncStyler.h"
 #import "Logger.h"
+#import "StartupScripts.h"
 #import "StyleRuns.h"
 #import "TextController.h"
 #import "TextStyles.h"
@@ -150,6 +151,8 @@
 		double startTime = getTime();
 			
 		__block NSUInteger count = 0;
+		__block NSUInteger beginLoc = 0;
+		__block NSUInteger endLoc = 0;
 		__block NSUInteger lastLoc = 0;
 		[storage beginEditing];
 		[runs process:
@@ -157,10 +160,14 @@
 			{
 				(void) elementIndex;
 				
+				if (beginLoc == 0)
+					beginLoc = range.location;
+				
 				lastLoc = range.location + range.length;
 				if (lastLoc < _firstDirtyLoc)
 				{
 					[self _applyStyle:style index:elementIndex range:range storage:storage];
+					endLoc = range.location + range.length;
 					
 					if (++count % 1000 == 0 && (getTime() - startTime) > MaxProcessTime)
 					{
@@ -173,6 +180,7 @@
 				}
 			}
 		];
+		[StartupScripts invokeApplyStyles:tmp.document location:beginLoc length:endLoc-beginLoc];
 		[storage endEditing];
 		
 		double elapsed = getTime() - startTime;

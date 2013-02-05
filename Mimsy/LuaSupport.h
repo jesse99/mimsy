@@ -10,8 +10,10 @@ struct lua_State;
 // See the help/lua-Lua Scripting.rtf help file for information about the methods.
 
 void initMethods(struct lua_State* state);
+void pushTextDoc(struct lua_State* state, NSDocument* doc);
 
 // ---- App --------------------------------------------------------------------
+int app_addhook(struct lua_State* state);
 int app_log(struct lua_State* state);
 int app_newdoc(struct lua_State* state);
 int app_openfile(struct lua_State* state);

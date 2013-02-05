@@ -5,6 +5,7 @@
 #import "Assert.h"
 #import "ColorCategory.h"
 #import "FunctionalTest.h"
+#import "StartupScripts.h"
 #import "TextController.h"
 #import "TextDocument.h"
 #import "TextStyles.h"
@@ -41,7 +42,7 @@ static NSColor* textColor(TextDocument* doc, NSString* name)
 	return color;
 }
 
-static void pushTextDoc(struct lua_State* state, NSDocument* doc)
+void pushTextDoc(struct lua_State* state, NSDocument* doc)
 {
 	luaL_Reg methods[] =
 	{
@@ -63,6 +64,7 @@ void initMethods(struct lua_State* state)
 {
 	luaL_Reg methods[] =
 	{
+		{"addhook", app_addhook},
 		{"log", app_log},
 		{"newdoc", app_newdoc},
 		{"openfile", app_openfile},
@@ -169,6 +171,15 @@ int app_newdoc(struct lua_State* state)
 	return 1;
 }
 
+// function addhook(app, hname, fname)
+int app_addhook(struct lua_State* state)
+{
+	const char* hname = lua_tostring(state, 2);
+	const char* fname = lua_tostring(state, 3);
+	[StartupScripts addHook:[NSString stringWithUTF8String:hname] function:[NSString stringWithUTF8String:fname]];
+	return 0;
+}
+
 // log(app, mesg)
 // TODO: might want to stick a log method on all tables (so we get better categories)
 int app_log(struct lua_State* state)
@@ -236,8 +247,8 @@ int textdoc_getselection(struct lua_State* state)
 	TextDocument* doc = (__bridge TextDocument*) lua_touserdata(state, -1);
 	
 	NSRange selection = doc.controller.textView.selectedRange;
-	lua_pushinteger(state, (lua_Integer)selection.location);
-	lua_pushinteger(state, (lua_Integer)selection.length);
+	lua_pushinteger(state, (lua_Integer) (selection.location+1));
+	lua_pushinteger(state, (lua_Integer) selection.length);
 	
 	return 2;
 }
@@ -247,7 +258,7 @@ int textdoc_setselection(struct lua_State* state)
 {
 	lua_getfield(state, 1, "target");
 	TextDocument* doc = (__bridge TextDocument*) lua_touserdata(state, -1);
-	lua_Integer loc = lua_tointeger(state, 2);
+	lua_Integer loc = lua_tointeger(state, 2) - 1;
 	lua_Integer len = lua_tointeger(state, 3);
 	
 	NSTextView* view = doc.controller.textView;
@@ -267,7 +278,7 @@ int textdoc_setunderline(struct lua_State* state)
 {
 	lua_getfield(state, 1, "target");
 	TextDocument* doc = (__bridge TextDocument*) lua_touserdata(state, -1);
-	lua_Integer loc = lua_tointeger(state, 2);
+	lua_Integer loc = lua_tointeger(state, 2) - 1;
 	lua_Integer len = lua_tointeger(state, 3);
 	const char* style = luaL_optstring(state, 4, "single");
 	const char* pattern = luaL_optstring(state, 5, "solid");

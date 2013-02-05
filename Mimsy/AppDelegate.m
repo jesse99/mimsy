@@ -11,6 +11,7 @@
 #import "Logger.h"
 #import "Paths.h"
 #import "SelectStyleController.h"
+#import "StartupScripts.h"
 #import "TranscriptController.h"
 #import "Utils.h"
 #import "WindowsDatabase.h"
@@ -64,6 +65,7 @@ void initLogLevels(void)
 	
 	[self _installFiles];
 	[self _watchInstalledFiles];
+	[StartupScripts setup];
 	[WindowsDatabase setup];
 	[Languages setup];
 	
@@ -371,6 +373,7 @@ void initLogLevels(void)
 		[installer initWithDstPath:path];
 		[installer addSourceItem:@"help"];
 		[installer addSourceItem:@"languages"];
+		[installer addSourceItem:@"scripts"];
 		[installer addSourceItem:@"settings"];
 		[installer addSourceItem:@"styles"];
 		[installer install];
@@ -396,6 +399,25 @@ void initLogLevels(void)
 		}
 	];
 
+	dir = [Paths installedDir:@"scripts"];
+	_settingsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
+		^(NSArray* paths)
+		{
+			(void) paths;
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"ScriptsChanged" object:self];
+		}
+	];
+	
+	dir = [Paths installedDir:@"scripts/startup"];
+	_settingsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
+		^(NSArray* paths)
+		{
+			(void) paths;
+			[StartupScripts setup];
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"StartupScriptsChanged" object:self];
+		}
+	];
+	
 	dir = [Paths installedDir:@"settings"];
 	_settingsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		^(NSArray* paths)

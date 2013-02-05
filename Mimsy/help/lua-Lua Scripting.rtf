@@ -1,24 +1,47 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-\cocoascreenfonts1{\fonttbl\f0\froman\fcharset0 Times-Roman;}
+\cocoascreenfonts1{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\fnil\fcharset0 Verdana;\f2\fswiss\fcharset0 Helvetica;
+}
 {\colortbl;\red255\green255\blue255;\red153\green0\blue0;\red23\green127\blue128;\red209\green8\blue70;
-\red72\green83\blue135;}
+\red0\green72\blue255;\red72\green83\blue135;}
 \deftab480
 \pard\pardeftab480\pardirnatural
 
-\f0\fs36 \cf0 Currently Lua scripts only run as part of functional tests. In the future there will be a way to load Lua scripts on startup and possibly via context menus.\
+\f0\fs36 \cf0 Lua scripts within scripts/startup are loaded when Mimsy starts up (and reloaded if they are changed while Mimsy is running). Typically these are used to install hooks to modify the behavior of Mimsy at pre-defined extension points. Lua scripts are also used for functional testing.\
 \
 Mimsy adds a global called 'app' to all Lua environments. The other tables listed below are available directly or indirectly via the app global.\
 \
 Methods taking color names accept CSS3 color names ("Dark Green"), VIM 7.3 names ("gray50"), hex RGB or RGBA values ("#FF0000" or "#FF0000FF"), and decimal RGB or RGBA values ("(255, 0, 0)" or "(255, 0, 0, 255)"). Text document methods also accept "back color" and colors from the active style file ("keyword color"). Spaces and case differences are ignored.\
-\pard\pardeftab480\pardirnatural
+\
+Note that methods taking indexes follow Lua conventions and are 1-based.\
 
-\fs32 \cf0 \
+\fs32 \
 
 \b\fs72 app\
 
 \b0\fs32 \
+\pard\pardeftab480\pardirnatural
 
-\b\fs36 function
+\b\fs36 \cf0 function
+\b0  
+\b \cf2 addhook
+\b0 \cf0 (
+\i \cf3 app, hname, fname
+\i0 \cf0 )\
+Used to install a lua function to be called by Mimsy at various times. The hook names and signatures are:\
+\'95\'a0\cf4 'apply styles'\cf0  
+\f1\b\fs28 \cf5 function
+\b0 \cf0  
+\b underline
+\b0 (textdoc, loc, len)
+\f2\fs24 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs36 \cf0 This is called after a batch of styles have been applied. The styles will have been applied to [loc, loc + len). This will only be called for text documents with a language.\
+\pard\pardeftab480\pardirnatural
+\cf0 \
+\pard\pardeftab480\pardirnatural
+
+\b \cf0 function
 \b0  
 \b \cf2 log
 \b0 \cf0 (
@@ -83,8 +106,7 @@ Calls callback after the specified number of seconds have elapsed. Secs can be a
 Closes the document window and disposes of the document. The textdoc should not be used after this is called. \
 
 \b \
-\pard\pardeftab480\pardirnatural
-\cf0 function
+function
 \b0  
 \b \cf2 data
 \b0 \cf0 (
@@ -94,9 +116,8 @@ Closes the document window and disposes of the document. The textdoc should not 
 \i0 \cf0 \
 Returns the text of the document as a UTF-8 string. \
 \
-\pard\pardeftab480\pardirnatural
 
-\b \cf0 function
+\b function
 \b0  
 \b \cf2 getselection
 \b0 \cf0 (
@@ -104,7 +125,7 @@ Returns the text of the document as a UTF-8 string. \
 \i0 \cf0 ) -> 
 \i \cf3 loc
 \i0 \cf0 ,
-\b \cf5  
+\b \cf6  
 \i\b0 \cf3 len
 \i0 \cf0 \
 Returns the location and length of the current selection (or insertion point if there is no selection). \
@@ -142,9 +163,8 @@ Saves the document to the specified path. Type can be any of the following:\
 \'95\'a0\cf4 'Word 2007 Format (docx)'\cf0 \
 \'95\'a0\cf4 'Open Document Text (odt)'\cf0 \
 \
-\pard\pardeftab480\pardirnatural
 
-\b \cf0 function
+\b function
 \b0  
 \b \cf2 setselection
 \b0 \cf0 (

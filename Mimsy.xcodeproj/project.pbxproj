@@ -39,6 +39,8 @@
 		376407EB16BB60D4000B7AE3 /* DirectoryWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 376407EA16BB60D4000B7AE3 /* DirectoryWatcher.m */; };
 		376407EE16BEB856000B7AE3 /* ColorCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 376407ED16BEB856000B7AE3 /* ColorCategory.m */; };
 		376407F116BECC7E000B7AE3 /* ColorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 376407F016BECC7E000B7AE3 /* ColorTests.m */; };
+		377BDE6316C005C8008DADA5 /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = 377BDE6216C005C8008DADA5 /* scripts */; };
+		377BDE6616C006BD008DADA5 /* StartupScripts.m in Sources */ = {isa = PBXBuildFile; fileRef = 377BDE6516C006BD008DADA5 /* StartupScripts.m */; };
 		37862C3E168D20FD00DB9E66 /* VectorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C3D168D20FD00DB9E66 /* VectorTests.m */; };
 		37862C44168D2D1300DB9E66 /* StyleRunsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C43168D2D1300DB9E66 /* StyleRunsTest.m */; };
 		37862C48168D4AF700DB9E66 /* RegexStylerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C47168D4AF700DB9E66 /* RegexStylerTests.m */; };
@@ -144,6 +146,9 @@
 		376407ED16BEB856000B7AE3 /* ColorCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorCategory.m; sourceTree = "<group>"; };
 		376407EF16BECC7E000B7AE3 /* ColorTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorTests.h; sourceTree = "<group>"; };
 		376407F016BECC7E000B7AE3 /* ColorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorTests.m; sourceTree = "<group>"; };
+		377BDE6216C005C8008DADA5 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = "<group>"; };
+		377BDE6416C006BD008DADA5 /* StartupScripts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartupScripts.h; sourceTree = "<group>"; };
+		377BDE6516C006BD008DADA5 /* StartupScripts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartupScripts.m; sourceTree = "<group>"; };
 		37862C3B168D20B200DB9E66 /* TestVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestVector.h; sourceTree = "<group>"; };
 		37862C3C168D20FD00DB9E66 /* VectorTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VectorTests.h; sourceTree = "<group>"; };
 		37862C3D168D20FD00DB9E66 /* VectorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VectorTests.m; sourceTree = "<group>"; };
@@ -349,6 +354,8 @@
 				37A8C6AE16758FF400D4DB13 /* MainMenu.xib */,
 				37CF062416AB998A00069A20 /* LuaSupport.h */,
 				37CF062516AB998A00069A20 /* LuaSupport.m */,
+				377BDE6416C006BD008DADA5 /* StartupScripts.h */,
+				377BDE6516C006BD008DADA5 /* StartupScripts.m */,
 			);
 			name = App;
 			sourceTree = "<group>";
@@ -424,6 +431,7 @@
 				376407E716B8CB05000B7AE3 /* tophat.icns */,
 				37EECF4C16A64A9E00BEB493 /* help */,
 				375140EE168B789100C329AF /* languages */,
+				377BDE6216C005C8008DADA5 /* scripts */,
 				37862C641690BC0600DB9E66 /* settings */,
 				37862C5F168FF58900DB9E66 /* styles */,
 			);
@@ -550,6 +558,7 @@
 				3752CC1116A1F25E00B623F5 /* SelectStyleWindow.xib in Resources */,
 				37EECF4D16A64A9E00BEB493 /* help in Resources */,
 				376407E816B8CB05000B7AE3 /* tophat.icns in Resources */,
+				377BDE6316C005C8008DADA5 /* scripts in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -620,6 +629,7 @@
 				3712632316B5A079007AF3BF /* DataCategory.m in Sources */,
 				376407EB16BB60D4000B7AE3 /* DirectoryWatcher.m in Sources */,
 				376407EE16BEB856000B7AE3 /* ColorCategory.m in Sources */,
+				377BDE6616C006BD008DADA5 /* StartupScripts.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
