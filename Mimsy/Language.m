@@ -22,31 +22,32 @@
 	NSMutableArray* lines = [NSMutableArray new];
 	NSMutableArray* help = [NSMutableArray new];
 	
-	[names addObject:@"Normal"];
+	[names addObject:@"normal"];
 	
 	[parser enumerate:
 		^(ConfigParserEntry* entry)
 		{
-			if ([entry.key isEqualToString:@"Language"])
+			NSString* key = [entry.key lowercaseString];
+			if ([key isEqualToString:@"language"])
 			{
 				if (_name)
 					[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
 				
 				_name = entry.value;
 			}
-			else if ([entry.key isEqualToString:@"LineComment"])
+			else if ([key isEqualToString:@"linecomment"])
 			{
 				if (_lineComment)
 					[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
 				
 				_lineComment = entry.value;
 			}
-			else if ([entry.key isEqualToString:@"Help"])
+			else if ([key isEqualToString:@"help"])
 			{
 				if (![Language parseHelp:entry.value help:help])
 					[errors addObject:[NSString stringWithFormat:@"malformed help on line %ld: expected '[<title>]<url or full path>'", entry.line]];
 			}
-			else if ([entry.key isEqualToString:@"Word"])	// TODO: reserved
+			else if ([key isEqualToString:@"word"])	// TODO: reserved
 			{
 //				if (_lineComment)
 //					[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
@@ -54,11 +55,11 @@
 //				_lineComment = entry.value;
 			}
 			
-			else if ([entry.key isEqualToString:@"Globs"])
+			else if ([key isEqualToString:@"globs"])
 			{
 				[globs addObjectsFromArray:[entry.value splitByString:@" "]];
 			}
-			else if ([entry.key isEqualToString:@"ConditionalGlob"])
+			else if ([key isEqualToString:@"conditionalglob"])
 			{
 				NSRange range = [entry.value rangeOfString:@" "];
 				if (range.location != NSNotFound)
@@ -87,7 +88,7 @@
 			else
 			{
 				// Note that it is OK to use the same element name multiple times.
-				[names addObject:entry.key];
+				[names addObject:key];
 				[patterns addObject:entry.value];
 				[lines addObject:[NSNumber numberWithUnsignedLong:entry.line]];
 			}

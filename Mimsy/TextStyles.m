@@ -40,7 +40,7 @@ static NSDictionary* _baseAttrs;
 	NSMutableDictionary* map = [NSMutableDictionary new];
 	NSAttributedString* text = [self _loadStyles];
 	if (!text || ![self _parseStyles:text attrMap:map])
-		map[@"Normal"] = _baseAttrs;
+		map[@"normal"] = _baseAttrs;
 	_attrMap = map;
 	
 	NSError* error = nil;
@@ -72,7 +72,7 @@ static NSDictionary* _baseAttrs;
 	if (!result)
 	{
 		LOG_WARN("Styler", "Couldn't find element %s in the styles file", STR(name));
-		result = _attrMap[@"Normal"];
+		result = _attrMap[@"normal"];
 		_attrMap[name] = result;
 	}
 	
@@ -129,15 +129,15 @@ static NSDictionary* _baseAttrs;
 			NSMutableDictionary* attrs = [NSMutableDictionary new];
 			[attrs addEntriesFromDictionary:_baseAttrs];
 			[attrs addEntriesFromDictionary:[text fontAttributesInRange:NSMakeRange(entry.offset, 1)]];
-			[self _setStyleName:entry.key attrMap:map attrs:attrs];
+			[self _setStyleName:[entry.key lowercaseString] attrMap:map attrs:attrs];
 		}
 	];
 	
-	if (!map[@"Normal"])
+	if (!map[@"normal"])
 	{
 		NSString* mesg = [[NSString alloc] initWithFormat:@"Styles file at '%@' is missing a Normal style.", _path];
 		[TranscriptController writeError:mesg];
-		map[@"Normal"] = _baseAttrs;
+		map[@"normal"] = _baseAttrs;
 	}
 	return true;
 }

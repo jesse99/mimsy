@@ -53,7 +53,7 @@
 	if (tmp)
 	{
 		NSTextStorage* storage = tmp.textView.textStorage;
-		[storage setAttributes:[tmp.styles attributesForElement:@"Normal"] range:NSMakeRange(0, storage.length)];
+		[storage setAttributes:[tmp.styles attributesForElement:@"normal"] range:NSMakeRange(0, storage.length)];
 		 
 		[self addDirtyLocation:0 reason:@"reset styles"];
 	}
