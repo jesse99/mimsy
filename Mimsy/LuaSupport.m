@@ -25,6 +25,10 @@ static NSColor* textColor(TextDocument* doc, NSString* name)
 		{
 			color = doc.controller.styles.backColor;
 		}
+		else if ([name isEqualToString:@"selectionbackcolor"])
+		{
+			color = [NSColor selectedTextBackgroundColor];
+		}
 		else
 		{
 			NSString* element = [name substringToIndex:name.length - 5];
