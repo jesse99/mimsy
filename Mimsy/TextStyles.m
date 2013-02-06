@@ -31,6 +31,7 @@ static NSDictionary* _baseAttrs;
 		attrs[NSStrikethroughStyleAttributeName] = @0;
 		attrs[NSObliquenessAttributeName]        = @0;
 		attrs[NSExpansionAttributeName]          = @0.0;
+		attrs[@"element name"]                   = @"base";
 		_baseAttrs = attrs;
 	}
 	
@@ -126,10 +127,13 @@ static NSDictionary* _baseAttrs;
 	[parser enumerate:
 		^(ConfigParserEntry *entry)
 		{
+			NSString* name = [entry.key lowercaseString];
+			
 			NSMutableDictionary* attrs = [NSMutableDictionary new];
 			[attrs addEntriesFromDictionary:_baseAttrs];
 			[attrs addEntriesFromDictionary:[text fontAttributesInRange:NSMakeRange(entry.offset, 1)]];
-			[self _setStyleName:[entry.key lowercaseString] attrMap:map attrs:attrs];
+			attrs[@"element name"] = name;	// handy to be able to tell whats a string, a comment, etc
+			[self _setStyleName:name attrMap:map attrs:attrs];
 		}
 	];
 	

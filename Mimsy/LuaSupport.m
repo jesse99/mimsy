@@ -52,6 +52,7 @@ void pushTextDoc(struct lua_State* state, NSDocument* doc)
 	{
 		{"close", doc_close},
 		{"data", textdoc_data},
+		{"getelementname", textdoc_getelementname},
 		{"getselection", textdoc_getselection},
 		{"resetstyle", textdoc_resetstyle},
 		{"saveas", doc_saveas},
@@ -241,7 +242,34 @@ int textdoc_data(struct lua_State* state)
 {
 	lua_getfield(state, 1, "target");
 	TextDocument* doc = (__bridge TextDocument*) lua_touserdata(state, -1);
-	lua_pushstring(state, doc.controller.text.UTF8String);
+	lua_pushstring(state, doc.controller.text.UTF8String);	
+	return 1;
+}
+
+// getelementname(textdoc, loc) -> name
+int textdoc_getelementname(struct lua_State* state)
+{
+	lua_getfield(state, 1, "target");
+	TextDocument* doc = (__bridge TextDocument*) lua_touserdata(state, -1);
+	lua_Integer loc = lua_tointeger(state, 2) - 1;
+	
+	NSString* name = nil;
+	if (loc >= 0 && loc < doc.controller.text.length)
+	{
+		NSTextStorage* storage = doc.controller.textView.textStorage;
+		
+		// It would be nice if we could return information about the range
+		// but effectiveRange is effectively useless.
+		NSDictionary* attrs = [storage attributesAtIndex:(NSUInteger)loc effectiveRange:NULL];
+		if (attrs)
+			name = attrs[@"element name"];
+	}
+	
+	if (name)
+		lua_pushstring(state, name.UTF8String);
+	else
+		lua_pushnil(state);
+	
 	return 1;
 }
 
