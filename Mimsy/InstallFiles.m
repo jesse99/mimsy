@@ -96,11 +96,8 @@
 				NSString* actualHash = [self _getHash:dstPath outError:&error];
 				if (actualHash && ![actualHash isEqualToString:installedHash])
 				{
-					NSString* ext = [dstPath pathExtension];
-					
-					NSString* backupPath = [dstPath stringByDeletingPathExtension];
-					backupPath = [backupPath stringByAppendingString:@".old."];
-					backupPath = [backupPath stringByAppendingString:ext];
+					// Note that we need a new extension to avoid loading the old file.
+					NSString* backupPath = [dstPath stringByAppendingString:@".old"];
 					
 					if ([Utils copySrcFile:dstPath dstFile:backupPath outError:&error])
 					{
