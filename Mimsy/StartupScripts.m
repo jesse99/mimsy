@@ -12,6 +12,7 @@
 
 static lua_State* _state;
 static NSMutableDictionary* _hooks;		// hook name => [lua function names]
+static NSArray* _valid;
 
 @implementation StartupScripts
 
@@ -21,8 +22,11 @@ static NSMutableDictionary* _hooks;		// hook name => [lua function names]
 		lua_close(_state);
 	
 	if (!_hooks)
+	{
 		_hooks = [NSMutableDictionary new];
-
+		_valid = @[@"apply styles", @"text selection changed"];
+	}
+	
 	_state = luaL_newstate();
 	luaL_openlibs(_state);
 	initMethods(_state);
@@ -46,6 +50,15 @@ static NSMutableDictionary* _hooks;		// hook name => [lua function names]
 
 + (void)addHook:(NSString*)hname function:(NSString*)fname
 {
+	if (![_valid containsObject:hname])
+	{
+		// TODO: This happens very early in startup which is why we don't use the transcript
+		// window. But it probably would be OK to use the transcript (and we can land here
+		// after startup if a script is changed while we're running).
+		LOG_ERROR("Mimsy", "Invalid hook name");
+		LOG_ERROR("Mimsy", "Valid names are: %s", STR([_valid componentsJoinedByString:@", "]));
+	}
+	
 	NSMutableArray* names = _hooks[hname];
 	if (!names)
 	{
