@@ -52,8 +52,9 @@ void pushTextDoc(struct lua_State* state, NSDocument* doc)
 	{
 		{"close", doc_close},
 		{"data", textdoc_data},
-		{"getelementname", textdoc_getelementname},
+		{"getelementat", textdoc_getelementat},
 		{"getselection", textdoc_getselection},
+		{"getwholeelement", textdoc_getwholeelement},
 		{"resetstyle", textdoc_resetstyle},
 		{"saveas", doc_saveas},
 		{"setselection", textdoc_setselection},
@@ -75,6 +76,8 @@ void initMethods(struct lua_State* state)
 		{"newdoc", app_newdoc},
 		{"openfile", app_openfile},
 		{"schedule", app_schedule},
+		{"stderr", app_stderr},
+		{"stdout", app_stdout},
 		{NULL, NULL}
 	};
 	luaL_register(state, "app", methods);
@@ -237,6 +240,22 @@ int doc_saveas(struct lua_State* state)
 	return 0;
 }
 
+// stderr(app, mesg)
+int app_stderr(struct lua_State* state)
+{
+	const char* mesg = lua_tostring(state, 2);
+	[TranscriptController writeStderr:[NSString stringWithUTF8String:mesg]];
+	return 0;
+}
+
+// stdout(app, mesg)
+int app_stdout(struct lua_State* state)
+{
+	const char* mesg = lua_tostring(state, 2);
+	[TranscriptController writeStdout:[NSString stringWithUTF8String:mesg]];
+	return 0;
+}
+
 // data(textdoc) -> text
 int textdoc_data(struct lua_State* state)
 {
@@ -246,8 +265,8 @@ int textdoc_data(struct lua_State* state)
 	return 1;
 }
 
-// getelementname(textdoc, loc) -> name
-int textdoc_getelementname(struct lua_State* state)
+// getelementat(textdoc, loc) -> name
+int textdoc_getelementat(struct lua_State* state)
 {
 	lua_getfield(state, 1, "target");
 	TextDocument* doc = (__bridge TextDocument*) lua_touserdata(state, -1);
@@ -258,8 +277,7 @@ int textdoc_getelementname(struct lua_State* state)
 	{
 		NSTextStorage* storage = doc.controller.textView.textStorage;
 		
-		// It would be nice if we could return information about the range
-		// but effectiveRange is effectively useless.
+		// Note that effectiveRange is so poorly specified as to be useless.
 		NSDictionary* attrs = [storage attributesAtIndex:(NSUInteger)loc effectiveRange:NULL];
 		if (attrs)
 			name = attrs[@"element name"];
@@ -284,6 +302,37 @@ int textdoc_getselection(struct lua_State* state)
 	lua_pushinteger(state, (lua_Integer) selection.length);
 	
 	return 2;
+}
+
+// getwholeelement(textdoc, loc, len) -> name
+int textdoc_getwholeelement(struct lua_State* state)
+{
+	lua_getfield(state, 1, "target");
+	TextDocument* doc = (__bridge TextDocument*) lua_touserdata(state, -1);
+	NSUInteger loc = (NSUInteger) lua_tointeger(state, 2) - 1;
+	NSUInteger len = (NSUInteger) lua_tointeger(state, 3);
+	
+	NSString* name = nil;
+	if (loc < doc.controller.text.length)
+	{
+		NSTextStorage* storage = doc.controller.textView.textStorage;
+		
+		NSRange clipRange;
+		clipRange.location = loc > 0 ? loc-1 : loc;
+		clipRange.length   = MIN(len + 2, doc.controller.text.length - clipRange.location);
+		
+		NSRange effRange;
+		NSDictionary* attrs = [storage attributesAtIndex:loc longestEffectiveRange:&effRange inRange:clipRange];
+		if (attrs && effRange.location == loc && effRange.length == len)
+			name = attrs[@"element name"];
+	}
+	
+	if (name)
+		lua_pushstring(state, name.UTF8String);
+	else
+		lua_pushnil(state);
+	
+	return 1;
 }
 
 // resetstyle(textdoc)

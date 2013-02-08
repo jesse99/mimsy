@@ -18,6 +18,8 @@ int app_log(struct lua_State* state);
 int app_newdoc(struct lua_State* state);
 int app_openfile(struct lua_State* state);
 int app_schedule(struct lua_State* state);
+int app_stderr(struct lua_State* state);
+int app_stdout(struct lua_State* state);
 
 // ---- Document ---------------------------------------------------------------
 int doc_close(struct lua_State* state);
@@ -25,8 +27,9 @@ int doc_saveas(struct lua_State* state);
 
 // ---- Text Document ----------------------------------------------------------
 int textdoc_data(struct lua_State* state);
-int textdoc_getelementname(struct lua_State* state);
+int textdoc_getelementat(struct lua_State* state);
 int textdoc_getselection(struct lua_State* state);
+int textdoc_getwholeelement(struct lua_State* state);
 int textdoc_setselection(struct lua_State* state);
 int textdoc_resetstyle(struct lua_State* state);
 int textdoc_setunderline(struct lua_State* state);

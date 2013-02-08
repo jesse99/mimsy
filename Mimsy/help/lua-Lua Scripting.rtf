@@ -8,6 +8,8 @@
 
 \f0\fs36 \cf0 Lua scripts within scripts/startup are loaded when Mimsy starts up (and reloaded if they are changed while Mimsy is running). Typically these are used to install hooks to modify the behavior of Mimsy at pre-defined extension points. Lua scripts are also used for functional testing.\
 \
+Lua scripts within scripts/no-startup are not loaded. If you want to use one of those scripts copy or move it into scripts/startup.\
+\
 Mimsy adds a global called 'app' to all Lua environments. The other tables listed below are available directly or indirectly via the app global.\
 \
 Methods taking color names accept CSS3 color names ("Dark Green"), VIM 7.3 names ("gray50"), hex RGB or RGBA values ("#FF0000" or "#FF0000FF"), and decimal RGB or RGBA values ("(255, 0, 0)" or "(255, 0, 0, 255)"). Text document methods also accept "back color", "selection back color", and colors from the active style file ("keyword color"). Spaces and case differences are ignored.\
@@ -15,13 +17,14 @@ Methods taking color names accept CSS3 color names ("Dark Green"), VIM 7.3 names
 Note that methods taking indexes follow Lua conventions and are 1-based.\
 
 \fs32 \
-
-\b\fs72 app\
-
-\b0\fs32 \
 \pard\pardeftab480\pardirnatural
 
-\b\fs36 \cf0 function
+\b\fs72 \cf0 app\
+\pard\pardeftab480\pardirnatural
+
+\b0\fs32 \cf0 \
+
+\b\fs36 function
 \b0  
 \b \cf2 addhook
 \b0 \cf0 (
@@ -34,24 +37,19 @@ Used to install a lua function to be called by Mimsy at various times. The hook 
 \b hook
 \b0 (textdoc, loc, len)
 \f2\fs24 \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
-\f0\fs36 \cf0 This is called after a batch of styles have been applied. The styles will have been applied to [loc, loc + len). This will only be called for text documents with a language.\
-\pard\pardeftab480\pardirnatural
-\cf0 \'95\'a0\cf4 'text selection changed'\cf0  
+\f0\fs36 This is called after a batch of styles have been applied. The styles will have been applied to [loc, loc + len). This will only be called for text documents with a language.\
+\'95\'a0\cf4 'text selection changed'\cf0  
 \f1\b\fs28 \cf5 function
 \b0 \cf0  
 \b hook
 \b0 (textdoc, sloc, slen)
 \f2\fs24 \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
 
-\f0\fs36 \cf0 This is called when the selection changes within a text document. The new selection range is passed into sloc and slen.\
-\pard\pardeftab480\pardirnatural
-\cf0 \
-\pard\pardeftab480\pardirnatural
+\f0\fs36 This is called when the selection changes within a text document. The new selection range is passed into sloc and slen.\
+\
 
-\b \cf0 function
+\b function
 \b0  
 \b \cf2 log
 \b0 \cf0 (
@@ -100,12 +98,37 @@ Note that, in general, the callbacks will not be invoked until the event loop is
 \i \cf3 callback
 \i0 \cf0 )\
 Calls callback after the specified number of seconds have elapsed. Secs can be an integer or a float, callback must be the name of a function.\
+\pard\pardeftab480\pardirnatural
 
-\fs32 \
+\fs32 \cf0 \
+\pard\pardeftab480\pardirnatural
 
-\b\fs72 textdoc\
+\b\fs36 \cf0 function
+\b0  
+\b \cf2 stderr
+\b0 \cf0 (
+\i \cf3 app, mesg
+\i0 \cf0 )\
+Writes a message to the transcript window using writeStderr:. New lines are not automatically added.\
+\pard\pardeftab480\pardirnatural
 
-\b0\fs32 \
+\fs32 \cf0 \
+\pard\pardeftab480\pardirnatural
+
+\b\fs36 \cf0 function
+\b0  
+\b \cf2 stdout
+\b0 \cf0 (
+\i \cf3 app, mesg
+\i0 \cf0 )\
+Writes a message to the transcript window using writeStdout:. New lines are not automatically added.\
+\
+\pard\pardeftab480\pardirnatural
+
+\b\fs72 \cf0 textdoc\
+\pard\pardeftab480\pardirnatural
+
+\b0\fs32 \cf0 \
 
 \b\fs36 function
 \b0  
@@ -126,11 +149,10 @@ function
 \i0 \cf0 \
 Returns the text of the document as a UTF-8 string. \
 \
-\pard\pardeftab480\pardirnatural
 
-\b \cf0 function
+\b function
 \b0  
-\b \cf2 getelementname
+\b \cf2 getelementat
 \b0 \cf0 (
 \i \cf3 textdoc, loc
 \i0 \cf0 ) -> 
@@ -152,9 +174,19 @@ Returns the lower-case element name for the specified location (e.g. \cf4 'keywo
 \i0 \cf0 \
 Returns the location and length of the current selection (or insertion point if there is no selection). \
 \
-\pard\pardeftab480\pardirnatural
 
-\b \cf0 function
+\b function
+\b0  
+\b \cf2 getwholeelement
+\b0 \cf0 (
+\i \cf3 textdoc, loc, len
+\i0 \cf0 ) -> 
+\i \cf3 name
+\i0 \cf0 \
+Returns the lower-case element name for the specified location (e.g. \cf4 'keyword'\cf0  or \cf4 'normal'\cf0 ). Returns nil if the document has no language or if the element extends beyond [loc, loc+len).\
+\
+
+\b function
 \b0  
 \b \cf2 resetstyle
 \b0 \cf0 (
