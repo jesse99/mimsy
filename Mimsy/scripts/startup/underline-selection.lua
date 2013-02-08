@@ -57,7 +57,7 @@ function underlineselection(doc, loc, len)
 				if i ~= selstart then
 					if not iswordchar(text, i - 1) and not iswordchar(text, i + len) then 
 						if iswordelem(doc, i) then
-							doc:setunderline(i, j - i + 1, 'thick', 'solid', 'blue')
+							doc:setunderline(i, j - i + 1, 'thick', 'solid', 'keyword color')
 						end
 					end
 				end
