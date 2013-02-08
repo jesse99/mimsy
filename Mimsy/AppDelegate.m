@@ -44,7 +44,6 @@ void initLogLevels(void)
 	DirectoryWatcher* _languagesWatcher;
 	DirectoryWatcher* _settingsWatcher;
 	DirectoryWatcher* _stylesWatcher;
-	DirectoryWatcher* _scriptsWatcher;
 	DirectoryWatcher* _scriptsStartupWatcher;
 }
 
@@ -401,15 +400,6 @@ void initLogLevels(void)
 		}
 	];
 
-	dir = [Paths installedDir:@"scripts"];
-	_scriptsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
-		^(NSArray* paths)
-		{
-			(void) paths;
-			[[NSNotificationCenter defaultCenter] postNotificationName:@"ScriptsChanged" object:self];
-		}
-	];
-	
 	dir = [Paths installedDir:@"scripts/startup"];
 	_scriptsStartupWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		^(NSArray* paths)
