@@ -44,6 +44,8 @@ void initLogLevels(void)
 	DirectoryWatcher* _languagesWatcher;
 	DirectoryWatcher* _settingsWatcher;
 	DirectoryWatcher* _stylesWatcher;
+	DirectoryWatcher* _scriptsWatcher;
+	DirectoryWatcher* _scriptsStartupWatcher;
 }
 
 // Note that windows will still be open when this is called.
@@ -400,7 +402,7 @@ void initLogLevels(void)
 	];
 
 	dir = [Paths installedDir:@"scripts"];
-	_settingsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
+	_scriptsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		^(NSArray* paths)
 		{
 			(void) paths;
@@ -409,7 +411,7 @@ void initLogLevels(void)
 	];
 	
 	dir = [Paths installedDir:@"scripts/startup"];
-	_settingsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
+	_scriptsStartupWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		^(NSArray* paths)
 		{
 			(void) paths;
