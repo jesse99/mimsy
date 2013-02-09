@@ -167,6 +167,8 @@
 				if (lastLoc < _firstDirtyLoc)
 				{
 					[storage removeAttribute:NSLinkAttributeName range:range];
+					[storage removeAttribute:NSToolTipAttributeName range:range];
+					
 					[self _applyStyle:style index:elementIndex range:range storage:storage];
 					endLoc = range.location + range.length;
 					
