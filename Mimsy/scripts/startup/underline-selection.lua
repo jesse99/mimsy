@@ -45,10 +45,7 @@ function underlineselection(doc, loc, len)
 			if i then
 				if i ~= selstart then
 					if isword(doc, i, #word) then
-						-- Which color to use is a bit of a sticky problem given the wide
-						-- variation in style files. But the keyword color will almost always
-						-- be something that stands out well.
-						doc:setunderline(i, j - i + 1, 'thick', 'solid', 'keyword color')
+						doc:setunderline(i, j - i + 1, 'thick', 'solid', 'underlined color')
 					end
 				end
 				index = j
