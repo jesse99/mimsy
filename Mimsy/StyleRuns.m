@@ -30,6 +30,11 @@
 	return _runs.count - _processed;
 }
 
+- (NSString*)indexToName:(NSUInteger)index
+{
+	return _names[index];
+}
+
 - (void)mapElementsToStyles:(ElementToStyle)block
 {
 	if (!_styler)
@@ -57,11 +62,13 @@
 	DEBUG_ASSERT(_names.count == _styles.count);
 	
 	bool stop = false;
-	for (; _processed < _runs.count && !stop; ++_processed)
+	for (; _processed < _runs.count; ++_processed)
 	{
 		NSUInteger element = _runs.data[_processed].elementIndex;
 		DEBUG_ASSERT(element < _styles.count);
 		block(element, _styles[element], _runs.data[_processed].range, &stop);
+		if (stop)
+			break;		// run the block stopped on is not considered to be processed
 	}
 }
 

@@ -89,6 +89,28 @@ static NSArray* _valid;
 	}
 }
 
++ (void)invokeOverrideStyle:(NSDocument*)doc location:(NSUInteger)loc length:(NSUInteger)len element:(NSString*)name
+{
+	NSString* hname = [NSString stringWithFormat:@"override %@ style", name];
+	NSMutableArray* names = _hooks[hname];
+	if (names)
+	{
+		for (NSString* fname in names)
+		{
+			lua_getglobal(_state, fname.UTF8String);
+			pushTextDoc(_state, doc);
+			lua_pushinteger(_state, (lua_Integer) (loc+1));
+			lua_pushinteger(_state, (lua_Integer) len);
+			lua_pushstring(_state, name.UTF8String);
+			int err = lua_pcall(_state, 4, 0, 0);		// 4 args, no result
+			if (err)
+			{
+				[TranscriptController writeStderr:[NSString stringWithUTF8String:lua_tostring(_state, -1)]];
+			}
+		}
+	}
+}
+
 + (void)invokeTextSelectionChanged:(NSDocument*)doc slocation:(NSUInteger)loc slength:(NSUInteger)len
 {
 	NSMutableArray* names = _hooks[@"text selection changed"];

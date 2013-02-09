@@ -23,6 +23,8 @@ typedef void (^ProcessStyleRun)(NSUInteger elementIndex, id style, NSRange range
 // each element name.
 - (void)mapElementsToStyles:(ElementToStyle)block;
 
+- (NSString*)indexToName:(NSUInteger)index;
+
 // Calls block until there are no more unprocessed runs or stop
 // is set. As a side effect length is adjusted by the number of
 // times block was called.

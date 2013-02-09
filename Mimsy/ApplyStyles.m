@@ -113,6 +113,8 @@
 	[runs process:
 		 ^(NSUInteger elementIndex, id style, NSRange range, bool* stop)
 		 {
+			 (void) style;
+			 
 			 if (numApplied < _appliedRuns.count &&
 				 _appliedRuns.data[numApplied].elementIndex == elementIndex &&
 				 _appliedRuns.data[numApplied].range.location == range.location &&
@@ -123,13 +125,6 @@
 			 else
 			 {
 				 setSizeStyleRunVector(&_appliedRuns, numApplied);
-				 
-				 TextController* tmp = _controller;
-				 if (tmp)
-				 {
-					 NSTextStorage* storage = tmp.textView.textStorage;
-					[self _applyStyle:style index:elementIndex range:range storage:storage];
-				 }
 				 *stop = true;
 			 }
 		 }
@@ -169,7 +164,9 @@
 					[storage removeAttribute:NSLinkAttributeName range:range];
 					[storage removeAttribute:NSToolTipAttributeName range:range];
 					
+					NSString* elementName = [runs indexToName:elementIndex];
 					[self _applyStyle:style index:elementIndex range:range storage:storage];
+					[StartupScripts invokeOverrideStyle:tmp.document location:range.location length:range.length element:elementName];
 					endLoc = range.location + range.length;
 					
 					if (++count % 1000 == 0 && (getTime() - startTime) > MaxProcessTime)

@@ -15,6 +15,7 @@
 
 // These are C entry points to the hooks.
 + (void)invokeApplyStyles:(NSDocument*)doc location:(NSUInteger)loc length:(NSUInteger)len;
++ (void)invokeOverrideStyle:(NSDocument*)doc location:(NSUInteger)loc length:(NSUInteger)len element:(NSString*)name;
 + (void)invokeTextSelectionChanged:(NSDocument*)doc slocation:(NSUInteger)loc slength:(NSUInteger)len;
 
 @end

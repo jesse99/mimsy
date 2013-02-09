@@ -39,7 +39,17 @@ Used to install a lua function to be called by Mimsy at various times. The hook 
 \f2\fs24 \
 
 \f0\fs36 This is called after a batch of styles have been applied. The styles will have been applied to [loc, loc + len). This will only be called for text documents with a language.\
-\'95\'a0\cf4 'text selection changed'\cf0  
+\pard\pardeftab480\pardirnatural
+\cf0 \'95\'a0\cf4 'override <element> style'\cf0  
+\f1\b\fs28 \cf5 function
+\b0 \cf0  
+\b hook
+\b0 (textdoc, loc, len, element)
+\f2\fs24 \
+
+\f0\fs36 Called after applying styles for the specified language element.\
+\pard\pardeftab480\pardirnatural
+\cf0 \'95\'a0\cf4 'text selection changed'\cf0  
 \f1\b\fs28 \cf5 function
 \b0 \cf0  
 \b hook
