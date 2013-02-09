@@ -287,6 +287,24 @@ Override the text color from style files.\
 
 \f0\b\fs36 \cf0 function
 \b0  
+\b \cf2 setlink
+\b0 \cf0 (
+\i \cf3 textdoc
+\i0 \cf0 , 
+\i \cf3 loc
+\i0 \cf0 , 
+\i \cf3 len
+\i0 \cf0 , 
+\i \cf3 url
+\i0 \cf0 )\
+Associates an URL with the range. The look of the range will change to appear to be a link (typically it will be underlined and the color will change). Clicking on an http link will open up a browser window with that link. Clicking on a file link will display the file in the Finder.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\f2\fs24 \cf0 \
+\pard\pardeftab480\pardirnatural
+
+\f0\b\fs36 \cf0 function
+\b0  
 \b \cf2 setselection
 \b0 \cf0 (
 \i \cf3 textdoc
@@ -296,7 +314,26 @@ Override the text color from style files.\
 \i \cf3  len
 \i0 \cf0 )\
 Sets the current selection (or insertion point if len is zero). Loc must be in [0, data.length). Len must be non-negative. Loc+len must be <= data.length. \
-\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\f2\fs24 \cf0 \
+\pard\pardeftab480\pardirnatural
+
+\f0\b\fs36 \cf0 function
+\b0  
+\b \cf2 setstrokewidth
+\b0 \cf0 (
+\i \cf3 textdoc
+\i0 \cf0 , 
+\i \cf3 loc
+\i0 \cf0 , 
+\i \cf3 len
+\i0 \cf0 , 
+\i \cf3 width
+\i0 \cf0 )\
+Width is a floating point percentage of font size. Positive numbers outline text, negative numbers stroke and fill (-3.0 works fairly well for bold).\
+\pard\pardeftab480\pardirnatural
+\cf0 \
 
 \b function
 \b0  

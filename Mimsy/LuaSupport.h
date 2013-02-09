@@ -33,6 +33,8 @@ int textdoc_getwholeelement(struct lua_State* state);
 int textdoc_setbackcolor(struct lua_State* state);
 int textdoc_setfont(struct lua_State* state);
 int textdoc_setforecolor(struct lua_State* state);
+int textdoc_setlink(struct lua_State* state);
 int textdoc_setselection(struct lua_State* state);
+int textdoc_setstrokewidth(struct lua_State* state);
 int textdoc_resetstyle(struct lua_State* state);
 int textdoc_setunderline(struct lua_State* state);

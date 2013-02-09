@@ -71,7 +71,9 @@ void pushTextDoc(struct lua_State* state, NSDocument* doc)
 		{"setbackcolor", textdoc_setbackcolor},
 		{"setfont", textdoc_setfont},
 		{"setforecolor", textdoc_setforecolor},
+		{"setlink", textdoc_setlink},
 		{"setselection", textdoc_setselection},
+		{"setstrokewidth", textdoc_setstrokewidth},
 		{"setunderline", textdoc_setunderline},
 		{NULL, NULL}
 	};
@@ -437,9 +439,7 @@ int textdoc_setfont(struct lua_State* state)
 	LUA_ASSERT(loc >= 0 && loc+len <= doc.controller.text.length, "loc = %d, len = %d", loc, len);
 	LUA_ASSERT(name != NULL && strlen(name) > 0, "name was NULL or empty");
 	LUA_ASSERT(size > 0, "size = %f", (float) size);
-	
-	//LOG_INFO("Mimsy", "font = %s, size = %.1f", name, size);
-	
+		
 	NSTextStorage* storage = doc.controller.textView.textStorage;
 	NSString* s = [NSString stringWithUTF8String:name];
 	NSRange range = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
@@ -472,6 +472,48 @@ int textdoc_setforecolor(struct lua_State* state)
 	{
 		luaL_error(state, "bad color: %s", cname);
 	}
+	
+	return 0;
+}
+
+// setlink(textdoc, loc, len, url)
+int textdoc_setlink(struct lua_State* state)
+{
+	lua_getfield(state, 1, "target");
+	TextDocument* doc = (__bridge TextDocument*) lua_touserdata(state, -1);
+	lua_Integer loc = lua_tointeger(state, 2) - 1;
+	lua_Integer len = lua_tointeger(state, 3);
+	const char* url = lua_tostring(state, 4);
+	
+	LUA_ASSERT(doc != NULL, "doc was NULL");
+	LUA_ASSERT(loc >= 0 && loc+len <= doc.controller.text.length, "loc = %d, len = %d", loc, len);
+	LUA_ASSERT(url != NULL && strlen(url) > 0, "url was NULL or empty");
+	
+	NSURL* u = [NSURL URLWithString:[NSString stringWithUTF8String:url]];
+	LUA_ASSERT(u != nil && strlen(url) > 0, "url was malformed: %s", url);
+	
+	NSTextStorage* storage = doc.controller.textView.textStorage;
+	NSRange range = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
+	[storage addAttributes:@{NSLinkAttributeName: u} range:range];
+	
+	return 0;
+}
+
+// setstrokewidth(textdoc, loc, len, width)
+int textdoc_setstrokewidth(struct lua_State* state)
+{
+	lua_getfield(state, 1, "target");
+	TextDocument* doc = (__bridge TextDocument*) lua_touserdata(state, -1);
+	lua_Integer loc = lua_tointeger(state, 2) - 1;
+	lua_Integer len = lua_tointeger(state, 3);
+	lua_Number width = lua_tonumber(state, 4);
+	
+	LUA_ASSERT(doc != NULL, "doc was NULL");
+	LUA_ASSERT(loc >= 0 && loc+len <= doc.controller.text.length, "loc = %d, len = %d", loc, len);
+	
+	NSTextStorage* storage = doc.controller.textView.textStorage;
+	NSRange range = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
+	[storage addAttributes:@{NSStrokeWidthAttributeName: [NSNumber numberWithDouble:width]} range:range];
 	
 	return 0;
 }
