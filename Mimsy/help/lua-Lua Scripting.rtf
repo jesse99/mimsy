@@ -314,12 +314,37 @@ Associates an URL with the range. The look of the range will change to appear to
 \i \cf3  len
 \i0 \cf0 )\
 Sets the current selection (or insertion point if len is zero). Loc must be in [0, data.length). Len must be non-negative. Loc+len must be <= data.length. \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
-
-\f2\fs24 \cf0 \
 \pard\pardeftab480\pardirnatural
+\cf0 \
 
-\f0\b\fs36 \cf0 function
+\b function
+\b0  
+\b \cf2 setstrikethrough
+\b0 \cf0 (
+\i \cf3 textdoc
+\i0 \cf0 , 
+\i \cf3 loc
+\i0 \cf0 , 
+\i \cf3 len
+\i0 \cf0 , 
+\i \cf3 style 
+\i0 \cf0 =
+\i \cf3  
+\i0 \cf4 'single'\cf0 , 
+\i \cf3 pattern 
+\i0 \cf0 =
+\i \cf3  
+\i0 \cf4 'solid'\cf0 , 
+\i \cf3 color 
+\i0 \cf0 =
+\i \cf3  
+\i0\b \cf0 nil
+\b0 )\
+Style may be \cf4 'none'\cf0 , \cf4 'single'\cf0 , \cf4 'thick'\cf0 , or \cf4 'double'\cf0 .\
+Pattern may be \cf4 'solid'\cf0 , \cf4 'dot'\cf0 , \cf4 'dash'\cf0 , \cf4 'dashdot'\cf0 , or \cf4 'dashdotdot'\cf0 .\
+
+\b \
+function
 \b0  
 \b \cf2 setstrokewidth
 \b0 \cf0 (
@@ -334,8 +359,25 @@ Sets the current selection (or insertion point if len is zero). Loc must be in [
 Width is a floating point percentage of font size. Positive numbers outline text, negative numbers stroke and fill (-3.0 works fairly well for bold).\
 \pard\pardeftab480\pardirnatural
 \cf0 \
+\pard\pardeftab480\pardirnatural
 
-\b function
+\b \cf0 function
+\b0  
+\b \cf2 settooltip
+\b0 \cf0 (
+\i \cf3 textdoc
+\i0 \cf0 , 
+\i \cf3 loc
+\i0 \cf0 , 
+\i \cf3 len
+\i0 \cf0 , 
+\i \cf3 text
+\i0 \cf0 )\
+Adds text which will popup when the mouse is over the range. Embedded new line characters can be used for line breaking.\
+\
+\pard\pardeftab480\pardirnatural
+
+\b \cf0 function
 \b0  
 \b \cf2 setunderline
 \b0 \cf0 (

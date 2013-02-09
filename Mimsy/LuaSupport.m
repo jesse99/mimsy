@@ -73,7 +73,9 @@ void pushTextDoc(struct lua_State* state, NSDocument* doc)
 		{"setforecolor", textdoc_setforecolor},
 		{"setlink", textdoc_setlink},
 		{"setselection", textdoc_setselection},
+		{"setstrikethrough", textdoc_setstrikethrough},
 		{"setstrokewidth", textdoc_setstrokewidth},
+		{"settooltip", textdoc_settooltip},
 		{"setunderline", textdoc_setunderline},
 		{NULL, NULL}
 	};
@@ -239,12 +241,12 @@ int doc_close(struct lua_State* state)
 // saveas(doc, path, type = nil, success = nil, failure = nil)
 int doc_saveas(struct lua_State* state)
 {
-	lua_getfield(state, 1, "target");
-	NSDocument* doc = (__bridge NSDocument*) lua_touserdata(state, -1);
 	const char* path = lua_tostring(state, 2);
 	const char* type = luaL_optstring(state, 3, "Plain Text, UTF8 Encoded");
 	const char* success = luaL_optstring(state, 4, NULL);
 	const char* failure = luaL_optstring(state, 5, NULL);
+	lua_getfield(state, 1, "target");			// need to be careful about pushing onto the string when there are optional arguments
+	NSDocument* doc = (__bridge NSDocument*) lua_touserdata(state, -1);
 	
 	LUA_ASSERT(doc != NULL, "doc was NULL");
 	LUA_ASSERT(path != NULL && strlen(path) > 0, "path was NULL or empty");
@@ -518,23 +520,20 @@ int textdoc_setstrokewidth(struct lua_State* state)
 	return 0;
 }
 
-// setunderline(textdoc, loc, len, style = 'single', pattern = 'solid, color = nil)
-int textdoc_setunderline(struct lua_State* state)
+// <strikethrough|underline>(textdoc, loc, len, style = 'single', pattern = 'solid, color = nil)
+static void strikeunderline(struct lua_State* state, TextDocument** outDoc, NSRange* outRange, NSNumber** outStyle, NSColor** outColor)
 {
-	lua_getfield(state, 1, "target");
-	TextDocument* doc = (__bridge TextDocument*) lua_touserdata(state, -1);
 	lua_Integer loc = lua_tointeger(state, 2) - 1;
 	lua_Integer len = lua_tointeger(state, 3);
 	const char* style = luaL_optstring(state, 4, "single");
 	const char* pattern = luaL_optstring(state, 5, "solid");
 	const char* cname = luaL_optstring(state, 6, NULL);
+	lua_getfield(state, 1, "target");			// need to be careful about pushing onto the string when there are optional arguments
+	*outDoc = (__bridge TextDocument*) lua_touserdata(state, -1);
 	
-	LUA_ASSERT(doc != NULL, "doc was NULL");
-	LUA_ASSERT(loc >= 0 && loc+len <= doc.controller.text.length, "loc = %d, len = %d", loc, len);
-	
-	NSTextStorage* storage = doc.controller.textView.textStorage;
-	NSMutableDictionary* attrs = [NSMutableDictionary new];
-	
+	LUA_ASSERT(outDoc != NULL, "doc was NULL");
+	LUA_ASSERT(loc >= 0 && loc+len <= (*outDoc).controller.text.length, "loc = %d, len = %d", loc, len);
+		
 	int value = 0;
 	if (strcmp(style, "none") == 0)			// TODO: may also want to support NSUnderlineByWordMask
 		value |= NSUnderlineStyleNone;
@@ -546,7 +545,7 @@ int textdoc_setunderline(struct lua_State* state)
 		value |= NSUnderlineStyleDouble;
 	else
 		luaL_error(state, "bad style: %s", style);
-
+	
 	if (strcmp(pattern, "solid") == 0)
 		value |= NSUnderlinePatternSolid;
 	else if (strcmp(pattern, "dot") == 0)
@@ -559,23 +558,81 @@ int textdoc_setunderline(struct lua_State* state)
 		value |= NSUnderlinePatternDashDotDot;
 	else
 		luaL_error(state, "bad pattern: %s", pattern);
-	attrs[NSUnderlineStyleAttributeName] = [NSNumber numberWithInt:value];
+	*outStyle = [NSNumber numberWithInt:value];
 	
 	if (cname)
 	{
-		NSColor* color = textColor(doc, [NSString stringWithUTF8String:cname]);
-		if (color)
-		{
-			attrs[NSUnderlineColorAttributeName] = color;
-		}
-		else
+		*outColor = textColor(*outDoc, [NSString stringWithUTF8String:cname]);
+		if (!*outColor)
 		{
 			luaL_error(state, "bad color: %s", cname);
 		}
 	}
+
+	*outRange = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
+}
+
+// setstrikethrough(textdoc, loc, len, style = 'single', pattern = 'solid, color = nil)
+int textdoc_setstrikethrough(struct lua_State* state)
+{
+	TextDocument* doc = nil;
+	NSRange range;
+	NSNumber* style = nil;
+	NSColor* color = nil;
+	strikeunderline(state, &doc, &range, &style, &color);
 	
-	NSRange range = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
+	NSTextStorage* storage = doc.controller.textView.textStorage;
+	
+	NSMutableDictionary* attrs = [NSMutableDictionary new];
+	attrs[NSStrikethroughStyleAttributeName] = style;
+	if (color)
+		attrs[NSStrikethroughColorAttributeName] = color;
+	
 	[storage addAttributes:attrs range:range];
+	
+	return 0;
+}
+
+// setunderline(textdoc, loc, len, style = 'single', pattern = 'solid, color = nil)
+int textdoc_setunderline(struct lua_State* state)
+{
+	TextDocument* doc = nil;
+	NSRange range;
+	NSNumber* style = nil;
+	NSColor* color = nil;
+	strikeunderline(state, &doc, &range, &style, &color);
+	
+	NSTextStorage* storage = doc.controller.textView.textStorage;
+	
+	NSMutableDictionary* attrs = [NSMutableDictionary new];
+	attrs[NSUnderlineStyleAttributeName] = style;
+	if (color)
+		attrs[NSUnderlineColorAttributeName] = color;
+	
+	[storage addAttributes:attrs range:range];
+	
+	return 0;
+}
+
+// settooltip(textdoc, loc, len, text)
+int textdoc_settooltip(struct lua_State* state)
+{
+	lua_getfield(state, 1, "target");
+	TextDocument* doc = (__bridge TextDocument*) lua_touserdata(state, -1);
+	lua_Integer loc = lua_tointeger(state, 2) - 1;
+	lua_Integer len = lua_tointeger(state, 3);
+	const char* text = lua_tostring(state, 4);
+	
+	LUA_ASSERT(doc != NULL, "doc was NULL");
+	LUA_ASSERT(loc >= 0 && loc+len <= doc.controller.text.length, "loc = %d, len = %d", loc, len);
+	LUA_ASSERT(text != NULL, "text was NULL");
+	
+	if (strlen(text) > 0)
+	{
+		NSTextStorage* storage = doc.controller.textView.textStorage;
+		NSRange range = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
+		[storage addAttributes:@{NSToolTipAttributeName: [NSString stringWithUTF8String:text]} range:range];
+	}
 	
 	return 0;
 }
