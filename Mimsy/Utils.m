@@ -113,7 +113,7 @@ static NSString* Replacement = @"\uFFFD";
     return result;
 }
 
-+ (void)enumerateDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item))block
++ (bool)enumerateDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item))block
 {
 	NSFileManager* fm = [NSFileManager new];
 	NSArray* candidates = [fm contentsOfDirectoryAtPath:path error:error];
@@ -128,10 +128,13 @@ static NSString* Replacement = @"\uFFFD";
 			}
 		}
 	}
+	return candidates;
 }
 
-+ (void)enumerateDeepDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item))block
++ (bool)enumerateDeepDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item))block
 {
+	ASSERT(error != NULL);
+	
 	NSFileManager* fm = [NSFileManager new];
 	NSMutableArray* errors = [NSMutableArray new];
 	
@@ -175,6 +178,7 @@ static NSString* Replacement = @"\uFFFD";
 		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
 		*error = [NSError errorWithDomain:@"mimsy" code:4 userInfo:dict];
 	}
+	return errors.count == 0;
 }
 
 + (bool)copySrcFile:(NSString*)srcPath dstFile:(NSString*)dstPath outError:(NSError**)outError

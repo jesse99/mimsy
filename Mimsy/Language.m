@@ -12,109 +12,117 @@
 
 - (id)initWithParser:(ConfigParser*)parser outError:(NSError**)error
 {
-	NSMutableArray* globs = [NSMutableArray new];
-	NSMutableArray* regexen = [NSMutableArray new];
-	NSMutableArray* conditionals = [NSMutableArray new];
-	NSMutableArray* errors = [NSMutableArray new];
+	ASSERT(error != NULL);
 	
-	NSMutableArray* names = [NSMutableArray new];
-	NSMutableArray* patterns = [NSMutableArray new];
-	NSMutableArray* lines = [NSMutableArray new];
-	NSMutableArray* help = [NSMutableArray new];
+	self = [super init];
 	
-	[names addObject:@"normal"];
-	
-	[parser enumerate:
-		^(ConfigParserEntry* entry)
-		{
-			NSString* key = [entry.key lowercaseString];
-			if ([key isEqualToString:@"language"])
+	if (self)
+	{
+		NSMutableArray* globs = [NSMutableArray new];
+		NSMutableArray* regexen = [NSMutableArray new];
+		NSMutableArray* conditionals = [NSMutableArray new];
+		NSMutableArray* errors = [NSMutableArray new];
+		
+		NSMutableArray* names = [NSMutableArray new];
+		NSMutableArray* patterns = [NSMutableArray new];
+		NSMutableArray* lines = [NSMutableArray new];
+		NSMutableArray* help = [NSMutableArray new];
+		
+		[names addObject:@"normal"];
+		
+		[parser enumerate:
+			^(ConfigParserEntry* entry)
 			{
-				if (_name)
-					[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
-				
-				_name = entry.value;
-			}
-			else if ([key isEqualToString:@"linecomment"])
-			{
-				if (_lineComment)
-					[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
-				
-				_lineComment = entry.value;
-			}
-			else if ([key isEqualToString:@"help"])
-			{
-				if (![Language parseHelp:entry.value help:help])
-					[errors addObject:[NSString stringWithFormat:@"malformed help on line %ld: expected '[<title>]<url or full path>'", entry.line]];
-			}
-			else if ([key isEqualToString:@"word"])	// TODO: reserved
-			{
-//				if (_lineComment)
-//					[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
-				
-//				_lineComment = entry.value;
-			}
-			
-			else if ([key isEqualToString:@"globs"])
-			{
-				[globs addObjectsFromArray:[entry.value splitByString:@" "]];
-			}
-			else if ([key isEqualToString:@"conditionalglob"])
-			{
-				NSRange range = [entry.value rangeOfString:@" "];
-				if (range.location != NSNotFound)
+				NSString* key = [entry.key lowercaseString];
+				if ([key isEqualToString:@"language"])
 				{
-					NSString* glob = [entry.value substringToIndex:range.location];
-					NSString* pattern = [entry.value substringFromIndex:range.location+1];
-
-					NSError* error = nil;
-					NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
-					NSRegularExpression* re = [[NSRegularExpression alloc] initWithPattern:pattern options:options error:&error];
-					if (re)
+					if (_name)
+						[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
+					
+					_name = entry.value;
+				}
+				else if ([key isEqualToString:@"linecomment"])
+				{
+					if (_lineComment)
+						[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
+					
+					_lineComment = entry.value;
+				}
+				else if ([key isEqualToString:@"help"])
+				{
+					if (![Language parseHelp:entry.value help:help])
+						[errors addObject:[NSString stringWithFormat:@"malformed help on line %ld: expected '[<title>]<url or full path>'", entry.line]];
+				}
+				else if ([key isEqualToString:@"word"])	// TODO: reserved
+				{
+	//				if (_lineComment)
+	//					[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
+					
+	//				_lineComment = entry.value;
+				}
+				
+				else if ([key isEqualToString:@"globs"])
+				{
+					[globs addObjectsFromArray:[entry.value splitByString:@" "]];
+				}
+				else if ([key isEqualToString:@"conditionalglob"])
+				{
+					NSRange range = [entry.value rangeOfString:@" "];
+					if (range.location != NSNotFound)
 					{
-						[regexen addObject:re];
-						[conditionals addObject:glob];
+						NSString* glob = [entry.value substringToIndex:range.location];
+						NSString* pattern = [entry.value substringFromIndex:range.location+1];
+
+						NSError* error = nil;
+						NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
+						NSRegularExpression* re = [[NSRegularExpression alloc] initWithPattern:pattern options:options error:&error];
+						if (re)
+						{
+							[regexen addObject:re];
+							[conditionals addObject:glob];
+						}
+						else
+						{
+							[errors addObject:[NSString stringWithFormat:@"regex on line %ld failed to parse: %@", entry.line, error.localizedFailureReason]];
+						}
 					}
 					else
 					{
-						[errors addObject:[NSString stringWithFormat:@"regex on line %ld failed to parse: %@", entry.line, error.localizedFailureReason]];
+						[errors addObject:[NSString stringWithFormat:@"expected space separating a glob from a regex on line %ld", entry.line]];
 					}
 				}
 				else
 				{
-					[errors addObject:[NSString stringWithFormat:@"expected space separating a glob from a regex on line %ld", entry.line]];
+					// Note that it is OK to use the same element name multiple times.
+					[names addObject:key];
+					[patterns addObject:entry.value];
+					[lines addObject:[NSNumber numberWithUnsignedLong:entry.line]];
 				}
 			}
-			else
-			{
-				// Note that it is OK to use the same element name multiple times.
-				[names addObject:key];
-				[patterns addObject:entry.value];
-				[lines addObject:[NSNumber numberWithUnsignedLong:entry.line]];
-			}
+		];
+
+		if (!_name)
+			[errors addObject:@"Language key is missing"];
+		if (globs.count == 0)
+			[errors addObject:@"Globs key is missing"];
+		if (patterns.count == 0)
+			[errors addObject:@"failed to find a language element"];
+		
+		_glob = [[ConditionalGlob alloc] initWithGlobs:globs regexen:regexen conditionals:conditionals];
+		_styler = [self _createStyler:names patterns:patterns lines:lines errors:errors];
+		_help = help;
+
+		if (errors.count > 0)
+		{
+			NSString* mesg = [[errors componentsJoinedByString:@", "] titleCase];
+			NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
+			*error = [NSError errorWithDomain:@"mimsy" code:4 userInfo:dict];
 		}
-	];
-
-	if (!_name)
-		[errors addObject:@"Language key is missing"];
-	if (globs.count == 0)
-		[errors addObject:@"Globs key is missing"];
-	if (patterns.count == 0)
-		[errors addObject:@"failed to find a language element"];
-	
-	_glob = [[ConditionalGlob alloc] initWithGlobs:globs regexen:regexen conditionals:conditionals];
-	_styler = [self _createStyler:names patterns:patterns lines:lines errors:errors];
-	_help = help;
-
-	if (errors.count > 0)
-	{
-		NSString* mesg = [errors componentsJoinedByString:@", "];
-		mesg = [mesg titleCase];
-		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
-		*error = [NSError errorWithDomain:@"mimsy" code:4 userInfo:dict];
+		
+		self = errors.count == 0 ? self : nil;
 	}
 	
-	return errors.count == 0 ? self : nil;
+	return self;
 }
 
 - (NSString*)description

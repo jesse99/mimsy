@@ -39,6 +39,8 @@
 
 - (id)initWithContent:(NSString*)contents outError:(NSError**)error
 {
+	ASSERT(error != NULL);
+	
 	_entries = [NSMutableArray new];
 	_letters = [NSCharacterSet letterCharacterSet];
 	_spaces = [NSCharacterSet whitespaceCharacterSet];
@@ -57,8 +59,10 @@
 	return *error == nil ? self : nil;
 }
 
-- (void)parseLine:(NSString*)contents error:(NSError**)error
-{	
+- (bool)parseLine:(NSString*)contents error:(NSError**)error
+{
+	ASSERT(error != NULL);
+	
 	unichar ch = [contents characterAtIndex:_index];
 	if ([_letters characterIsMember:ch])
 	{
@@ -88,6 +92,7 @@
 		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
 		*error = [NSError errorWithDomain:@"mimsy" code:2 userInfo:dict];
 	}
+	return *error == NULL;
 }
 
 // key := [^\n\r: ]+
@@ -109,8 +114,10 @@
 }
 
 // colon := [ \t]* ':'
-- (void)parseColon:(NSString*)contents error:(NSError**)error
+- (bool)parseColon:(NSString*)contents error:(NSError**)error
 {
+	ASSERT(error != NULL);
+	
 	while (_index < _length)
 	{
 		unichar ch = [contents characterAtIndex:_index];
@@ -130,11 +137,14 @@
 		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
 		*error = [NSError errorWithDomain:@"mimsy" code:3 userInfo:dict];
 	}
+	return *error == NULL;
 }
 
 // value := [^\r\n]* eol
 - (NSString*)parseValue:(NSString*)contents error:(NSError**)error
 {
+	ASSERT(error != NULL);
+	
 	NSUInteger begin = _index;
 	while (_index < _length)
 	{
@@ -152,8 +162,10 @@
 }
 
 // comment := '#' [^\r\n]* eol
-- (void)parseCommentLine:(NSString*)contents error:(NSError**)error
+- (bool)parseCommentLine:(NSString*)contents error:(NSError**)error
 {
+	ASSERT(error != NULL);
+	
 	while (_index < _length)
 	{
 		unichar ch = [contents characterAtIndex:_index];
@@ -164,11 +176,14 @@
 	}
 	
 	[self parseEOL:contents error:error];
+	return *error == NULL;
 }
 
 // blank := [ \t]* eol
-- (void)parseBlankLine:(NSString*)contents error:(NSError**)error
+- (bool)parseBlankLine:(NSString*)contents error:(NSError**)error
 {
+	ASSERT(error != NULL);
+	
 	while (_index < _length)
 	{
 		unichar ch = [contents characterAtIndex:_index];
@@ -179,11 +194,14 @@
 	}
 	
 	[self parseEOL:contents error:error];
+	return *error == NULL;
 }
 
 // eol := '\r\n' | '\r' | '\n'
-- (void)parseEOL:(NSString*)contents error:(NSError**)error
+- (bool)parseEOL:(NSString*)contents error:(NSError**)error
 {
+	ASSERT(error != NULL);
+	
 	if (_index < _length)
 	{
 		unichar ch0 = [contents characterAtIndex:_index];	// need to be careful here so we don't screw up _line
@@ -203,6 +221,7 @@
 			*error = [NSError errorWithDomain:@"mimsy" code:3 userInfo:dict];
 		}
 	}
+	return *error == NULL;
 }
 
 - (NSUInteger)length

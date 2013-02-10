@@ -1,5 +1,7 @@
 #import "Database.h"
+
 #import <sqlite3.h>
+#import "Assert.h"
 
 @implementation Database
 {
@@ -14,31 +16,41 @@
 
 - (id)initWithPath:(NSString*)path error:(NSError**)error
 {
-	int flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FULLMUTEX;
-	int err = sqlite3_open_v2([path UTF8String], &_database, flags, NULL);
-	if (err != SQLITE_OK)
+	ASSERT(error != NULL);
+	
+	self = [super init];
+	if (self)
 	{
-		NSString* mesg = [[NSString alloc] initWithFormat:@"Failed to open '%@' (%d).", path, err];
-		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
-		*error = [NSError errorWithDomain:@"mimsy" code:4 userInfo:dict];
+		int flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FULLMUTEX;
+		int err = sqlite3_open_v2([path UTF8String], &_database, flags, NULL);
+		if (err != SQLITE_OK)
+		{
+			NSString* mesg = [[NSString alloc] initWithFormat:@"Failed to open '%@' (%d).", path, err];
+			NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
+			*error = [NSError errorWithDomain:@"mimsy" code:4 userInfo:dict];
+		}
+		else if (_database == NULL)
+		{
+			NSString* mesg = [[NSString alloc] initWithFormat:@"Failed to open '%@'.", path];
+			NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
+			*error = [NSError errorWithDomain:@"mimsy" code:5 userInfo:dict];
+		}
+		else
+		{
+			(void) sqlite3_busy_timeout(_database, 5*1000);
+			*error = nil;
+		}
+			
+		self = *error == nil ? self : nil;
 	}
-	else if (_database == NULL)
-	{
-		NSString* mesg = [[NSString alloc] initWithFormat:@"Failed to open '%@'.", path];
-		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
-		*error = [NSError errorWithDomain:@"mimsy" code:5 userInfo:dict];
-	}
-	else
-	{
-		(void) sqlite3_busy_timeout(_database, 5*1000);
-		*error = nil;
-	}
-		
-	return *error == nil ? self : nil;
+	
+	return self;
 }
 
-- (void)update:(NSString*)command error:(NSError**)error
+- (bool)update:(NSString*)command error:(NSError**)error
 {
+	ASSERT(error != NULL);
+	
 	char* errMesg = NULL;
 	int err = sqlite3_exec(_database, [command UTF8String], NULL, NULL, &errMesg);
 	if (err != SQLITE_OK)
@@ -53,6 +65,7 @@
 		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
 		*error = [NSError errorWithDomain:@"mimsy" code:6 userInfo:dict];
 	}
+	return *error == NULL;
 }
 
 static int queryCallback(void* context, int numCols, char** values, char** names)
@@ -73,6 +86,8 @@ static int queryCallback(void* context, int numCols, char** values, char** names
 
 - (NSArray*)queryRows:(NSString*)command error:(NSError**)error
 {
+	ASSERT(error != NULL);
+	
 	NSMutableArray* rows = [[NSMutableArray alloc] initWithCapacity:16];
 	
 	char* errMesg = NULL;

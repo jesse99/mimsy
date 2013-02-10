@@ -11,7 +11,7 @@
 - (id)initWithPath:(NSString*)path error:(NSError**)error;
 
 // Used for SQL commands that do not return a result.
-- (void)update:(NSString*)command error:(NSError**)error;
+- (bool)update:(NSString*)command error:(NSError**)error;
 
 // Returns an array of rows where each row is an array of strings.
 // Note that this should not be used from the main thread if there

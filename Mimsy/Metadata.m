@@ -1,5 +1,6 @@
 #import "Metadata.h"
 
+#import "Assert.h"
 #import "Logger.h"
 #import <sys/xattr.h>
 
@@ -7,6 +8,7 @@
 
 + (NSString*)criticalPath:(NSString*)path named:(NSString*)name outError:(NSError**)error
 {
+	ASSERT(error != NULL);
 	NSString* fpath = nil;
 
 	BOOL isDir;

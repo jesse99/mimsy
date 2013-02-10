@@ -12,13 +12,19 @@
 #import "TextView.h"
 #import "TranscriptController.h"
 
+#ifdef __clang_analyzer__
+	void luaL_error2(lua_State *L, const char *fmt, ...) __attribute__((__noreturn__));
+#else
+	#define luaL_error2 luaL_error
+#endif
+
 #define LUA_ASSERT(e, format, ...)						\
 	do													\
 	{													\
 		if (__builtin_expect(!(e), 0))					\
 		{												\
 			__PRAGMA_PUSH_NO_EXTRA_ARG_WARNINGS			\
-			luaL_error(state, format, ##__VA_ARGS__);	\
+			luaL_error2(state, format, ##__VA_ARGS__);	\
 			__PRAGMA_POP_NO_EXTRA_ARG_WARNINGS			\
 		}												\
 	} while(0)

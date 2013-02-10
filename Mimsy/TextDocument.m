@@ -395,6 +395,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
 {
 	ASSERT(self.text == nil);
+	ASSERT(outError != NULL);
 	
 	_encoding = 0;
 	_binary = false;
@@ -414,8 +415,10 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	return *outError == nil;
 }
 
-- (void)confirmOpen:(NSData *)data error:(NSError **)outError
+- (bool)confirmOpen:(NSData *)data error:(NSError **)outError
 {
+	ASSERT(outError != NULL);
+	
 	NSString* name = [[self fileURL] lastPathComponent];
 	NSString* mesg = [[NSString alloc] initWithFormat:@"This file is %@. Are you sure you want to open it?", [Utils bytesToStr:data.length]];
 	NSInteger button = NSRunAlertPanel(name, mesg, @"No", @"Yes", nil);
@@ -423,10 +426,13 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	{
 		*outError = [NSError errorWithDomain:NSCocoaErrorDomain code:NSUserCancelledError userInfo:nil];
 	}
+	return *outError == NULL;
 }
 
-- (void)doReadFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
+- (bool)doReadFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
 {
+	ASSERT(outError != NULL);
+	
 	_endian = NoEndian;
 	
 	if ([typeName isEqualToString:@"Plain Text, UTF8 Encoded"] || [typeName isEqualToString:@"HTML"])
@@ -502,6 +508,8 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		[_controller setAttributedText:self.text];
 		_text = nil;
 	}
+	
+	return *outError == NULL;
 }
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError

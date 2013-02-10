@@ -16,8 +16,8 @@
 // DEBUG_ASSERT(predicate)		assertion that is compiled out in release
 #import "Logger.h"
 
-void _assertFailed(const char* fname, const char* file, int line, const char* expr);
-void _assertMesg(const char* fname, const char* file, int line, const char* format, ...) __printflike(4, 5);
+void _assertFailed(const char* fname, const char* file, int line, const char* expr) __attribute__((__noreturn__));
+void _assertMesg(const char* fname, const char* file, int line, const char* format, ...) __printflike(4, 5) __attribute__((__noreturn__));
 
 #define	ASSERT(e) \
 	(__builtin_expect(!(e), 0) ? _assertFailed(__func__, __FILE__, __LINE__, #e) : (void) 0)
