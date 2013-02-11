@@ -14,7 +14,6 @@
 #import "StartupScripts.h"
 #import "TranscriptController.h"
 #import "Utils.h"
-#import "WindowsDatabase.h"
 
 void initLogLevels(void)
 {
@@ -67,7 +66,6 @@ void initLogLevels(void)
 	[self _installFiles];
 	[self _watchInstalledFiles];
 	[StartupScripts setup];
-	[WindowsDatabase setup];
 	[Languages setup];
 	
 	initFunctionalTests();

@@ -81,14 +81,12 @@
 			NSScrollView* sv = self.scrollView;
 			
 			struct WindowInfo info;
+			info.frame     = self.window.frame;
 			info.length    = (NSInteger) self.text.length;
-			if (sv)
-				info.origin = sv.contentView.bounds.origin;
+			info.origin    = sv ? sv.contentView.bounds.origin : NSZeroPoint;
 			info.selection = self.textView.selectedRange;
 			info.wordWrap  = self->_wordWrap;
-
-			NSRect frame = self.window.frame;
-			[WindowsDatabase saveInfo:&info frame:frame forPath:path];
+			[WindowsDatabase saveInfo:&info forPath:path];
 		}
 		
 //		if (Path.Contains("/var/") && Path.Contains("/-Tmp-/"))		// TODO: seems kind of fragile
@@ -342,9 +340,9 @@
 	NSString* path = [self path];
 	if (path)
 	{
-		NSRect frame = [WindowsDatabase getFrame:path];
-		if (NSWidth(frame) >= 40)
-			[self.window setFrame:frame display:YES];	// note that Cocoa will ensure that windows with title bars are not moved off screen
+		struct WindowInfo info;
+		if ([WindowsDatabase getInfo:&info forPath:path])
+			[self.window setFrame:info.frame display:YES];	// note that Cocoa will ensure that windows with title bars are not moved off screen
 		
 		NSString* name = [path lastPathComponent];
 		self.Language = [Languages findWithFileName:name contents:self.text];
