@@ -52,11 +52,14 @@ static NSArray* _valid;
 {
 	if (![_valid containsObject:hname])
 	{
-		// TODO: This happens very early in startup which is why we don't use the transcript
-		// window. But it probably would be OK to use the transcript (and we can land here
-		// after startup if a script is changed while we're running).
-		LOG_ERROR("Mimsy", "Invalid hook name");
-		LOG_ERROR("Mimsy", "Valid names are: %s", STR([_valid componentsJoinedByString:@", "]));
+		if (!([hname hasPrefix:@"override"] && [hname hasSuffix:@"style"]))
+		{
+			// TODO: This happens very early in startup which is why we don't use the transcript
+			// window. But it probably would be OK to use the transcript (and we can land here
+			// after startup if a script is changed while we're running).
+			LOG_ERROR("Mimsy", "Invalid hook name: %s", STR(hname));
+			LOG_ERROR("Mimsy", "Valid names are: %s", STR([_valid componentsJoinedByString:@", "]));
+		}
 	}
 	
 	NSMutableArray* names = _hooks[hname];
