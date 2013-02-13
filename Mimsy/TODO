@@ -48,6 +48,7 @@
 	- need to hook into build error infrastructure
 	- possibly also syntax check command
 * May want a script/context menu to open github page associated with current file.
+* Once we get Windows menu working better will probably want to add a Show Transcript menu item.
 * Add support for snippets:
 	- probably a directory with them
 	- maybe sub-directories with each directory a language name

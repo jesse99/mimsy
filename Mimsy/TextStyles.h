@@ -1,6 +1,8 @@
 #import <Foundation/Foundation.h>
 
-// Contains all the attributes which are applied to text views.
+// This is used with Mimsy settings files formatted as rtf documents.
+// In addition to providing the values for keys it provides the text
+// attributes used with the key.
 @interface TextStyles : NSObject
 
 // Path should be a full path to a styles rtf file.
@@ -18,6 +20,9 @@
 - (NSDictionary*)attributesForOnlyElement:(NSString*)name;
 
 - (NSColor*)backColor;
+
+// Returns nil if the key isn't present.
+- (NSString*)valueForKey:(NSString*)key;
 
 @property (readonly) NSString* path;
 

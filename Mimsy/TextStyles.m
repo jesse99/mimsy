@@ -14,6 +14,7 @@ static NSDictionary* _baseAttrs;
 	NSString* _path;					// path to the styles file
 	NSMutableDictionary* _attrMap;		// element name => attributes
 	NSColor* _backColor;
+	NSDictionary* _values;
 }
 
 - (id)initWithPath:(NSString*)path
@@ -40,7 +41,7 @@ static NSDictionary* _baseAttrs;
 	
 	NSMutableDictionary* map = [NSMutableDictionary new];
 	NSAttributedString* text = [self _loadStyles];
-	if (!text || ![self _parseStyles:text attrMap:map])
+	if (!text || ![self _parseStyles:text attrMap:map path:path])
 		map[@"normal"] = _baseAttrs;
 	_attrMap = map;
 	
@@ -91,6 +92,11 @@ static NSDictionary* _baseAttrs;
 	return _backColor;
 }
 
+- (NSString*)valueForKey:(NSString*)key
+{
+	return _values[key];
+}
+
 - (NSAttributedString*)_loadStyles
 {
 	NSURL* url = [NSURL fileURLWithPath:_path];
@@ -111,7 +117,7 @@ static NSDictionary* _baseAttrs;
 	}
 }
 
-- (bool)_parseStyles:(NSAttributedString*)text attrMap:(NSMutableDictionary*)map
+- (bool)_parseStyles:(NSAttributedString*)text attrMap:(NSMutableDictionary*)map path:(NSString*)path
 {
 	ASSERT(map.count == 0);		// can't modify attributes once they have been applied
 	
@@ -124,6 +130,7 @@ static NSDictionary* _baseAttrs;
 		return false;
 	}
 	
+	NSMutableDictionary* values = [NSMutableDictionary new];
 	[parser enumerate:
 		^(ConfigParserEntry *entry)
 		{
@@ -134,10 +141,13 @@ static NSDictionary* _baseAttrs;
 			[attrs addEntriesFromDictionary:[text fontAttributesInRange:NSMakeRange(entry.offset, 1)]];
 			attrs[@"element name"] = name;	// handy to be able to tell whats a string, a comment, etc
 			[self _setStyleName:name attrMap:map attrs:attrs];
+			
+			values[entry.key] = entry.value;
 		}
 	];
+	_values = values;
 	
-	if (!map[@"normal"])
+	if (!map[@"normal"] && [path rangeOfString:@"/styles/"].location != NSNotFound)
 	{
 		NSString* mesg = [[NSString alloc] initWithFormat:@"Styles file at '%@' is missing a Normal style.", _path];
 		[TranscriptController writeError:mesg];
