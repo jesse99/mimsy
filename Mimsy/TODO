@@ -16,6 +16,8 @@
 	- probably should have a way to have fallback element name aliases
 	- would be nice if there was a way to show which elements text ranges belong to
 		could do this by adding a "style name" attribute
+* Get find working
+* Get find in files working
 * Context menu should maybe use a hueristic to add open (local) files based on selection name:
 	- maybe also scripts to update context menu using function and type info from styling or parsing
 * Open selection should be able to open directories.
