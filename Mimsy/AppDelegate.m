@@ -149,6 +149,14 @@ void initLogLevels(void)
 	}
 }
 
+- (void)openInstalled:(id)sender
+{
+	(void) sender;
+	
+	NSString* path = [Paths installedDir:nil];
+	[[NSWorkspace sharedWorkspace] openFile:path];
+}
+
 - (IBAction)setStyle:(id)sender
 {
 	(void) sender;

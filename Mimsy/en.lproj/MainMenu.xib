@@ -74,7 +74,7 @@
 								</object>
 								<object class="NSMenuItem" id="609285721">
 									<reference key="NSMenu" ref="110575045"/>
-									<string key="NSTitle">Preferences…</string>
+									<string key="NSTitle">Open Installed</string>
 									<string key="NSKeyEquiv">,</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -1034,7 +1034,7 @@
 							</array>
 						</object>
 					</object>
-					<object class="NSMenuItem" id="611998826">
+					<object class="NSMenuItem" id="1063622603">
 						<reference key="NSMenu" ref="649796088"/>
 						<string key="NSTitle">Build</string>
 						<string key="NSKeyEquiv"/>
@@ -1042,11 +1042,11 @@
 						<reference key="NSOnImage" ref="1033313550"/>
 						<reference key="NSMixedImage" ref="310636482"/>
 						<string key="NSAction">submenuAction:</string>
-						<object class="NSMenu" key="NSSubmenu" id="529595783">
+						<object class="NSMenu" key="NSSubmenu" id="606295188">
 							<string key="NSTitle">Build</string>
 							<array class="NSMutableArray" key="NSMenuItems">
-								<object class="NSMenuItem" id="755484649">
-									<reference key="NSMenu" ref="529595783"/>
+								<object class="NSMenuItem" id="162218144">
+									<reference key="NSMenu" ref="606295188"/>
 									<string key="NSTitle">Clear Transcript</string>
 									<string key="NSKeyEquiv">k</string>
 									<int key="NSKeyEquivModMask">1048576</int>
@@ -1703,9 +1703,17 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">clear:</string>
 						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="755484649"/>
+						<reference key="destination" ref="162218144"/>
 					</object>
 					<int key="connectionID">619</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">openInstalled:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="609285721"/>
+					</object>
+					<int key="connectionID">620</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -1792,7 +1800,7 @@
 							<reference ref="379814623"/>
 							<reference ref="470804886"/>
 							<reference ref="1050483726"/>
-							<reference ref="611998826"/>
+							<reference ref="1063622603"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -2602,24 +2610,24 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">616</int>
-						<reference key="object" ref="611998826"/>
+						<reference key="object" ref="1063622603"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="529595783"/>
+							<reference ref="606295188"/>
 						</array>
 						<reference key="parent" ref="649796088"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">617</int>
-						<reference key="object" ref="529595783"/>
+						<reference key="object" ref="606295188"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="755484649"/>
+							<reference ref="162218144"/>
 						</array>
-						<reference key="parent" ref="611998826"/>
+						<reference key="parent" ref="1063622603"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">618</int>
-						<reference key="object" ref="755484649"/>
-						<reference key="parent" ref="529595783"/>
+						<reference key="object" ref="162218144"/>
+						<reference key="parent" ref="606295188"/>
 					</object>
 				</array>
 			</object>
@@ -2761,7 +2769,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">619</int>
+			<int key="maxID">620</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2773,6 +2781,7 @@
 						<string key="clear:">id</string>
 						<string key="duplicateDocument:">id</string>
 						<string key="getInfo:">id</string>
+						<string key="openInstalled:">id</string>
 						<string key="removeStyle:">id</string>
 						<string key="setStyle:">id</string>
 					</dictionary>
@@ -2795,6 +2804,10 @@
 						</object>
 						<object class="IBActionInfo" key="getInfo:">
 							<string key="name">getInfo:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="openInstalled:">
+							<string key="name">openInstalled:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="removeStyle:">
