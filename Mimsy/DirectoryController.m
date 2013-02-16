@@ -16,7 +16,6 @@ static NSMutableArray* _windows;
 			_windows = [NSMutableArray new];
 		[_windows addObject:self.window];		// need to keep a reference to the window around
 		
-		[self.window setFrameAutosaveName:<#(NSString *)#>]
 		[self.window setTitle:[path lastPathComponent]];
 		[self.window makeKeyAndOrderFront:self];
 	}
