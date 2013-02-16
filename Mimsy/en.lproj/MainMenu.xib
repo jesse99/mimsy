@@ -207,6 +207,15 @@
 									<reference key="NSOnImage" ref="1033313550"/>
 									<reference key="NSMixedImage" ref="310636482"/>
 								</object>
+								<object class="NSMenuItem" id="313853805">
+									<reference key="NSMenu" ref="720053764"/>
+									<string key="NSTitle">Open Directory…</string>
+									<string key="NSKeyEquiv">o</string>
+									<int key="NSKeyEquivModMask">1572864</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
 								<object class="NSMenuItem" id="1022743461">
 									<reference key="NSMenu" ref="720053764"/>
 									<string key="NSTitle">Open As Binary…</string>
@@ -1717,6 +1726,14 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
+						<string key="label">openDirectory:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="313853805"/>
+					</object>
+					<int key="connectionID">623</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
 						<string key="label">addFontTrait:</string>
 						<reference key="source" ref="739804602"/>
 						<reference key="destination" ref="994630407"/>
@@ -1854,6 +1871,7 @@
 							<reference ref="234550214"/>
 							<reference ref="185818193"/>
 							<reference ref="548747831"/>
+							<reference ref="313853805"/>
 						</array>
 						<reference key="parent" ref="379814623"/>
 					</object>
@@ -2629,6 +2647,11 @@
 						<reference key="object" ref="162218144"/>
 						<reference key="parent" ref="606295188"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">621</int>
+						<reference key="object" ref="313853805"/>
+						<reference key="parent" ref="720053764"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -2753,6 +2776,7 @@
 				<string key="616.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="617.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="618.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="621.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="72.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="73.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="74.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2769,7 +2793,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">620</int>
+			<int key="maxID">623</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2781,6 +2805,7 @@
 						<string key="clear:">id</string>
 						<string key="duplicateDocument:">id</string>
 						<string key="getInfo:">id</string>
+						<string key="openDirectory:">id</string>
 						<string key="openInstalled:">id</string>
 						<string key="removeStyle:">id</string>
 						<string key="setStyle:">id</string>
@@ -2804,6 +2829,10 @@
 						</object>
 						<object class="IBActionInfo" key="getInfo:">
 							<string key="name">getInfo:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="openDirectory:">
+							<string key="name">openDirectory:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="openInstalled:">

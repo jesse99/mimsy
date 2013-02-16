@@ -36,6 +36,8 @@
 		376407EB16BB60D4000B7AE3 /* DirectoryWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 376407EA16BB60D4000B7AE3 /* DirectoryWatcher.m */; };
 		376407EE16BEB856000B7AE3 /* ColorCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 376407ED16BEB856000B7AE3 /* ColorCategory.m */; };
 		376407F116BECC7E000B7AE3 /* ColorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 376407F016BECC7E000B7AE3 /* ColorTests.m */; };
+		3768CCC816CDDAB100D5CB57 /* DirectoryWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3768CCC716CDDAB100D5CB57 /* DirectoryWindow.xib */; };
+		3768CCCC16CDDCB000D5CB57 /* DirectoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3768CCCA16CDDCB000D5CB57 /* DirectoryController.m */; };
 		377BDE6316C005C8008DADA5 /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = 377BDE6216C005C8008DADA5 /* scripts */; };
 		377BDE6616C006BD008DADA5 /* StartupScripts.m in Sources */ = {isa = PBXBuildFile; fileRef = 377BDE6516C006BD008DADA5 /* StartupScripts.m */; };
 		377BDE6916CDA8F3008DADA5 /* Database.m in Sources */ = {isa = PBXBuildFile; fileRef = 377BDE6816CDA8F2008DADA5 /* Database.m */; };
@@ -141,6 +143,9 @@
 		376407ED16BEB856000B7AE3 /* ColorCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorCategory.m; sourceTree = "<group>"; };
 		376407EF16BECC7E000B7AE3 /* ColorTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorTests.h; sourceTree = "<group>"; };
 		376407F016BECC7E000B7AE3 /* ColorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorTests.m; sourceTree = "<group>"; };
+		3768CCC416CDDA0700D5CB57 /* DirectoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryController.h; sourceTree = "<group>"; };
+		3768CCC716CDDAB100D5CB57 /* DirectoryWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DirectoryWindow.xib; sourceTree = "<group>"; };
+		3768CCCA16CDDCB000D5CB57 /* DirectoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryController.m; sourceTree = "<group>"; };
 		377BDE6216C005C8008DADA5 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = "<group>"; };
 		377BDE6416C006BD008DADA5 /* StartupScripts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartupScripts.h; sourceTree = "<group>"; };
 		377BDE6516C006BD008DADA5 /* StartupScripts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartupScripts.m; sourceTree = "<group>"; };
@@ -342,6 +347,16 @@
 			name = "Text Editor";
 			sourceTree = "<group>";
 		};
+		3768CCC316CDD9DF00D5CB57 /* Directory Editor */ = {
+			isa = PBXGroup;
+			children = (
+				3768CCC416CDDA0700D5CB57 /* DirectoryController.h */,
+				3768CCCA16CDDCB000D5CB57 /* DirectoryController.m */,
+				3768CCC716CDDAB100D5CB57 /* DirectoryWindow.xib */,
+			);
+			name = "Directory Editor";
+			sourceTree = "<group>";
+		};
 		37979FEB16AAEE94009D9944 /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -408,6 +423,7 @@
 				37A8C6CD167590E700D4DB13 /* TODO */,
 				370040351676C89C0009907A /* README.md */,
 				37979FEB16AAEE94009D9944 /* App */,
+				3768CCC316CDD9DF00D5CB57 /* Directory Editor */,
 				3751410A168CE11100C329AF /* Scripts */,
 				375140F3168BD64500C329AF /* Styler */,
 				3759B65D1678338600D3F3B8 /* Text Editor */,
@@ -559,6 +575,7 @@
 				37EECF4D16A64A9E00BEB493 /* help in Resources */,
 				376407E816B8CB05000B7AE3 /* tophat.icns in Resources */,
 				377BDE6316C005C8008DADA5 /* scripts in Resources */,
+				3768CCC816CDDAB100D5CB57 /* DirectoryWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -630,6 +647,7 @@
 				376407EE16BEB856000B7AE3 /* ColorCategory.m in Sources */,
 				377BDE6616C006BD008DADA5 /* StartupScripts.m in Sources */,
 				377BDE6916CDA8F3008DADA5 /* Database.m in Sources */,
+				3768CCCC16CDDCB000D5CB57 /* DirectoryController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

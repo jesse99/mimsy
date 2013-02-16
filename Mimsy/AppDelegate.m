@@ -2,6 +2,7 @@
 
 #import "Assert.h"
 #import "ConfigParser.h"
+#import "DirectoryController.h"
 #import "DirectoryWatcher.h"
 #import "FunctionalTest.h"
 #import "Glob.h"
@@ -163,6 +164,27 @@ void initLogLevels(void)
 {
 	(void) sender;
 	[SelectStyleController open];
+}
+
+- (void)openDirectory:(id)sender
+{
+	(void) sender;
+	
+	NSOpenPanel* panel = [NSOpenPanel new];
+	[panel setTitle:@"Open Directory"];
+	[panel setCanChooseDirectories:YES];
+	[panel setCanChooseFiles:NO];
+	[panel setCanCreateDirectories:YES];
+	[panel setAllowsMultipleSelection:YES];
+	
+	NSInteger button = [panel runModal];
+	if (button == NSOKButton)
+	{
+		for (NSURL* url in panel.URLs)
+		{
+			(void) [[DirectoryController alloc] initWithDir:[url path]];
+		}
+	}	
 }
 
 - (IBAction)openAsBinary:(id)sender
