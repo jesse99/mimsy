@@ -38,6 +38,9 @@
 		376407F116BECC7E000B7AE3 /* ColorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 376407F016BECC7E000B7AE3 /* ColorTests.m */; };
 		3768CCC816CDDAB100D5CB57 /* DirectoryWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3768CCC716CDDAB100D5CB57 /* DirectoryWindow.xib */; };
 		3768CCCC16CDDCB000D5CB57 /* DirectoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3768CCCA16CDDCB000D5CB57 /* DirectoryController.m */; };
+		3768CCD116CFFFEE00D5CB57 /* FileSystemItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3768CCCF16CFFFEE00D5CB57 /* FileSystemItem.m */; };
+		3768CCD516D052D400D5CB57 /* FileItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3768CCD416D052D400D5CB57 /* FileItem.m */; };
+		3768CCD816D0547A00D5CB57 /* FolderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3768CCD716D0547A00D5CB57 /* FolderItem.m */; };
 		377BDE6316C005C8008DADA5 /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = 377BDE6216C005C8008DADA5 /* scripts */; };
 		377BDE6616C006BD008DADA5 /* StartupScripts.m in Sources */ = {isa = PBXBuildFile; fileRef = 377BDE6516C006BD008DADA5 /* StartupScripts.m */; };
 		377BDE6916CDA8F3008DADA5 /* Database.m in Sources */ = {isa = PBXBuildFile; fileRef = 377BDE6816CDA8F2008DADA5 /* Database.m */; };
@@ -146,6 +149,12 @@
 		3768CCC416CDDA0700D5CB57 /* DirectoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryController.h; sourceTree = "<group>"; };
 		3768CCC716CDDAB100D5CB57 /* DirectoryWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DirectoryWindow.xib; sourceTree = "<group>"; };
 		3768CCCA16CDDCB000D5CB57 /* DirectoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryController.m; sourceTree = "<group>"; };
+		3768CCCE16CFFFEE00D5CB57 /* FileSystemItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSystemItem.h; sourceTree = "<group>"; };
+		3768CCCF16CFFFEE00D5CB57 /* FileSystemItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileSystemItem.m; sourceTree = "<group>"; };
+		3768CCD316D052D400D5CB57 /* FileItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileItem.h; sourceTree = "<group>"; };
+		3768CCD416D052D400D5CB57 /* FileItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileItem.m; sourceTree = "<group>"; };
+		3768CCD616D0547A00D5CB57 /* FolderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FolderItem.h; sourceTree = "<group>"; };
+		3768CCD716D0547A00D5CB57 /* FolderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FolderItem.m; sourceTree = "<group>"; };
 		377BDE6216C005C8008DADA5 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = "<group>"; };
 		377BDE6416C006BD008DADA5 /* StartupScripts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartupScripts.h; sourceTree = "<group>"; };
 		377BDE6516C006BD008DADA5 /* StartupScripts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartupScripts.m; sourceTree = "<group>"; };
@@ -353,6 +362,12 @@
 				3768CCC416CDDA0700D5CB57 /* DirectoryController.h */,
 				3768CCCA16CDDCB000D5CB57 /* DirectoryController.m */,
 				3768CCC716CDDAB100D5CB57 /* DirectoryWindow.xib */,
+				3768CCCE16CFFFEE00D5CB57 /* FileSystemItem.h */,
+				3768CCCF16CFFFEE00D5CB57 /* FileSystemItem.m */,
+				3768CCD316D052D400D5CB57 /* FileItem.h */,
+				3768CCD416D052D400D5CB57 /* FileItem.m */,
+				3768CCD616D0547A00D5CB57 /* FolderItem.h */,
+				3768CCD716D0547A00D5CB57 /* FolderItem.m */,
 			);
 			name = "Directory Editor";
 			sourceTree = "<group>";
@@ -648,6 +663,9 @@
 				377BDE6616C006BD008DADA5 /* StartupScripts.m in Sources */,
 				377BDE6916CDA8F3008DADA5 /* Database.m in Sources */,
 				3768CCCC16CDDCB000D5CB57 /* DirectoryController.m in Sources */,
+				3768CCD116CFFFEE00D5CB57 /* FileSystemItem.m in Sources */,
+				3768CCD516D052D400D5CB57 /* FileItem.m in Sources */,
+				3768CCD816D0547A00D5CB57 /* FolderItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
