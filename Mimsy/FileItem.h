@@ -6,5 +6,6 @@
 // Overrides
 - (id)initWithPath:(NSString*)path;
 - (NSString*)bytes;
+- (bool)reload:(NSMutableArray*)added;
 
 @end

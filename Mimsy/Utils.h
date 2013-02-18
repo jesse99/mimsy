@@ -7,7 +7,8 @@ extern const NSRange NSZeroRange;
 // Misc utility functions.
 @interface Utils : NSObject
 
-// Converts bytes to a string like "10 KiB" or "1.2 MiB".
+// Converts bytes to a string like "10K" or "1.2M". Note that these are the base 10
+// units which are the correct units for files but not for memory.
 + (NSString*)bytesToStr:(NSUInteger)bytes;
 
 // Returns a `hexdump -C` sort of string except that unicode symbols are

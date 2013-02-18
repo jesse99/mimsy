@@ -20,17 +20,17 @@ static NSString* Replacement = @"\uFFFD";
 
 + (NSString*)bytesToStr:(NSUInteger)bytes
 {
-	if (bytes > 1024*1024*1024)
-		return [[NSString alloc] initWithFormat:@"%.2f GiB", bytes/(1024*1024*1024.0)];
+	if (bytes > 1000*1000*1000)
+		return [[NSString alloc] initWithFormat:@"%.2fG", bytes/(1000*1000*1000.0)];
 	
-	else if (bytes > 1024*1024)
-		return [[NSString alloc] initWithFormat:@"%.1f MiB", bytes/(1024*1024.0)];
+	else if (bytes > 1000*1000)
+		return [[NSString alloc] initWithFormat:@"%.1fM", bytes/(1000*1000.0)];
 	
-	else if (bytes > 10*1024)
-		return [[NSString alloc] initWithFormat:@"%.0f KiB", bytes/1024.0];
+	else if (bytes > 1000)
+		return [[NSString alloc] initWithFormat:@"%.1fK", bytes/1000.0];
 	
 	else
-		return [[NSString alloc] initWithFormat:@"%lu bytes", bytes];
+		return [[NSString alloc] initWithFormat:@"%luB", bytes];
 }
 
 + (NSString*)bufferToStr:(const void*)buffer length:(NSUInteger)length
