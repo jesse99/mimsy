@@ -53,6 +53,11 @@
 	return false;
 }
 
+- (FileSystemItem*)find:(NSString*)path
+{
+	return [_standardPath isEqualToString:[path stringByStandardizingPath]] ? self : nil;
+}
+
 - (BOOL)isEqual:(id)rhs
 {
 	if (rhs && [rhs isKindOfClass:[FileSystemItem class]])

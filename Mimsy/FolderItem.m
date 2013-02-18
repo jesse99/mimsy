@@ -44,6 +44,21 @@
 	return _children[index];
 }
 
+- (FileSystemItem*)find:(NSString*)path
+{
+	FileSystemItem* result = [super find:path];
+	
+	if (_children)
+	{
+		for (NSUInteger i = 0; i < _children.count && result == nil; ++i)
+		{
+			result = [_children[i] find:path];
+		}
+	}
+	
+	return result;
+}
+
 - (bool)reload:(NSMutableArray*)added
 {
 	bool changed = false;

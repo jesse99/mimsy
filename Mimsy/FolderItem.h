@@ -8,6 +8,7 @@
 - (bool)isExpandable;
 - (NSUInteger)count;
 - (FileSystemItem*)objectAtIndexedSubscript:(NSUInteger)index;
+- (FileSystemItem*)find:(NSString*)path;
 - (bool)reload:(NSMutableArray*)added;
 
 @end

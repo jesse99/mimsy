@@ -23,6 +23,10 @@
 // directory beneath the root item. Returns true if the item changed.
 - (bool)reload:(NSMutableArray*)added;
 
+// Returns the (opened) item which matches the specified path or nil
+// if no item was found.
+- (FileSystemItem*)find:(NSString*)path;
+
 - (BOOL)isEqual:(id)rhs;
 - (NSUInteger)hash;
 
