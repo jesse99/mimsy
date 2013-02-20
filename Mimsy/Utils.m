@@ -30,7 +30,7 @@ static NSString* Replacement = @"\uFFFD";
 		return [[NSString alloc] initWithFormat:@"%.1fK", bytes/1000.0];
 	
 	else
-		return [[NSString alloc] initWithFormat:@"%luB", bytes];
+		return [[NSString alloc] initWithFormat:@"%lu", bytes];
 }
 
 + (NSString*)bufferToStr:(const void*)buffer length:(NSUInteger)length
