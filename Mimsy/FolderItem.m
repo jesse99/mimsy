@@ -1,17 +1,21 @@
 #import "FolderItem.h"
 
+#import "DirectoryController.h"
 #import "FileItem.h"
+#import "Glob.h"
 #import "Logger.h"
 #import "Utils.h"
 
 @implementation FolderItem
 {
 	NSMutableArray* _children;
+	__weak DirectoryController* _controller;
 }
 
-- (id)initWithPath:(NSString*)path
+- (id)initWithPath:(NSString*)path controller:(DirectoryController*)controller
 {
 	self = [super initWithPath:path];
+	_controller = controller;
 	return self;
 }
 
@@ -109,7 +113,7 @@
 				if (!isDir || [[NSWorkspace sharedWorkspace] isFilePackageAtPath:path])
 					item = [[FileItem alloc] initWithPath:path];
 				else
-					item = [[FolderItem alloc] initWithPath:path];
+					item = [[FolderItem alloc] initWithPath:path controller:_controller];
 				
 				[_children addObject:item];
 				if (added)
@@ -143,12 +147,14 @@
 {
 	__block NSMutableArray* paths = [NSMutableArray new];
 	
+	DirectoryController* controller = _controller;
+	
 	NSError* error = nil;
 	bool ok = [Utils enumerateDir:self.path glob:nil error:&error block:
 		^(NSString* item)
 		{
-			// TODO: Need to filter out items users don't want to see
-			[paths addObject:item];
+			if (!controller || ![controller.ignores matchName:[item lastPathComponent]])
+				[paths addObject:item];
 		}
 	];
 	if (!ok)

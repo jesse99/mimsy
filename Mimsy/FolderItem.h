@@ -1,10 +1,12 @@
 #import "FileSystemItem.h"
 
+@class DirectoryController;
+
 // Class for sub-directories appearing in the directory window outline view.
 @interface FolderItem : FileSystemItem
 
 // Overrides
-- (id)initWithPath:(NSString*)path;
+- (id)initWithPath:(NSString*)path controller:(DirectoryController*)controller;
 - (bool)isExpandable;
 - (NSUInteger)count;
 - (FileSystemItem*)objectAtIndexedSubscript:(NSUInteger)index;
