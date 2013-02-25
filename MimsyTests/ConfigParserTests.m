@@ -47,11 +47,6 @@
 	[self checkBad:@"alpha: one\n beta: two\nalpha: three\n" errorContains:@"Expected EOL" line:2 func:__func__];
 }
 
-- (void)testWeirdLine
-{
-	[self checkBad:@"alpha: one\n9beta: two\nalpha: three\n" errorContains:@"start with a letter, a #, or be blank" line:2 func:__func__];
-}
-
 - (void)testWindowsLines
 {
 	[self checkBad:@"alpha: one\r\nbeta: two\r\nalpha three\r\n" errorContains:@"Expected a colon" line:3 func:__func__];
