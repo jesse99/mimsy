@@ -227,6 +227,7 @@ static NSMutableArray* _windows;
 		if (item == _root)
 			[self _loadPrefs];
 		
+		NSOutlineView* table = self.table;
 		if (item)
 		{
 			// Continuum used the argument to reload to manually preserve the selection.
@@ -234,11 +235,15 @@ static NSMutableArray* _windows;
 			// the selection.
 			if ([item reload:nil])
 			{
-				NSOutlineView* table = self.table;
-				if (table)
+				if (table && item != _root)
 					[table reloadItem:item == _root ? nil : item reloadChildren:true];
 			}
 		}
+
+		// If root changes we need to force a full reload (mainly because the prefs file
+		// may have changed and we need to let Cocoa know if any row heights have changed).
+		if (table && item == _root)
+			[table reloadData];
 	}
 }
 
