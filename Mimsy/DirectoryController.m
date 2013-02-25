@@ -15,6 +15,9 @@ static NSMutableArray* _windows;
 	NSString* _path;
 	FolderItem* _root;
 	DirectoryWatcher* _watcher;
+	NSDictionary* _dirAttrs;
+	NSDictionary* _fileAttrs;
+	NSDictionary* _sizeAttrs;
 }
 
 - (id)initWithDir:(NSString*)path
@@ -80,9 +83,31 @@ static NSMutableArray* _windows;
 	(void) table;
 	
 	if ([column.identifier isEqualToString:@"1"])
-		return item == nil ? _root.name : [item name];
+	{
+		NSDictionary* attrs = [item isKindOfClass:[FolderItem class]] ? _dirAttrs : _fileAttrs;
+		NSString* text = item == nil ? _root.name : [item name];
+		return [[NSAttributedString alloc] initWithString:text attributes:attrs];
+	}
 	else
-		return item == nil ? _root.bytes : [item bytes];
+	{
+		NSString* text = item == nil ? _root.bytes : [item bytes];
+		return [[NSAttributedString alloc] initWithString:text attributes:_sizeAttrs];
+	}
+}
+
+- (CGFloat)outlineView:(NSOutlineView*)table heightOfRowByItem:(id)item
+{
+	NSTableColumn* col1 = [[NSTableColumn alloc] initWithIdentifier:@"1"];
+	NSTableColumn* col2 = [[NSTableColumn alloc] initWithIdentifier:@"2"];
+	CGFloat height = MAX([self _getItemHeight:table col:col1 item:item], [self _getItemHeight:table col:col2 item:item]);
+	return height;
+}
+
+- (CGFloat)_getItemHeight:(NSOutlineView*)table col:(NSTableColumn*)column item:(id)item
+{
+	NSAttributedString* str = [self outlineView:table objectValueForTableColumn:column byItem:item];
+	NSSize size = str.size;
+	return size.height;
 }
 
 - (void)_loadPrefs
@@ -93,6 +118,10 @@ static NSMutableArray* _windows;
 	NSFileManager* fm = [NSFileManager defaultManager];
 	if (![fm fileExistsAtPath:path])
 		path = [self _installPrefFile:path];
+	
+	NSMutableDictionary* dirAttrs = [NSMutableDictionary new];
+	NSMutableDictionary* fileAttrs = [NSMutableDictionary new];
+	NSMutableDictionary* sizeAttrs = [NSMutableDictionary new];
 	
 	NSAttributedString* text = [self _loadPrefFile:path];
 	if (text)
@@ -114,6 +143,28 @@ static NSMutableArray* _windows;
 				 {
 					 [ignores addObject:entry.value];
 				 }
+				 else if ([entry.key isEqualToString:@"Directory"])
+				 {
+					 NSDictionary* attrs = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
+					 [dirAttrs addEntriesFromDictionary:attrs];
+				 }
+				 else if ([entry.key isEqualToString:@"File"])
+				 {
+					 NSDictionary* attrs = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
+					 [fileAttrs addEntriesFromDictionary:attrs];
+				 }
+				 else if ([entry.key isEqualToString:@"Size"])
+				 {
+					 NSDictionary* a = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
+					 NSMutableDictionary* attrs = [NSMutableDictionary dictionaryWithDictionary:a];
+
+					 NSMutableParagraphStyle* p = [NSMutableParagraphStyle new];
+					 [p setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
+					 [p setAlignment:NSRightTextAlignment];
+					 attrs[NSParagraphStyleAttributeName] = p;
+					 
+					 [sizeAttrs addEntriesFromDictionary:attrs];
+				 }
 				 else
 				 {
 					 NSString* mesg = [NSString stringWithFormat:@"Ignoring %s from %s", STR(entry.key), STR(path)];
@@ -124,6 +175,10 @@ static NSMutableArray* _windows;
 		
 		_ignores = [[ConditionalGlob alloc] initWithGlobs:ignores];
 	}
+	
+	_dirAttrs = dirAttrs;
+	_fileAttrs = fileAttrs;
+	_sizeAttrs = sizeAttrs;
 }
 
 - (NSAttributedString*)_loadPrefFile:(NSString*)path
