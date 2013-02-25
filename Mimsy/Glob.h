@@ -5,6 +5,8 @@
 //    ? matches a single character
 //    [x] matches the characters in the bracket
 //    everything else matches itself
+//
+// Also see ConditionalGlob.
 @interface Glob : NSObject
 
 - (id)initWithGlob:(NSString*)glob;
