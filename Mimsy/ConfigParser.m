@@ -64,7 +64,15 @@
 	ASSERT(error != NULL);
 	
 	unichar ch = [contents characterAtIndex:_index];
-	if ([_letters characterIsMember:ch])
+	if (ch == '#')
+	{
+		[self parseCommentLine:contents error:error];
+	}
+	else if ([_whitespace characterIsMember:ch])
+	{
+		[self parseBlankLine:contents error:error];
+	}
+	else if (ch != ':')
 	{
 		ConfigParserEntry* entry = [ConfigParserEntry new];
 		entry.offset = _index;
@@ -78,17 +86,9 @@
 			[_entries addObject:entry];
 		}
 	}
-	else if (ch == '#')
-	{
-		[self parseCommentLine:contents error:error];
-	}
-	else if ([_whitespace characterIsMember:ch])
-	{
-		[self parseBlankLine:contents error:error];
-	}
 	else
 	{
-		NSString* mesg = [[NSString alloc] initWithFormat:@"Expected line %lu to start with a letter, a #, or be blank.", _line];
+		NSString* mesg = [[NSString alloc] initWithFormat:@"Expected line %lu to start with a non-colon, a #, or be blank.", _line];
 		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
 		*error = [NSError errorWithDomain:@"mimsy" code:2 userInfo:dict];
 	}
