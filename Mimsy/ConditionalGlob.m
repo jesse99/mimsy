@@ -54,4 +54,24 @@
 	return 0;
 }
 
+- (id)copyWithZone:(NSZone*)zone
+{
+	return [[ConditionalGlob allocWithZone:zone] initWithGlobs:self.globs regexen:_regexen conditionals:_conditionals];
+}
+
+- (NSUInteger)hash
+{
+	return [self.globs hash] + [_regexen hash] + [_conditionals hash];
+}
+
+- (BOOL)isEqual:(id)rhs
+{
+	if (rhs && [rhs isMemberOfClass:[ConditionalGlob class]])
+	{
+		ConditionalGlob* g = (ConditionalGlob*) rhs;
+		return [self.globs isEqual:g.globs] && [_regexen isEqual:g->_regexen] && [_conditionals isEqual:g->_conditionals];
+	}
+	return FALSE;
+}
+
 @end

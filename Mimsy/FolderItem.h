@@ -9,6 +9,8 @@
 - (id)initWithPath:(NSString*)path controller:(DirectoryController*)controller;
 - (bool)isExpandable;
 - (NSUInteger)count;
+- (NSAttributedString*) name;
+- (NSAttributedString*)bytes;
 - (FileSystemItem*)objectAtIndexedSubscript:(NSUInteger)index;
 - (FileSystemItem*)find:(NSString*)path;
 - (bool)reload:(NSMutableArray*)added;

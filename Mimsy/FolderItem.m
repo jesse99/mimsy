@@ -8,14 +8,22 @@
 
 @implementation FolderItem
 {
+	NSAttributedString* _name;
+	NSAttributedString* _bytes;
 	NSMutableArray* _children;
-	__weak DirectoryController* _controller;
 }
 
 - (id)initWithPath:(NSString*)path controller:(DirectoryController*)controller
 {
-	self = [super initWithPath:path];
-	_controller = controller;
+	self = [super initWithPath:path controller:controller];
+	if (self)
+	{
+		NSString* name = [path lastPathComponent];
+		NSDictionary* attrs = [controller getDirAttrs:name];
+		_name = [[NSAttributedString alloc] initWithString:name attributes:attrs];
+		_bytes = [[NSAttributedString alloc] initWithString:@"" attributes:attrs];
+	}
+	
 	return self;
 }
 
@@ -35,6 +43,16 @@
 	}
 
 	return _children.count;
+}
+
+- (NSAttributedString*)name
+{
+	return _name;
+}
+
+- (NSAttributedString*)bytes
+{
+	return _bytes;
 }
 
 - (FileSystemItem*)objectAtIndexedSubscript:(NSUInteger)index
@@ -66,6 +84,15 @@
 - (bool)reload:(NSMutableArray*)added
 {
 	bool changed = false;
+	
+	DirectoryController* controller = self.controller;
+	if (controller)
+	{
+		NSString* name = [self.path lastPathComponent];
+		NSDictionary* attrs = [controller getDirAttrs:name];
+		_name = [[NSAttributedString alloc] initWithString:name attributes:attrs];
+		_bytes = [[NSAttributedString alloc] initWithString:@"" attributes:attrs];
+	}
 	
 	if (_children)
 		changed = [self _reload:added];
@@ -111,9 +138,9 @@
 			{
 				FileSystemItem* item;
 				if (!isDir || [[NSWorkspace sharedWorkspace] isFilePackageAtPath:path])
-					item = [[FileItem alloc] initWithPath:path];
+					item = [[FileItem alloc] initWithPath:path controller:self.controller];
 				else
-					item = [[FolderItem alloc] initWithPath:path controller:_controller];
+					item = [[FolderItem alloc] initWithPath:path controller:self.controller];
 				
 				[_children addObject:item];
 				if (added)
@@ -147,7 +174,7 @@
 {
 	__block NSMutableArray* paths = [NSMutableArray new];
 	
-	DirectoryController* controller = _controller;
+	DirectoryController* controller = self.controller;
 	
 	NSError* error = nil;
 	bool ok = [Utils enumerateDir:self.path glob:nil error:&error block:

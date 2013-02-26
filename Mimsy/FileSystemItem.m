@@ -7,14 +7,14 @@
 	NSString* _standardPath;
 }
 
-- (id)initWithPath:(NSString*)path
+- (id)initWithPath:(NSString*)path controller:(DirectoryController*)controller
 {
     self = [super init];
     if (self)
 	{
-		_name = [path lastPathComponent];
 		_path = path;
 		_standardPath = [path stringByStandardizingPath];
+		_controller = controller;
     }
     return self;
 }
@@ -37,9 +37,16 @@
 	return nil;
 }
 
-- (NSString*)bytes
+- (NSAttributedString*) name
 {
-	return @"";
+	ASSERT(false);
+	return nil;
+}
+
+- (NSAttributedString*)bytes
+{
+	ASSERT(false);
+	return nil;
 }
 
 - (NSString*)description

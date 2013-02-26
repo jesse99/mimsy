@@ -8,6 +8,10 @@
 
 - (id)initWithDir:(NSString*)path;
 
+- (NSDictionary*)getDirAttrs:(NSString*)path;
+- (NSDictionary*)getFileAttrs:(NSString*)path;
+- (NSDictionary*)getSizeAttrs;
+
 @property Glob* ignores;
 @property (weak) IBOutlet NSOutlineView* table;
 

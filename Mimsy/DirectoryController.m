@@ -18,6 +18,7 @@ static NSMutableArray* _windows;
 	NSDictionary* _dirAttrs;
 	NSDictionary* _fileAttrs;
 	NSDictionary* _sizeAttrs;
+	NSDictionary* _globs;		// Glob => NSDictionary
 }
 
 - (id)initWithDir:(NSString*)path
@@ -57,6 +58,39 @@ static NSMutableArray* _windows;
 	[_windows removeObject:self];
 }
 
+- (NSDictionary*)getDirAttrs:(NSString*)path
+{
+	NSString* name = [path lastPathComponent];
+	for (Glob* glob in _globs)
+	{
+		if ([glob matchName:name])
+		{
+			return _globs[glob];
+		}
+	}
+	
+	return _dirAttrs;
+}
+
+- (NSDictionary*)getFileAttrs:(NSString*)path
+{
+	NSString* name = [path lastPathComponent];
+	for (Glob* glob in _globs)
+	{
+		if ([glob matchName:name])
+		{
+			return _globs[glob];
+		}
+	}
+	
+	return _fileAttrs;
+}
+
+- (NSDictionary*)getSizeAttrs
+{
+	return _sizeAttrs;
+}
+
 - (NSInteger)outlineView:(NSOutlineView*)table numberOfChildrenOfItem:(FileSystemItem*)item
 {
 	(void) table;
@@ -84,14 +118,11 @@ static NSMutableArray* _windows;
 	
 	if ([column.identifier isEqualToString:@"1"])
 	{
-		NSDictionary* attrs = [item isKindOfClass:[FolderItem class]] ? _dirAttrs : _fileAttrs;
-		NSString* text = item == nil ? _root.name : [item name];
-		return [[NSAttributedString alloc] initWithString:text attributes:attrs];
+		return item == nil ? _root.name : item.name;
 	}
 	else
 	{
-		NSString* text = item == nil ? _root.bytes : [item bytes];
-		return [[NSAttributedString alloc] initWithString:text attributes:_sizeAttrs];
+		return item == nil ? _root.bytes : [item bytes];
 	}
 }
 
@@ -122,6 +153,7 @@ static NSMutableArray* _windows;
 	NSMutableDictionary* dirAttrs = [NSMutableDictionary new];
 	NSMutableDictionary* fileAttrs = [NSMutableDictionary new];
 	NSMutableDictionary* sizeAttrs = [NSMutableDictionary new];
+	NSMutableDictionary* globs = [NSMutableDictionary new];
 	
 	NSAttributedString* text = [self _loadPrefFile:path];
 	if (text)
@@ -167,8 +199,9 @@ static NSMutableArray* _windows;
 				 }
 				 else
 				 {
-					 NSString* mesg = [NSString stringWithFormat:@"Ignoring %s from %s", STR(entry.key), STR(path)];
-					 [TranscriptController writeError:mesg];
+					 NSDictionary* attrs = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
+					 Glob* g = [[Glob alloc] initWithGlob:entry.key];
+					 globs[g] = attrs;
 				 }
 			 }
 		 ];
@@ -179,6 +212,7 @@ static NSMutableArray* _windows;
 	_dirAttrs = dirAttrs;
 	_fileAttrs = fileAttrs;
 	_sizeAttrs = sizeAttrs;
+	_globs = globs;
 }
 
 - (NSAttributedString*)_loadPrefFile:(NSString*)path

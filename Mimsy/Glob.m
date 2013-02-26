@@ -2,9 +2,6 @@
 #import <fnmatch.h>
 
 @implementation Glob
-{
-	NSArray* _globs;
-}
 
 - (id)initWithGlob:(NSString*)glob
 {
@@ -26,6 +23,26 @@
 			return 1;
 	}
 	return 0;
+}
+
+- (id)copyWithZone:(NSZone*)zone
+{
+	return [[Glob allocWithZone:zone] initWithGlobs:_globs];
+}
+
+- (NSUInteger)hash
+{
+	return [_globs hash];
+}
+
+- (BOOL)isEqual:(id)rhs
+{
+	if (rhs && [rhs isMemberOfClass:[Glob class]])
+	{
+		Glob* g = (Glob*) rhs;
+		return [_globs isEqual:g.globs];
+	}
+	return FALSE;
 }
 
 @end

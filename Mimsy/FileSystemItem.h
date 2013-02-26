@@ -1,9 +1,11 @@
 #import <Cocoa/Cocoa.h>
 
+@class DirectoryController;
+
 // Base class for the items which appear in the directory window outline view.
 @interface FileSystemItem : NSObject
 
-- (id)initWithPath:(NSString*)path;
+- (id)initWithPath:(NSString*)path controller:(DirectoryController*)controller;
 
 // Note that this should be used instead of Count because it will not force
 // all children to be loaded. Defaults to false.
@@ -12,8 +14,10 @@
 // Defaults to zero.
 - (NSUInteger)count;
 
+- (NSAttributedString*) name;
+
 // Returns "" if the item has no size (mostly directories but possibly for files too).
-- (NSString*)bytes;
+- (NSAttributedString*)bytes;
 
 - (FileSystemItem*)objectAtIndexedSubscript:(NSUInteger)index;
 
@@ -30,7 +34,7 @@
 - (BOOL)isEqual:(id)rhs;
 - (NSUInteger)hash;
 
-@property (readonly) NSString* name;
+@property (readonly, weak) DirectoryController* controller;
 @property (readonly) NSString* path;
 
 @end

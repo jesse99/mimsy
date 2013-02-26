@@ -1,24 +1,35 @@
 #import "FileItem.h"
 
+#import "DirectoryController.h"
 #import "Logger.h"
 #import "Utils.h"
 
 @implementation FileItem
 {
-	NSString* _bytes;
+	NSAttributedString* _name;
+	NSAttributedString* _bytes;
 }
 
-- (id)initWithPath:(NSString*)path
+- (id)initWithPath:(NSString*)path controller:(DirectoryController*)controller
 {
-	self = [super initWithPath:path];
+	self = [super initWithPath:path controller:controller];
 	if (self)
 	{
+		NSString* name = [path lastPathComponent];
+		NSDictionary* attrs = [controller getFileAttrs:name];
+		_name = [[NSAttributedString alloc] initWithString:name attributes:attrs];
+		
 		[self reload:nil];
 	}
 	return self;
 }
 
-- (NSString*)bytes
+- (NSAttributedString*) name
+{
+	return _name;
+}
+
+- (NSAttributedString*)bytes
 {
 	return _bytes;
 }
@@ -27,9 +38,18 @@
 {
 	(void) added;
 	
+	DirectoryController* controller = self.controller;
+	if (controller)
+	{
+		NSString* name = [self.path lastPathComponent];
+		NSDictionary* attrs = [controller getFileAttrs:name];
+		_name = [[NSAttributedString alloc] initWithString:name attributes:attrs];
+	}
+	
 	NSUInteger bytes = [self _getBytes:self.path];
-	NSString* newBytes = [Utils bytesToStr:bytes];
-	if (![newBytes isEqualToString:_bytes])
+	NSDictionary* attrs = [controller getSizeAttrs];
+	NSAttributedString* newBytes = [[NSAttributedString alloc] initWithString:[Utils bytesToStr:bytes] attributes:attrs];
+	if (![newBytes isEqual:_bytes])
 	{
 		_bytes = newBytes;
 		return true;
