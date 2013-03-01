@@ -1,5 +1,6 @@
 #import "DirectoryController.h"
 
+#import "AppDelegate.h"
 #import "ConditionalGlob.h"
 #import "ConfigParser.h"
 #import "DirectoryWatcher.h"
@@ -26,29 +27,37 @@ static NSMutableArray* _windows;
 	self = [super initWithWindowNibName:@"DirectoryWindow"];
 	if (self)
 	{
-		_path = path;
+		self.window.restorationClass = [AppDelegate class];
+		self.window.identifier = @"DirectoryWindow3";
 		
 		if (!_windows)
 			_windows = [NSMutableArray new];
 		[_windows addObject:self];				// need to keep a reference to the controller around (using the window won't retain the controller)
 		
-		[self _loadPrefs];
-		
 //		m_table.setDoubleAction("doubleClicked:");
 //		m_table.setTarget(this);
 		
-		_root = [[FolderItem alloc] initWithPath:path controller:self];
-		NSOutlineView* table = self.table;
-		if (table)
-			[table reloadData];
-		
-		_watcher = [[DirectoryWatcher alloc] initWithPath:path latency:1.0 block:
-			^(NSArray* paths) {[self _dirChanged:paths];}];
-
-		[self.window setTitle:[path lastPathComponent]];
-		[self.window makeKeyAndOrderFront:self];
+		if (![path isEqualToString:@":restoring:"])
+			[self _loadPath:path];
 	}
 	return self;
+}
+
+- (void)_loadPath:(NSString*)path
+{
+	_path = path;
+	[self _loadPrefs];
+	
+	_root = [[FolderItem alloc] initWithPath:path controller:self];
+	NSOutlineView* table = self.table;
+	if (table)
+		[table reloadData];
+	
+	_watcher = [[DirectoryWatcher alloc] initWithPath:path latency:1.0 block:
+				^(NSArray* paths) {[self _dirChanged:paths];}];
+	
+	[self.window setTitle:[path lastPathComponent]];
+	[self.window makeKeyAndOrderFront:self];	
 }
 
 - (void)windowWillClose:(NSNotification*)notification
@@ -56,6 +65,21 @@ static NSMutableArray* _windows;
 	(void) notification;
 	
 	[_windows removeObject:self];
+}
+
+- (void)window:(NSWindow*)window willEncodeRestorableState:(NSCoder*)state
+{
+	(void) window;
+	
+	[state encodeObject:_path];
+}
+
+- (void)window:(NSWindow*)window didDecodeRestorableState:(NSCoder*)state
+{
+	(void) window;
+	
+	NSString* path = (NSString*) [state decodeObject];
+	[self _loadPath:path];
 }
 
 - (NSDictionary*)getDirAttrs:(NSString*)path
@@ -171,7 +195,7 @@ static NSMutableArray* _windows;
 		[parser enumerate:
 			 ^(ConfigParserEntry* entry)
 			 {
-				 if ([entry.key isEqualToString:@"Ignore"])
+				 if ([entry.key isEqualToString:@"Ignore"]) 
 				 {
 					 [ignores addObject:entry.value];
 				 }
@@ -201,7 +225,10 @@ static NSMutableArray* _windows;
 				 {
 					 NSDictionary* attrs = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
 					 Glob* g = [[Glob alloc] initWithGlob:entry.key];
-					 globs[g] = attrs;
+					 if (![globs objectForKey:g])
+						 globs[g] = attrs;
+					 else
+						[TranscriptController writeError:[NSString stringWithFormat:@"%@ appears twice in %@", entry.key, path]];
 				 }
 			 }
 		 ];

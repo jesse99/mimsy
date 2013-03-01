@@ -2,9 +2,10 @@
 
 void initLogLevels(void);
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate>
+@interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate, NSWindowRestoration>
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
++ (void)restoreWindowWithIdentifier:(NSString*)identifier state:(NSCoder*)state completionHandler:(void (^)(NSWindow*, NSError*))handler;
 
 - (IBAction)openAsBinary:(id)sender;
 

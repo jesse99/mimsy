@@ -88,6 +88,24 @@ void initLogLevels(void)
 	return NO;
 }
 
++ (void)restoreWindowWithIdentifier:(NSString*)identifier state:(NSCoder*)state completionHandler:(void (^)(NSWindow*, NSError*))handler
+{
+	(void) state;
+	
+	if ([identifier isEqualToString:@"DirectoryWindow3"])
+	{
+		NSWindowController* controller = [[DirectoryController alloc] initWithDir:@":restoring:"];
+		handler(controller.window, NULL);
+	}
+	else
+	{
+		NSString* mesg = [NSString stringWithFormat:@"Don't know how to restore a %@ window", identifier];
+		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
+		NSError* err = [NSError errorWithDomain:@"mimsy" code:4 userInfo:dict];
+		handler(nil, err);
+	}
+}
+
 - (void)reloadIfChanged
 {
 	for (id doc in [[NSDocumentController sharedDocumentController] documents])
