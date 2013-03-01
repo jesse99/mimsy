@@ -5,14 +5,16 @@
 // Contoller used to mediate between text documents and the NSTextView in the associated window.
 @interface TextController : NSWindowController
 
++ (TextController*)frontmost;
++ (void)enumerate:(void (^)(TextController* controller))block;
+
 - (void)open;
 - (void)onPathChanged;
 - (void)toggleWordWrap;
 - (void)resetAttributes;
 - (void)changeStyle:(NSString*)path;
 - (void)resetStyles;
-+ (TextController*)frontmost;
-+ (void)enumerate:(void (^)(TextController* controller))block;
+- (void)showLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width;
 
 @property IBOutlet TextView* textView;
 @property IBOutlet __weak NSScrollView* scrollView;

@@ -367,6 +367,15 @@
 	}
 }
 
+- (void)showLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width
+{
+	(void) line;
+	(void) col;
+	(void) width;
+	
+	// TODO: this is Editor.ShowLine which calls TextController.ShowLine
+}
+
 - (void)toggleWordWrap
 {
 	_wordWrap = !_wordWrap;

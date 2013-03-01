@@ -6,6 +6,7 @@
 #import "DirectoryWatcher.h"
 #import "FolderItem.h"
 #import "Logger.h"
+#import "OpenFile.h"
 #import "Paths.h"
 #import "TranscriptController.h"
 
@@ -34,8 +35,12 @@ static NSMutableArray* _windows;
 			_windows = [NSMutableArray new];
 		[_windows addObject:self];				// need to keep a reference to the controller around (using the window won't retain the controller)
 		
-//		m_table.setDoubleAction("doubleClicked:");
-//		m_table.setTarget(this);
+		NSOutlineView* table = self.table;
+		if (table)
+		{
+			[table setDoubleAction:@selector(doubleClicked:)];
+			[table setTarget:self];
+		}
 		
 		if (![path isEqualToString:@":restoring:"])
 			[self _loadPath:path];
@@ -80,6 +85,64 @@ static NSMutableArray* _windows;
 	
 	NSString* path = (NSString*) [state decodeObject];
 	[self _loadPath:path];
+}
+
+- (void)doubleClicked:(id)sender
+{
+	(void) sender;
+	
+	NSOutlineView* table = _table;
+	if (_table)
+	{
+		NSArray* selectedItems = [self _getSelectedItems];
+		if (selectedItems.count == 1 && [selectedItems[0] isExpandable])
+		{
+			FileSystemItem* item = selectedItems[0];
+			if ([table isItemExpanded:item])
+				[table collapseItem:item];
+			else
+				[table expandItem:item];
+		}
+		else
+		{
+			[self _openSelection];
+		}
+	}
+}
+
+- (NSArray*)_getSelectedItems
+{
+	__block NSMutableArray* result = [NSMutableArray new];
+	
+	NSOutlineView* table = self.table;
+	if (table)
+	{
+		NSIndexSet* indexes = [table selectedRowIndexes];
+		[indexes enumerateIndexesUsingBlock:
+			^(NSUInteger index, BOOL* stop)
+			{
+				(void) stop;
+				[result addObject:[table itemAtRow:(NSInteger)index]];
+			}
+		];
+	}
+	
+	return result;
+}
+
+- (void)_openSelection
+{
+	NSArray* selectedItems = [self _getSelectedItems];
+	if ([OpenFile shouldOpenFiles:selectedItems.count])
+	{
+		for (FileSystemItem* item  in selectedItems)
+		{
+			if ([item.path rangeOfString:@"(Autosaved)"].location == NSNotFound)
+				[OpenFile openPath:item.path atLine:-1 atCol:-1 withTabWidth:1];
+			else
+				NSBeep();
+		}
+	}
 }
 
 - (NSDictionary*)getDirAttrs:(NSString*)path
