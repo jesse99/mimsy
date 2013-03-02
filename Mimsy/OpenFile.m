@@ -1,6 +1,7 @@
 #import "OpenFile.h"
 
 #import "Assert.h"
+#import "DirectoryController.h"
 #import "Languages.h"
 #import "TextController.h"
 #import "TranscriptController.h"
@@ -64,15 +65,13 @@
 
 + (bool)_mimsyCanOpen:(NSString*)path
 {
-	// See if the extension is one we want to handle.
-	// TODO: might want a rich-text language so users can have more
-	// control over this (or a pref).
-	NSString* ext = [path pathExtension];
-	if ([ext isEqualToString:@"rtf"])
+	// If the file is part of an open directory then check the directory prefs.
+	DirectoryController* controller = [DirectoryController getController:path];
+	if (controller && [controller shouldOpen:path])
 		return true;
 
 	// See if the extension matches one of our languages. Unfortunately
-	// some languages require oeeking at the file contents in order to
+	// some languages require peeking at the file contents in order to
 	// know if it's really one of their files so we have to read the file.
 	NSString* name = [path lastPathComponent];
 	NSString* contents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];

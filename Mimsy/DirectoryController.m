@@ -10,7 +10,7 @@
 #import "Paths.h"
 #import "TranscriptController.h"
 
-static NSMutableArray* _windows;
+static NSMutableArray* _controllers;
 
 @implementation DirectoryController
 {
@@ -21,6 +21,20 @@ static NSMutableArray* _windows;
 	NSDictionary* _fileAttrs;
 	NSDictionary* _sizeAttrs;
 	NSDictionary* _globs;		// Glob => NSDictionary
+	NSArray* _openWithMimsy;	// [Glob]
+}
+
++ (DirectoryController*)getController:(NSString*)path
+{
+	path = [path stringByStandardizingPath];
+	for (DirectoryController* controller in _controllers)
+	{
+		NSString* candidate = [controller->_path stringByStandardizingPath];
+		if ([path rangeOfString:candidate].location == 0)
+			return controller;
+	}
+	
+	return nil;
 }
 
 - (id)initWithDir:(NSString*)path
@@ -31,9 +45,9 @@ static NSMutableArray* _windows;
 		self.window.restorationClass = [AppDelegate class];
 		self.window.identifier = @"DirectoryWindow3";
 		
-		if (!_windows)
-			_windows = [NSMutableArray new];
-		[_windows addObject:self];				// need to keep a reference to the controller around (using the window won't retain the controller)
+		if (!_controllers)
+			_controllers = [NSMutableArray new];
+		[_controllers addObject:self];				// need to keep a reference to the controller around (using the window won't retain the controller)
 		
 		NSOutlineView* table = self.table;
 		if (table)
@@ -69,7 +83,7 @@ static NSMutableArray* _windows;
 {
 	(void) notification;
 	
-	[_windows removeObject:self];
+	[_controllers removeObject:self];
 }
 
 - (void)window:(NSWindow*)window willEncodeRestorableState:(NSCoder*)state
@@ -85,6 +99,21 @@ static NSMutableArray* _windows;
 	
 	NSString* path = (NSString*) [state decodeObject];
 	[self _loadPath:path];
+}
+
+// This only checks whether the path should be opened with mimsy using info
+// from the directory. Callers will typically also check to see if the file
+// can be opened with a language.
+- (bool)shouldOpen:(NSString*)path
+{
+	NSString* name = [path lastPathComponent];
+	for (Glob* glob in _openWithMimsy)
+	{
+		if ([glob matchName:name])
+			return true;
+	}
+	
+	return false;
 }
 
 - (void)doubleClicked:(id)sender
@@ -241,6 +270,7 @@ static NSMutableArray* _windows;
 	NSMutableDictionary* fileAttrs = [NSMutableDictionary new];
 	NSMutableDictionary* sizeAttrs = [NSMutableDictionary new];
 	NSMutableDictionary* globs = [NSMutableDictionary new];
+	NSMutableArray* openWithMimsy = [NSMutableArray new];
 	
 	NSAttributedString* text = [self _loadPrefFile:path];
 	if (text)
@@ -258,7 +288,7 @@ static NSMutableArray* _windows;
 		[parser enumerate:
 			 ^(ConfigParserEntry* entry)
 			 {
-				 if ([entry.key isEqualToString:@"Ignore"]) 
+				 if ([entry.key isEqualToString:@"Ignore"])
 				 {
 					 [ignores addObject:entry.value];
 				 }
@@ -276,13 +306,18 @@ static NSMutableArray* _windows;
 				 {
 					 NSDictionary* a = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
 					 NSMutableDictionary* attrs = [NSMutableDictionary dictionaryWithDictionary:a];
-
+					 
 					 NSMutableParagraphStyle* p = [NSMutableParagraphStyle new];
 					 [p setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
 					 [p setAlignment:NSRightTextAlignment];
 					 attrs[NSParagraphStyleAttributeName] = p;
 					 
 					 [sizeAttrs addEntriesFromDictionary:attrs];
+				 }
+				 else if ([entry.key isEqualToString:@"OpenWithMimsy"])
+				 {
+					 Glob* g = [[Glob alloc] initWithGlob:entry.value];
+					 [openWithMimsy addObject:g];
 				 }
 				 else
 				 {
@@ -303,6 +338,7 @@ static NSMutableArray* _windows;
 	_fileAttrs = fileAttrs;
 	_sizeAttrs = sizeAttrs;
 	_globs = globs;
+	_openWithMimsy = openWithMimsy;
 }
 
 - (NSAttributedString*)_loadPrefFile:(NSString*)path

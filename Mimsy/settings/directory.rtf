@@ -1,5 +1,5 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Verdana;\f1\froman\fcharset0 Times-Roman;\f2\fswiss\fcharset0 Helvetica;
+\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Verdana;\f1\fswiss\fcharset0 Helvetica;\f2\froman\fcharset0 Times-Roman;
 }
 {\colortbl;\red255\green255\blue255;\red240\green0\blue31;\red32\green78\blue51;\red106\green11\blue19;
 \red65\green51\blue255;\red22\green118\blue20;\red46\green58\blue181;}
@@ -41,12 +41,33 @@
 \b0 \cf0  waf\
 \
 
-\i \cf2 # The entries below are used to style items in directory windows. Directory and File\
+\i \cf2 # These are globs for files which may not have a language associated with them, but\
+# we still want to open with Mimsy (if they don't have a language they'll be opened\
+# as plain text).
+\i0 \cf0 \
+
+\b \cf3 OpenWithMimsy:
+\b0 \cf0  *.conf\
+
+\b \cf3 OpenWithMimsy:
+\b0 \cf0  *.rtf\
+
+\b \cf3 OpenWithMimsy:
+\b0 \cf0  *.log\
+
+\b \cf3 OpenWithMimsy:
+\b0 \cf0  *.txt\
+\pard\pardeftab480\pardirnatural
+
+\f1\fs24 \cf0 \
+\pard\pardeftab480\pardirnatural
+
+\f0\i\fs28 \cf2 # The entries below are used to style items in directory windows. Directory and File\
 # are used when if none of the globs match.
 \i0 \cf0 \
 \pard\pardeftab480\pardirnatural
 
-\f1\b\fs36 \cf0 Directory: 
+\f2\b\fs36 \cf0 Directory: 
 \b0 \
 File: note that packages are considered to be files\
 Size: used for the second column in the view (byte size of files and packages)\
@@ -56,18 +77,18 @@ Size: used for the second column in the view (byte size of files and packages)\
 \f0\i\fs28 \cf2 # Binaries
 \i0 \cf0 \
 
-\f1\fs36 \cf2 *.dll: \
+\f2\fs36 \cf2 *.dll: \
 *.dylib: \
 *.exe: \
 \pard\pardeftab480\pardirnatural
 
-\f2\fs24 \cf0 \
+\f1\fs24 \cf0 \
 \pard\pardeftab480\pardirnatural
 
 \f0\i\fs28 \cf2 # Build files
 \i0 \cf0 \
 
-\f1\fs36 \cf4 Makefile: \
+\f2\fs36 \cf4 Makefile: \
 Make.shared: \
 SConscript: \
 SConstruct: \
@@ -84,7 +105,7 @@ wscript_build:\
 \f0\i\fs28 \cf2 # Data files
 \i0 \cf0 \
 
-\f1\fs36 \cf5 *.config: \
+\f2\fs36 \cf5 *.config: \
 *.css: \
 *.htm: \
 *.html: \
@@ -104,7 +125,7 @@ wscript_build:\
 
 \f0\i\fs28 \cf2 # Resources\
 
-\f1\i0\fs36 \cf6 favicon.ico\
+\f2\i0\fs36 \cf6 favicon.ico\
 *.icns: \
 *.gif: \
 *.jpeg: \
@@ -119,7 +140,7 @@ wscript_build:\
 \f0\i\fs28 \cf2 # Scripts
 \i0 \cf0 \
 
-\f1\fs36 \cf7 *.pl: \
+\f2\fs36 \cf7 *.pl: \
 *.py: \
 *.rb: \
 *.R: \
@@ -133,7 +154,7 @@ wscript_build:\
 \i0 \cf0 \
 \pard\pardeftab480\pardirnatural
 
-\f1\fs36 \cf0 *.c: \
+\f2\fs36 \cf0 *.c: \
 *.cpp: \
 *.cs: c#\
 *.h: \

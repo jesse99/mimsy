@@ -6,7 +6,11 @@
 // These windows work a bit like project windows in IDEs.
 @interface DirectoryController : NSWindowController
 
++ (DirectoryController*)getController:(NSString*)path;
+
 - (id)initWithDir:(NSString*)path;
+
+- (bool)shouldOpen:(NSString*)path;
 
 - (NSDictionary*)getDirAttrs:(NSString*)path;
 - (NSDictionary*)getFileAttrs:(NSString*)path;
