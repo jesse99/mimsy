@@ -242,12 +242,41 @@ static NSMutableArray* _controllers;
 	}
 }
 
+- (void)outlineView:(NSOutlineView*)table setObjectValue:(id)object forTableColumn:(NSTableColumn*)col byItem:(id)item
+{
+	(void) table;
+	(void) col;
+	
+	NSString* newName = [object description];
+	[self _rename:item as:newName];
+}
+
 - (CGFloat)outlineView:(NSOutlineView*)table heightOfRowByItem:(id)item
 {
 	NSTableColumn* col1 = [[NSTableColumn alloc] initWithIdentifier:@"1"];
 	NSTableColumn* col2 = [[NSTableColumn alloc] initWithIdentifier:@"2"];
 	CGFloat height = MAX([self _getItemHeight:table col:col1 item:item], [self _getItemHeight:table col:col2 item:item]);
 	return height;
+}
+
+- (void)_rename:(FileSystemItem*)item as:(NSString*)newName
+{
+	NSString* oldPath = item.path;
+	NSString* oldName = [oldPath lastPathComponent];
+	if (![oldName isEqualToString:newName])
+	{
+		NSString* dir = [oldPath stringByDeletingLastPathComponent];
+		NSString* newPath = [dir stringByAppendingPathComponent:newName];
+		
+		// TODO: need to use a sccs to do the rename (if one is present)
+		NSError* error = nil;
+		if (![[NSFileManager defaultManager] moveItemAtPath:oldPath toPath:newPath error:&error])
+		{
+			NSString* reason = [error localizedFailureReason];
+			NSString* mesg = [NSString stringWithFormat:@"Couldn't rename %@: %@", oldName, reason];
+			[TranscriptController writeError:mesg];
+		}
+	}
 }
 
 - (CGFloat)_getItemHeight:(NSOutlineView*)table col:(NSTableColumn*)column item:(id)item
