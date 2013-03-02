@@ -11,6 +11,7 @@
 - (id)initWithDir:(NSString*)path;
 
 - (bool)shouldOpen:(NSString*)path;
+- (void)doubleClicked:(id)sender;
 
 - (NSDictionary*)getDirAttrs:(NSString*)path;
 - (NSDictionary*)getFileAttrs:(NSString*)path;
