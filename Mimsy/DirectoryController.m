@@ -179,6 +179,11 @@ static NSMutableArray* _controllers;
 	}
 }
 
+- (NSArray*)getHelpContext
+{
+	return @[@"directory editor"];
+}
+
 - (NSDictionary*)getDirAttrs:(NSString*)path
 {
 	NSString* name = [path lastPathComponent];
