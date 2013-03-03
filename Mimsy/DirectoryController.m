@@ -356,7 +356,8 @@ static NSMutableArray* _controllers;
 	for (NSInteger i = 1; i < 100; ++i)
 	{
 		NSString* newName = [self _getDuplicateFileName:name index:i];
-		newName = [newName stringByAppendingPathExtension:ext];
+		if (ext.length > 0)
+			newName = [newName stringByAppendingPathExtension:ext];
 		
 		NSString* newPath = [dir stringByAppendingPathComponent:newName];
 		if (![[NSFileManager defaultManager] fileExistsAtPath:newPath])
