@@ -1,6 +1,7 @@
 #import "DirectoryController.h"
 
 #import "AppDelegate.h"
+#import "ArrayCategory.h"
 #import "Assert.h"
 #import "ConditionalGlob.h"
 #import "ConfigParser.h"
@@ -124,6 +125,33 @@ static NSMutableArray* _controllers;
 			[self _openSelection];
 		}
 	}
+}
+
+- (void)deleted:(id)sender
+{
+	UNUSED(sender);
+	
+	NSArray* selectedItems = [self _getSelectedItems];
+	NSArray* urls = [selectedItems map:^id(FileSystemItem* item) {return [NSURL fileURLWithPath:item.path];}];
+	[[NSWorkspace sharedWorkspace] recycleURLs:urls completionHandler:
+		^(NSDictionary* urls, NSError* error)
+		{
+			UNUSED(urls);
+			
+			if (!error)
+			{
+				NSOutlineView* table = _table;
+				if (_table)
+					[table deselectAll:self];
+			}
+			else
+			{
+				NSString* reason = [error localizedFailureReason];
+				NSString* mesg = [NSString stringWithFormat:@"Couldn't move the items to the trash: %@", reason];
+				[TranscriptController writeError:mesg];
+			}
+		}
+	];
 }
 
 - (void)duplicate:(id)sender

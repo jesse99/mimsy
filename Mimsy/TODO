@@ -75,7 +75,7 @@
 * Might want to cache styles:
 	- its fairly common to open and close large source files
 	- probably want some logging for how large the cache gets
-* Do something special with file rename when a SCCS is present.
+* Do something special with file rename when a SCCS is present. Also delete.
 * Should have a mode where tab uses tab at the start of lines, but spaces once the line starts.
 * Might also want to use that wacky VIM(?) meta-data embedded in files containing info like tab lengths
 	- or support a dot file that does the same thing
