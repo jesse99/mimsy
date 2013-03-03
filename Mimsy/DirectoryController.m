@@ -68,21 +68,21 @@ static NSMutableArray* _controllers;
 
 - (void)windowWillClose:(NSNotification*)notification
 {
-	(void) notification;
+	UNUSED(notification);
 	
 	[_controllers removeObject:self];
 }
 
 - (void)window:(NSWindow*)window willEncodeRestorableState:(NSCoder*)state
 {
-	(void) window;
+	UNUSED(window);
 	
 	[state encodeObject:_path];
 }
 
 - (void)window:(NSWindow*)window didDecodeRestorableState:(NSCoder*)state
 {
-	(void) window;
+	UNUSED(window);
 	
 	NSString* path = (NSString*) [state decodeObject];
 	[self _loadPath:path];
@@ -105,7 +105,7 @@ static NSMutableArray* _controllers;
 
 - (void)doubleClicked:(id)sender
 {
-	(void) sender;
+	UNUSED(sender);
 	
 	NSOutlineView* table = _table;
 	if (_table)
@@ -128,7 +128,7 @@ static NSMutableArray* _controllers;
 
 - (void)duplicate:(id)sender
 {
-	(void) sender;
+	UNUSED(sender);
 	
 	bool copied = false;
 	NSOutlineView* table = _table;
@@ -186,28 +186,28 @@ static NSMutableArray* _controllers;
 
 - (NSInteger)outlineView:(NSOutlineView*)table numberOfChildrenOfItem:(FileSystemItem*)item
 {
-	(void) table;
+	UNUSED(table);
 	
 	return (NSInteger) (item == nil ? _root.count : [item count]);
 }
 
 - (BOOL)outlineView:(NSOutlineView*)table isItemExpandable:(FileSystemItem*)item
 {
-	(void) table;
+	UNUSED(table);
 	
 	return item == nil ? YES : [item isExpandable];
 }
 
 - (id)outlineView:(NSOutlineView*)table child:(NSInteger)index ofItem:(FileSystemItem*)item
 {
-	(void) table;
+	UNUSED(table);
 	
 	return item == nil ? _root[(NSUInteger) index] : item[(NSUInteger) index];
 }
 
 - (id)outlineView:(NSOutlineView*)table objectValueForTableColumn:(NSTableColumn*)column byItem:(FileSystemItem*)item
 {
-	(void) table;
+	UNUSED(table);
 	
 	if ([column.identifier isEqualToString:@"1"])
 	{
@@ -221,8 +221,7 @@ static NSMutableArray* _controllers;
 
 - (void)outlineView:(NSOutlineView*)table setObjectValue:(id)object forTableColumn:(NSTableColumn*)col byItem:(id)item
 {
-	(void) table;
-	(void) col;
+	UNUSED(table, col);
 	
 	NSString* newName = [object description];
 	[self _rename:item as:newName];
@@ -345,7 +344,7 @@ static NSMutableArray* _controllers;
 		[indexes enumerateIndexesUsingBlock:
 		 ^(NSUInteger index, BOOL* stop)
 		 {
-			 (void) stop;
+			 UNUSED(stop);
 			 [result addObject:[table itemAtRow:(NSInteger)index]];
 		 }
 		 ];

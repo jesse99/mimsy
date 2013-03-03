@@ -1,6 +1,7 @@
 #import "TextController.h"
 
 #import "ApplyStyles.h"
+#import "Assert.h"
 #import "ConfigParser.h"
 #import "FunctionalTest.h"
 #import "Language.h"
@@ -66,7 +67,7 @@
 
 - (void)windowWillClose:(NSNotification*)notification
 {
-	(void) notification;
+	UNUSED(notification);
 	
 	_closed = true;
 
@@ -137,7 +138,7 @@
 
 - (void)removeStyle:(id)sender
 {
-	(void) sender;
+	UNUSED(sender);
 	
 	NSRange range = self.textView.selectedRange;
 	if (range.length > 0)
@@ -303,7 +304,7 @@
 
 - (void)languagesChanged:(NSNotification*)notification
 {
-	(void) notification;
+	UNUSED(notification);
 	
 	if (_language)
 		[self setLanguage:[Languages findWithlangName:_language.name]];
@@ -311,7 +312,7 @@
 
 - (void)stylesChanged:(NSNotification*)notification
 {
-	(void) notification;
+	UNUSED(notification);
 	
 	if (_styles)
 	{
@@ -369,9 +370,7 @@
 
 - (void)showLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width
 {
-	(void) line;
-	(void) col;
-	(void) width;
+	UNUSED(line, col, width);
 	
 	// TODO: this is Editor.ShowLine which calls TextController.ShowLine
 }
@@ -409,7 +408,7 @@
 
 - (void)textViewDidChangeSelection:(NSNotification*)notification
 {
-	(void) notification;
+	UNUSED(notification);
 	
 	NSRange range = _textView.selectedRange;
 	[StartupScripts invokeTextSelectionChanged:self.document slocation:range.location slength:range.length];
@@ -418,7 +417,7 @@
 // Note that this is called for every key stroke.
 - (void)textStorageDidProcessEditing:(NSNotification*)notification
 {
-	(void) notification;
+	UNUSED(notification);
 	
 	NSUInteger mask = self.textView.textStorage.editedMask;
 	if ((mask & NSTextStorageEditedCharacters))
@@ -436,7 +435,7 @@
 // This is also called a lot while the user types.
 - (void)layoutManager:(NSLayoutManager*)layout didCompleteLayoutForTextContainer:(NSTextContainer*)container atEnd:(BOOL)atEnd
 {
-	(void) container;
+	UNUSED(container);
 	
 	if (!_closed)
 	{

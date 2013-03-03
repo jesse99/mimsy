@@ -51,13 +51,13 @@ void initLogLevels(void)
 // Note that windows will still be open when this is called.
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
-	(void) notification;
+	UNUSED(notification);
 	LOG_INFO("App", "Terminating");
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
-	(void) notification;
+	UNUSED(notification);
 	
 	ASSERT([NSThread isMultiThreaded]);
 	LOG_DEBUG("App", "Finished launching");
@@ -76,7 +76,7 @@ void initLogLevels(void)
 
 - (void)applicationDidBecomeActive:(NSNotification*)notification
 {
-	(void) notification;
+	UNUSED(notification);
 	
 	[self reloadIfChanged];
 }
@@ -84,13 +84,13 @@ void initLogLevels(void)
 // Don't open a new unitled window when we are activated and don't have a window open.
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication*)sender
 {
-	(void) sender;
+	UNUSED(sender);
 	return NO;
 }
 
 + (void)restoreWindowWithIdentifier:(NSString*)identifier state:(NSCoder*)state completionHandler:(void (^)(NSWindow*, NSError*))handler
 {
-	(void) state;
+	UNUSED(state);
 	
 	if ([identifier isEqualToString:@"DirectoryWindow3"])
 	{
@@ -134,7 +134,7 @@ void initLogLevels(void)
 
 - (void)runFTests:(id)sender
 {
-	(void) sender;
+	UNUSED(sender);
 	runFunctionalTests();
 }
 
@@ -152,8 +152,7 @@ void initLogLevels(void)
 		[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES completionHandler:
 			^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
 			{
-				(void) document;
-				(void) documentWasAlreadyOpen;
+				UNUSED(document, documentWasAlreadyOpen);
 				if (error)
 				{
 					NSString* reason = [error localizedFailureReason];
@@ -172,7 +171,7 @@ void initLogLevels(void)
 
 - (void)openInstalled:(id)sender
 {
-	(void) sender;
+	UNUSED(sender);
 	
 	NSString* path = [Paths installedDir:nil];
 	[[NSWorkspace sharedWorkspace] openFile:path];
@@ -180,13 +179,13 @@ void initLogLevels(void)
 
 - (IBAction)setStyle:(id)sender
 {
-	(void) sender;
+	UNUSED(sender);
 	[SelectStyleController open];
 }
 
 - (void)openDirectory:(id)sender
 {
-	(void) sender;
+	UNUSED(sender);
 	
 	NSOpenPanel* panel = [NSOpenPanel new];
 	[panel setTitle:@"Open Directory"];
@@ -207,7 +206,7 @@ void initLogLevels(void)
 
 - (IBAction)openAsBinary:(id)sender
 {
-	(void) sender;
+	UNUSED(sender);
 	
 	NSOpenPanel* panel = [NSOpenPanel new];
 	[panel setTitle:@"Open as Binary"];
@@ -442,7 +441,7 @@ void initLogLevels(void)
 	_languagesWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		^(NSArray* paths)
 		{
-			(void) paths;
+			UNUSED(paths);
 			[Languages languagesChanged];
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"LanguagesChanged" object:self];
 		}
@@ -452,7 +451,7 @@ void initLogLevels(void)
 	_scriptsStartupWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		^(NSArray* paths)
 		{
-			(void) paths;
+			UNUSED(paths);
 			[StartupScripts setup];
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"StartupScriptsChanged" object:self];
 		}
@@ -462,7 +461,7 @@ void initLogLevels(void)
 	_settingsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		^(NSArray* paths)
 		{
-			(void) paths;
+			UNUSED(paths);
 			initLogLevels();
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
 		}
@@ -472,7 +471,7 @@ void initLogLevels(void)
 	_stylesWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		^(NSArray* paths)
 		{
-			(void) paths;
+			UNUSED(paths);
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"StylesChanged" object:self];
 		}
 	];
