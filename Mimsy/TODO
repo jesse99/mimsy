@@ -18,6 +18,15 @@
 		could do this by adding a "style name" attribute
 * Get find working
 * Get find in files working
+* Work on directory window hooks:
+	- styling
+	- text annotations
+	- context menu
+	- tooltips (NSOutlineView has support for these)
+* Would be neat to have a script to highlight commonly used files:
+	- maybe add bullets to the name
+	- last N most recently used? quartiles?
+	- credit don
 * Context menu should maybe use a hueristic to add open (local) files based on selection name:
 	- maybe also scripts to update context menu using function and type info from styling or parsing
 * Open selection should be able to open directories.
@@ -41,6 +50,10 @@
 		` mapping from group number to standard categories like file, line, col
 	- language files need to include search URL
 	- would be nice to do something for SCCSs
+* Would be nice to have a script to warn when lines are over 78 chars
+	- probably disabled by default
+	- or do nothing unless a setting is set
+	- directory settings file would need entries for custom settings
 * Work on directory editor.
 * Language files should have support for a run key:
 	- value is command line used to run a single file (or *.c file for C based languages)
