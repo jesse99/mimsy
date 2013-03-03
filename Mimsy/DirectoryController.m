@@ -203,6 +203,15 @@ static NSMutableArray* _controllers;
 		[item setTitle:[NSString stringWithFormat:@"Open %@ Settings", name]];
 		enabled = YES;
 	}
+	else if (sel == @selector(duplicate:))
+	{
+		NSOutlineView* table = _table;
+		if (table)
+		{
+			NSIndexSet* selected = [table selectedRowIndexes];
+			enabled = selected.count > 0 && table.editedRow < 0;	// cocoa crashes if we do a duplicate while editing...
+		}
+	}
 	else if ([self respondsToSelector:sel])
 	{
 		enabled = YES;
