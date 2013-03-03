@@ -179,9 +179,40 @@ static NSMutableArray* _controllers;
 	}
 }
 
+- (void)openDirSettings:(id)sender
+{
+	UNUSED(sender);
+	
+	NSString* path = [_path stringByAppendingPathComponent:@".mimsy.rtf"];
+	[OpenFile openPath:path atLine:-1 atCol:-1 withTabWidth:1];
+}
+
 - (NSArray*)getHelpContext
 {
 	return @[@"directory editor"];
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem*)item
+{
+	BOOL enabled = NO;
+	
+	SEL sel = [item action];
+	if (sel == @selector(openDirSettings:))
+	{
+		NSString* name = [_path lastPathComponent];
+		[item setTitle:[NSString stringWithFormat:@"Open %@ Settings", name]];
+		enabled = YES;
+	}
+	else if ([self respondsToSelector:sel])
+	{
+		enabled = YES;
+	}
+	else if ([super respondsToSelector:@selector(validateMenuItem:)])
+	{
+		enabled = [super validateMenuItem:item];
+	}
+	
+	return enabled;
 }
 
 - (NSDictionary*)getDirAttrs:(NSString*)path

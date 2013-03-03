@@ -74,8 +74,18 @@
 								</object>
 								<object class="NSMenuItem" id="609285721">
 									<reference key="NSMenu" ref="110575045"/>
-									<string key="NSTitle">Open Installed</string>
+									<string key="NSTitle">Open Installed Files</string>
 									<string key="NSKeyEquiv">,</string>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
+								<object class="NSMenuItem" id="352084731">
+									<reference key="NSMenu" ref="110575045"/>
+									<bool key="NSIsDisabled">YES</bool>
+									<string key="NSTitle">Open Directory Settings</string>
+									<string key="NSKeyEquiv">;</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="1033313550"/>
@@ -207,7 +217,7 @@
 									<reference key="NSOnImage" ref="1033313550"/>
 									<reference key="NSMixedImage" ref="310636482"/>
 								</object>
-								<object class="NSMenuItem" id="240247204">
+								<object class="NSMenuItem" id="863971684">
 									<reference key="NSMenu" ref="720053764"/>
 									<string key="NSTitle">Open Directory…</string>
 									<string key="NSKeyEquiv">o</string>
@@ -425,7 +435,7 @@
 									<reference key="NSOnImage" ref="1033313550"/>
 									<reference key="NSMixedImage" ref="310636482"/>
 								</object>
-								<object class="NSMenuItem" id="727111004">
+								<object class="NSMenuItem" id="375233468">
 									<reference key="NSMenu" ref="789758025"/>
 									<string key="NSTitle">Duplicate</string>
 									<string key="NSKeyEquiv">D</string>
@@ -1720,7 +1730,7 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">openDirectory:</string>
 						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="240247204"/>
+						<reference key="destination" ref="863971684"/>
 					</object>
 					<int key="connectionID">623</int>
 				</object>
@@ -1728,9 +1738,17 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">duplicate:</string>
 						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="727111004"/>
+						<reference key="destination" ref="375233468"/>
 					</object>
 					<int key="connectionID">626</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">openDirSettings:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="352084731"/>
+					</object>
+					<int key="connectionID">629</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -1871,7 +1889,7 @@
 							<reference ref="234550214"/>
 							<reference ref="185818193"/>
 							<reference ref="548747831"/>
-							<reference ref="240247204"/>
+							<reference ref="863971684"/>
 						</array>
 						<reference key="parent" ref="379814623"/>
 					</object>
@@ -1959,7 +1977,7 @@
 							<reference ref="507821607"/>
 							<reference ref="981774355"/>
 							<reference ref="763435172"/>
-							<reference ref="727111004"/>
+							<reference ref="375233468"/>
 						</array>
 						<reference key="parent" ref="952259628"/>
 					</object>
@@ -2101,6 +2119,7 @@
 							<reference ref="1056857174"/>
 							<reference ref="342932134"/>
 							<reference ref="987821792"/>
+							<reference ref="352084731"/>
 						</array>
 						<reference key="parent" ref="694149608"/>
 					</object>
@@ -2644,13 +2663,18 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">621</int>
-						<reference key="object" ref="240247204"/>
+						<reference key="object" ref="863971684"/>
 						<reference key="parent" ref="720053764"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">624</int>
-						<reference key="object" ref="727111004"/>
+						<reference key="object" ref="375233468"/>
 						<reference key="parent" ref="789758025"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">627</int>
+						<reference key="object" ref="352084731"/>
+						<reference key="parent" ref="110575045"/>
 					</object>
 				</array>
 			</object>
@@ -2777,6 +2801,7 @@
 				<string key="618.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="621.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="624.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="627.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="72.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="73.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="74.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2793,7 +2818,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">626</int>
+			<int key="maxID">629</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2806,6 +2831,7 @@
 						<string key="duplicate:">id</string>
 						<string key="duplicateDocument:">id</string>
 						<string key="getInfo:">id</string>
+						<string key="openDirSettings:">id</string>
 						<string key="openDirectory:">id</string>
 						<string key="openInstalled:">id</string>
 						<string key="removeStyle:">id</string>
@@ -2834,6 +2860,10 @@
 						</object>
 						<object class="IBActionInfo" key="getInfo:">
 							<string key="name">getInfo:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="openDirSettings:">
+							<string key="name">openDirSettings:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="openDirectory:">

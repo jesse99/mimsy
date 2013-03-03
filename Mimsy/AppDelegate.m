@@ -246,6 +246,36 @@ void initLogLevels(void)
 	[doc showWindows];
 }
 
+// Seems that we need to define this to shut the compiler up (having it declared in DirectoryController
+// isn't enough).
+- (void)openDirSettings:(id)sender
+{
+	UNUSED(sender);
+	ASSERT(false);
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem*)item
+{
+	BOOL enabled = NO;
+	
+	SEL sel = [item action];
+	if (sel == @selector(openDirSettings:))
+	{
+		[item setTitle:@"Open Directory Settings"];
+		enabled = NO;
+	}
+	else if ([self respondsToSelector:sel])
+	{
+		enabled = YES;
+	}
+	else if ([super respondsToSelector:@selector(validateMenuItem:)])
+	{
+		enabled = [super validateMenuItem:item];
+	}
+	
+	return enabled;
+}
+
 // This isn't used (the app is part of the responder chain, but not the app delegate).
 // But we need a getHelpContext declaration to shut the compiler up.
 - (NSArray*)getHelpContext
