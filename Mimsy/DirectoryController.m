@@ -1,13 +1,16 @@
 #import "DirectoryController.h"
 
 #import "AppDelegate.h"
+#import "Assert.h"
 #import "ConditionalGlob.h"
 #import "ConfigParser.h"
 #import "DirectoryWatcher.h"
+#import "FileItem.h"
 #import "FolderItem.h"
 #import "Logger.h"
 #import "OpenFile.h"
 #import "Paths.h"
+#import "StringCategory.h"
 #import "TranscriptController.h"
 
 static NSMutableArray* _controllers;
@@ -22,6 +25,7 @@ static NSMutableArray* _controllers;
 	NSDictionary* _sizeAttrs;
 	NSDictionary* _globs;		// Glob => NSDictionary
 	NSArray* _openWithMimsy;	// [Glob]
+	NSRegularExpression* _copyRe;
 }
 
 + (DirectoryController*)getController:(NSString*)path
@@ -60,23 +64,6 @@ static NSMutableArray* _controllers;
 			[self _loadPath:path];
 	}
 	return self;
-}
-
-- (void)_loadPath:(NSString*)path
-{
-	_path = path;
-	[self _loadPrefs];
-	
-	_root = [[FolderItem alloc] initWithPath:path controller:self];
-	NSOutlineView* table = self.table;
-	if (table)
-		[table reloadData];
-	
-	_watcher = [[DirectoryWatcher alloc] initWithPath:path latency:1.0 block:
-				^(NSArray* paths) {[self _dirChanged:paths];}];
-	
-	[self.window setTitle:[path lastPathComponent]];
-	[self.window makeKeyAndOrderFront:self];	
 }
 
 - (void)windowWillClose:(NSNotification*)notification
@@ -139,38 +126,28 @@ static NSMutableArray* _controllers;
 	}
 }
 
-- (NSArray*)_getSelectedItems
+- (void)duplicate:(id)sender
 {
-	__block NSMutableArray* result = [NSMutableArray new];
+	(void) sender;
 	
-	NSOutlineView* table = self.table;
-	if (table)
+	bool copied = false;
+	NSOutlineView* table = _table;
+	if (_table)
 	{
-		NSIndexSet* indexes = [table selectedRowIndexes];
-		[indexes enumerateIndexesUsingBlock:
-			^(NSUInteger index, BOOL* stop)
-			{
-				(void) stop;
-				[result addObject:[table itemAtRow:(NSInteger)index]];
-			}
-		];
-	}
-	
-	return result;
-}
-
-- (void)_openSelection
-{
-	NSArray* selectedItems = [self _getSelectedItems];
-	if ([OpenFile shouldOpenFiles:selectedItems.count])
-	{
-		for (FileSystemItem* item  in selectedItems)
+		NSArray* selectedItems = [self _getSelectedItems];
+		for (FileSystemItem* item in selectedItems)
 		{
-			if ([item.path rangeOfString:@"(Autosaved)"].location == NSNotFound)
-				[OpenFile openPath:item.path atLine:-1 atCol:-1 withTabWidth:1];
-			else
-				NSBeep();
+			if ([self _duplicate:item])
+				copied = true;
 		}
+		
+		// Not sure that this is the greatest thing in the world but we'll assume
+		// that everything is OK if we were able to copy something. (Notable for
+		// now we don't support copying directories).
+		if (copied)
+			[table deselectAll:self];
+		else
+			NSBeep();
 	}
 }
 
@@ -259,6 +236,139 @@ static NSMutableArray* _controllers;
 	return height;
 }
 
+// ---- Private Methods ----------------------------------------------------------
+
+// Continuum allowed copying of directories although I don't think I ever used it.
+// If we decide to support that we'll need to set a NSFileManager delegate to allow
+// control over what gets copied and use a setting to control what should not be
+// copied (e.g. .svn and .git directories). (Continuum did most of that).
+- (bool)_duplicate:(FileSystemItem*)item
+{
+	bool copied = false;
+	
+	if ([item isKindOfClass:[FileItem class]])
+	{
+		NSString* oldPath = item.path;
+		NSString* dir = [oldPath stringByDeletingLastPathComponent];
+		NSString* newPath = [self _getDuplicatePath:dir oldName:[oldPath lastPathComponent]];
+		
+		if (newPath)
+		{
+			NSError* error = NULL;
+			if (![[NSFileManager defaultManager] copyItemAtPath:oldPath toPath:newPath error:&error])
+			{
+				NSString* reason = [error localizedFailureReason];
+				NSString* mesg = [NSString stringWithFormat:@"Failed to duplicate %@: %@", oldPath, reason];
+				[TranscriptController writeError:mesg];
+			}
+		}
+		else
+		{
+			NSString* mesg = [NSString stringWithFormat:@"Chouldn't find a name to use for %@", oldPath];
+			[TranscriptController writeError:mesg];
+		}
+		
+		// We may not have actually copied the file but we have fully handled it
+		// so we'll do a little white lie.
+		copied = true;
+	}
+	
+	return copied;
+}
+
+- (NSString*)_getDuplicatePath:(NSString*)dir oldName:(NSString*)oldName
+{
+	NSString* ext = [oldName pathExtension];
+	NSString* name = [oldName stringByDeletingPathExtension];
+	
+	for (NSInteger i = 1; i < 100; ++i)
+	{
+		NSString* newName = [self _getDuplicateFileName:name index:i];
+		newName = [newName stringByAppendingPathExtension:ext];
+		
+		NSString* newPath = [dir stringByAppendingPathComponent:newName];
+		if (![[NSFileManager defaultManager] fileExistsAtPath:newPath])
+			return newPath;
+	}
+	
+	return nil;
+}
+
+// Note that NSWorkspaceDuplicateOperation provides a simpler way to do
+// this but it doesn't work as well. For example, "foo copy 2" becomes
+// "foo copy 2 copy".
+- (NSString*)_getDuplicateFileName:(NSString*)oldName index:(NSInteger)count
+{
+	NSString* newName = oldName;
+	
+	if (count == 1)
+	{
+		if (![oldName endsWith:@" copy"] && ![oldName contains:@" copy "])
+			newName = [oldName stringByAppendingString:@" copy"];
+	}
+	else
+	{
+		if (!_copyRe)
+		{
+			NSError* error = nil;
+			_copyRe = [[NSRegularExpression alloc] initWithPattern:@" copy \\d+$" options:0 error:&error];
+			ASSERT(_copyRe);
+		}
+		
+		NSTextCheckingResult* match = [_copyRe firstMatchInString:oldName options:0 range:NSMakeRange(0, oldName.length)];
+		if (match && match.range.location != NSNotFound)
+		{
+			NSString* replacement = [NSString stringWithFormat:@" copy %ld", count];
+			newName = [oldName stringByReplacingCharactersInRange:match.range withString:replacement];
+		}
+		else if ([oldName endsWith:@" copy"])
+		{
+			newName = [oldName stringByAppendingString:[NSString stringWithFormat:@" %ld", count]];
+		}
+		else
+		{
+			newName = [oldName stringByAppendingString:[NSString stringWithFormat:@" copy %ld", count]];
+		}
+	}
+	
+	return newName;
+}
+
+- (NSArray*)_getSelectedItems
+{
+	__block NSMutableArray* result = [NSMutableArray new];
+	
+	NSOutlineView* table = self.table;
+	if (table)
+	{
+		NSIndexSet* indexes = [table selectedRowIndexes];
+		[indexes enumerateIndexesUsingBlock:
+		 ^(NSUInteger index, BOOL* stop)
+		 {
+			 (void) stop;
+			 [result addObject:[table itemAtRow:(NSInteger)index]];
+		 }
+		 ];
+	}
+	
+	return result;
+}
+
+- (void)_openSelection
+{
+	NSArray* selectedItems = [self _getSelectedItems];
+	if ([OpenFile shouldOpenFiles:selectedItems.count])
+	{
+		for (FileSystemItem* item  in selectedItems)
+		{
+			if ([item.path rangeOfString:@"(Autosaved)"].location == NSNotFound)
+				[OpenFile openPath:item.path atLine:-1 atCol:-1 withTabWidth:1];
+			else
+				NSBeep();
+		}
+	}
+}
+
 - (void)_rename:(FileSystemItem*)item as:(NSString*)newName
 {
 	NSString* oldPath = item.path;
@@ -284,6 +394,23 @@ static NSMutableArray* _controllers;
 	NSAttributedString* str = [self outlineView:table objectValueForTableColumn:column byItem:item];
 	NSSize size = str.size;
 	return size.height;
+}
+
+- (void)_loadPath:(NSString*)path
+{
+	_path = path;
+	[self _loadPrefs];
+	
+	_root = [[FolderItem alloc] initWithPath:path controller:self];
+	NSOutlineView* table = self.table;
+	if (table)
+		[table reloadData];
+	
+	_watcher = [[DirectoryWatcher alloc] initWithPath:path latency:1.0 block:
+				^(NSArray* paths) {[self _dirChanged:paths];}];
+	
+	[self.window setTitle:[path lastPathComponent]];
+	[self.window makeKeyAndOrderFront:self];
 }
 
 - (void)_loadPrefs

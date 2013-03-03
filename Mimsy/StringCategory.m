@@ -2,6 +2,24 @@
 
 @implementation NSString (StringCategory)
 
+- (bool)startsWith:(NSString*)needle
+{
+	NSRange range = [self rangeOfString:needle];
+	return range.location == 0;
+}
+
+- (bool)endsWith:(NSString*)needle
+{
+	NSRange range = [self rangeOfString:needle options:NSBackwardsSearch];
+	return range.location == self.length - needle.length;
+}
+
+- (bool)contains:(NSString*)needle
+{
+	NSRange range = [self rangeOfString:needle];
+	return range.location != NSNotFound;
+}
+
 - (NSArray*)splitByString:(NSString*)separator
 {
 	NSArray* tmp = [self componentsSeparatedByString:separator];

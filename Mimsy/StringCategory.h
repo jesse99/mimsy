@@ -2,6 +2,10 @@
 
 @interface NSString (StringCategory)
 
+- (bool)startsWith:(NSString*)needle;
+- (bool)endsWith:(NSString*)needle;
+- (bool)contains:(NSString*)needle;
+
 // Like componentsSeparatedByString: except that empty strings are not returned.
 - (NSArray*)splitByString:(NSString*)separator;
 
