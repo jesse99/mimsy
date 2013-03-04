@@ -19,6 +19,10 @@
 	#define luaL_error2 luaL_error
 #endif
 
+// This was intended to catch programmer errors made within lua scripts. But because
+// scripts may be edited while Mimsy is running the errors it acts more like runtime
+// errors than asserts (which in theory can be disabled in release with no harm).
+// TODO: may want to rename this LUA_CHECK or something.
 #define LUA_ASSERT(e, format, ...)						\
 	do													\
 	{													\
@@ -178,9 +182,14 @@ int app_opendir(struct lua_State* state)
 	LUA_ASSERT(pathArg != NULL, "path was nil");
 	NSString* path = [NSString stringWithUTF8String:pathArg];
 	
+	BOOL isDir = NO;
+	BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir];
+	LUA_ASSERT(exists, "Expected a directory but '%s' doesn't exist.", pathArg);
+	LUA_ASSERT(isDir, "Expected a directory but '%s' is a file.", pathArg);
+	
 	DirectoryController* controller = [[DirectoryController alloc] initWithDir:path];
 	pushDirWindow(state, controller.window);
-	
+
 	return 1;
 }
 
