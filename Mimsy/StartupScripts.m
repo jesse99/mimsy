@@ -29,7 +29,7 @@ static NSArray* _valid;
 	
 	_state = luaL_newstate();
 	luaL_openlibs(_state);
-	initMethods(_state);
+	initAppMethods(_state);
 	
 	NSString* dir = [Paths installedDir:@"scripts/startup"];
 	Glob* glob = [[Glob alloc] initWithGlob:@"*.lua"];

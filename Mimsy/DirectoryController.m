@@ -8,6 +8,7 @@
 #import "DirectoryWatcher.h"
 #import "FileItem.h"
 #import "FolderItem.h"
+#import "FunctionalTest.h"
 #import "Logger.h"
 #import "OpenFile.h"
 #import "Paths.h"
@@ -63,14 +64,27 @@ static NSMutableArray* _controllers;
 		
 		if (![path isEqualToString:@":restoring:"])
 			[self _loadPath:path];
+
+		updateInstanceCount(@"DirectoryController", +1);
+		updateInstanceCount(@"DirectoryWindow", +1);
 	}
 	return self;
+}
+
+- (void)dealloc
+{
+	updateInstanceCount(@"DirectoryController", -1);
 }
 
 - (void)windowWillClose:(NSNotification*)notification
 {
 	UNUSED(notification);
 	
+	// It would be better to track DirectoryView, but it deallocates at a weird
+	// time (and sleeping for long periods in the functional test doesn't suffice).
+	updateInstanceCount(@"DirectoryWindow", -1);
+
+	_watcher = nil;
 	[_controllers removeObject:self];
 }
 

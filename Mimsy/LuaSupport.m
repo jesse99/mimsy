@@ -4,6 +4,7 @@
 
 #import "Assert.h"
 #import "ColorCategory.h"
+#import "DirectoryController.h"
 #import "FunctionalTest.h"
 #import "StartupScripts.h"
 #import "TextController.h"
@@ -91,13 +92,27 @@ void pushTextDoc(struct lua_State* state, NSDocument* doc)
 	lua_setfield(state, -2, "target");
 }
 
-void initMethods(struct lua_State* state)
+void pushDirWindow(struct lua_State* state, NSWindow* window)
+{
+	luaL_Reg methods[] =
+	{
+		{"close", window_close},
+		{NULL, NULL}
+	};
+	luaL_register(state, "window", methods);
+	
+	lua_pushlightuserdata(state, (__bridge void*) window);
+	lua_setfield(state, -2, "target");
+}
+
+void initAppMethods(struct lua_State* state)
 {
 	luaL_Reg methods[] =
 	{
 		{"addhook", app_addhook},
 		{"log", app_log},
 		{"newdoc", app_newdoc},
+		{"opendir", app_opendir},
 		{"openfile", app_openfile},
 		{"schedule", app_schedule},
 		{"stderr", app_stderr},
@@ -154,6 +169,19 @@ int app_openfile(struct lua_State* state)
 	 ];
 	
 	return 0;
+}
+
+// openfile(app, path) -> dirwindow
+int app_opendir(struct lua_State* state)
+{
+	const char* pathArg = lua_tostring(state, 2);
+	LUA_ASSERT(pathArg != NULL, "path was nil");
+	NSString* path = [NSString stringWithUTF8String:pathArg];
+	
+	DirectoryController* controller = [[DirectoryController alloc] initWithDir:path];
+	pushDirWindow(state, controller.window);
+	
+	return 1;
 }
 
 // schedule(app, secs, callback)
@@ -233,13 +261,24 @@ int app_log(struct lua_State* state)
 	return 0;
 }
 
+// close(window)
+int window_close(struct lua_State* state)
+{
+	lua_getfield(state, 1, "target");
+	NSWindow* window = (__bridge NSWindow*) lua_touserdata(state, -1);
+	LUA_ASSERT(window != NULL, "doc was NULL");
+	
+	[window close];		// doesn't ask to save changes
+	return 0;
+}
+
 // close(doc)
 int doc_close(struct lua_State* state)
 {
 	lua_getfield(state, 1, "target");
 	NSDocument* doc = (__bridge NSDocument*) lua_touserdata(state, -1);
 	LUA_ASSERT(doc != NULL, "doc was NULL");
-
+	
 	[doc close];		// doesn't ask to save changes
 	return 0;
 }

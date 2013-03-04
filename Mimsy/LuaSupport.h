@@ -9,17 +9,22 @@ struct lua_State;
 //
 // See the help/lua-Lua Scripting.rtf help file for information about the methods.
 
-void initMethods(struct lua_State* state);
+void initAppMethods(struct lua_State* state);
 void pushTextDoc(struct lua_State* state, NSDocument* doc);
+void pushDirWindow(struct lua_State* state, NSWindow* window);
 
 // ---- App --------------------------------------------------------------------
 int app_addhook(struct lua_State* state);
 int app_log(struct lua_State* state);
 int app_newdoc(struct lua_State* state);
+int app_opendir(struct lua_State* state);
 int app_openfile(struct lua_State* state);
 int app_schedule(struct lua_State* state);
 int app_stderr(struct lua_State* state);
 int app_stdout(struct lua_State* state);
+
+// ---- Window -----------------------------------------------------------------
+int window_close(struct lua_State* state);
 
 // ---- Document ---------------------------------------------------------------
 int doc_close(struct lua_State* state);

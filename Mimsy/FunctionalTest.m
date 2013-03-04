@@ -221,7 +221,7 @@ static lua_State* createLua()
 {
 	lua_State* state = luaL_newstate();
 	initFTestMethods(state);
-	initMethods(state);
+	initAppMethods(state);
 	luaL_openlibs(state);
 
 	return state;
