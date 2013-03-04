@@ -187,7 +187,7 @@ int app_opendir(struct lua_State* state)
 	LUA_ASSERT(exists, "Expected a directory but '%s' doesn't exist.", pathArg);
 	LUA_ASSERT(isDir, "Expected a directory but '%s' is a file.", pathArg);
 	
-	DirectoryController* controller = [[DirectoryController alloc] initWithDir:path];
+	DirectoryController* controller = [DirectoryController open:path];
 	pushDirWindow(state, controller.window);
 
 	return 1;

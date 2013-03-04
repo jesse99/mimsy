@@ -28,6 +28,7 @@ static NSMutableArray* _controllers;
 	NSDictionary* _globs;		// Glob => NSDictionary
 	NSArray* _openWithMimsy;	// [Glob]
 	NSRegularExpression* _copyRe;
+	bool _closing;				// need this for leaks ftest
 }
 
 + (DirectoryController*)getController:(NSString*)path
@@ -35,12 +36,30 @@ static NSMutableArray* _controllers;
 	path = [path stringByStandardizingPath];
 	for (DirectoryController* controller in _controllers)
 	{
-		NSString* candidate = [controller->_path stringByStandardizingPath];
-		if ([path rangeOfString:candidate].location == 0)
-			return controller;
+		if (!controller->_closing)
+		{
+			NSString* candidate = [controller->_path stringByStandardizingPath];
+			if ([path rangeOfString:candidate].location == 0)
+				return controller;
+		}
 	}
 	
 	return nil;
+}
+
++ (DirectoryController*)open:(NSString*)path
+{
+	DirectoryController* controller = [DirectoryController getController:path];
+	if (controller && !controller->_closing)
+	{
+		[controller.window makeKeyAndOrderFront:self];
+	}
+	else
+	{
+		controller = [[DirectoryController alloc] initWithDir:path];
+	}
+	
+	return controller;
 }
 
 - (id)initWithDir:(NSString*)path
@@ -86,6 +105,7 @@ static NSMutableArray* _controllers;
 
 	_watcher = nil;
 	[_controllers removeObject:self];
+	self->_closing = true;
 }
 
 - (void)window:(NSWindow*)window willEncodeRestorableState:(NSCoder*)state

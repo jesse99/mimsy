@@ -7,8 +7,7 @@
 @interface DirectoryController : NSWindowController
 
 + (DirectoryController*)getController:(NSString*)path;
-
-- (id)initWithDir:(NSString*)path;
++ (DirectoryController*)open:(NSString*)path;
 
 - (bool)shouldOpen:(NSString*)path;
 - (void)doubleClicked:(id)sender;

@@ -94,7 +94,7 @@ void initLogLevels(void)
 	
 	if ([identifier isEqualToString:@"DirectoryWindow3"])
 	{
-		NSWindowController* controller = [[DirectoryController alloc] initWithDir:@":restoring:"];
+		NSWindowController* controller = [DirectoryController open:@":restoring:"];
 		handler(controller.window, NULL);
 	}
 	else
@@ -199,7 +199,7 @@ void initLogLevels(void)
 	{
 		for (NSURL* url in panel.URLs)
 		{
-			(void) [[DirectoryController alloc] initWithDir:[url path]];
+			(void) [DirectoryController open:[url path]];
 		}
 	}	
 }
