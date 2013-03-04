@@ -40,11 +40,10 @@ max_count = 3
 count = 0
 doc = nil
 
--- TODO: it'd be nice to check a window or view but atm the only custom class
--- we have is TextView and, while it is going away, dealloc is not called.
 stats = {}
 stats['TextDocument'] = ftest:instancecount('TextDocument')
 stats['TextController'] = ftest:instancecount('TextController')
+stats['TextWindow'] = ftest:instancecount('TextWindow')
 
 function checkStats(delta)
 	local err = ''

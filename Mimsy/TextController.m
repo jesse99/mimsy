@@ -36,7 +36,9 @@
 
 		// This will be set to nil once the view has been restored.
 		_restorer = [[RestoreView alloc] init:self];
+		
  		updateInstanceCount(@"TextController", +1);
+		updateInstanceCount(@"TextWindow", +1);
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(languagesChanged:) name:@"LanguagesChanged" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stylesChanged:) name:@"StylesChanged" object:nil];
@@ -70,6 +72,7 @@
 	UNUSED(notification);
 	
 	_closed = true;
+	updateInstanceCount(@"TextWindow", -1);
 
 	NSString* path = [self path];
 	if (path)
