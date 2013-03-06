@@ -7,6 +7,7 @@
 #import "Logger.h"
 #import "Paths.h"
 #import "RegexStyler.h"
+#import "StringCategory.h"
 #import "TranscriptController.h"
 #import "Utils.h"
 
@@ -29,6 +30,14 @@ static NSArray* _languages;
 	Language* lang = nil;
 	int best = 0;
 	
+	NSString* shebang = nil;
+	if ([text startsWith:@"#!"])
+	{
+		NSRange range = [text rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet]];
+		if (range.location != NSNotFound)
+			shebang = [text substringWithRange:NSMakeRange(0, range.location)];
+	}
+	
 	for (Language* candidate in _languages)
 	{
 		// Unfortunately some files (notably *.h) can match multiple
@@ -38,6 +47,19 @@ static NSArray* _languages;
 		{
 			lang = candidate;
 			best = weight;
+		}
+		
+		// If the shebang matchs we have a winner.
+		if (shebang)
+		{
+			for (NSString* tool in candidate.shebangs)
+			{
+				if ([shebang endsWith:tool])
+				{
+					lang = candidate;
+					break;
+				}
+			}
 		}
 	}
 	

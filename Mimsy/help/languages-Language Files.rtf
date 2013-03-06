@@ -9,22 +9,23 @@
 New languages can be added to the user directory. Languages are defined using a simple line-based file format consisting of settings and elements. The settings configure various aspects of the language and the elements affect highlighting.\
 \
 The settings are:\
-\pard\pardeftab480\pardirnatural
 
-\b \cf0 Language
+\b Language
 \b0 : is the name of the language. By convention this is lower case. This is a required setting.\
 \
-\pard\pardeftab480\pardirnatural
 
-\b \cf0 Globs
+\b Globs
 \b0 : is a space separated list of file name globs associated with the language. This is a required setting.\
 \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
 
-\b \cf0 ConditionalGlob
+\b ConditionalGlob
 \b0 : consists of a glob, followed by a space, followed by a regex. Files will use the language if the glob matches the file name and the regex matches something in the contents. Languages where a ConditionalGlob matches will be used instead of languages where just a Glob matches.\
+\
 \pard\pardeftab480\pardirnatural
-\cf0 \
+
+\b \cf0 Shebang
+\b0 : name of the associated tool appearing on a shebang line. May appear multiple times. This is an alternative way to associate files with a language.\
+\
 \pard\pardeftab480\pardirnatural
 
 \b \cf0 IgnoreWhitespace
@@ -72,5 +73,6 @@ The requirement that look behind assertions must be bounded can cause problems, 
 	\
 Changes to language files are dynamic: the prefs panel and text documents will both update when a lang file is saved. \
 \
+\pard\pardeftab480\pardirnatural
 \cf3 A lot of this isn't implemented yet.\cf0 \
 }

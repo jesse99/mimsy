@@ -1,5 +1,6 @@
 Language: lua
 Globs: *.lua
+Shebang: lua
 LineComment: --
 Help: [Lua Wiki]http://lua-users.org/wiki/
 Help: [Lua Tech Notes]http://www.lua.org/notes/

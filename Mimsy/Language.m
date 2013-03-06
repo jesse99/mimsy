@@ -19,6 +19,7 @@
 	if (self)
 	{
 		NSMutableArray* globs = [NSMutableArray new];
+		NSMutableArray* shebangs = [NSMutableArray new];
 		NSMutableArray* regexen = [NSMutableArray new];
 		NSMutableArray* conditionals = [NSMutableArray new];
 		NSMutableArray* errors = [NSMutableArray new];
@@ -65,6 +66,10 @@
 				{
 					[globs addObjectsFromArray:[entry.value splitByString:@" "]];
 				}
+				else if ([key isEqualToString:@"shebang"])
+				{
+					[shebangs addObject:entry.value];
+				}
 				else if ([key isEqualToString:@"conditionalglob"])
 				{
 					NSRange range = [entry.value rangeOfString:@" "];
@@ -109,6 +114,7 @@
 			[errors addObject:@"failed to find a language element"];
 		
 		_glob = [[ConditionalGlob alloc] initWithGlobs:globs regexen:regexen conditionals:conditionals];
+		_shebangs = shebangs;
 		_styler = [self _createStyler:names patterns:patterns lines:lines errors:errors];
 		_help = help;
 

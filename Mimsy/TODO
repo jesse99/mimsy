@@ -1,8 +1,8 @@
-* Add directory document:
-	- use WindowDatabase
-	- return should do an open
 * Might want Run and Test commands (run different targets).
 * Build menu should reload if build file changes.
+* Work on building:
+	- might be able to use vim files, eg /usr/share/vim/vim73/compiler/gcc.vim
+* Make sure builds call reloadIfChanged
 * Should have some sort of field to use when toggling between header and C files:
 	- maybe also stuff like .html and .css and .js
 * Work on styling:
@@ -54,7 +54,6 @@
 	- probably disabled by default
 	- or do nothing unless a setting is set
 	- directory settings file would need entries for custom settings
-* Work on directory editor.
 * Language files should have support for a run key:
 	- value is command line used to run a single file (or *.c file for C based languages)
 	- probably triggered by option-R
@@ -70,6 +69,8 @@
 	- maybe context menu to insert
 	- would be nice to be able to prompt for strings
 	- might want to allow lua snippets for more logic
+	- should be per language
+	- maybe both text and script based (or possibly scripts are refactors)
 * git modified file indicator is nice.
 * Could use styler to support jump to definition:
 	- directory watcher and a task are used to maintain a cache
@@ -92,13 +93,10 @@
 * Should have a mode where tab uses tab at the start of lines, but spaces once the line starts.
 * Might also want to use that wacky VIM(?) meta-data embedded in files containing info like tab lengths
 	- or support a dot file that does the same thing
-* Work on building:
-	- might be able to use vim files, eg /usr/share/vim/vim73/compiler/gcc.vim
 * Might be cool to replace some strings on load/save:
 	- -> and => to unicode arrows
 	- :: to something
 	- probably would also have to do this during editing
-* Make sure builds call reloadIfChanged
 * Find in files needs to be able to search rtf files.
 * Get searching in help files working.
 * Info window should have a popup to override default styler file.
@@ -126,9 +124,6 @@
 	- see what the policy is for open source apps
 	- look at Prepare for Mac App Store Submission link
 * Support named bookmarks.
-* Support snippets:
-	- should be per language
-	- maybe both text and script based (or possibly scripts are refactors)
 * Could replace Mimsy files with lua config files:
 	- regex would be a little annoying, probably would need to use long brackets to avoid escaping
 	- maybe a little annoying to edit too: lua is simple but not as simple as the Mimsy format

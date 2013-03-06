@@ -17,6 +17,9 @@
 // The object used to associated files with this particular language.
 @property (readonly) ConditionalGlob* glob;
 
+// Sequence of tool names.
+@property (readonly) NSArray* shebangs;
+
 // The object used to compute the styles associated with a document.
 @property (readonly) RegexStyler* styler;
 
