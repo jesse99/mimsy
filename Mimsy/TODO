@@ -131,7 +131,7 @@
 * Release checklist:
 	- might have to add a lame build step to archive build to copy the styles files a second time
 	- make sure that the binary works on someone elses mac
-	- increment support files version number
+	- increment support files version number, also build scripts version numbers
 	- ship the release version
 	
 	
