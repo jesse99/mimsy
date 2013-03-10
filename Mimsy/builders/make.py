@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# http://www.gnu.org/software/make/manual/make.html
 import json, os, re, subprocess, sys
 
 try:
@@ -7,11 +8,12 @@ except:
 	sys.stderr.write("This script requires Python 2.7 or later\n")
 	sys.exit(2)
 
+# Return information about the build tool itself.
 def tool_info():
 	result = {'name' : 'make', 'globs': ['Makefile']}
 	return json.dumps(result)
 
-# See http://www.gnu.org/software/make/manual/make.html
+# Return information about a particular build file.
 def build_info(path):
 	# Make's -p option will print the database associated with the makefile, but unfortunately
 	# it's returned in some ad-hoc format from the Paleozoic era so we need to rely on some
@@ -56,6 +58,7 @@ def build_info(path):
 	
 	return json.dumps(result)
 
+# Return a command line that can be used to perform a build.
 def build_command(path, target, flags):
 	if flags and flags[0] != ' ':
 		flags = ' ' + flags
