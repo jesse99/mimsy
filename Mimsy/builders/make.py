@@ -39,22 +39,29 @@ def build_info(path):
 	# straight from the Makefile.
 	def parse_variables(content):
 		variables = []
-		regex = re.compile(r'(?<= \n \043 \040 makefile \040 \(from) .+ \n ([\w_-]+) \s+ = \s+', re.VERBOSE | re.MULTILINE)
+		regex = re.compile(r'(?<= \n \043 \040 makefile \040 \(from) .+ \n ([\w_-]+) \s+ = \s+ (.+) $', re.VERBOSE | re.MULTILINE)
 		for match in regex.finditer(content):
-			var = match.group(1)
-			variables.append(var)
+			name = match.group(1)
+			value = match.group(2)
+			variables.append([name, value.strip()])
 		
 		return variables
 	
 	path = os.path.expanduser(path)
 	wd = os.path.dirname(path)
-	process = subprocess.Popen(['make', '-p', '-f', path], cwd = wd, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+	args = ['make', '-p', '-f', path]
+	process = subprocess.Popen(args, cwd = wd, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
 	(stdout, stderr) = process.communicate()
-	result = {'returncode': process.returncode, 'stderr': stderr}
 	
+	result = {}
 	if process.returncode == 0:
+		result['error'] = ''
 		result['targets'] = parse_targets(stdout)
 		result['variables'] = parse_variables(stdout)
+	elif stderr:
+		result['error'] = "`%s` returned with error '%s'" % (' '.join(args), stderr)
+	else:
+		result['error'] = "`%s` returned with return code %s" % (' '.join(args), process.returncode)
 	
 	return json.dumps(result)
 

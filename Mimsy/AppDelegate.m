@@ -449,6 +449,7 @@ void initLogLevels(void)
 		
 		InstallFiles* installer = [InstallFiles new];
 		[installer initWithDstPath:path];
+		[installer addSourceItem:@"builders"];
 		[installer addSourceItem:@"help"];
 		[installer addSourceItem:@"languages"];
 		[installer addSourceItem:@"scripts"];
