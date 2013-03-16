@@ -217,4 +217,24 @@ static NSString* Replacement = @"\uFFFD";
 	return true;
 }
 
++ (int)run:(NSTask*)task stdout:(NSString**)stdout stderr:(NSString**)stderr
+{
+	[task launch];
+	[task waitUntilExit];
+	
+	if (stdout)
+	{
+		NSData* data = [[[task standardOutput] fileHandleForReading] readDataToEndOfFile];
+		*stdout = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	}
+	
+	if (stderr)
+	{
+		NSData* data = [[[task standardError] fileHandleForReading] readDataToEndOfFile];
+		*stderr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	}
+	
+	return task.terminationStatus;
+}
+
 @end

@@ -22,6 +22,10 @@ extern const NSRange NSZeroRange;
 // file if it exists.
 + (bool)copySrcFile:(NSString*)srcPath dstFile:(NSString*)dstPath outError:(NSError**)outError;
 
+// Runs the task returning the exit code. If stdout/stderr is not NULL then those
+// are returned as well.
++ (int)run:(NSTask*)task stdout:(NSString**)stdout stderr:(NSString**)stderr;
+
 // Returns a path to a unique file name in the temporary directory for the current user.
 + (NSString*)pathForTemporaryFileWithPrefix:(NSString *)prefix;
 
