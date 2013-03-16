@@ -3,6 +3,7 @@
 #import "AppDelegate.h"
 #import "ArrayCategory.h"
 #import "Assert.h"
+#import "Builders.h"
 #import "ConditionalGlob.h"
 #import "ConfigParser.h"
 #import "DirectoryWatcher.h"
@@ -28,6 +29,8 @@ static NSMutableArray* _controllers;
 	NSDictionary* _globs;		// Glob => NSDictionary
 	NSArray* _openWithMimsy;	// [Glob]
 	NSRegularExpression* _copyRe;
+	NSDictionary* _builderInfo;
+	NSDictionary* _buildVars;	// environment variable name => value
 	bool _closing;				// need this for leaks ftest
 }
 
@@ -516,8 +519,29 @@ static NSMutableArray* _controllers;
 	_watcher = [[DirectoryWatcher alloc] initWithPath:path latency:1.0 block:
 				^(NSArray* paths) {[self _dirChanged:paths];}];
 	
+	_builderInfo = [Builders builderInfo:path];
+	if (_builderInfo)
+		[self _loadTargets];
+	
 	[self.window setTitle:[path lastPathComponent]];
 	[self.window makeKeyAndOrderFront:self];
+}
+
+- (void)_loadTargets
+{
+	ASSERT(_builderInfo);
+	
+	NSMenu* menu = _targetsMenu;
+	if (menu)
+	{
+		NSArray* targets = [Builders getTargets:_builderInfo env:_buildVars];
+		[menu removeAllItems];
+		
+		for (NSString* target in targets)
+		{
+			(void) [menu addItemWithTitle:target action:NULL keyEquivalent:@""];
+		}
+	}
 }
 
 - (void)_loadPrefs
@@ -533,7 +557,12 @@ static NSMutableArray* _controllers;
 	NSMutableDictionary* fileAttrs = [NSMutableDictionary new];
 	NSMutableDictionary* sizeAttrs = [NSMutableDictionary new];
 	NSMutableDictionary* globs = [NSMutableDictionary new];
+	NSMutableDictionary* buildVars = [NSMutableDictionary new];
 	NSMutableArray* openWithMimsy = [NSMutableArray new];
+	
+	NSProcessInfo* info = [NSProcessInfo processInfo];
+	[buildVars addEntriesFromDictionary:info.environment];
+	LOG_DEBUG("Mimsy", "default build variables:\n%s", STR(buildVars));
 	
 	NSAttributedString* text = [self _loadPrefFile:path];
 	if (text)
@@ -582,6 +611,21 @@ static NSMutableArray* _controllers;
 					 Glob* g = [[Glob alloc] initWithGlob:entry.value];
 					 [openWithMimsy addObject:g];
 				 }
+				 else if ([entry.key isEqualToString:@"BuildEnv"])
+				 {
+					 NSRange range = [entry.value rangeOfString:@"="];
+					 if (range.location != NSNotFound)
+					 {
+						 NSString* name = [entry.value substringToIndex:range.location];
+						 NSString* value = [entry.value substringFromIndex:range.location+1];
+						 buildVars[name] = value;
+					 }
+					 else
+					 {
+						 NSString* mesg = [NSString stringWithFormat:@"Expected a '=' in the value for BuildEnv %@", entry.value];
+						 [TranscriptController writeError:mesg];
+					 }
+				 }
 				 else
 				 {
 					 NSDictionary* attrs = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
@@ -601,6 +645,7 @@ static NSMutableArray* _controllers;
 	_fileAttrs = fileAttrs;
 	_sizeAttrs = sizeAttrs;
 	_globs = globs;
+	_buildVars = buildVars;
 	_openWithMimsy = openWithMimsy;
 }
 
@@ -648,7 +693,11 @@ static NSMutableArray* _controllers;
 	{
 		FileSystemItem* item = [_root find:path];
 		if (item == _root)
+		{
 			[self _loadPrefs];
+			if (_builderInfo)
+				[self _loadTargets];
+		}
 		
 		NSOutlineView* table = self.table;
 		if (item)

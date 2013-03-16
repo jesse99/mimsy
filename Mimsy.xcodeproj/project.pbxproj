@@ -44,6 +44,7 @@
 		3768CCDB16E0F54900D5CB57 /* OpenFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 3768CCDA16E0F54900D5CB57 /* OpenFile.m */; };
 		3768CCDE16E1A61100D5CB57 /* DirectoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3768CCDD16E1A61100D5CB57 /* DirectoryView.m */; };
 		3768CCE016EB6C0A00D5CB57 /* builders in Resources */ = {isa = PBXBuildFile; fileRef = 3768CCDF16EB6C0A00D5CB57 /* builders */; };
+		3768CCE316ED322D00D5CB57 /* Builders.m in Sources */ = {isa = PBXBuildFile; fileRef = 3768CCE216ED322C00D5CB57 /* Builders.m */; };
 		377BDE6316C005C8008DADA5 /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = 377BDE6216C005C8008DADA5 /* scripts */; };
 		377BDE6616C006BD008DADA5 /* StartupScripts.m in Sources */ = {isa = PBXBuildFile; fileRef = 377BDE6516C006BD008DADA5 /* StartupScripts.m */; };
 		377BDE6916CDA8F3008DADA5 /* Database.m in Sources */ = {isa = PBXBuildFile; fileRef = 377BDE6816CDA8F2008DADA5 /* Database.m */; };
@@ -163,6 +164,8 @@
 		3768CCDC16E1A61100D5CB57 /* DirectoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryView.h; sourceTree = "<group>"; };
 		3768CCDD16E1A61100D5CB57 /* DirectoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryView.m; sourceTree = "<group>"; };
 		3768CCDF16EB6C0A00D5CB57 /* builders */ = {isa = PBXFileReference; lastKnownFileType = folder; path = builders; sourceTree = "<group>"; };
+		3768CCE116ED322C00D5CB57 /* Builders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Builders.h; sourceTree = "<group>"; };
+		3768CCE216ED322C00D5CB57 /* Builders.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Builders.m; sourceTree = "<group>"; };
 		377BDE6216C005C8008DADA5 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = "<group>"; };
 		377BDE6416C006BD008DADA5 /* StartupScripts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartupScripts.h; sourceTree = "<group>"; };
 		377BDE6516C006BD008DADA5 /* StartupScripts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartupScripts.m; sourceTree = "<group>"; };
@@ -367,6 +370,8 @@
 		3768CCC316CDD9DF00D5CB57 /* Directory Editor */ = {
 			isa = PBXGroup;
 			children = (
+				3768CCE116ED322C00D5CB57 /* Builders.h */,
+				3768CCE216ED322C00D5CB57 /* Builders.m */,
 				3768CCC416CDDA0700D5CB57 /* DirectoryController.h */,
 				3768CCCA16CDDCB000D5CB57 /* DirectoryController.m */,
 				3768CCDC16E1A61100D5CB57 /* DirectoryView.h */,
@@ -682,6 +687,7 @@
 				3768CCD816D0547A00D5CB57 /* FolderItem.m in Sources */,
 				3768CCDB16E0F54900D5CB57 /* OpenFile.m in Sources */,
 				3768CCDE16E1A61100D5CB57 /* DirectoryView.m in Sources */,
+				3768CCE316ED322D00D5CB57 /* Builders.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

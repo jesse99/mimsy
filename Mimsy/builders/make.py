@@ -49,12 +49,12 @@ def build_info(path):
 	
 	path = os.path.expanduser(path)
 	wd = os.path.dirname(path)
-	args = ['make', '-p', '-f', path]
+	args = ['make', '--dry-run', '--print-data-base', '--file', path]
 	process = subprocess.Popen(args, cwd = wd, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
 	(stdout, stderr) = process.communicate()
 	
 	result = {}
-	if process.returncode == 0:
+	if len(stdout) > 0:		# Note that we can get valid results even if make returns with an error code.
 		result['error'] = ''
 		result['targets'] = parse_targets(stdout)
 		result['variables'] = parse_variables(stdout)
