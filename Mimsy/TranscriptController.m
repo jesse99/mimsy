@@ -63,7 +63,6 @@ static TranscriptController* controller;
 	return instance.view.textStorage.length == 0;
 }
 
-
 + (void)writeCommand:(NSString*)text
 {
 	TranscriptController* instance = [TranscriptController getInstance];
