@@ -57,6 +57,13 @@ static TranscriptController* controller;
 	[self.view.textStorage deleteCharactersInRange:range];
 }
 
++ (bool)empty
+{
+	TranscriptController* instance = [TranscriptController getInstance];
+	return instance.view.textStorage.length == 0;
+}
+
+
 + (void)writeCommand:(NSString*)text
 {
 	TranscriptController* instance = [TranscriptController getInstance];

@@ -51,16 +51,13 @@ static NSDictionary* _globs;	// name => glob
 	[task setArguments:@[[NSString stringWithFormat:@"--path=%@", info[@"path"]]]];	// note that task arguments are not processed by a shell and so don't need to be quoted
 	[task setEnvironment:vars];
 	
-	LOG_INFO("Mimsy", "getting targets json");
 	NSDictionary* json = [self _runBuilder:task];
-	LOG_INFO("Mimsy", "targets json = %s", STR(json));
 	if (json)
 	{
 		NSString* error = json[@"error"];
 		if (!error || error.length == 0)
 		{
 			targets = json[@"targets"];
-			LOG_INFO("Mimsy", "targets = %s", STR(targets));
 		}
 		else
 		{
@@ -93,8 +90,9 @@ static NSDictionary* _globs;	// name => glob
 		if (!error || error.length == 0)
 		{
 			results = @{
-			   @"cwd": [json[@"cwd"] stringByStandardizingPath],
-			   @"command": json[@"command"],
+				@"tool": json[@"tool"],
+				@"args": json[@"args"],
+				@"cwd": [json[@"cwd"] stringByStandardizingPath],
 			};
 		}
 		else

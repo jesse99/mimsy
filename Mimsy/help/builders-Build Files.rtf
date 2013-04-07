@@ -6,30 +6,34 @@
 
 \f0\fs36 \cf0 The files in the builders directory are used by Mimsy to perform builds via a directory window. The files should be executable scripts (using a shebang) or compiled programs. The builders are called in three different ways and should return either a non-zero exit code or results as JSON dictionary.\
 \
+\pard\pardeftab480\pardirnatural
 
-\b\fs42 builder
+\b\fs42 \cf0 builder
 \b0\fs36 \
 When called with no arguments a builder should return information about the build tool. The returned dictionary should contain:\
 \pard\pardeftab480\pardirnatural
 \cf2 name\cf0 : The name of the build tool. This is used as an identifier for the builder.\
-\pard\pardeftab480\pardirnatural
 \cf2 globs\cf0 : A list with globs for file names describing a build. These files are passed into the builder using the --path option. It's undefined which builder will be chosen if a file name matches globs from multiple builders.\
+\
 \pard\pardeftab480\pardirnatural
-\cf0 \
 
-\b\fs42 builder --path=PATH
+\b\fs42 \cf0 builder --path=PATH
 \b0\fs36 \
 Returns information about a particular build. The returned dictionary should contain:\
+\pard\pardeftab480\pardirnatural
 \cf2 error\cf0 : If non-empty a message explaining why the builder failed. If there was an error the dictionary may not have any other entries.\
 \cf2 targets\cf0 : List of targets within the build file. These are used to populate the dropdown menu in the directory window.\
 \cf2 variables\cf0 : List of lists where the inner lists are variable name/default value pairs.\
 \
-
-\b\fs42 builder --path=PATH --target=TARGET [--flags=FLAGS]
-\b0\fs36 \
-Returns a command line which can be used to perform a build. Flags is an arbitrary list of options to be embedded in the returned command line. The returned dictionary should contain:\
-\cf2 cwd\cf0 : The directory in which to run the command.\
-\cf2 command\cf0 : The command to be run.\
 \pard\pardeftab480\pardirnatural
-\cf0 \
+
+\b\fs42 \cf0 builder --path=PATH --target=TARGET
+\b0\fs36 \
+Returns a command line which can be used to perform a build. The returned dictionary should contain:\
+\pard\pardeftab480\pardirnatural
+\cf2 error\cf0 : If non-empty a message explaining why the builder failed. If there was an error the dictionary may not have any other entries.\
+\cf2 cwd\cf0 : The directory in which to run the command.\
+\cf2 tool\cf0 : Full path to the program to run.\
+\cf2 args\cf0 : Array of arguments to pass into the tool. These arguments do not need to be quoted.\
+\
 }

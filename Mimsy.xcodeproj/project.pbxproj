@@ -17,6 +17,8 @@
 		3712631F16B4AA53007AF3BF /* InstallFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 3712631E16B4AA53007AF3BF /* InstallFiles.m */; };
 		3712632316B5A079007AF3BF /* DataCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3712632216B5A079007AF3BF /* DataCategory.m */; };
 		3712632516B5A431007AF3BF /* libcrypto.0.9.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */; };
+		372D8FA916F5719E00CBBC96 /* Build.png in Resources */ = {isa = PBXBuildFile; fileRef = 372D8FA816F5719E00CBBC96 /* Build.png */; };
+		372D8FAB16F571A500CBBC96 /* Cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 372D8FAA16F571A500CBBC96 /* Cancel.png */; };
 		375140D416800FFD00C329AF /* ConfigParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D316800FFD00C329AF /* ConfigParser.m */; };
 		375140D816801A4800C329AF /* ConfigParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D716801A4800C329AF /* ConfigParserTests.m */; };
 		375140E416828EB600C329AF /* WindowsDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140E316828EB600C329AF /* WindowsDatabase.m */; };
@@ -79,6 +81,7 @@
 		37A8C6B916758FF400D4DB13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C69616758FF400D4DB13 /* Cocoa.framework */; };
 		37A8C6C116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C6BF16758FF400D4DB13 /* InfoPlist.strings */; };
 		37A8C6C416758FF400D4DB13 /* DecodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6C316758FF400D4DB13 /* DecodeTests.m */; };
+		37BF4DFA16F56CB3008FD480 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 37BF4DF916F56CB3008FD480 /* images */; };
 		37CF062616AB998A00069A20 /* LuaSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF062516AB998A00069A20 /* LuaSupport.m */; };
 		37EECF4D16A64A9E00BEB493 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 37EECF4C16A64A9E00BEB493 /* help */; };
 		37F2C58B169E7B92009C5355 /* ArrayCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 37F2C58A169E7B92009C5355 /* ArrayCategory.m */; };
@@ -113,6 +116,8 @@
 		3712632116B5A079007AF3BF /* DataCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataCategory.h; sourceTree = "<group>"; };
 		3712632216B5A079007AF3BF /* DataCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataCategory.m; sourceTree = "<group>"; };
 		3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.0.9.8.dylib; path = ../../../usr/lib/libcrypto.0.9.8.dylib; sourceTree = "<group>"; };
+		372D8FA816F5719E00CBBC96 /* Build.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Build.png; path = images/Build.png; sourceTree = "<group>"; };
+		372D8FAA16F571A500CBBC96 /* Cancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Cancel.png; path = images/Cancel.png; sourceTree = "<group>"; };
 		375140D216800FFD00C329AF /* ConfigParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParser.h; sourceTree = "<group>"; };
 		375140D316800FFD00C329AF /* ConfigParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigParser.m; sourceTree = "<group>"; };
 		375140D616801A4800C329AF /* ConfigParserTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParserTests.h; sourceTree = "<group>"; };
@@ -232,6 +237,7 @@
 		37A8C6C216758FF400D4DB13 /* DecodeTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DecodeTests.h; sourceTree = "<group>"; };
 		37A8C6C316758FF400D4DB13 /* DecodeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DecodeTests.m; sourceTree = "<group>"; };
 		37A8C6CD167590E700D4DB13 /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
+		37BF4DF916F56CB3008FD480 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
 		37CF062416AB998A00069A20 /* LuaSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaSupport.h; sourceTree = "<group>"; };
 		37CF062516AB998A00069A20 /* LuaSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LuaSupport.m; sourceTree = "<group>"; };
 		37EECF4C16A64A9E00BEB493 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
@@ -469,6 +475,8 @@
 		37A8C69D16758FF400D4DB13 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				372D8FA816F5719E00CBBC96 /* Build.png */,
+				372D8FAA16F571A500CBBC96 /* Cancel.png */,
 				37A8C6A516758FF400D4DB13 /* Credits.rtf */,
 				37A8C69F16758FF400D4DB13 /* InfoPlist.strings */,
 				3796F6FC169A8CC900659DBD /* convertVIMFiles.h */,
@@ -479,6 +487,7 @@
 				376407E716B8CB05000B7AE3 /* tophat.icns */,
 				3768CCDF16EB6C0A00D5CB57 /* builders */,
 				37EECF4C16A64A9E00BEB493 /* help */,
+				37BF4DF916F56CB3008FD480 /* images */,
 				375140EE168B789100C329AF /* languages */,
 				377BDE6216C005C8008DADA5 /* scripts */,
 				37862C641690BC0600DB9E66 /* settings */,
@@ -569,7 +578,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = MIM;
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Jesse Jones";
 			};
 			buildConfigurationList = 37A8C68C16758FF400D4DB13 /* Build configuration list for PBXProject "Mimsy" */;
@@ -610,6 +619,9 @@
 				377BDE6316C005C8008DADA5 /* scripts in Resources */,
 				3768CCC816CDDAB100D5CB57 /* DirectoryWindow.xib in Resources */,
 				3768CCE016EB6C0A00D5CB57 /* builders in Resources */,
+				37BF4DFA16F56CB3008FD480 /* images in Resources */,
+				372D8FA916F5719E00CBBC96 /* Build.png in Resources */,
+				372D8FAB16F571A500CBBC96 /* Cancel.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -771,7 +783,6 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_OBJCPP_ARC_ABI = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -804,7 +815,6 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_OBJCPP_ARC_ABI = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";

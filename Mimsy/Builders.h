@@ -14,7 +14,8 @@
 + (NSArray*)getTargets:(NSDictionary*)info env:(NSDictionary*)vars;
 
 // Returns a dictionary with:
-//    "command": the command to execute to build the target (along with an arbitrary set of command line flags)
+//    "tool": full path to the tool used to build
+//    "args": array of arguments to use when building
 //    "cwd": full path to the directory in which the command should be executed
 + (NSDictionary*)build:(NSDictionary*)info target:(NSString*)target flags:(NSString*)flags env:(NSDictionary*)vars;
 

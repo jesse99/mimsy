@@ -65,38 +65,48 @@ def build_info(path):
 	
 	return json.dumps(result)
 
-# Return a command line that can be used to perform a build.
-def build_command(path, target, flags):
-	if flags and flags[0] != ' ':
-		flags = ' ' + flags
+# Return a command line that can be used to perform a build.	
+def build_command(path, target):
+	def get_make_dir():
+		for candidate in os.environ['PATH'].split(':'):
+			path = os.path.join(candidate, 'make')
+			if os.path.exists(path):
+				return candidate
+		return None
+		
+	make_dir = get_make_dir()
+	if make_dir:
+		args = []
+		
+		path = os.path.expanduser(path)
+		(directory, filename) = os.path.split(path)
+		if filename != 'Makefile':
+			args.append('--file=%s' % path)
+		args.append(target)
+		
+		result = {
+			'error': '',
+			'cwd': directory,
+			'tool': os.path.join(make_dir, 'make'),
+			'args': args
+		}
+	else:
+		result = {
+			'error': "Couldn't find 'make' in '%s'" % os.environ['PATH'],
+		}
 	
-	(directory, filename) = os.path.split(os.path.expanduser(path))
-	if filename != 'Makefile':
-		flags = ' -f %s' % filename + flags
-	
-	result = {
-		'cwd': directory,
-		'command': "make%s %s" % (flags, target)
-	}
 	return json.dumps(result)
-
-def validate_options(options):
-	if options.flags and not (options.path and options.path):
-		sys.stderr.write("--flags only makes sense with --path and --target\n")
-		sys.exit(1)
 
 # Parse command line.
 parser = argparse.ArgumentParser(description = "Used by Mimsy to interact with Makefiles.")
-parser.add_argument("--flags", default = '', help = 'make flags used when building a target')
 parser.add_argument("--path", help = 'path to the Makefile')
 parser.add_argument("--target", help = 'name of the Makefile target to build')
 parser.add_argument("--version", "-V", action = 'version', version = '%(prog)s 0.1')
 options = parser.parse_args()
 
 # Process command line.
-validate_options(options)
 if options.path and options.target:
-	print build_command(options.path, options.target, options.flags)
+	print build_command(options.path, options.target)
 elif options.path:
 	print build_info(options.path)
 else:
