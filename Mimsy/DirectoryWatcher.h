@@ -1,6 +1,12 @@
 #import <Foundation/Foundation.h>
 
-typedef void (^DirectoryWatcherCallback)(NSArray* paths);
+// Flags are set as follows:
+//    create - kFSEventStreamEventFlagItemCreated
+//    remove - kFSEventStreamEventFlagItemRemoved (unless the Finder does it in which case all you will get is rename)
+//    rename - kFSEventStreamEventFlagItemRenamed
+//    edit   - kFSEventStreamEventFlagItemModified
+// If it is a file kFSEventStreamEventFlagItemIsFile is set. If it is a directory kFSEventStreamEventFlagItemIsDir is set.
+typedef void (^DirectoryWatcherCallback)(NSString* path, FSEventStreamEventFlags flags);
 
 // Used to call a block when files are added, removed, or changed from a
 // directory and its sub-directories.
