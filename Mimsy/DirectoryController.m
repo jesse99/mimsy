@@ -15,6 +15,7 @@
 #import "Paths.h"
 #import "StringCategory.h"
 #import "TranscriptController.h"
+#import "Utils.h"
 
 static NSMutableArray* _controllers;
 
@@ -26,7 +27,7 @@ static NSMutableArray* _controllers;
 	NSDictionary* _dirAttrs;
 	NSDictionary* _fileAttrs;
 	NSDictionary* _sizeAttrs;
-	NSDictionary* _globs;		// Glob => NSDictionary
+	NSDictionary* _globs;		// Glob => NSDictionary (text attributes)
 	NSArray* _openWithMimsy;	// [Glob]
 	NSRegularExpression* _copyRe;
 	NSDictionary* _builderInfo;
@@ -224,6 +225,31 @@ static NSMutableArray* _controllers;
 	[OpenFile openPath:path atLine:-1 atCol:-1 withTabWidth:1];
 }
 
+- (void)buildTarget:(id)sender
+{
+	UNUSED(sender);
+	
+	NSPopUpButton* menu = _targetsMenu;
+	if (menu)
+	{
+		NSString* target = [menu titleOfSelectedItem];
+		if (target && target.length > 0)
+		{
+			NSDictionary* info = [Builders build:_builderInfo target:target flags:@"" env:_buildVars];
+			[self _doBuild:info];
+		}
+		else
+		{
+			NSBeep();
+		}
+	}
+}
+
+- (void)cancelBuild:(id)sender
+{
+	UNUSED(sender);
+}
+
 - (NSArray*)getHelpContext
 {
 	return @[@"directory editor"];
@@ -346,6 +372,50 @@ static NSMutableArray* _controllers;
 }
 
 // ---- Private Methods ----------------------------------------------------------
+
+- (void)_doBuild:(NSDictionary*)info
+{
+	NSString* command = [NSString stringWithFormat:@"%@ %@\n", [info[@"tool"] lastPathComponent], [info[@"args"] componentsJoinedByString:@" "]];
+	if (![TranscriptController empty])
+		[TranscriptController writeCommand:@"\n"];
+	[TranscriptController writeCommand:command];
+	
+	NSTask* task = [NSTask new];
+	[task setLaunchPath:info[@"tool"]];
+	[task setCurrentDirectoryPath:info[@"cwd"]];
+	[task setArguments:info[@"args"]];
+	[task setEnvironment:_buildVars];
+	[task setStandardOutput:[NSPipe new]];
+	[task setStandardError:[NSPipe new]];
+	//LOG_INFO("Mimsy", "launch path: %s", STR(info[@"tool"]));
+	//LOG_INFO("Mimsy", "cwd: %s", STR(info[@"cwd"]));
+	//LOG_INFO("Mimsy", "args: %s", STR(info[@"args"]));
+	//LOG_INFO("Mimsy", "env: %s", STR(_buildVars));
+	
+	NSString* stdout = nil;
+	NSString* stderr = nil;
+	int returncode = [Utils run:task stdout:&stdout stderr:&stderr];
+	
+	stdout = [stdout stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	if (stdout && stdout.length > 0)
+	{
+		[TranscriptController writeStdout:stdout];
+		[TranscriptController writeStdout:@"\n"];
+	}
+	
+	stderr = [stderr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	if (stderr && stderr.length > 0)
+	{
+		[TranscriptController writeStderr:stderr];
+		[TranscriptController writeStderr:@"\n"];
+	}
+	
+	if (returncode != 0)
+	{
+		NSString* name = [info[@"tool"] lastPathComponent];
+		[TranscriptController writeStderr:[NSString stringWithFormat:@"%@ exited with code %d\n", name, returncode]];
+	}
+}
 
 // Continuum allowed copying of directories although I don't think I ever used it.
 // If we decide to support that we'll need to set a NSFileManager delegate to allow
@@ -517,7 +587,7 @@ static NSMutableArray* _controllers;
 		[table reloadData];
 	
 	_watcher = [[DirectoryWatcher alloc] initWithPath:path latency:1.0 block:
-				^(NSArray* paths) {[self _dirChanged:paths];}];
+				^(NSString* path, FSEventStreamEventFlags flags) {[self _dirChanged:path flags:flags];}];
 	
 	_builderInfo = [Builders builderInfo:path];
 	if (_builderInfo)
@@ -531,16 +601,24 @@ static NSMutableArray* _controllers;
 {
 	ASSERT(_builderInfo);
 	
-	NSMenu* menu = _targetsMenu;
+	LOG_INFO("Mimsy", "Building targets menu");
+	NSPopUpButton* menu = _targetsMenu;
 	if (menu)
 	{
+		NSString* oldSelection = [menu titleOfSelectedItem];
+		
 		NSArray* targets = [Builders getTargets:_builderInfo env:_buildVars];
 		[menu removeAllItems];
 		
 		for (NSString* target in targets)
 		{
-			(void) [menu addItemWithTitle:target action:NULL keyEquivalent:@""];
+			(void) [menu addItemWithTitle:target];
 		}
+		
+		if (oldSelection)
+			[menu selectItemWithTitle:oldSelection];
+		else if (targets.count > 0)
+			[menu selectItemAtIndex:0];
 	}
 }
 
@@ -686,37 +764,36 @@ static NSMutableArray* _controllers;
 	return dst;
 }
 
-- (void)_dirChanged:(NSArray*)paths
+- (void)_dirChanged:(NSString*)path flags:(FSEventStreamEventFlags)flags
 {
+	UNUSED(flags);
+	
 	// Update which ever items were opened.
-	for (NSString* path in paths)
+	FileSystemItem* item = [_root find:path];
+	if (item == _root)
 	{
-		FileSystemItem* item = [_root find:path];
-		if (item == _root)
-		{
-			[self _loadPrefs];
-			if (_builderInfo)
-				[self _loadTargets];
-		}
-		
-		NSOutlineView* table = self.table;
-		if (item)
-		{
-			// Continuum used the argument to reload to manually preserve the selection.
-			// But it seems that newer versions of Cocoa do a better job at preserving
-			// the selection.
-			if ([item reload:nil])
-			{
-				if (table && item != _root)
-					[table reloadItem:item == _root ? nil : item reloadChildren:true];
-			}
-		}
-
-		// If root changes we need to force a full reload (mainly because the prefs file
-		// may have changed and we need to let Cocoa know if any row heights have changed).
-		if (table && item == _root)
-			[table reloadData];
+		[self _loadPrefs];
+		if (_builderInfo)
+			[self _loadTargets];
 	}
+	
+	NSOutlineView* table = self.table;
+	if (item)
+	{
+		// Continuum used the argument to reload to manually preserve the selection.
+		// But it seems that newer versions of Cocoa do a better job at preserving
+		// the selection.
+		if ([item reload:nil])
+		{
+			if (table && item != _root)
+				[table reloadItem:item == _root ? nil : item reloadChildren:true];
+		}
+	}
+
+	// If root changes we need to force a full reload (mainly because the prefs file
+	// may have changed and we need to let Cocoa know if any row heights have changed).
+	if (table && item == _root)
+		[table reloadData];
 }
 
 @end

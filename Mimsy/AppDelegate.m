@@ -470,9 +470,9 @@ void initLogLevels(void)
 	
 	NSString* dir = [Paths installedDir:@"languages"];
 	_languagesWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
-		^(NSArray* paths)
+		^(NSString* path, FSEventStreamEventFlags flags)
 		{
-			UNUSED(paths);
+			UNUSED(path, flags);
 			[Languages languagesChanged];
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"LanguagesChanged" object:self];
 		}
@@ -480,9 +480,9 @@ void initLogLevels(void)
 
 	dir = [Paths installedDir:@"scripts/startup"];
 	_scriptsStartupWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
-		^(NSArray* paths)
+		^(NSString* path, FSEventStreamEventFlags flags)
 		{
-			UNUSED(paths);
+			UNUSED(path, flags);
 			[StartupScripts setup];
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"StartupScriptsChanged" object:self];
 		}
@@ -490,9 +490,9 @@ void initLogLevels(void)
 	
 	dir = [Paths installedDir:@"settings"];
 	_settingsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
-		^(NSArray* paths)
+		^(NSString* path, FSEventStreamEventFlags flags)
 		{
-			UNUSED(paths);
+			UNUSED(path, flags);
 			initLogLevels();
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
 		}
@@ -500,9 +500,9 @@ void initLogLevels(void)
 
 	dir = [Paths installedDir:@"styles"];
 	_stylesWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
-		^(NSArray* paths)
+		^(NSString* path, FSEventStreamEventFlags flags)
 		{
-			UNUSED(paths);
+			UNUSED(path, flags);
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"StylesChanged" object:self];
 		}
 	];

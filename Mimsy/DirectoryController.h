@@ -19,6 +19,6 @@
 
 @property Glob* ignores;
 @property (weak) IBOutlet NSOutlineView* table;
-@property (weak) IBOutlet NSMenu* targetsMenu;
+@property (weak) IBOutlet NSPopUpButton* targetsMenu;
 
 @end
