@@ -15,6 +15,7 @@
 #import "Paths.h"
 #import "StringCategory.h"
 #import "TranscriptController.h"
+#import "UpdateConfig.h"
 #import "Utils.h"
 
 static NSMutableArray* _controllers;
@@ -32,6 +33,7 @@ static NSMutableArray* _controllers;
 	NSRegularExpression* _copyRe;
 	NSDictionary* _builderInfo;
 	NSDictionary* _buildVars;	// environment variable name => value
+	NSString* _defaultTarget;
 	bool _closing;				// need this for leaks ftest
 }
 
@@ -190,6 +192,26 @@ static NSMutableArray* _controllers;
 			}
 		}
 	];
+}
+
+- (IBAction)targetChanged:(id)sender
+{
+	UNUSED(sender);
+	
+	NSPopUpButton* menu = _targetsMenu;
+	if (menu)
+	{
+		NSString* target = [menu titleOfSelectedItem];
+		
+		NSError* error = nil;
+		NSString* path = [_path stringByAppendingPathComponent:@".mimsy.rtf"];
+		if (!updatePref(path, @"BuildTarget", target, &error))
+		{
+			NSString* reason = [error localizedFailureReason];
+			NSString* mesg = [NSString stringWithFormat:@"Couldn't set BuildTarget pref: %@", reason];
+			[TranscriptController writeError:mesg];
+		}
+	}
 }
 
 - (void)duplicate:(id)sender
@@ -606,6 +628,8 @@ static NSMutableArray* _controllers;
 	if (menu)
 	{
 		NSString* oldSelection = [menu titleOfSelectedItem];
+		if (!oldSelection)
+			oldSelection = _defaultTarget;
 		
 		NSArray* targets = [Builders getTargets:_builderInfo env:_buildVars];
 		[menu removeAllItems];
@@ -703,6 +727,10 @@ static NSMutableArray* _controllers;
 						 NSString* mesg = [NSString stringWithFormat:@"Expected a '=' in the value for BuildEnv %@", entry.value];
 						 [TranscriptController writeError:mesg];
 					 }
+				 }
+				 else if ([entry.key isEqualToString:@"BuildTarget"])
+				 {
+					 _defaultTarget = entry.value;
 				 }
 				 else
 				 {

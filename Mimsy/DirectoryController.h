@@ -12,6 +12,7 @@
 - (bool)shouldOpen:(NSString*)path;
 - (void)doubleClicked:(id)sender;
 - (void)deleted:(id)sender;
+- (IBAction)targetChanged:(id)sender;
 
 - (NSDictionary*)getDirAttrs:(NSString*)path;
 - (NSDictionary*)getFileAttrs:(NSString*)path;
