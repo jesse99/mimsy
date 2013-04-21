@@ -416,6 +416,7 @@ static NSMutableArray* _controllers;
 	
 	NSString* stdout = nil;
 	NSString* stderr = nil;
+	time_t startTime = time(NULL);
 	int returncode = [Utils run:task stdout:&stdout stderr:&stderr];
 	
 	stdout = [stdout stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -432,7 +433,12 @@ static NSMutableArray* _controllers;
 		[TranscriptController writeStderr:@"\n"];
 	}
 	
-	if (returncode != 0)
+	if (returncode == 0)
+	{
+		time_t elapsed = time(NULL) - startTime;
+		[TranscriptController writeStdout:[NSString stringWithFormat:@"built in %ld seconds\n", elapsed]];
+	}
+	else
 	{
 		NSString* name = [info[@"tool"] lastPathComponent];
 		[TranscriptController writeStderr:[NSString stringWithFormat:@"%@ exited with code %d\n", name, returncode]];
