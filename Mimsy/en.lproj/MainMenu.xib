@@ -1066,6 +1066,15 @@
 							<array class="NSMutableArray" key="NSMenuItems">
 								<object class="NSMenuItem" id="162218144">
 									<reference key="NSMenu" ref="606295188"/>
+									<string key="NSTitle">Build</string>
+									<string key="NSKeyEquiv">r</string>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
+								<object class="NSMenuItem" id="799307600">
+									<reference key="NSMenu" ref="606295188"/>
 									<string key="NSTitle">Clear Transcript</string>
 									<string key="NSKeyEquiv">k</string>
 									<int key="NSKeyEquivModMask">1048576</int>
@@ -1712,14 +1721,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">clear:</string>
-						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="162218144"/>
-					</object>
-					<int key="connectionID">619</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">openInstalled:</string>
 						<reference key="source" ref="1014"/>
 						<reference key="destination" ref="609285721"/>
@@ -1749,6 +1750,22 @@
 						<reference key="destination" ref="352084731"/>
 					</object>
 					<int key="connectionID">629</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">clear:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="799307600"/>
+					</object>
+					<int key="connectionID">631</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">build:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="162218144"/>
+					</object>
+					<int key="connectionID">633</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -2653,6 +2670,7 @@
 						<reference key="object" ref="606295188"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="162218144"/>
+							<reference ref="799307600"/>
 						</array>
 						<reference key="parent" ref="1063622603"/>
 					</object>
@@ -2675,6 +2693,11 @@
 						<int key="objectID">627</int>
 						<reference key="object" ref="352084731"/>
 						<reference key="parent" ref="110575045"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">630</int>
+						<reference key="object" ref="799307600"/>
+						<reference key="parent" ref="606295188"/>
 					</object>
 				</array>
 			</object>
@@ -2802,6 +2825,7 @@
 				<string key="621.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="624.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="627.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="630.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="72.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="73.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="74.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2818,13 +2842,14 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">629</int>
+			<int key="maxID">633</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
 					<string key="className">FirstResponder</string>
 					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="build:">id</string>
 						<string key="changeBackColor:">id</string>
 						<string key="changeForeColor:">id</string>
 						<string key="clear:">id</string>
@@ -2838,6 +2863,10 @@
 						<string key="setStyle:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="build:">
+							<string key="name">build:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="changeBackColor:">
 							<string key="name">changeBackColor:</string>
 							<string key="candidateClassName">id</string>

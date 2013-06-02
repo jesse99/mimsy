@@ -19,6 +19,7 @@
 #import "Utils.h"
 
 static NSMutableArray* _controllers;
+static DirectoryController* _lastBuilt;
 
 @implementation DirectoryController
 {
@@ -35,6 +36,39 @@ static NSMutableArray* _controllers;
 	NSDictionary* _buildVars;	// environment variable name => value
 	NSString* _defaultTarget;
 	bool _closing;				// need this for leaks ftest
+	NSTask* _buildTask;
+}
+
++ (DirectoryController*)getCurrentController
+{	
+	// Iterate through all the windows until we find a sensible candidate,
+	for (NSWindow* window in [NSApp orderedWindows])
+	{
+		if (window.isVisible && window.windowController)	// note that we don't consider isMiniaturized windows
+		{
+			id candidate = window.windowController;
+			
+			// if it is a directory editor window then we're done,
+			if ([candidate isKindOfClass:[DirectoryController class]])
+			{
+				return candidate;
+			}
+			// if it has a path method then use the associated directory window,
+			else if ([candidate respondsToSelector:NSSelectorFromString(@"path")])
+			{
+				NSString* path = [candidate path];
+				DirectoryController* candidate = [DirectoryController getController:path];
+				return candidate;
+			}
+			else
+			{
+				// otherwise return whichever last did a build (useful with the transcript window).
+				return _lastBuilt;
+			}
+		}
+	}
+	
+	return nil;
 }
 
 + (DirectoryController*)getController:(NSString*)path
@@ -108,6 +142,9 @@ static NSMutableArray* _controllers;
 	// It would be better to track DirectoryView, but it deallocates at a weird
 	// time (and sleeping for long periods in the functional test doesn't suffice).
 	updateInstanceCount(@"DirectoryWindow", -1);
+	
+	if (_lastBuilt == self)
+		_lastBuilt = nil;
 
 	_watcher = nil;
 	[_controllers removeObject:self];
@@ -247,6 +284,19 @@ static NSMutableArray* _controllers;
 	[OpenFile openPath:path atLine:-1 atCol:-1 withTabWidth:1];
 }
 
+- (bool)canBuild
+{
+	NSPopUpButton* menu = _targetsMenu;
+	NSString* target = menu != nil ? [menu titleOfSelectedItem] : nil;
+	return !_buildTask && target && target.length > 0;
+}
+
+- (NSString*)buildTargetName
+{
+	NSPopUpButton* menu = _targetsMenu;
+	return menu != nil ? [menu titleOfSelectedItem] : nil;
+}
+
 - (void)buildTarget:(id)sender
 {
 	UNUSED(sender);
@@ -259,6 +309,7 @@ static NSMutableArray* _controllers;
 		{
 			NSDictionary* info = [Builders build:_builderInfo target:target flags:@"" env:_buildVars];
 			[self _doBuild:info];
+			_lastBuilt = self;
 		}
 		else
 		{
@@ -277,6 +328,25 @@ static NSMutableArray* _controllers;
 	return @[@"directory editor"];
 }
 
+// This is called often (like for every click) so it has to be fast.
+- (BOOL)validateToolbarItem:(NSToolbarItem*)item
+{
+	BOOL enabled = YES;
+	
+	if ([item.itemIdentifier isEqualToString:@"Build"])
+	{
+		enabled = _buildTask == nil;
+	}
+	else if ([item.itemIdentifier isEqualToString:@"Cancel"])
+	{
+		enabled = _buildTask != nil;
+	}
+	
+	return enabled;
+}
+
+// This isn't called very much: typically only once when a menu is shown for
+// the first time.
 - (BOOL)validateMenuItem:(NSMenuItem*)item
 {
 	BOOL enabled = NO;
@@ -397,27 +467,31 @@ static NSMutableArray* _controllers;
 
 - (void)_doBuild:(NSDictionary*)info
 {
+	ASSERT(_buildTask == nil);
+	
 	NSString* command = [NSString stringWithFormat:@"%@ %@\n", [info[@"tool"] lastPathComponent], [info[@"args"] componentsJoinedByString:@" "]];
 	if (![TranscriptController empty])
 		[TranscriptController writeCommand:@"\n"];
 	[TranscriptController writeCommand:command];
 	
-	NSTask* task = [NSTask new];
-	[task setLaunchPath:info[@"tool"]];
-	[task setCurrentDirectoryPath:info[@"cwd"]];
-	[task setArguments:info[@"args"]];
-	[task setEnvironment:_buildVars];
-	[task setStandardOutput:[NSPipe new]];
-	[task setStandardError:[NSPipe new]];
+	_buildTask = [NSTask new];
+	[_buildTask setLaunchPath:info[@"tool"]];
+	[_buildTask setCurrentDirectoryPath:info[@"cwd"]];
+	[_buildTask setArguments:info[@"args"]];
+	[_buildTask setEnvironment:_buildVars];
+	[_buildTask setStandardOutput:[NSPipe new]];
+	[_buildTask setStandardError:[NSPipe new]];
 	//LOG_INFO("Mimsy", "launch path: %s", STR(info[@"tool"]));
 	//LOG_INFO("Mimsy", "cwd: %s", STR(info[@"cwd"]));
 	//LOG_INFO("Mimsy", "args: %s", STR(info[@"args"]));
 	//LOG_INFO("Mimsy", "env: %s", STR(_buildVars));
 	
+	[self _updateBuildButtons];
+	
 	NSString* stdout = nil;
 	NSString* stderr = nil;
 	time_t startTime = time(NULL);
-	int returncode = [Utils run:task stdout:&stdout stderr:&stderr];
+	int returncode = [Utils run:_buildTask stdout:&stdout stderr:&stderr];
 	
 	stdout = [stdout stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	if (stdout && stdout.length > 0)
@@ -432,6 +506,8 @@ static NSMutableArray* _controllers;
 		[TranscriptController writeStderr:stderr];
 		[TranscriptController writeStderr:@"\n"];
 	}
+	_buildTask = nil;
+	[self _updateBuildButtons];
 	
 	if (returncode == 0)
 	{
@@ -443,6 +519,17 @@ static NSMutableArray* _controllers;
 		NSString* name = [info[@"tool"] lastPathComponent];
 		[TranscriptController writeStderr:[NSString stringWithFormat:@"%@ exited with code %d\n", name, returncode]];
 	}
+}
+
+- (void)_updateBuildButtons
+{
+	NSToolbarItem* button = _buildButton;
+	if (button)
+		[button validate];
+	
+	button = _cancelButton;
+	if (button)
+		[button validate];
 }
 
 // Continuum allowed copying of directories although I don't think I ever used it.

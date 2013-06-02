@@ -15,6 +15,7 @@
 - (void)changeStyle:(NSString*)path;
 - (void)resetStyles;
 - (void)showLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width;
+- (NSString*)path;
 
 @property IBOutlet TextView* textView;
 @property IBOutlet __weak NSScrollView* scrollView;

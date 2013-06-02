@@ -254,6 +254,15 @@ void initLogLevels(void)
 	ASSERT(false);
 }
 
+- (void)build:(id)sender
+{
+	DirectoryController* controller = [DirectoryController getCurrentController];
+	if (controller)
+		[controller buildTarget:sender];
+	else
+		NSBeep();
+}
+
 - (BOOL)validateMenuItem:(NSMenuItem*)item
 {
 	BOOL enabled = NO;
@@ -263,6 +272,19 @@ void initLogLevels(void)
 	{
 		[item setTitle:@"Open Directory Settings"];
 		enabled = NO;
+	}
+	else if (sel == @selector(build:))
+	{
+		DirectoryController* controller = [DirectoryController getCurrentController];
+		if (controller && controller.canBuild)
+		{
+			[item setTitle:[NSString stringWithFormat:@"Build %@", controller.buildTargetName]];
+			enabled = YES;
+		}
+		else
+		{
+			[item setTitle:@"Build"];
+		}
 	}
 	else if ([self respondsToSelector:sel])
 	{

@@ -6,6 +6,7 @@
 // These windows work a bit like project windows in IDEs.
 @interface DirectoryController : NSWindowController
 
++ (DirectoryController*)getCurrentController;
 + (DirectoryController*)getController:(NSString*)path;
 + (DirectoryController*)open:(NSString*)path;
 
@@ -13,6 +14,9 @@
 - (void)doubleClicked:(id)sender;
 - (void)deleted:(id)sender;
 - (IBAction)targetChanged:(id)sender;
+- (bool)canBuild;
+- (NSString*)buildTargetName;
+- (void)buildTarget:(id)sender;
 
 - (NSDictionary*)getDirAttrs:(NSString*)path;
 - (NSDictionary*)getFileAttrs:(NSString*)path;
@@ -21,5 +25,7 @@
 @property Glob* ignores;
 @property (weak) IBOutlet NSOutlineView* table;
 @property (weak) IBOutlet NSPopUpButton* targetsMenu;
+@property (weak) IBOutlet NSToolbarItem* buildButton;
+@property (weak) IBOutlet NSToolbarItem* cancelButton;
 
 @end
