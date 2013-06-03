@@ -40,7 +40,7 @@ static DirectoryController* _lastBuilt;
 }
 
 + (DirectoryController*)getCurrentController
-{	
+{
 	// Iterate through all the windows until we find a sensible candidate,
 	for (NSWindow* window in [NSApp orderedWindows])
 	{
@@ -123,7 +123,7 @@ static DirectoryController* _lastBuilt;
 		
 		if (![path isEqualToString:@":restoring:"])
 			[self _loadPath:path];
-
+		
 		updateInstanceCount(@"DirectoryController", +1);
 		updateInstanceCount(@"DirectoryWindow", +1);
 	}
@@ -145,7 +145,7 @@ static DirectoryController* _lastBuilt;
 	
 	if (_lastBuilt == self)
 		_lastBuilt = nil;
-
+	
 	_watcher = nil;
 	[_controllers removeObject:self];
 	self->_closing = true;
@@ -211,24 +211,24 @@ static DirectoryController* _lastBuilt;
 	NSArray* selectedItems = [self _getSelectedItems];
 	NSArray* urls = [selectedItems map:^id(FileSystemItem* item) {return [NSURL fileURLWithPath:item.path];}];
 	[[NSWorkspace sharedWorkspace] recycleURLs:urls completionHandler:
-		^(NSDictionary* urls, NSError* error)
-		{
-			UNUSED(urls);
-			
-			if (!error)
-			{
-				NSOutlineView* table = _table;
-				if (_table)
-					[table deselectAll:self];
-			}
-			else
-			{
-				NSString* reason = [error localizedFailureReason];
-				NSString* mesg = [NSString stringWithFormat:@"Couldn't move the items to the trash: %@", reason];
-				[TranscriptController writeError:mesg];
-			}
-		}
-	];
+	 ^(NSDictionary* urls, NSError* error)
+	 {
+		 UNUSED(urls);
+		 
+		 if (!error)
+		 {
+			 NSOutlineView* table = _table;
+			 if (_table)
+				 [table deselectAll:self];
+		 }
+		 else
+		 {
+			 NSString* reason = [error localizedFailureReason];
+			 NSString* mesg = [NSString stringWithFormat:@"Couldn't move the items to the trash: %@", reason];
+			 [TranscriptController writeError:mesg];
+		 }
+	 }
+	 ];
 }
 
 - (IBAction)targetChanged:(id)sender
@@ -481,44 +481,49 @@ static DirectoryController* _lastBuilt;
 	[_buildTask setEnvironment:_buildVars];
 	[_buildTask setStandardOutput:[NSPipe new]];
 	[_buildTask setStandardError:[NSPipe new]];
-	//LOG_INFO("Mimsy", "launch path: %s", STR(info[@"tool"]));
-	//LOG_INFO("Mimsy", "cwd: %s", STR(info[@"cwd"]));
-	//LOG_INFO("Mimsy", "args: %s", STR(info[@"args"]));
-	//LOG_INFO("Mimsy", "env: %s", STR(_buildVars));
-	
 	[self _updateBuildButtons];
 	
-	NSString* stdout = nil;
-	NSString* stderr = nil;
-	time_t startTime = time(NULL);
-	int returncode = [Utils run:_buildTask stdout:&stdout stderr:&stderr];
+	__block NSString* stdout = nil;
+	__block NSString* stderr = nil;
+	__block time_t startTime = 0;
+	__block int returncode = 0;
 	
-	stdout = [stdout stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-	if (stdout && stdout.length > 0)
+	dispatch_queue_t concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+	dispatch_queue_t main = dispatch_get_main_queue();
+	dispatch_async(concurrent, ^
 	{
-		[TranscriptController writeStdout:stdout];
-		[TranscriptController writeStdout:@"\n"];
-	}
-	
-	stderr = [stderr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-	if (stderr && stderr.length > 0)
-	{
-		[TranscriptController writeStderr:stderr];
-		[TranscriptController writeStderr:@"\n"];
-	}
-	_buildTask = nil;
-	[self _updateBuildButtons];
-	
-	if (returncode == 0)
-	{
-		time_t elapsed = time(NULL) - startTime;
-		[TranscriptController writeStdout:[NSString stringWithFormat:@"built in %ld seconds\n", elapsed]];
-	}
-	else
-	{
-		NSString* name = [info[@"tool"] lastPathComponent];
-		[TranscriptController writeStderr:[NSString stringWithFormat:@"%@ exited with code %d\n", name, returncode]];
-	}
+	   startTime = time(NULL);
+	   returncode = [Utils run:_buildTask stdout:&stdout stderr:&stderr];
+	   dispatch_async(main, ^
+	   {
+		  stdout = [stdout stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		  if (stdout && stdout.length > 0)
+		  {
+			  [TranscriptController writeStdout:stdout];
+			  [TranscriptController writeStdout:@"\n"];
+		  }
+		  
+		  stderr = [stderr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		  if (stderr && stderr.length > 0)
+		  {
+			  [TranscriptController writeStderr:stderr];
+			  [TranscriptController writeStderr:@"\n"];
+		  }
+		  _buildTask = nil;
+		  [self _updateBuildButtons];
+		  
+		  if (returncode == 0)
+		  {
+			  time_t elapsed = time(NULL) - startTime;
+			  [TranscriptController writeStdout:[NSString stringWithFormat:@"built in %ld seconds\n", elapsed]];
+		  }
+		  else
+		  {
+			  NSString* name = [info[@"tool"] lastPathComponent];
+			  [TranscriptController writeStderr:[NSString stringWithFormat:@"%@ exited with code %d\n", name, returncode]];
+		  }
+	  });
+   });
 }
 
 - (void)_updateBuildButtons
@@ -773,68 +778,68 @@ static DirectoryController* _lastBuilt;
 		
 		NSMutableArray* ignores = [NSMutableArray new];
 		[parser enumerate:
-			 ^(ConfigParserEntry* entry)
+		 ^(ConfigParserEntry* entry)
+		 {
+			 if ([entry.key isEqualToString:@"Ignore"])
 			 {
-				 if ([entry.key isEqualToString:@"Ignore"])
+				 [ignores addObject:entry.value];
+			 }
+			 else if ([entry.key isEqualToString:@"Directory"])
+			 {
+				 NSDictionary* attrs = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
+				 [dirAttrs addEntriesFromDictionary:attrs];
+			 }
+			 else if ([entry.key isEqualToString:@"File"])
+			 {
+				 NSDictionary* attrs = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
+				 [fileAttrs addEntriesFromDictionary:attrs];
+			 }
+			 else if ([entry.key isEqualToString:@"Size"])
+			 {
+				 NSDictionary* a = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
+				 NSMutableDictionary* attrs = [NSMutableDictionary dictionaryWithDictionary:a];
+				 
+				 NSMutableParagraphStyle* p = [NSMutableParagraphStyle new];
+				 [p setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
+				 [p setAlignment:NSRightTextAlignment];
+				 attrs[NSParagraphStyleAttributeName] = p;
+				 
+				 [sizeAttrs addEntriesFromDictionary:attrs];
+			 }
+			 else if ([entry.key isEqualToString:@"OpenWithMimsy"])
+			 {
+				 Glob* g = [[Glob alloc] initWithGlob:entry.value];
+				 [openWithMimsy addObject:g];
+			 }
+			 else if ([entry.key isEqualToString:@"BuildEnv"])
+			 {
+				 NSRange range = [entry.value rangeOfString:@"="];
+				 if (range.location != NSNotFound)
 				 {
-					 [ignores addObject:entry.value];
-				 }
-				 else if ([entry.key isEqualToString:@"Directory"])
-				 {
-					 NSDictionary* attrs = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
-					 [dirAttrs addEntriesFromDictionary:attrs];
-				 }
-				 else if ([entry.key isEqualToString:@"File"])
-				 {
-					 NSDictionary* attrs = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
-					 [fileAttrs addEntriesFromDictionary:attrs];
-				 }
-				 else if ([entry.key isEqualToString:@"Size"])
-				 {
-					 NSDictionary* a = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
-					 NSMutableDictionary* attrs = [NSMutableDictionary dictionaryWithDictionary:a];
-					 
-					 NSMutableParagraphStyle* p = [NSMutableParagraphStyle new];
-					 [p setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
-					 [p setAlignment:NSRightTextAlignment];
-					 attrs[NSParagraphStyleAttributeName] = p;
-					 
-					 [sizeAttrs addEntriesFromDictionary:attrs];
-				 }
-				 else if ([entry.key isEqualToString:@"OpenWithMimsy"])
-				 {
-					 Glob* g = [[Glob alloc] initWithGlob:entry.value];
-					 [openWithMimsy addObject:g];
-				 }
-				 else if ([entry.key isEqualToString:@"BuildEnv"])
-				 {
-					 NSRange range = [entry.value rangeOfString:@"="];
-					 if (range.location != NSNotFound)
-					 {
-						 NSString* name = [entry.value substringToIndex:range.location];
-						 NSString* value = [entry.value substringFromIndex:range.location+1];
-						 buildVars[name] = value;
-					 }
-					 else
-					 {
-						 NSString* mesg = [NSString stringWithFormat:@"Expected a '=' in the value for BuildEnv %@", entry.value];
-						 [TranscriptController writeError:mesg];
-					 }
-				 }
-				 else if ([entry.key isEqualToString:@"BuildTarget"])
-				 {
-					 _defaultTarget = entry.value;
+					 NSString* name = [entry.value substringToIndex:range.location];
+					 NSString* value = [entry.value substringFromIndex:range.location+1];
+					 buildVars[name] = value;
 				 }
 				 else
 				 {
-					 NSDictionary* attrs = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
-					 Glob* g = [[Glob alloc] initWithGlob:entry.key];
-					 if (![globs objectForKey:g])
-						 globs[g] = attrs;
-					 else
-						[TranscriptController writeError:[NSString stringWithFormat:@"%@ appears twice in %@", entry.key, path]];
+					 NSString* mesg = [NSString stringWithFormat:@"Expected a '=' in the value for BuildEnv %@", entry.value];
+					 [TranscriptController writeError:mesg];
 				 }
 			 }
+			 else if ([entry.key isEqualToString:@"BuildTarget"])
+			 {
+				 _defaultTarget = entry.value;
+			 }
+			 else
+			 {
+				 NSDictionary* attrs = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
+				 Glob* g = [[Glob alloc] initWithGlob:entry.key];
+				 if (![globs objectForKey:g])
+					 globs[g] = attrs;
+				 else
+					 [TranscriptController writeError:[NSString stringWithFormat:@"%@ appears twice in %@", entry.key, path]];
+			 }
+		 }
 		 ];
 		
 		_ignores = [[ConditionalGlob alloc] initWithGlobs:ignores];
@@ -910,7 +915,7 @@ static DirectoryController* _lastBuilt;
 				[table reloadItem:item == _root ? nil : item reloadChildren:true];
 		}
 	}
-
+	
 	// If root changes we need to force a full reload (mainly because the prefs file
 	// may have changed and we need to let Cocoa know if any row heights have changed).
 	if (table && item == _root)
