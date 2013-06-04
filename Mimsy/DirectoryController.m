@@ -321,6 +321,8 @@ static DirectoryController* _lastBuilt;
 - (void)cancelBuild:(id)sender
 {
 	UNUSED(sender);
+	[_buildTask interrupt];		// this is the "polite" way to kill a task
+	_buildTask = nil;
 }
 
 - (NSArray*)getHelpContext
