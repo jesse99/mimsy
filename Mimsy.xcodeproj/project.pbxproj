@@ -52,6 +52,8 @@
 		377BDE6916CDA8F3008DADA5 /* Database.m in Sources */ = {isa = PBXBuildFile; fileRef = 377BDE6816CDA8F2008DADA5 /* Database.m */; };
 		377BDE6C16CDAC2B008DADA5 /* DatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 377BDE6B16CDAC2B008DADA5 /* DatabaseTests.m */; };
 		377BDE6E16CDACD1008DADA5 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 377BDE6D16CDACD1008DADA5 /* libsqlite3.0.dylib */; };
+		377C2CA8176503B4008E383E /* BuildOptions.xib in Resources */ = {isa = PBXBuildFile; fileRef = 377C2CA7176503B4008E383E /* BuildOptions.xib */; };
+		377C2CAB17650650008E383E /* BuildOptionsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 377C2CAA17650650008E383E /* BuildOptionsController.m */; };
 		37862C3E168D20FD00DB9E66 /* VectorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C3D168D20FD00DB9E66 /* VectorTests.m */; };
 		37862C44168D2D1300DB9E66 /* StyleRunsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C43168D2D1300DB9E66 /* StyleRunsTest.m */; };
 		37862C48168D4AF700DB9E66 /* RegexStylerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C47168D4AF700DB9E66 /* RegexStylerTests.m */; };
@@ -180,6 +182,9 @@
 		377BDE6A16CDAC2B008DADA5 /* DatabaseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseTests.h; sourceTree = "<group>"; };
 		377BDE6B16CDAC2B008DADA5 /* DatabaseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseTests.m; sourceTree = "<group>"; };
 		377BDE6D16CDACD1008DADA5 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = ../../../usr/lib/libsqlite3.0.dylib; sourceTree = "<group>"; };
+		377C2CA7176503B4008E383E /* BuildOptions.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BuildOptions.xib; sourceTree = "<group>"; };
+		377C2CA917650650008E383E /* BuildOptionsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuildOptionsController.h; sourceTree = "<group>"; };
+		377C2CAA17650650008E383E /* BuildOptionsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuildOptionsController.m; sourceTree = "<group>"; };
 		37862C3B168D20B200DB9E66 /* TestVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestVector.h; sourceTree = "<group>"; };
 		37862C3C168D20FD00DB9E66 /* VectorTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VectorTests.h; sourceTree = "<group>"; };
 		37862C3D168D20FD00DB9E66 /* VectorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VectorTests.m; sourceTree = "<group>"; };
@@ -383,6 +388,9 @@
 			children = (
 				3768CCE116ED322C00D5CB57 /* Builders.h */,
 				3768CCE216ED322C00D5CB57 /* Builders.m */,
+				377C2CA917650650008E383E /* BuildOptionsController.h */,
+				377C2CAA17650650008E383E /* BuildOptionsController.m */,
+				377C2CA7176503B4008E383E /* BuildOptions.xib */,
 				3768CCC416CDDA0700D5CB57 /* DirectoryController.h */,
 				3768CCCA16CDDCB000D5CB57 /* DirectoryController.m */,
 				3768CCDC16E1A61100D5CB57 /* DirectoryView.h */,
@@ -627,6 +635,7 @@
 				37BF4DFA16F56CB3008FD480 /* images in Resources */,
 				372D8FA916F5719E00CBBC96 /* Build.png in Resources */,
 				372D8FAB16F571A500CBBC96 /* Cancel.png in Resources */,
+				377C2CA8176503B4008E383E /* BuildOptions.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -706,6 +715,7 @@
 				3768CCDE16E1A61100D5CB57 /* DirectoryView.m in Sources */,
 				3768CCE316ED322D00D5CB57 /* Builders.m in Sources */,
 				37AD7570171B95460054A75F /* UpdateConfig.m in Sources */,
+				377C2CAB17650650008E383E /* BuildOptionsController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

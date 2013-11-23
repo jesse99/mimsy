@@ -19,6 +19,8 @@
 - (NSUInteger)hash;
 - (BOOL)isEqual:(id)anObject;
 
+- (NSString*)description;
+
 @property (readonly) NSArray* globs;
 
 @end

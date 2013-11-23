@@ -17,12 +17,17 @@
 - (bool)canBuild;
 - (NSString*)buildTargetName;
 - (void)buildTarget:(id)sender;
+- (void)saveBuildFlags;
 
 - (NSDictionary*)getDirAttrs:(NSString*)path;
 - (NSDictionary*)getFileAttrs:(NSString*)path;
 - (NSDictionary*)getSizeAttrs;
 
+@property NSString* path;
 @property Glob* ignores;
+@property NSMutableArray* targetGlobs;
+@property NSMutableArray* flags;
+
 @property (weak) IBOutlet NSOutlineView* table;
 @property (weak) IBOutlet NSPopUpButton* targetsMenu;
 @property (weak) IBOutlet NSToolbarItem* buildButton;

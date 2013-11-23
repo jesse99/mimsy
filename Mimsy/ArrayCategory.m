@@ -28,3 +28,19 @@
 }
 
 @end
+
+@implementation NSMutableArray (MutableArrayCategory)
+
+- (NSMutableArray*)map:(id (^)(id element))block
+{
+	NSMutableArray* result = [[NSMutableArray alloc] initWithCapacity:self.count];
+	
+	for (id element in self)
+	{
+		[result addObject:block(element)];
+	}
+	
+	return result;
+}
+
+@end

@@ -9,3 +9,9 @@
 - (NSArray*)arrayByRemovingObject:(id)object;
 
 @end
+
+@interface NSMutableArray (MutableArrayCategory)
+
+- (NSMutableArray*)map:(id (^)(id element))block;
+
+@end

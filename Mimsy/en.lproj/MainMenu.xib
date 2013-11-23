@@ -1082,6 +1082,24 @@
 									<reference key="NSOnImage" ref="1033313550"/>
 									<reference key="NSMixedImage" ref="310636482"/>
 								</object>
+								<object class="NSMenuItem" id="423876945">
+									<reference key="NSMenu" ref="606295188"/>
+									<bool key="NSIsDisabled">YES</bool>
+									<bool key="NSIsSeparator">YES</bool>
+									<string key="NSTitle"/>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
+								<object class="NSMenuItem" id="421505801">
+									<reference key="NSMenu" ref="606295188"/>
+									<string key="NSTitle">Build Flags…</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
 							</array>
 						</object>
 					</object>
@@ -1766,6 +1784,14 @@
 						<reference key="destination" ref="162218144"/>
 					</object>
 					<int key="connectionID">633</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">openBuildFlags:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="421505801"/>
+					</object>
+					<int key="connectionID">639</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -2671,6 +2697,8 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="162218144"/>
 							<reference ref="799307600"/>
+							<reference ref="421505801"/>
+							<reference ref="423876945"/>
 						</array>
 						<reference key="parent" ref="1063622603"/>
 					</object>
@@ -2697,6 +2725,16 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">630</int>
 						<reference key="object" ref="799307600"/>
+						<reference key="parent" ref="606295188"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">636</int>
+						<reference key="object" ref="421505801"/>
+						<reference key="parent" ref="606295188"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">638</int>
+						<reference key="object" ref="423876945"/>
 						<reference key="parent" ref="606295188"/>
 					</object>
 				</array>
@@ -2826,6 +2864,8 @@
 				<string key="624.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="627.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="630.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="636.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="638.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="72.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="73.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="74.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2842,7 +2882,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">633</int>
+			<int key="maxID">639</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2856,6 +2896,7 @@
 						<string key="duplicate:">id</string>
 						<string key="duplicateDocument:">id</string>
 						<string key="getInfo:">id</string>
+						<string key="openBuildFlags:">id</string>
 						<string key="openDirSettings:">id</string>
 						<string key="openDirectory:">id</string>
 						<string key="openInstalled:">id</string>
@@ -2889,6 +2930,10 @@
 						</object>
 						<object class="IBActionInfo" key="getInfo:">
 							<string key="name">getInfo:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="openBuildFlags:">
+							<string key="name">openBuildFlags:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="openDirSettings:">

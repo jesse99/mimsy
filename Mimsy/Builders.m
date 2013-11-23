@@ -3,6 +3,7 @@
 #import "Glob.h"
 #import "Logger.h"
 #import "Paths.h"
+#import "StringCategory.h"
 #import "TranscriptController.h"
 #import "Utils.h"
 
@@ -76,7 +77,10 @@ static NSDictionary* _globs;	// name => glob
 	[args addObject:[NSString stringWithFormat:@"--path=%@", info[@"path"]]];
 	[args addObject:[NSString stringWithFormat:@"--target=%@", target]];
 	if (flags && flags.length > 0)
-		[args addObject:[NSString stringWithFormat:@"--flags=%@", flags]];
+	{
+		[args addObject:@"--"];
+		[args addObjectsFromArray:[flags splitByString:@" "]];
+	}
 	
 	NSTask* task = [NSTask new];
 	[task setLaunchPath:_builders[info[@"name"]]];

@@ -66,7 +66,7 @@ def build_info(path):
 	return json.dumps(result)
 
 # Return a command line that can be used to perform a build.	
-def build_command(path, target):
+def build_command(path, target, flags):
 	def get_make_dir():
 		for candidate in os.environ['PATH'].split(':'):
 			path = os.path.join(candidate, 'make')
@@ -83,6 +83,8 @@ def build_command(path, target):
 		if filename != 'Makefile':
 			args.append('--file=%s' % path)
 		args.append(target)
+		if flags:
+			args.extend(flags)
 		
 		result = {
 			'error': '',
@@ -97,16 +99,17 @@ def build_command(path, target):
 	
 	return json.dumps(result)
 
-# Parse command line.
+# Parse command line. 
 parser = argparse.ArgumentParser(description = "Used by Mimsy to interact with Makefiles.")
 parser.add_argument("--path", help = 'path to the Makefile')
 parser.add_argument("--target", help = 'name of the Makefile target to build')
 parser.add_argument("--version", "-V", action = 'version', version = '%(prog)s 0.1')
+parser.add_argument("flags", nargs="*")
 options = parser.parse_args()
 
 # Process command line.
 if options.path and options.target:
-	print build_command(options.path, options.target)
+	print build_command(options.path, options.target, options.flags)
 elif options.path:
 	print build_info(options.path)
 else:

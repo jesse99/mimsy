@@ -45,4 +45,16 @@
 	return FALSE;
 }
 
+- (NSString*)description
+{
+	if (_globs.count == 1)
+	{
+		return [_globs[0] description];
+	}
+	else
+	{
+		return [_globs componentsJoinedByString:@";"];
+	}
+
+}
 @end

@@ -4,6 +4,7 @@
 #import "ArrayCategory.h"
 #import "Assert.h"
 #import "Builders.h"
+#import "BuildOptionsController.h"
 #import "ConditionalGlob.h"
 #import "ConfigParser.h"
 #import "DirectoryWatcher.h"
@@ -37,6 +38,9 @@ static DirectoryController* _lastBuilt;
 	NSString* _defaultTarget;
 	bool _closing;				// need this for leaks ftest
 	NSTask* _buildTask;
+	BuildOptionsController* _optionsController;
+	NSMutableArray* _targets;
+	NSMutableArray* _flags;
 }
 
 + (DirectoryController*)getCurrentController
@@ -109,6 +113,8 @@ static DirectoryController* _lastBuilt;
 	{
 		self.window.restorationClass = [AppDelegate class];
 		self.window.identifier = @"DirectoryWindow3";
+		self.targetGlobs = [NSMutableArray new];
+		self.flags = [NSMutableArray new];
 		
 		if (!_controllers)
 			_controllers = [NSMutableArray new];
@@ -251,6 +257,22 @@ static DirectoryController* _lastBuilt;
 	}
 }
 
+- (void)saveBuildFlags
+{
+	NSString* path = [_path stringByAppendingPathComponent:@".mimsy.rtf"];
+	for (NSUInteger i = 0; i < self.targetGlobs.count; ++i)
+	{
+		NSError* error = nil;
+		NSString* value = [NSString stringWithFormat:@"%@=%@", self.targetGlobs[i], self.flags[i]];
+		if (!updatePref(path, @"BuildFlag", value, &error))
+		{
+			NSString* reason = [error localizedFailureReason];
+			NSString* mesg = [NSString stringWithFormat:@"Couldn't set BuildFlag pref for %@: %@", self.targetGlobs[i], reason];
+			[TranscriptController writeError:mesg];
+		}
+	}
+}
+
 - (void)duplicate:(id)sender
 {
 	UNUSED(sender);
@@ -284,6 +306,17 @@ static DirectoryController* _lastBuilt;
 	[OpenFile openPath:path atLine:-1 atCol:-1 withTabWidth:1];
 }
 
+- (void)openBuildFlags:(id)sender
+{
+	UNUSED(sender);
+	
+	if (!_optionsController)
+		_optionsController = [BuildOptionsController new];	
+	[_optionsController openWith:self];
+	
+	(void) [NSApp runModalForWindow:_optionsController.window];
+}
+
 - (bool)canBuild
 {
 	NSPopUpButton* menu = _targetsMenu;
@@ -307,7 +340,8 @@ static DirectoryController* _lastBuilt;
 		NSString* target = [menu titleOfSelectedItem];
 		if (target && target.length > 0)
 		{
-			NSDictionary* info = [Builders build:_builderInfo target:target flags:@"" env:_buildVars];
+			NSString* flags = [self _findBuildFlags:target];
+			NSDictionary* info = [Builders build:_builderInfo target:target flags:flags env:_buildVars];
 			[self _doBuild:info];
 			_lastBuilt = self;
 		}
@@ -316,6 +350,17 @@ static DirectoryController* _lastBuilt;
 			NSBeep();
 		}
 	}
+}
+
+- (NSString*)_findBuildFlags:(NSString*)target
+{
+	for (NSUInteger i = 0; i < _targetGlobs.count; ++i)
+	{
+		Glob* glob = _targetGlobs[i];
+		if ([glob matchName:target])
+			return _flags[i];
+	}
+	return @"";
 }
 
 - (void)cancelBuild:(id)sender
@@ -761,6 +806,8 @@ static DirectoryController* _lastBuilt;
 	NSMutableDictionary* globs = [NSMutableDictionary new];
 	NSMutableDictionary* buildVars = [NSMutableDictionary new];
 	NSMutableArray* openWithMimsy = [NSMutableArray new];
+	NSMutableArray* targets = [NSMutableArray new];
+	NSMutableArray* flags = [NSMutableArray new];
 	
 	NSProcessInfo* info = [NSProcessInfo processInfo];
 	[buildVars addEntriesFromDictionary:info.environment];
@@ -828,6 +875,22 @@ static DirectoryController* _lastBuilt;
 					 [TranscriptController writeError:mesg];
 				 }
 			 }
+			 else if ([entry.key isEqualToString:@"BuildFlag"])
+			 {
+				 NSRange range = [entry.value rangeOfString:@"="];
+				 if (range.location != NSNotFound)
+				 {
+					 NSString* glob = [entry.value substringToIndex:range.location];
+					 NSString* flag = [entry.value substringFromIndex:range.location+1];
+					 [targets addObject:[[Glob alloc] initWithGlob:glob]];
+					 [flags addObject:flag];
+				 }
+				 else
+				 {
+					 NSString* mesg = [NSString stringWithFormat:@"Expected a '=' in the value for BuildFlag %@", entry.value];
+					 [TranscriptController writeError:mesg];
+				 }
+			 }
 			 else if ([entry.key isEqualToString:@"BuildTarget"])
 			 {
 				 _defaultTarget = entry.value;
@@ -853,6 +916,8 @@ static DirectoryController* _lastBuilt;
 	_globs = globs;
 	_buildVars = buildVars;
 	_openWithMimsy = openWithMimsy;
+	_targetGlobs = targets;
+	_flags = flags;
 }
 
 - (NSAttributedString*)_loadPrefFile:(NSString*)path
