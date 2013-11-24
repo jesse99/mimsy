@@ -110,19 +110,19 @@ static void validateOptions(struct Options* options)
 	{
 		handleHelpOption(0);
 	}
-	else if (options->unknown)
-	{
-		printf("Unknown option: %s\n", options->unknown);
-		printf("\n");
-		handleHelpOption(1);
-	}
-	else if (options->vimDir)
+	if (options->vimDir)
 	{
 		if (!options->outDir)
 		{
 			printf("--out must be used if --vim is used\n");
 			exit(1);
 		}
+	}
+	if (options->unknown)
+	{
+		// The Finder passes in weird options like -psn_0_354533895 so we won't
+		// bail if we get an unrecognized option.
+		LOG_INFO("App", "Unknown option: %s\n", options->unknown);
 	}
 }
 

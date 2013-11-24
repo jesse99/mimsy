@@ -1,3 +1,47 @@
+* Is there a way to get command-D working with unsaved docs?
+* Shell files have no styling?
+* Can we add some sort of subtle highlight for the area between the current brackets?
+	- rainbow?
+	- only mismatched?
+	- use a script?
+* Update xcode
+	- see whats changed in cocoa
+* Should be able to command-click directory window
+* Make sure directory window shows the mimsy file
+	- may want a setting for files to always show
+* Get builds working:
+	- probably want project settings file to have target black list
+	- support build variables
+		do builders really need to provide this?
+		can't the settings file just list env vars to set?
+	- implement a waf builder
+	- maybe an xcode builder
+* Add support for extracting error info from tools	
+	should use settings files (or maybe lua scripts)
+	build docs should probably reference this
+	look at VIM: /usr/share/vim/vim73/compiler/gcc.vim
+	error formats use scanf syntax
+	        %f              file name (finds a string)
+	        %l              line number (finds a number)
+	        %c              column number (finds a number representing character
+	                        column of the error, (1 <tab> == 1 character column))
+	        %v              virtual column number (finds a number representing
+	                        screen column of the error (1 <tab> == 8 screen
+	                        columns))
+	        %t              error type (finds a single character)
+	        %n              error number (finds a number)
+	        %m              error message (finds a string)
+	        %r              matches the "rest" of a single-line file message %O/P/Q
+	        %p              pointer line (finds a sequence of '-', '.' or ' ' and
+	                        uses the length for the column number)
+	        %*{conv}        any scanf non-assignable conversion
+	        %%              the single '%' character
+	        %s              search text (finds a string)
+	        see :help errorformat
+	        http://vim.wikia.com/wiki/Errorformats
+	builds need to call reloadIfChanged
+	build menu should rebuild if the dir changes
+* Maybe can use rustc --parse-syntax in a script to highlight errors
 * Might want Run and Test commands (run different targets).
 * Build menu should reload if build file changes.
 * Work on building:
