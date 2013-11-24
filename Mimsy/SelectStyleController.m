@@ -106,7 +106,7 @@ static SelectStyleController* _controller;
 		];
 
 		[temp reloadData];
-		[_writeTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:5.0]];
+		[_writeTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
 	}
 }
 
