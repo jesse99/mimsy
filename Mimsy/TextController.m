@@ -64,7 +64,11 @@
 	[self.textView.textStorage setDelegate:this];
 	[self.textView.layoutManager setDelegate:this];
 	[self.textView.layoutManager setBackgroundLayoutEnabled:YES];
-	[self.textView setTypingAttributes:TextStyles.fallbackStyle];
+
+	if (self.path)
+		[self.textView setTypingAttributes:TextStyles.fallbackStyle];
+	else
+		[self _setDefaultUntitledStyles];
 }
 
 - (void)windowWillClose:(NSNotification*)notification
@@ -130,7 +134,7 @@
 		LOG_INFO("Text", "Untitled window opened");
 	// TODO: need to do this stuff
 	//Broadcaster.Invoke("opening document window", m_boss);
-	
+		
 	[self.window makeKeyAndOrderFront:self];
 	
 	//Broadcaster.Invoke("opened document window", m_boss);
@@ -285,9 +289,7 @@
 		
 		if (_language && !_styles)
 		{
-			NSString* dir = [Paths installedDir:@"styles"];
-			NSString* path = [dir stringByAppendingPathComponent:self._getDefaultStyleName];
-			_styles = [[TextStyles alloc] initWithPath:path];
+			_styles = [self _createTextStyles];
 		}
 		else if (!_language && _styles)
 		{
@@ -464,6 +466,20 @@
 //			DoPruneRanges();
 //		}
 	}
+}
+
+- (void)_setDefaultUntitledStyles
+{
+	TextStyles* styles = [self _createTextStyles];
+	[self.textView setBackgroundColor:styles.backColor];
+	[self.textView setTypingAttributes:[styles attributesForElement:@"Normal"]];
+}
+
+- (TextStyles*)_createTextStyles
+{
+	NSString* dir = [Paths installedDir:@"styles"];
+	NSString* path = [dir stringByAppendingPathComponent:self._getDefaultStyleName];
+	return [[TextStyles alloc] initWithPath:path];
 }
 
 @end
