@@ -9,6 +9,7 @@
 + (DirectoryController*)getCurrentController;
 + (DirectoryController*)getController:(NSString*)path;
 + (DirectoryController*)open:(NSString*)path;
++ (void)enumerate:(void (^)(DirectoryController* controller))block;
 
 - (bool)shouldOpen:(NSString*)path;
 - (void)doubleClicked:(id)sender;

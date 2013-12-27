@@ -131,10 +131,8 @@ static NSString* Replacement = @"\uFFFD";
 	return candidates;
 }
 
-+ (bool)enumerateDeepDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item))block
-{
-	ASSERT(error != NULL);
-	
++ (bool)enumerateDeepDir:(NSString*)path glob:(Glob*)glob error:(NSError**)outError block:(void (^)(NSString* item))block
+{	
 	NSFileManager* fm = [NSFileManager new];
 	NSMutableArray* errors = [NSMutableArray new];
 	
@@ -172,11 +170,11 @@ static NSString* Replacement = @"\uFFFD";
 		}
 	}
 	
-	if (errors.count)
+	if (errors.count && outError)
 	{
 		NSString* mesg = [errors componentsJoinedByString:@"\n"];
 		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
-		*error = [NSError errorWithDomain:@"mimsy" code:4 userInfo:dict];
+		*outError = [NSError errorWithDomain:@"mimsy" code:4 userInfo:dict];
 	}
 	return errors.count == 0;
 }
@@ -219,8 +217,8 @@ static NSString* Replacement = @"\uFFFD";
 
 + (int)run:(NSTask*)task stdout:(NSString**)stdout stderr:(NSString**)stderr
 {
+	// TODO: NSTask can block if the pipes get full, may want to try: http://dev.notoptimal.net/2007/04/nstasks-nspipes-and-deadlocks-when.html
 	[task launch];
-	[task waitUntilExit];
 	
 	if (stdout)
 	{
@@ -233,6 +231,8 @@ static NSString* Replacement = @"\uFFFD";
 		NSData* data = [[[task standardError] fileHandleForReading] readDataToEndOfFile];
 		*stderr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	}
+	
+	[task waitUntilExit];
 	
 	return task.terminationStatus;
 }

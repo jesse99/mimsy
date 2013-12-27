@@ -91,6 +91,17 @@ static DirectoryController* _lastBuilt;
 	return nil;
 }
 
++ (void)enumerate:(void (^)(DirectoryController*))block
+{
+	for (NSWindow* window in [NSApp orderedWindows])
+	{
+		if (window.isVisible || window.isMiniaturized)
+			if (window.windowController)
+				if ([window.windowController isKindOfClass:[DirectoryController class]])
+					block(window.windowController);
+	}
+}
+
 + (DirectoryController*)open:(NSString*)path
 {
 	DirectoryController* controller = [DirectoryController getController:path];
@@ -303,7 +314,7 @@ static DirectoryController* _lastBuilt;
 	UNUSED(sender);
 	
 	NSString* path = [_path stringByAppendingPathComponent:@".mimsy.rtf"];
-	[OpenFile openPath:path atLine:-1 atCol:-1 withTabWidth:1];
+	(void) [OpenFile openPath:path atLine:-1 atCol:-1 withTabWidth:1];
 }
 
 - (void)openBuildFlags:(id)sender
@@ -706,13 +717,15 @@ static DirectoryController* _lastBuilt;
 	NSArray* selectedItems = [self _getSelectedItems];
 	if ([OpenFile shouldOpenFiles:selectedItems.count])
 	{
+		bool failed = false;
 		for (FileSystemItem* item  in selectedItems)
 		{
 			if ([item.path rangeOfString:@"(Autosaved)"].location == NSNotFound)
-				[OpenFile openPath:item.path atLine:-1 atCol:-1 withTabWidth:1];
-			else
-				NSBeep();
+				if (![OpenFile openPath:item.path atLine:-1 atCol:-1 withTabWidth:1])
+					failed = true;
 		}
+		if (failed)
+			NSBeep();
 	}
 }
 

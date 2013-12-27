@@ -7,6 +7,7 @@
 #import "Language.h"
 #import "Languages.h"
 #import "Logger.h"
+#import "OpenSelection.h"
 #import "Paths.h"
 #import "RestoreView.h"
 #import "StartupScripts.h"
@@ -141,6 +142,16 @@
 	//synchronizeWindowTitleWithDocumentName();		// bit of a hack, but we need something like this for IDocumentWindowTitle to work
 
 	//DoSetTabSettings();
+}
+
+- (void)openSelection:(id)sender
+{
+	UNUSED(sender);
+	
+	NSTextStorage* storage = self.textView.textStorage;
+	NSRange range = self.textView.selectedRange;
+	if (!openTextRange(storage, range))
+		NSBeep();
 }
 
 - (void)removeStyle:(id)sender

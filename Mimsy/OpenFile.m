@@ -26,8 +26,10 @@
 	return open;
 }
 
-+ (void)openPath:(NSString*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width
++ (bool)openPath:(NSString*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width
 {
+	bool opened = false;
+	
 	if ([self _mimsyCanOpen:path])
 	{
 		NSURL* url = [NSURL fileURLWithPath:path];
@@ -53,14 +55,17 @@
 				 }
 			 }
 		 ];
+		
+		// openDocumentWithContentsOfURL should have been able to open it but it's an asynchronous
+		// method so we can't know for sure if it has actually succeeded until some time later.
+		opened = true;
 	}
 	else
 	{
-		if (![[NSWorkspace sharedWorkspace] openFile:path])
-		{
-			NSBeep();
-		}
+		opened = [[NSWorkspace sharedWorkspace] openFile:path];
 	}
+	
+	return opened;
 }
 
 + (bool)_mimsyCanOpen:(NSString*)path

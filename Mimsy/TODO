@@ -1,14 +1,19 @@
-* Is there a way to get command-D working with unsaved docs?
-* Shell files have no styling?
+* Get open selection working:
+	- add a menu item
+	- get open in google working
+	- lang files should allow other sites to be searched
+	- if there is no selection then pop up a dialog
+* Add Time Machine support.
+* Spelling.
 * Can we add some sort of subtle highlight for the area between the current brackets?
 	- rainbow?
 	- only mismatched?
 	- use a script?
 * Update xcode
 	- see whats changed in cocoa
-* Should be able to command-click directory window
 * Make sure directory window shows the mimsy file
 	- may want a setting for files to always show
+	- or a setting for files to hide?
 * Get builds working:
 	- probably want project settings file to have target black list
 	- support build variables

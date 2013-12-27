@@ -1,0 +1,36 @@
+Language: c#
+Globs: *.cs
+LineComment: //
+Word: [\w\p{Lm}\p{Nl}\p{Mn}_~]+
+Help: [.NET Framework]http://msdn.microsoft.com/en-us/library/gg145045(v=VS.110).aspx
+Help: [C# Reference]http://msdn.microsoft.com/en-us/library/aa645596(v=vs.71).aspx
+
+Comment: // .* $
+Comment: /\* (?: . | \r | \n)*? \*/
+Type: \b(?:  object | bool | byte | decimal | double | fixed | float | int | sbyte | long | ulong | uint | char | ushort | short | string | void)\b
+Conditional: \b(?: case | if | switch)\b
+Exception: \b(?: catch | finally | throw | try)\b
+Keyword: \b(?: abstract | event | new | struct | as | dynamic | null | base | this | operator | override | params | private | break | protected | checked | public | unchecked | class | continue | in | return | using | default | interface | delegate | is | lock | stackalloc | else | enum | namespace)\b
+Keyword: \b(?: by | on | ascending | descending | from | get | group | into | join | let | orderby | partial | partial | select | set | var | where | where | yield )\b
+Operator: \b(?: sizeof | typeof)\b
+Repeat: \b(?: do | foreach | for | while)\b
+StorageClass: \b(?: const | explicit | extern | out | readonly | unsafe  | implicit | internal | ref | virtual | sealed | volatile | static)\b
+
+Boolean: \b(?: false | true)\b
+Float: (?<= \W) \d+ \. \d+ (?: [eE] [\+-]? \d+)? [FfDdMm]? (?= \W)
+Float: (?<= \W) \. \d+ (?: [eE] [\+-]? \d+)? [FfDdMm]? (?= \W)
+Float: (?<= \W) \d+ [eE] [\+-]? \d+ [FfDdMm]? (?= \W)
+Float: (?<= \W) \d+ [FfDdMm] (?= \W)
+Number: (?<= \W) \d+ (?= \W)
+Number: (?<= \W) 0x [0-9a-fA-f]+ (?= \W)
+
+#Attribute: (?<= ^ \s* \[ (?: \w+ \s* :)? \s*) [\w\.]+ \s* (?= \]|\()
+PreProc: \x23 \s* (?: define | pragma) .* $
+PreProc: \x23 \s* (?: else | endif | line | warning | error | undef)
+PreCondit: \x23 \s* (?: if | elif | region) .* $
+PreCondit: \x23 \s* (?: endregion)
+Include: \x23 \s* include
+
+String: " (?: [^"\r\n\\] | \\.)* "
+String: @" (?: [^"\\] | \\. | (?: " "))* "
+Character: ' (?: [^'\r\n\\] | \\.)* '

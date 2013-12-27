@@ -4,6 +4,6 @@
 @interface OpenFile : NSObject
 
 + (bool)shouldOpenFiles:(NSUInteger)numFiles;
-+ (void)openPath:(NSString*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width;
++ (bool)openPath:(NSString*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width;
 
 @end
