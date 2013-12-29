@@ -28,6 +28,8 @@
 @property Glob* ignores;
 @property NSMutableArray* targetGlobs;
 @property NSMutableArray* flags;
+@property Glob* preferredPaths;
+@property Glob* ignoredPaths;
 
 @property (weak) IBOutlet NSOutlineView* table;
 @property (weak) IBOutlet NSPopUpButton* targetsMenu;

@@ -2,6 +2,19 @@
 
 @implementation NSArray (ArrayCategory)
 
+- (NSArray*)filteredArrayUsingBlock:(bool (^)(id element))block
+{
+	NSMutableArray* result = [[NSMutableArray alloc] initWithCapacity:self.count];
+	
+	for (id element in self)
+	{
+		if (block(element))
+			[result addObject:element];
+	}
+	
+	return result;
+}
+
 - (NSArray*)map:(id (^)(id element))block
 {
 	NSMutableArray* result = [[NSMutableArray alloc] initWithCapacity:self.count];

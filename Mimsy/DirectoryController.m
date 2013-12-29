@@ -126,6 +126,8 @@ static DirectoryController* _lastBuilt;
 		self.window.identifier = @"DirectoryWindow3";
 		self.targetGlobs = [NSMutableArray new];
 		self.flags = [NSMutableArray new];
+		self.preferredPaths = [[Glob alloc] initWithGlobs:@[]];
+		self.ignoredPaths = [[Glob alloc] initWithGlobs:@[]];
 		
 		if (!_controllers)
 			_controllers = [NSMutableArray new];
@@ -821,6 +823,8 @@ static DirectoryController* _lastBuilt;
 	NSMutableArray* openWithMimsy = [NSMutableArray new];
 	NSMutableArray* targets = [NSMutableArray new];
 	NSMutableArray* flags = [NSMutableArray new];
+	NSMutableArray* preferredPaths = [NSMutableArray new];
+	NSMutableArray* ignoredPaths = [NSMutableArray new];
 	
 	NSProcessInfo* info = [NSProcessInfo processInfo];
 	[buildVars addEntriesFromDictionary:info.environment];
@@ -873,9 +877,28 @@ static DirectoryController* _lastBuilt;
 				 Glob* g = [[Glob alloc] initWithGlob:entry.value];
 				 [openWithMimsy addObject:g];
 			 }
+			 else if ([entry.key isEqualToString:@"PreferredPath"])
+			 {
+				 if ([entry.value isEqualToString:@"."])
+				 {
+					 [preferredPaths addObject:[self.path stringByAppendingPathComponent:@"*"]];
+				 }
+				 else if ([entry.value isEqualToString:@".."])
+				 {
+					 [preferredPaths addObject:[[self.path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"*" ]];
+				 }
+				 else
+				 {
+					 [preferredPaths addObject:entry.value];
+				 }
+			 }
+			 else if ([entry.key isEqualToString:@"IgnoredPath"])
+			 {
+				[ignoredPaths addObject:entry.value];
+			 }
 			 else if ([entry.key isEqualToString:@"BuildEnv"])
 			 {
-				 NSRange range = [entry.value rangeOfString:@"="];
+				 NSRange range = [entry.value rangeOfString:@"="];	
 				 if (range.location != NSNotFound)
 				 {
 					 NSString* name = [entry.value substringToIndex:range.location];
@@ -930,6 +953,8 @@ static DirectoryController* _lastBuilt;
 	_buildVars = buildVars;
 	_openWithMimsy = openWithMimsy;
 	_targetGlobs = targets;
+	_preferredPaths = [[Glob alloc] initWithGlobs:preferredPaths];
+	_ignoredPaths = [[Glob alloc] initWithGlobs:ignoredPaths];
 	_flags = flags;
 }
 

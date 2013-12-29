@@ -1,7 +1,9 @@
 #import "OpenSelection.h"
 
+#import "ArrayCategory.h"
 #import "Assert.h"
 #import "DirectoryController.h"
+#import "Glob.h"
 #import "Logger.h"
 #import "OpenFile.h"
 #import "ScannerCategory.h"
@@ -139,11 +141,12 @@ static bool _openLocalPath(NSString* path, int line, int col)
 	return opened;
 }
 
-// TODO: The operation of open selection is a little weird: when searching for
-// local files we use the full file name, but when using the locate command
-// we allow partial file name matches.
 static NSArray* _locateFiles(NSString* path)
 {
+	// Unlike the other implementations of open selection here we only use
+	// the file name component of the path we're trying to open. We do this
+	// because it's fairly common to try and locate paths like <AppKit/NSResponder.h>
+	// which are links to paths like /System/Library/Frameworks/AppKit.framework/Versions/C/Headers/NSResponder.h
 	NSArray* components = [path pathComponents];
 	NSString* fileName = [components lastObject];
 	NSString* file = [@"/" stringByAppendingString:fileName];
@@ -174,50 +177,61 @@ static NSArray* _locateFiles(NSString* path)
 	return files;
 }
 
+static bool _openAllLocatedFiles(NSArray* files, int line, int col)
+{
+	bool opened = false;
+
+	for (NSString* path in files)
+	{
+		if (_doAbsolutePath(path, line, col))
+		{
+			LOG_DEBUG("Text", "opened using located path");
+			opened = true;
+		}
+	}
+	
+	return opened;
+}
+
 // TODO:
-// add support for preferred paths
-//    preferred are:
-//       current directory
-//       list of directories in settings file
-// may want non-preferred
-//    e.g. any directory starting with a dot
 // if there are four total or four preferred then
 //    open them
 // else
 //    pop up a picker dialog
-static bool _openLocatedFiles(NSArray* candidates, int line, int col)
+static bool _openLocatedFiles(NSArray* files, int line, int col)
 {
 	bool opened = false;
 	
-	if (candidates.count < 20)
+	// First try and open files within the preferred directories.
+	DirectoryController* controller = [DirectoryController getCurrentController];
+	if (controller)
 	{
-		for (NSString* path in candidates)
+		Glob* ignored = controller.ignoredPaths;
+		files = [files filteredArrayUsingBlock:^bool(id element)
 		{
-			if (_doAbsolutePath(path, line, col))
-			{
-				LOG_DEBUG("Text", "opened using located path");
-				opened = true;
-			}
-		}
+		   return ![ignored matchName:element];
+		}];
+
+		Glob* preferred = controller.preferredPaths;
+		NSArray* candidates = [files filteredArrayUsingBlock:^bool(id element)
+		{
+			return [preferred matchName:element];
+		}];
+
+		if (candidates.count < 4)
+			opened = _openAllLocatedFiles(candidates, line, col);
 	}
 	
-	//			NSString* name = [path lastPathComponent];
-	
-	//			Boss boss = ObjectModel.Create("FileSystem");
-	//			var fs = boss.Get<IFileSystem>();
-	//			var candidates = new List<string>(fs.LocatePath("/" + name));
-	
-	// This isn't as tight a test as we would like, but I don't think we can
-	// do much better because of links. For example, <AppKit/NSResponder.h>
-	// maps to a path like:
-	//  "/System/Library/Frameworks/AppKit.framework/Versions/C/Headers/NSResponder.h".
-	//			candidates.RemoveAll(c => System.IO.Path.GetFileName(path) != name);
-	
-	//			if (candidates.Count > 0)
-	//				found = _openLocalPath(candidates.ToArray(), name, line, col) || DoOpenGlobalPath(candidates.ToArray(), name, line, col);
-	//			else
+	// If we couldn't do that and we have a small number of files
+	// then just open them all.
 	if (!opened)
-		LOG_DEBUG("Text", "open using locate failed (no candidates)");
+		if (files.count < 4)
+			opened = _openAllLocatedFiles(files, line, col);
+	
+	// Otherwise pop up a dialog and let the user select which he wants
+	// to open.
+	if (!opened)
+		LOG_INFO("Text", "too many files");
 	
 	return opened;
 }
@@ -283,7 +297,11 @@ static bool _openFile(NSString* text, NSUInteger location, NSUInteger length)
 		if (!found)
 		{
 			NSArray* candidates = _locateFiles(path);
-			found = _openLocatedFiles(candidates, line, col);
+
+			if (candidates.count > 0)
+				found = _openLocatedFiles(candidates, line, col);
+			else
+				LOG_DEBUG("Text", "open using locate failed (no candidates)");
 		}
 	}
 	
