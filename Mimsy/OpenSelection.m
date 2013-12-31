@@ -300,34 +300,38 @@ static void _getLineAndCol(NSString* text, NSUInteger location, NSUInteger lengt
 
 static bool _openFile(NSString* text, NSUInteger location, NSUInteger length)
 {
-	NSString* path = [text substringWithRange:NSMakeRange(location, length)];
-	LOG_DEBUG("Text", "trying path '%s'", path.UTF8String);
-	
-	int line = -1, col = -1;
-	_getLineAndCol(text, location, length, &line, &col);
 	bool found = false;
-	
-	// We don't want to try paths like "//code.google.com/p/mobjc/w/list" because
-	// we'll find "/Developer/SDKs/MacOSX10.5.sdk/usr/include/c++/4.0.0/list".
-	if (![path startsWith:@"//"])
-	{
-		if (!found)
-			found = _openAbsolutePath(path, line, col);
-		
-		if (!found)
-			found = _openRelativePath(path, line, col);
-		
-		if (!found)
-			found = _openLocalPath(path, line, col);
-		
-		if (!found)
-		{
-			NSArray* candidates = _locateFiles(path);
 
-			if (candidates.count > 0)
-				found = _openLocatedFiles(candidates, line, col);
-			else
-				LOG_DEBUG("Text", "open using locate failed (no candidates)");
+	NSString* path = [text substringWithRange:NSMakeRange(location, length)];
+	if (![path contains:@"://"])		// don't attempt to open stuff like http://blah as a file (especially bad with _locateFiles)
+	{
+		LOG_DEBUG("Text", "trying path '%s'", path.UTF8String);
+		
+		int line = -1, col = -1;
+		_getLineAndCol(text, location, length, &line, &col);
+		
+		// We don't want to try paths like "//code.google.com/p/mobjc/w/list" because
+		// we'll find "/Developer/SDKs/MacOSX10.5.sdk/usr/include/c++/4.0.0/list".
+		if (![path startsWith:@"//"])
+		{
+			if (!found)
+				found = _openAbsolutePath(path, line, col);
+			
+			if (!found)
+				found = _openRelativePath(path, line, col);
+			
+			if (!found)
+				found = _openLocalPath(path, line, col);
+			
+			if (!found)
+			{
+				NSArray* candidates = _locateFiles(path);
+
+				if (candidates.count > 0)
+					found = _openLocatedFiles(candidates, line, col);
+				else
+					LOG_DEBUG("Text", "open using locate failed (no candidates)");
+			}
 		}
 	}
 	
@@ -339,9 +343,20 @@ static bool _openHtml(NSString* text, NSUInteger location, NSUInteger length)
 	NSString* path = [text substringWithRange:NSMakeRange(location, length)];
 	LOG_DEBUG("Text", "trying URL '%s'", path.UTF8String);
 	
-	bool found = false;
+	bool opened = false;
+	
+	NSURL* url = [NSURL URLWithString:path];
+	if (url)
+	{
+		[[NSWorkspace sharedWorkspace] openURL:url];
+		opened = true;
+	}
+	else
+	{
+		LOG_DEBUG("Text", "failed to create an url");
+	}
 		
-	return found;
+	return opened;
 }
 
 // Here are some test cases which should work:
@@ -350,7 +365,7 @@ static bool _openHtml(NSString* text, NSUInteger location, NSUInteger length)
 // <AppKit/NSResponder.h>								non-local relative path
 // /Users/jessejones/Source/Continuum/source/plugins/find/AssemblyInfo.cs		absolute path
 // http://dev.mysql.com/tech-resources/articles/why-data-modeling.html			url
-// http://developer.apple.com/library/mac/#documentation/MacOSX/Conceptual/OSX_Technology_Overview/About/About.html relative url
+// http://en.wikipedia.org/wiki/Html#HTTP				relative url
 // NSWindow.h											file in preferred directory
 // c#.cs												file not in preferred directory
 bool openTextRange(NSTextStorage* storage, NSRange range)
