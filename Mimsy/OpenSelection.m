@@ -7,6 +7,7 @@
 #import "Logger.h"
 #import "OpenFile.h"
 #import "ScannerCategory.h"
+#import "SelectNameController.h"
 #import "StringCategory.h"
 #import "TranscriptController.h"
 #import "Utils.h"
@@ -193,11 +194,36 @@ static bool _openAllLocatedFiles(NSArray* files, int line, int col)
 	return opened;
 }
 
-// TODO:
-// if there are four total or four preferred then
-//    open them
-// else
-//    pop up a picker dialog
+static bool _selectLocatedFiles(NSArray* files, int line, int col)
+{
+	__block bool opened = false;
+
+	NSArray* reversed = [files map:^id(id element)
+	{
+		return [element reversePath];
+	}];
+	SelectNameController* controller = [[SelectNameController alloc] initWithTitle:@"Open Selection" names:reversed];
+	(void) [NSApp runModalForWindow:controller.window];
+	
+	if (controller.selectedRows)
+	{
+		[controller.selectedRows enumerateIndexesUsingBlock:^(NSUInteger index, BOOL* stop)
+		 {
+			 UNUSED(stop);
+			 if (_doAbsolutePath(files[index], line, col))
+			 {
+				 LOG_DEBUG("Text", "opened %s", [files[index] UTF8String]);
+				 opened = true;
+			 }
+			 
+		 }];
+	}
+	
+	// Even if the user cancelled he still has had a chance to handle the
+	// files so we don't want to do anything further.
+	return opened;
+}
+
 static bool _openLocatedFiles(NSArray* files, int line, int col)
 {
 	bool opened = false;
@@ -231,7 +257,7 @@ static bool _openLocatedFiles(NSArray* files, int line, int col)
 	// Otherwise pop up a dialog and let the user select which he wants
 	// to open.
 	if (!opened)
-		LOG_INFO("Text", "too many files");
+		opened = _selectLocatedFiles(files, line, col);
 	
 	return opened;
 }

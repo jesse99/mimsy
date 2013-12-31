@@ -40,6 +40,19 @@
 	return result;
 }
 
+- (NSArray*)reverse
+{
+	NSMutableArray* result = [[NSMutableArray alloc] initWithCapacity:self.count];
+	
+	for (NSUInteger i = self.count - 1; i < self.count; --i)
+	{
+		id element = self[i];
+		[result addObject:element];
+	}
+	
+	return result;
+}
+
 @end
 
 @implementation NSMutableArray (MutableArrayCategory)

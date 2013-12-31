@@ -1,5 +1,7 @@
 #import "StringCategory.h"
 
+#import "ArrayCategory.h"
+
 @implementation NSString (StringCategory)
 
 - (bool)startsWith:(NSString*)needle
@@ -18,6 +20,13 @@
 {
 	NSRange range = [self rangeOfString:needle];
 	return range.location != NSNotFound;
+}
+
+- (NSString*)reversePath
+{
+	NSArray* components = [self splitByString:@"/"];
+	NSArray* reversed = [components reverse];
+	return [reversed componentsJoinedByString:@"\u2009\u2022\u2009"];	// thin space, bullet, thin space
 }
 
 - (NSArray*)splitByString:(NSString*)separator

@@ -18,4 +18,7 @@
 // Returns a new string with each character mapped using the block.
 - (NSString*)map:(unichar (^)(unichar ch))block;
 
+// Returns "baz • bar • foo" for "/foo/bar/baz".
+- (NSString*)reversePath;
+
 @end

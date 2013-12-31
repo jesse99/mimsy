@@ -2,12 +2,17 @@
 	- get open in google working
 	- lang files should allow other sites to be searched
 	- if there is no selection then pop up a dialog
+	- review continuum code
 * Add Time Machine support.
 * Spelling.
 * Can we add some sort of subtle highlight for the area between the current brackets?
 	- rainbow?
 	- only mismatched?
 	- use a script?
+* Could add some simple finf definition support by relying on the styler:
+	- maybe also support paths to library files
+	- might be a bit problematic for languages with overloading
+	- may want to mention in docs that definition style serves two purposes
 * Update xcode
 	- see whats changed in cocoa
 * Make sure directory window shows the mimsy file
