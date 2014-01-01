@@ -44,6 +44,11 @@ static TranscriptController* controller;
 	return controller;
 }
 
+- (NSTextView*)getTextView
+{
+	return _view;
+}
+
 - (NSArray*)getHelpContext
 {
 	return @[@"transcript"];

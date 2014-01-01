@@ -144,6 +144,11 @@
 	//DoSetTabSettings();
 }
 
+- (NSTextView*)getTextView
+{
+	return _textView;
+}
+
 - (void)openSelection:(id)sender
 {
 	UNUSED(sender);

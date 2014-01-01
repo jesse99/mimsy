@@ -1,10 +1,14 @@
-* Get open selection working:	
-	- get open in google working
-	- lang files should allow other sites to be searched
-	- if there is no selection then pop up a dialog
-	- review continuum code
+* Work on site searchers:
+	- sanitize the selection
+	- make sure parse errors work OK
+	- allow searchers to be specified in directory settings file
+	- add some commented out by default common cases
+	- allow searchers to be specified in language files
+	- if no searchers then default to search in google
 * Add Time Machine support.
 * Spelling.
+* Work on find
+	- would be nice if there was a simple way to remove find in files directories
 * Can we add some sort of subtle highlight for the area between the current brackets?
 	- rainbow?
 	- only mismatched?

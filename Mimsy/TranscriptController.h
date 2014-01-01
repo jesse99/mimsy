@@ -14,4 +14,6 @@
 
 + (void)writeError:(NSString*)text;		// Mimsy error (unlike the others this appends a new-line)
 
+- (NSTextView*)getTextView;
+
 @end

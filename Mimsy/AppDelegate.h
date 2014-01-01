@@ -12,4 +12,6 @@ void initLogLevels(void);
 - (void)runFTest:(id)sender;
 - (void)runFTests:(id)sender;
 
+@property (weak) IBOutlet NSMenu *searchMenu;
+
 @end
