@@ -4,6 +4,7 @@ LineComment: //
 Word: [\w\p{Lm}\p{Nl}\p{Mn}_~]+
 Help: [.NET Framework]http://msdn.microsoft.com/en-us/library/gg145045(v=VS.110).aspx
 Help: [C# Reference]http://msdn.microsoft.com/en-us/library/aa645596(v=vs.71).aspx
+SearchIn: [.NET Framework]http://social.msdn.microsoft.com/Search/en-US/vstudio?query=${TEXT}
 
 Comment: // .* $
 Comment: /\* (?: . | \r | \n)*? \*/

@@ -32,4 +32,7 @@
 // Sequence of menu item titles and url pairs.
 @property (readonly) NSArray* help;
 
+// Sequence of "[label]query url".
+@property (readonly) NSArray* searchIn;
+
 @end

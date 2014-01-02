@@ -128,6 +128,7 @@ static DirectoryController* _lastBuilt;
 		self.flags = [NSMutableArray new];
 		self.preferredPaths = [[Glob alloc] initWithGlobs:@[]];
 		self.ignoredPaths = [[Glob alloc] initWithGlobs:@[]];
+		self.searchIn = @[];
 		
 		if (!_controllers)
 			_controllers = [NSMutableArray new];
@@ -825,6 +826,7 @@ static DirectoryController* _lastBuilt;
 	NSMutableArray* flags = [NSMutableArray new];
 	NSMutableArray* preferredPaths = [NSMutableArray new];
 	NSMutableArray* ignoredPaths = [NSMutableArray new];
+	NSMutableArray* searchIn = [NSMutableArray new];
 	
 	NSProcessInfo* info = [NSProcessInfo processInfo];
 	[buildVars addEntriesFromDictionary:info.environment];
@@ -894,7 +896,11 @@ static DirectoryController* _lastBuilt;
 			 }
 			 else if ([entry.key isEqualToString:@"IgnoredPath"])
 			 {
-				[ignoredPaths addObject:entry.value];
+				 [ignoredPaths addObject:entry.value];
+			 }
+			 else if ([entry.key isEqualToString:@"SearchIn"])
+			 {
+				[searchIn addObject:entry.value];
 			 }
 			 else if ([entry.key isEqualToString:@"BuildEnv"])
 			 {
@@ -955,6 +961,7 @@ static DirectoryController* _lastBuilt;
 	_targetGlobs = targets;
 	_preferredPaths = [[Glob alloc] initWithGlobs:preferredPaths];
 	_ignoredPaths = [[Glob alloc] initWithGlobs:ignoredPaths];
+	_searchIn = searchIn;
 	_flags = flags;
 }
 

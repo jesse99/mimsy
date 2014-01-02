@@ -14,6 +14,7 @@
 #import "SelectStyleController.h"
 #import "StartupScripts.h"
 #import "StringCategory.h"
+#import "TextController.h"
 #import "TranscriptController.h"
 #import "Utils.h"
 #import "WindowsDatabase.h"
@@ -66,7 +67,7 @@ void initLogLevels(void)
 	__weak AppDelegate* this = self;
 	[[NSApp helpMenu] setDelegate:this];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowActivated:) name:NSWindowDidBecomeMainNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecameMain:) name:NSWindowDidBecomeMainNotification object:nil];
 	
 	[self _installFiles];
 	[self _watchInstalledFiles];
@@ -84,29 +85,55 @@ void initLogLevels(void)
 	[self reloadIfChanged];
 }
 
-- (void)windowActivated:(NSNotification*)notification
+- (void)windowBecameMain:(NSNotification*)notification
 {
-	NSWindow* window = notification.object;
+	UNUSED(notification);
 	
+	// This seems to be called a bit too early: before NSApplication's orderedWindows
+	// has been updated. So we wait a little while to ensure that we can get the
+	// right TextController for the new window.
+	[self performSelector:@selector(updateSearchers) withObject:nil afterDelay:0.250];
+}
+
+- (void)updateSearchers
+{
 	NSMutableArray* sources = [NSMutableArray new];
 	NSMutableArray* searchers = [NSMutableArray new];
 
-	[self _findSearchers:window searchers:searchers sources:sources];
-	if (sources.count == 0)
-	{
-		[sources addObject:@"AppDelegate.m"];	// this isn't terribly useful but the source is handy elsewhwere
-		[searchers addObject:@"[Google]http://www.google.com/search?q=${TEXT}"];
-	}
-	
+	[self _findSearchers:searchers sources:sources];
 	[self _clearSearchers];
 	[self _addSearchers:searchers sources:sources];
 }
 
-- (void)_findSearchers:(NSWindow*)window searchers:(NSMutableArray*)searchers sources:(NSMutableArray*)sources
-{
-	UNUSED(window);
-	UNUSED(searchers);
-	UNUSED(sources);
+- (void)_findSearchers:(NSMutableArray*)searchers sources:(NSMutableArray*)sources
+{	
+	// First add lnguage specific searchers. 
+	TextController* text = [TextController frontmost];
+	if (text && text.language)
+	{
+		NSString* source = [NSString stringWithFormat:@"%@ language file", text.language.name];
+		for (NSString* searcher in text.language.searchIn)
+		{
+			[sources addObject:source];
+			[searchers addObject:searcher];
+		}
+	}
+	
+	// Then add project specific searchers.
+	DirectoryController* directory = [DirectoryController getCurrentController];
+	if (directory)
+	{
+		NSString* source = [directory.path stringByAppendingPathComponent:@".mimsy.rtf"];
+		for (NSString* searcher in directory.searchIn)
+		{
+			[sources addObject:source];
+			[searchers addObject:searcher];
+		}
+	}
+
+	// And finally add google.
+	[sources addObject:@"AppDelegate.m"];		// TODO: probably should pull this from app setting file
+	[searchers addObject:@"[Google]http://www.google.com/search?q=${TEXT}"];
 }
 
 - (void)_clearSearchers
@@ -154,6 +181,8 @@ void initLogLevels(void)
 			NSTextView* view = [controller getTextView];
 			NSRange range = [view selectedRange];
 			NSString* selection = [view.textStorage.string substringWithRange:range];
+			selection = [selection replaceCharacters:@"*{}\\:<>/+.() %?&" with:@"%20"];	// http://www.google.com/support/forum/p/Google%20Analytics/thread?tid=7d92c1d4cd30a285&hl=en
+			selection = [selection replaceCharacters:@"#" with:@"%23"];
 
 			NSString* template = [sender representedObject];
 			NSString* path = [template stringByReplacingOccurrencesOfString:@"${TEXT}" withString:selection];

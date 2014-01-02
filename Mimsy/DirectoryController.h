@@ -30,6 +30,7 @@
 @property NSMutableArray* flags;
 @property Glob* preferredPaths;
 @property Glob* ignoredPaths;
+@property NSArray* searchIn;
 
 @property (weak) IBOutlet NSOutlineView* table;
 @property (weak) IBOutlet NSPopUpButton* targetsMenu;

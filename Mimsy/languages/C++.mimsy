@@ -5,6 +5,7 @@ Word: [\w_~]+
 LineComment: //
 Help: [C++ Library]http://www.cplusplus.com/reference/
 Help: [C++ Language]http://msdn.microsoft.com/en-us/library/3bstk3k5.aspx
+SearchIn: [cplusplus]http://www.cplusplus.com/search.do?q=${TEXT}&kwr=no
 
 Comment: // .* $
 Comment: /\* (?: . | \r | \n)*? \*/

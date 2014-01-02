@@ -22,6 +22,17 @@
 	return range.location != NSNotFound;
 }
 
+- (bool)containsChar:(unichar)ch
+{
+	for (NSUInteger i = 0; i < self.length; ++i)
+	{
+		if ([self characterAtIndex:i] == ch)
+			return true;
+	}
+	
+	return false;
+}
+
 - (NSString*)reversePath
 {
 	NSArray* components = [self splitByString:@"/"];
@@ -78,6 +89,23 @@
 	for (NSUInteger i = 0; i < self.length; ++i)
 	{
 		[result appendFormat:@"%C", block([self characterAtIndex:i])];
+	}
+	
+	return result;
+}
+
+- (NSString*)replaceCharacters:(NSString*)chars with:(NSString*)with
+{
+	NSMutableString* result = [NSMutableString stringWithCapacity:self.length];
+	
+	for (NSUInteger i = 0; i < self.length; ++i)
+	{
+		unichar ch = [self characterAtIndex:i];
+		
+		if ([chars containsChar:ch])
+			[result appendString:with];
+		else
+			[result appendFormat:@"%C", ch];
 	}
 	
 	return result;

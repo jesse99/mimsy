@@ -6,6 +6,8 @@
 - (bool)endsWith:(NSString*)needle;
 - (bool)contains:(NSString*)needle;
 
+- (bool)containsChar:(unichar)ch;
+
 // Like componentsSeparatedByString: except that empty strings are not returned.
 - (NSArray*)splitByString:(NSString*)separator;
 
@@ -20,5 +22,8 @@
 
 // Returns "baz • bar • foo" for "/foo/bar/baz".
 - (NSString*)reversePath;
+
+// Returns a new string with all characters in chars replaced with with.
+- (NSString*)replaceCharacters:(NSString*)chars with:(NSString*)with;
 
 @end

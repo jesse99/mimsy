@@ -3,6 +3,7 @@ Globs: *.c *.h
 LineComment: //
 Help: [C Library]http://www.cplusplus.com/reference/clibrary/
 Help: [C Language]http://www.gnu.org/software/gnu-c-manual/gnu-c-manual.html
+SearchIn: [cplusplus]http://www.cplusplus.com/search.do?q=${TEXT}&kwr=no
 
 Comment: // .* $
 Comment: /\* (?: . | \r | \n)*? \*/

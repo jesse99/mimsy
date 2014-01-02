@@ -28,6 +28,7 @@
 		NSMutableArray* patterns = [NSMutableArray new];
 		NSMutableArray* lines = [NSMutableArray new];
 		NSMutableArray* help = [NSMutableArray new];
+		NSMutableArray* searchIn = [NSMutableArray new];
 		
 		[names addObject:@"normal"];
 		
@@ -47,12 +48,16 @@
 					if (_lineComment)
 						[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
 					
-					_lineComment = entry.value;
+					_lineComment = entry.value;	
 				}
 				else if ([key isEqualToString:@"help"])
 				{
 					if (![Language parseHelp:entry.value help:help])
 						[errors addObject:[NSString stringWithFormat:@"malformed help on line %ld: expected '[<title>]<url or full path>'", entry.line]];
+				}
+				else if ([key isEqualToString:@"searchin"])
+				{
+					[searchIn addObject:entry.value];
 				}
 				else if ([key isEqualToString:@"word"])	// TODO: reserved
 				{
@@ -117,6 +122,7 @@
 		_shebangs = shebangs;
 		_styler = [self _createStyler:names patterns:patterns lines:lines errors:errors];
 		_help = help;
+		_searchIn = searchIn;
 
 		if (errors.count > 0)
 		{

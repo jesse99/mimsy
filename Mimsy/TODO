@@ -1,10 +1,7 @@
 * Work on site searchers:
-	- sanitize the selection
-	- make sure parse errors work OK
-	- allow searchers to be specified in directory settings file
-	- add some commented out by default common cases
-	- allow searchers to be specified in language files
+	- add some commented out by default common cases? in language?
 	- if no searchers then default to search in google
+	- make sure parse errors work OK
 * Add Time Machine support.
 * Spelling.
 * Work on find
