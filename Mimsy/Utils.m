@@ -16,6 +16,30 @@ static NSString* DownArrow = @"\u2193";
 static NSString* DownHookedArrow = @"\u21A9";
 static NSString* Replacement = @"\uFFFD";
 
+bool rangeIntersectsIndex(NSRange range, NSUInteger index)
+{
+	return rangeIntersects(range, NSMakeRange(index, 1));
+}
+
+bool rangeIntersects(NSRange lhs, NSRange rhs)
+{
+	bool intersects = false;
+	
+	if (lhs.length > 0 && rhs.length > 0)
+	{
+		if (rhs.location < lhs.location)
+			intersects = rhs.location + rhs.length > lhs.location;
+		
+		else if (rhs.location > lhs.location)
+			intersects = lhs.location + lhs.length > rhs.location;
+		
+		else
+			intersects = true;
+	}
+	
+	return intersects;
+}
+
 @implementation Utils
 
 + (NSString*)bytesToStr:(NSUInteger)bytes

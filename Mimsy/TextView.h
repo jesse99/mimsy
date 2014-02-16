@@ -7,6 +7,8 @@
 
 - (void)onOpened:(TextController*)controller;
 
+- (NSMenu*)menuForEvent:(NSEvent *)event;
+
 @property (readonly) bool restored;
 
 @end

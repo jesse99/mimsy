@@ -4,6 +4,9 @@
 
 extern const NSRange NSZeroRange;
 
+bool rangeIntersectsIndex(NSRange range, NSUInteger index);
+bool rangeIntersects(NSRange lhs, NSRange rhs);
+
 // Misc utility functions.
 @interface Utils : NSObject
 

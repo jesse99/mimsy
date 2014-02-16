@@ -1,9 +1,19 @@
-* Work on site searchers:
-	- add some commented out by default common cases? in language?
-	- if no searchers then default to search in google
-	- make sure parse errors work OK
-* Add Time Machine support.
-* Spelling.
+* Work on context menus:
+	- build menu using observer pattern
+	- observers should register with app delegate?
+	- observer data includes info about text view and selection
+	  maybe also language
+	- one observer uses transforms scripts directory
+	- support spell checking
+	- would be nice to also have global spell checking
+	- may also want some sort of hook for lua scripts
+	- add time machine support
+	- transcript needs a clear window context command
+* Should there be scripts associated with directory windows?
+	- copy and rename?
+	- add C file?
+	- git helpers?
+	- diff?
 * Work on find
 	- would be nice if there was a simple way to remove find in files directories
 * Can we add some sort of subtle highlight for the area between the current brackets?
