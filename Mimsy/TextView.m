@@ -38,18 +38,70 @@
 	if (self.selectedRange.length > 0)
 	{
 		if (self.selectedRange.length < 100)
-		{
-			//NSString* selectedText = [self.textStorage.string substringWithRange:self.selectedRange];
 			[self _addDictContextItem:menu];	// 0.11
-		}
-		
+
 		if (self.isEditable)
 		{
-			
+			if ([self _needsSpellCheck])
+				[self _addSpellCHeckContextItem:menu];	// 0.9
 		}
 	}
 	
 	return menu;
+}
+
+- (bool)_needsSpellCheck
+{
+	// If the selection is large or has multiple words then don't spell check it.
+	if (self.selectedRange.length > 100)
+		return false;
+	
+	NSRange range = [self selectedRange];
+	NSCharacterSet* cs = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+	for (NSUInteger offset = 0; offset < self.selectedRange.length; ++offset)
+	{
+		unichar ch = [self.textStorage.string characterAtIndex:range.location+offset];
+		if ([cs characterIsMember:ch])
+			return false;
+	}
+	
+	// If the selection is one word and has an interior upper case letter
+	// or underscore then don't spell check it.
+	cs = [NSCharacterSet uppercaseLetterCharacterSet];
+	for (NSUInteger offset = 1; offset < self.selectedRange.length; ++offset)
+	{
+		unichar ch = [self.textStorage.string characterAtIndex:range.location+offset];
+		if (ch == '_' || [cs characterIsMember:ch])
+			return false;
+	}
+	
+	// Otherwise spell check it.
+	return true;
+}
+
+- (void)_addSpellCHeckContextItem:(NSMenu*)menu
+{
+	NSArray* guesses = [[NSSpellChecker sharedSpellChecker] guessesForWordRange:self.selectedRange inString:self.textStorage.string language:@"en_US" inSpellDocumentWithTag:0];	// TODO: how can we not hard-code the language?
+	if (guesses.count > 0)
+	{
+		[menu addItem:[NSMenuItem separatorItem]];
+		
+		for (NSUInteger i = 0; i < guesses.count; ++i)
+		{
+			NSString* guess = [guesses[i] description];
+			
+			NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:guess action:@selector(_processRepObjectContextItem:) keyEquivalent:@""];
+			[item setRepresentedObject:guess];
+			[menu addItem:item];
+		}
+	}
+}
+
+- (void)_processRepObjectContextItem:(id)sender
+{
+	UNUSED(sender);
+	
+	[self.textStorage replaceCharactersInRange:self.selectedRange withString:[sender representedObject]];
 }
 
 - (void)_addDictContextItem:(NSMenu*)menu
