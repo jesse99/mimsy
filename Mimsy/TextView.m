@@ -38,7 +38,10 @@
 	if (self.selectedRange.length > 0)
 	{
 		if (self.selectedRange.length < 100)
-			[self _addDictContextItem:menu];	// 0.11
+			[self _addDictContextItem:menu];			// 0.11
+		
+//		if (self.selectedRange.length < 1000)
+//			[self _addSiteSearchContextItem:menu];		// 0.11
 
 		if (self.isEditable)
 		{

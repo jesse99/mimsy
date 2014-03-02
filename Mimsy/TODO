@@ -1,4 +1,13 @@
 * Work on context menus:
+	- add support for searching on sites
+	- add support for external transforms scripts
+	- be sure to document the transforms somehow
+	- support time machine
+	- support word wrapping
+	- support copy path
+	- support show in finder
+	- may want some language dependent scripts, eg for Python
+
 	- build menu using observer pattern
 	- observers should register with app delegate?
 	- observer data includes info about text view and selection

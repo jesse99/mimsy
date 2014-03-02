@@ -88,6 +88,7 @@
 		37A8C6B916758FF400D4DB13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C69616758FF400D4DB13 /* Cocoa.framework */; };
 		37A8C6C116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C6BF16758FF400D4DB13 /* InfoPlist.strings */; };
 		37A8C6C416758FF400D4DB13 /* DecodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6C316758FF400D4DB13 /* DecodeTests.m */; };
+		37ABF9B318C2EA9C006AFDB7 /* SearchSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */; };
 		37AD7570171B95460054A75F /* UpdateConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AD756F171B95460054A75F /* UpdateConfig.m */; };
 		37BF4DFA16F56CB3008FD480 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 37BF4DF916F56CB3008FD480 /* images */; };
 		37CF062616AB998A00069A20 /* LuaSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF062516AB998A00069A20 /* LuaSupport.m */; };
@@ -256,6 +257,8 @@
 		37A8C6C216758FF400D4DB13 /* DecodeTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DecodeTests.h; sourceTree = "<group>"; };
 		37A8C6C316758FF400D4DB13 /* DecodeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DecodeTests.m; sourceTree = "<group>"; };
 		37A8C6CD167590E700D4DB13 /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
+		37ABF9B118C2EA9C006AFDB7 /* SearchSite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchSite.h; sourceTree = "<group>"; };
+		37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchSite.m; sourceTree = "<group>"; };
 		37AD756E171B95460054A75F /* UpdateConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateConfig.h; sourceTree = "<group>"; };
 		37AD756F171B95460054A75F /* UpdateConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateConfig.m; sourceTree = "<group>"; };
 		37BF4DF916F56CB3008FD480 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
@@ -442,6 +445,8 @@
 				3768CCDA16E0F54900D5CB57 /* OpenFile.m */,
 				377BDE6416C006BD008DADA5 /* StartupScripts.h */,
 				377BDE6516C006BD008DADA5 /* StartupScripts.m */,
+				37ABF9B118C2EA9C006AFDB7 /* SearchSite.h */,
+				37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */,
 			);
 			name = App;
 			sourceTree = "<group>";
@@ -742,6 +747,7 @@
 				3751BCFC18445CCD00DD2C8A /* OpenSelection.m in Sources */,
 				3751BCFF1846E69000DD2C8A /* ScannerCategory.m in Sources */,
 				370552A618710E15005F1438 /* SelectNameController.m in Sources */,
+				37ABF9B318C2EA9C006AFDB7 /* SearchSite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -890,7 +896,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
 				GCC_WARN_MISSING_PARENTHESES = NO;
-				GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR = YES;
+				GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR = NO;
 				GCC_WARN_PEDANTIC = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
@@ -926,7 +932,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
 				GCC_WARN_MISSING_PARENTHESES = NO;
-				GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR = YES;
+				GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR = NO;
 				GCC_WARN_PEDANTIC = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;

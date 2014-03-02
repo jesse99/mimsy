@@ -8,6 +8,7 @@ void initLogLevels(void);
 + (void)restoreWindowWithIdentifier:(NSString*)identifier state:(NSCoder*)state completionHandler:(void (^)(NSWindow*, NSError*))handler;
 
 - (IBAction)openAsBinary:(id)sender;
+- (void)searchSite:(id)sender;
 
 - (void)runFTest:(id)sender;
 - (void)runFTests:(id)sender;
