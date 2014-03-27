@@ -5,4 +5,6 @@
 
 +(void)updateMainMenu:(NSMenu*)searchMenu;
 
++(void)appendContextMenu:(NSMenu*)menu;
+
 @end

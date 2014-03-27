@@ -2,6 +2,7 @@
 
 #import "Assert.h"
 #import "Logger.h"
+#import "SearchSite.h"
 #import "TextController.h"
 #import "Utils.h"
 
@@ -40,13 +41,13 @@
 		if (self.selectedRange.length < 100)
 			[self _addDictContextItem:menu];			// 0.11
 		
-//		if (self.selectedRange.length < 1000)
-//			[self _addSiteSearchContextItem:menu];		// 0.11
+		if (self.selectedRange.length < 1000)
+			[self _addSiteSearchContextItem:menu];		// 0.11
 
 		if (self.isEditable)
 		{
 			if ([self _needsSpellCheck])
-				[self _addSpellCHeckContextItem:menu];	// 0.9
+				[self _addSpellCheckContextItem:menu];	// 0.9
 		}
 	}
 	
@@ -82,7 +83,7 @@
 	return true;
 }
 
-- (void)_addSpellCHeckContextItem:(NSMenu*)menu
+- (void)_addSpellCheckContextItem:(NSMenu*)menu
 {
 	NSArray* guesses = [[NSSpellChecker sharedSpellChecker] guessesForWordRange:self.selectedRange inString:self.textStorage.string language:@"en_US" inSpellDocumentWithTag:0];	// TODO: how can we not hard-code the language?
 	if (guesses.count > 0)
@@ -105,6 +106,11 @@
 	UNUSED(sender);
 	
 	[self.textStorage replaceCharactersInRange:self.selectedRange withString:[sender representedObject]];
+}	
+
+- (void)_addSiteSearchContextItem:(NSMenu*)menu
+{
+	[SearchSite appendContextMenu:menu];
 }
 
 - (void)_addDictContextItem:(NSMenu*)menu

@@ -20,6 +20,15 @@
 	[SearchSite _addSearchers:searchers sources:sources to:searchMenu];
 }
 
++(void)appendContextMenu:(NSMenu*)menu
+{
+	NSMutableArray* sources = [NSMutableArray new];
+	NSMutableArray* searchers = [NSMutableArray new];
+	
+	[SearchSite _findSearchers:searchers sources:sources];
+	[SearchSite _addSearchers:searchers sources:sources to:menu];
+}
+
 // sources is used when reporting errors within the search URL
 + (void)_findSearchers:(NSMutableArray*)searchers sources:(NSMutableArray*)sources
 {
