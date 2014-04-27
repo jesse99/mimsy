@@ -15,6 +15,7 @@
 #import "SelectStyleController.h"
 #import "StartupScripts.h"
 #import "StringCategory.h"
+#import "TextController.h"
 #import "TranscriptController.h"
 #import "Utils.h"
 #import "WindowsDatabase.h"
@@ -48,6 +49,7 @@ void initLogLevels(void)
 	DirectoryWatcher* _settingsWatcher;
 	DirectoryWatcher* _stylesWatcher;
 	DirectoryWatcher* _scriptsStartupWatcher;
+	DirectoryWatcher* _transformsWatcher;
 }
 
 // Note that windows will still be open when this is called.
@@ -70,6 +72,7 @@ void initLogLevels(void)
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecameMain:) name:NSWindowDidBecomeMainNotification object:nil];
 	
 	[self _installFiles];
+	[self _addTransformItems];
 	[self _watchInstalledFiles];
 	[StartupScripts setup];
 	[WindowsDatabase setup];
@@ -354,6 +357,20 @@ void initLogLevels(void)
 			}
 		}
 	}
+	else if (sel == @selector(_runTransformFile:))
+	{
+		NSWindow* window = [NSApp mainWindow];
+		if (window)
+		{
+			id controller = window.windowController;
+			if (controller && [controller respondsToSelector:@selector(getTextView)])
+			{
+				NSTextView* view = [controller getTextView];
+				NSRange range = [view selectedRange];
+				enabled = range.length > 0;
+			}
+		}
+	}
 	else if ([self respondsToSelector:sel])
 	{
 		enabled = YES;
@@ -528,6 +545,94 @@ void initLogLevels(void)
 	return item;
 }
 
+- (void)_runTransformFile:(id)sender
+{
+	TextController* controller = [TextController frontmost];
+	NSTextView* view = [controller getTextView];
+	NSRange range = view ? [view selectedRange] : NSZeroRange;
+	if (range.length > 0)
+	{
+		NSString* selection = [view.textStorage.string substringWithRange:range];
+		NSString* path = [sender representedObject];
+				
+		NSPipe* input = [NSPipe new];
+		NSFileHandle* handle = input.fileHandleForWriting;
+		[handle writeData:[NSData dataWithBytes:(void*)selection.UTF8String length:range.length]];
+		[handle closeFile];
+
+		NSTask* task = [NSTask new];
+		[task setLaunchPath:path];
+		[task setStandardInput:input];
+		[task setStandardOutput:[NSPipe new]];
+		[task setStandardError:[NSPipe new]];
+		
+		NSString* stdout = nil;
+		NSString* stderr = nil;
+		NSError* err = [Utils run:task stdout:&stdout stderr:&stderr timeout:MainThreadTimeOut];
+		
+		if (!err)
+		{
+			if ([view shouldChangeTextInRange:range replacementString:stdout])
+				[view replaceCharactersInRange:range withString:stdout];
+		}
+		else
+		{
+			NSString* reason = [err localizedFailureReason];
+			NSString* mesg = [NSString stringWithFormat:@"Error running transform: %@\n", reason];
+			[TranscriptController writeError:mesg];
+		}
+	}
+}
+
+- (void) _removeTransformItems
+{
+	NSMenu* menu = self.textMenu;
+	while (true)
+	{
+		NSMenuItem* item = [menu itemAtIndex:menu.numberOfItems-1];
+		if (item.action == @selector(_runTransformFile:))
+		{
+			[menu removeItem:item];
+		}
+		else
+		{
+			break;
+		}
+	}
+}
+
+- (void) _addTransformItems
+{
+	NSString* transformsDir = [Paths installedDir:@"transforms"];
+	NSError* error = nil;
+	[Utils enumerateDir:transformsDir glob:nil error:&error block:
+		 ^(NSString* path)
+		 {
+			 NSString* name = path.lastPathComponent;
+			 if ([[NSFileManager defaultManager] isExecutableFileAtPath:path])
+			 {
+				 NSString* title = [name stringByDeletingPathExtension];
+				 NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(_runTransformFile:) keyEquivalent:@""];
+				 [item setRepresentedObject:path];
+				 
+				 NSMenu* menu = self.textMenu;
+				 if (menu)
+					 [menu addItem:item];
+			 }
+			 else
+			 {
+				 LOG_INFO("Mimsy", "Skipping %s (it isn't executable)\n", name.UTF8String);
+			 }
+		 }
+	 ];
+	
+	if (error)
+	{
+		NSString* reason = [error localizedFailureReason];
+		LOG_ERROR("Mimsy", "Error adding transforms to Text menu: %s\n", STR(reason));
+	}
+}
+
 - (void)_installFiles
 {
 	NSFileManager* fm = [NSFileManager defaultManager];
@@ -545,6 +650,7 @@ void initLogLevels(void)
 		[installer addSourceItem:@"scripts"];
 		[installer addSourceItem:@"settings"];
 		[installer addSourceItem:@"styles"];
+		[installer addSourceItem:@"transforms"];
 		[installer install];
 	}
 	else
@@ -570,11 +676,22 @@ void initLogLevels(void)
 
 	dir = [Paths installedDir:@"scripts/startup"];
 	_scriptsStartupWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
+		  ^(NSString* path, FSEventStreamEventFlags flags)
+		  {
+			  UNUSED(path, flags);
+			  [StartupScripts setup];
+			  [[NSNotificationCenter defaultCenter] postNotificationName:@"StartupScriptsChanged" object:self];
+		  }
+		  ];
+	
+	dir = [Paths installedDir:@"transforms"];
+	_transformsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		^(NSString* path, FSEventStreamEventFlags flags)
 		{
 			UNUSED(path, flags);
-			[StartupScripts setup];
-			[[NSNotificationCenter defaultCenter] postNotificationName:@"StartupScriptsChanged" object:self];
+			[self _removeTransformItems];
+			[self _addTransformItems];
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"TransformsChanged" object:self];
 		}
 	];
 	
@@ -587,13 +704,22 @@ void initLogLevels(void)
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
 		}
 	];
-
+	
 	dir = [Paths installedDir:@"styles"];
+	_stylesWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
+		  ^(NSString* path, FSEventStreamEventFlags flags)
+		  {
+			  UNUSED(path, flags);
+			  [[NSNotificationCenter defaultCenter] postNotificationName:@"StylesChanged" object:self];
+		  }
+		  ];
+
+	dir = [Paths installedDir:@"transforms"];
 	_stylesWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		^(NSString* path, FSEventStreamEventFlags flags)
 		{
 			UNUSED(path, flags);
-			[[NSNotificationCenter defaultCenter] postNotificationName:@"StylesChanged" object:self];
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"TransformsChanged" object:self];
 		}
 	];
 }

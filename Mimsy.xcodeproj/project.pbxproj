@@ -89,6 +89,7 @@
 		37A8C6C116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C6BF16758FF400D4DB13 /* InfoPlist.strings */; };
 		37A8C6C416758FF400D4DB13 /* DecodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6C316758FF400D4DB13 /* DecodeTests.m */; };
 		37ABF9B318C2EA9C006AFDB7 /* SearchSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */; };
+		37ABF9B518E3C5A5006AFDB7 /* transforms in Resources */ = {isa = PBXBuildFile; fileRef = 37ABF9B418E3C5A4006AFDB7 /* transforms */; };
 		37AD7570171B95460054A75F /* UpdateConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AD756F171B95460054A75F /* UpdateConfig.m */; };
 		37BF4DFA16F56CB3008FD480 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 37BF4DF916F56CB3008FD480 /* images */; };
 		37CF062616AB998A00069A20 /* LuaSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF062516AB998A00069A20 /* LuaSupport.m */; };
@@ -259,6 +260,7 @@
 		37A8C6CD167590E700D4DB13 /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		37ABF9B118C2EA9C006AFDB7 /* SearchSite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchSite.h; sourceTree = "<group>"; };
 		37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchSite.m; sourceTree = "<group>"; };
+		37ABF9B418E3C5A4006AFDB7 /* transforms */ = {isa = PBXFileReference; lastKnownFileType = folder; path = transforms; sourceTree = "<group>"; };
 		37AD756E171B95460054A75F /* UpdateConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateConfig.h; sourceTree = "<group>"; };
 		37AD756F171B95460054A75F /* UpdateConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateConfig.m; sourceTree = "<group>"; };
 		37BF4DF916F56CB3008FD480 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
@@ -531,6 +533,7 @@
 				377BDE6216C005C8008DADA5 /* scripts */,
 				37862C641690BC0600DB9E66 /* settings */,
 				37862C5F168FF58900DB9E66 /* styles */,
+				37ABF9B418E3C5A4006AFDB7 /* transforms */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -664,6 +667,7 @@
 				377C2CA8176503B4008E383E /* BuildOptions.xib in Resources */,
 				37479B831842F42C004D94FC /* C#.mimsy in Resources */,
 				370552A318710C27005F1438 /* SelectName.xib in Resources */,
+				37ABF9B518E3C5A5006AFDB7 /* transforms in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

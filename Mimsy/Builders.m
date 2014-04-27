@@ -152,8 +152,8 @@ static NSDictionary* _globs;	// name => glob
 	[task setStandardError:[NSPipe new]];
 	
 	NSString* stderr = nil;
-	int returncode = [Utils run:task stdout:nil stderr:&stderr];
-	if (returncode == 0)
+	NSError* err = [Utils run:task stdout:nil stderr:&stderr timeout:NoTimeOut];
+	if (!err)
 	{
 		NSError* error = nil;
 		NSData* data = [[[task standardOutput] fileHandleForReading] readDataToEndOfFile];
@@ -176,6 +176,7 @@ static NSDictionary* _globs;	// name => glob
 	}
 	else
 	{
+		int returncode = [err.userInfo[@"return code"] intValue];
 		NSString* mesg = [NSString stringWithFormat:@"Error running %@ %@: it returned with code %d", task.launchPath, [task.arguments componentsJoinedByString:@" "], returncode];
 		[TranscriptController writeError:mesg];
 	}

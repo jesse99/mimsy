@@ -1,6 +1,7 @@
+* Add support for transforms:
+	- support lua?
+	- should these be used for snippets? probably not
 * Work on context menus:
-	- add support for searching on sites
-	- add support for external transforms scripts
 	- be sure to document the transforms somehow
 	- support time machine
 	- support word wrapping
@@ -23,18 +24,24 @@
 	- add C file?
 	- git helpers?
 	- diff?
+* Would be great if there was a way to skip backward and forward between selections.
 * Work on find
 	- would be nice if there was a simple way to remove find in files directories
 * Can we add some sort of subtle highlight for the area between the current brackets?
 	- rainbow?
 	- only mismatched?
 	- use a script?
+* Would be nice if Mimsy had something to enforce 80 char lines.
 * Could add some simple finf definition support by relying on the styler:
 	- maybe also support paths to library files
 	- might be a bit problematic for languages with overloading
 	- may want to mention in docs that definition style serves two purposes
+* Support remote editing
+	- might be simplest to just have a Python script running remotely
+	- contents could be zipped and binhexed
 * Update xcode
 	- see whats changed in cocoa
+* Might be neat to have a small font bace line addon.
 * Make sure directory window shows the mimsy file
 	- may want a setting for files to always show
 	- or a setting for files to hide?
