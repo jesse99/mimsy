@@ -547,16 +547,15 @@ static DirectoryController* _lastBuilt;
 	__block NSString* stdout = nil;
 	__block NSString* stderr = nil;
 	__block time_t startTime = 0;
-	__block int returncode = 0;
 	
 	dispatch_queue_t concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	dispatch_queue_t main = dispatch_get_main_queue();
 	dispatch_async(concurrent, ^
 	{
-	   startTime = time(NULL);
-	   returncode = [Utils run:_buildTask stdout:&stdout stderr:&stderr];
-	   dispatch_async(main, ^
-	   {
+		startTime = time(NULL);
+		NSError* err = [Utils run:_buildTask stdout:&stdout stderr:&stderr timeout:NoTimeOut];
+		dispatch_async(main, ^
+		{
 		  stdout = [stdout stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 		  if (stdout && stdout.length > 0)
 		  {
@@ -573,13 +572,14 @@ static DirectoryController* _lastBuilt;
 		  _buildTask = nil;
 		  [self _updateBuildButtons];
 		  
-		  if (returncode == 0)
+		  if (!err)
 		  {
 			  time_t elapsed = time(NULL) - startTime;
 			  [TranscriptController writeStdout:[NSString stringWithFormat:@"built in %ld seconds\n", elapsed]];
 		  }
 		  else
 		  {
+			  int returncode = [err.userInfo[@"return code"] intValue];
 			  NSString* name = [info[@"tool"] lastPathComponent];
 			  [TranscriptController writeStderr:[NSString stringWithFormat:@"%@ exited with code %d\n", name, returncode]];
 		  }

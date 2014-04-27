@@ -161,9 +161,9 @@ static NSArray* _locateFiles(NSString* path)
 	NSArray* files = @[];
 	NSString* stdout = nil;
 	NSString* stderr = nil;
-	int returncode = [Utils run:task stdout:&stdout stderr:&stderr];
+	NSError* err = [Utils run:task stdout:&stdout stderr:&stderr timeout:MainThreadTimeOut];
 	
-	if (returncode == 0)
+	if (!err)
 	{
 		files = [stdout splitByString:@"\n"];
 	}

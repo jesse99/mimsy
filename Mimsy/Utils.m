@@ -4,6 +4,8 @@
 #import "Glob.h"
 
 const NSRange NSZeroRange = {0};
+const time_t NoTimeOut = -1;
+const time_t MainThreadTimeOut = 5;
 
 // These are more technically correct but the new-line and tab symbols are really hard
 // to read unless the font's point size is very large.
@@ -239,26 +241,72 @@ bool rangeIntersects(NSRange lhs, NSRange rhs)
 	return true;
 }
 
-+ (int)run:(NSTask*)task stdout:(NSString**)stdout stderr:(NSString**)stderr
+static NSString* getTaskOutput(id handle)
+{
+	NSData* data = [[handle fileHandleForReading] readDataToEndOfFile];
+	NSString* str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	return str;
+}
+
++ (NSError*)run:(NSTask*)task stdout:(NSString**)stdout stderr:(NSString**)stderr timeout:(time_t)timeout
 {
 	// TODO: NSTask can block if the pipes get full, may want to try: http://dev.notoptimal.net/2007/04/nstasks-nspipes-and-deadlocks-when.html
-	[task launch];
-	
-	if (stdout)
+	NSError* result = nil;
+	@try
 	{
-		NSData* data = [[[task standardOutput] fileHandleForReading] readDataToEndOfFile];
-		*stdout = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+		[task launch];
+		
+		if (timeout == NoTimeOut)
+		{
+			[task waitUntilExit];
+			if (task.terminationStatus != 0)
+			{
+				NSDictionary* dict = @{
+					NSLocalizedFailureReasonErrorKey:[NSString stringWithFormat:@"%@ failed with return code %d", task.launchPath, task.terminationStatus],
+					 @"return code":[NSNumber numberWithInt:task.terminationStatus],
+					 @"stderr":getTaskOutput([task standardError]),
+					 @"stdout":getTaskOutput([task standardOutput])};
+				result = [NSError errorWithDomain:@"process failed" code:task.terminationStatus userInfo:dict];
+			}
+		}
+		else
+		{
+			time_t startTime = time(NULL);
+			time_t elapsed = time(NULL) - startTime;
+			
+			while (task.isRunning && elapsed < timeout)
+			{
+				CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.25, TRUE);
+				elapsed = time(NULL) - startTime;
+			}
+			
+			if (task.isRunning)
+			{
+				[task terminate];
+				
+				NSDictionary* dict = @{
+					NSLocalizedFailureReasonErrorKey:[NSString stringWithFormat:@"%@ took longer than %lds to run", task.launchPath, timeout],
+					 @"stderr":getTaskOutput([task standardError]),
+					 @"stdout":getTaskOutput([task standardOutput])};
+				result = [NSError errorWithDomain:@"timed out" code:0 userInfo:dict];
+			}
+		}
+		
+		if (stderr)
+			*stderr = getTaskOutput([task standardError]);
+		
+		if (stdout)
+			*stdout = getTaskOutput([task standardOutput]);
+	}
+	@catch (NSException *exception)
+	{
+		// launch will raise exceptions for things like the process not being executable
+		NSDictionary* dict = @{
+			 NSLocalizedFailureReasonErrorKey:[NSString stringWithFormat:@"%@ failed: %@", task.launchPath, exception.reason]};
+		result = [NSError errorWithDomain:@"task failed" code:0 userInfo:dict];
 	}
 	
-	if (stderr)
-	{
-		NSData* data = [[[task standardError] fileHandleForReading] readDataToEndOfFile];
-		*stderr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	}
-	
-	[task waitUntilExit];
-	
-	return task.terminationStatus;
+	return result;
 }
 
 @end

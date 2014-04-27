@@ -3,6 +3,8 @@
 @class Glob;
 
 extern const NSRange NSZeroRange;
+extern const time_t NoTimeOut;
+extern const time_t MainThreadTimeOut;
 
 bool rangeIntersectsIndex(NSRange range, NSUInteger index);
 bool rangeIntersects(NSRange lhs, NSRange rhs);
@@ -26,8 +28,10 @@ bool rangeIntersects(NSRange lhs, NSRange rhs);
 + (bool)copySrcFile:(NSString*)srcPath dstFile:(NSString*)dstPath outError:(NSError**)outError;
 
 // Runs the task returning the exit code. If stdout/stderr is not NULL then those
-// are returned as well.
-+ (int)run:(NSTask*)task stdout:(NSString**)stdout stderr:(NSString**)stderr;
+// are returned as well. Timeout is either NoTimeOut, MainThreadTimeOut, or a time
+// in seconds. An error is returned if the process exits with a non-zero return code
+// or the process takes longer than timeout seconds to execute.
++ (NSError*)run:(NSTask*)task stdout:(NSString**)stdout stderr:(NSString**)stderr timeout:(time_t)timeout;
 
 // Returns a path to a unique file name in the temporary directory for the current user.
 + (NSString*)pathForTemporaryFileWithPrefix:(NSString *)prefix;
