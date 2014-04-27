@@ -601,29 +601,27 @@ void initLogLevels(void)
 	}
 }
 
-- (void) _addTransformItems
++ (void) _addTransformItemsToMenu:(NSMenu*)menu
 {
 	NSString* transformsDir = [Paths installedDir:@"transforms"];
 	NSError* error = nil;
 	[Utils enumerateDir:transformsDir glob:nil error:&error block:
-		 ^(NSString* path)
+	 ^(NSString* path)
+	 {
+		 NSString* name = path.lastPathComponent;
+		 if ([[NSFileManager defaultManager] isExecutableFileAtPath:path])
 		 {
-			 NSString* name = path.lastPathComponent;
-			 if ([[NSFileManager defaultManager] isExecutableFileAtPath:path])
-			 {
-				 NSString* title = [name stringByDeletingPathExtension];
-				 NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(_runTransformFile:) keyEquivalent:@""];
-				 [item setRepresentedObject:path];
-				 
-				 NSMenu* menu = self.textMenu;
-				 if (menu)
-					 [menu addItem:item];
-			 }
-			 else
-			 {
-				 LOG_INFO("Mimsy", "Skipping %s (it isn't executable)\n", name.UTF8String);
-			 }
+			 NSString* title = [name stringByDeletingPathExtension];
+			 NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(_runTransformFile:) keyEquivalent:@""];
+			 [item setRepresentedObject:path];
+			 
+			[menu addItem:item];
 		 }
+		 else
+		 {
+			 LOG_INFO("Mimsy", "Skipping %s (it isn't executable)\n", name.UTF8String);
+		 }
+	 }
 	 ];
 	
 	if (error)
@@ -631,6 +629,19 @@ void initLogLevels(void)
 		NSString* reason = [error localizedFailureReason];
 		LOG_ERROR("Mimsy", "Error adding transforms to Text menu: %s\n", STR(reason));
 	}
+}
+
+- (void) _addTransformItems
+{
+	NSMenu* menu = self.textMenu;
+	if (menu)
+		[AppDelegate _addTransformItemsToMenu:menu];
+}
+
++ (void)appendContextMenu:(NSMenu*)menu
+{
+	[menu addItem:[NSMenuItem separatorItem]];
+	[AppDelegate _addTransformItemsToMenu:menu];
 }
 
 - (void)_installFiles

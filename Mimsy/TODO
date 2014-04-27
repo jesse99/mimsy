@@ -1,8 +1,4 @@
-* Add support for transforms:
-	- support lua?
-	- should these be used for snippets? probably not
 * Work on context menus:
-	- be sure to document the transforms somehow
 	- support time machine
 	- support word wrapping
 	- support copy path
@@ -19,12 +15,18 @@
 	- may also want some sort of hook for lua scripts
 	- add time machine support
 	- transcript needs a clear window context command
+* Need to special case double-click selections according to the language
+	- eg most languages should not treat period as a word
 * Should there be scripts associated with directory windows?
 	- copy and rename?
 	- add C file?
 	- git helpers?
 	- diff?
 * Would be great if there was a way to skip backward and forward between selections.
+	- xcode uses command-control left and right arrows
+* Jump to selection would also be nice
+* Some sort of placeholder support would be nice too:
+	- maybe something like a bookmarks window
 * Work on find
 	- would be nice if there was a simple way to remove find in files directories
 * Can we add some sort of subtle highlight for the area between the current brackets?

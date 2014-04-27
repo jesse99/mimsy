@@ -1,5 +1,6 @@
 #import "TextView.h"
 
+#import "AppDelegate.h"
 #import "Assert.h"
 #import "Logger.h"
 #import "SearchSite.h"
@@ -43,6 +44,11 @@
 		
 		if (self.selectedRange.length < 1000)
 			[self _addSiteSearchContextItem:menu];		// 0.11
+		
+		if (self.isEditable)
+		{
+			[self _addTransformsContextMenu:menu];		// 0.8
+		}
 
 		if (self.isEditable)
 		{
@@ -106,7 +112,12 @@
 	UNUSED(sender);
 	
 	[self.textStorage replaceCharactersInRange:self.selectedRange withString:[sender representedObject]];
-}	
+}
+
+- (void)_addTransformsContextMenu:(NSMenu*)menu
+{
+	[AppDelegate appendContextMenu:menu];
+}
 
 - (void)_addSiteSearchContextItem:(NSMenu*)menu
 {

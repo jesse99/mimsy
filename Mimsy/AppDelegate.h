@@ -10,6 +10,8 @@ void initLogLevels(void);
 - (IBAction)openAsBinary:(id)sender;
 - (void)searchSite:(id)sender;
 
++ (void)appendContextMenu:(NSMenu*)menu;
+
 - (void)runFTest:(id)sender;
 - (void)runFTests:(id)sender;
 
