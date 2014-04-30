@@ -25,5 +25,6 @@
 @property (readonly) NSUInteger editCount;
 @property (readonly) TextStyles* styles;
 @property Language* language;
+@property NSString* customTitle;
 
 @end

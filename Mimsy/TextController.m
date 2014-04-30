@@ -14,6 +14,7 @@
 #import "TextView.h"
 #import "TextDocument.h"
 #import "TextStyles.h"
+#import "TimeMachine.h"
 #import "TranscriptController.h"
 #import "WindowsDatabase.h"
 
@@ -142,6 +143,14 @@
 	//synchronizeWindowTitleWithDocumentName();		// bit of a hack, but we need something like this for IDocumentWindowTitle to work
 
 	//DoSetTabSettings();
+}
+
+- (NSString*)windowTitleForDocumentDisplayName:(NSString*)displayName
+{
+	if (self.customTitle)
+		return self.customTitle;
+	else
+		return [super windowTitleForDocumentDisplayName:displayName];
 }
 
 - (NSTextView*)getTextView
@@ -357,14 +366,30 @@
 	return [url path];
 }
 
+- (void)_positionWindow:(NSString*)path
+{
+	NSRect frame = [WindowsDatabase getFrame:path];
+	if (NSWidth(frame) >= 40)
+	{
+		[self.window setFrame:frame display:YES];	// note that Cocoa will ensure that windows with title bars are not moved off screen
+	}
+	else
+	{
+		TextController* front = [TextController frontmost];
+		if (front)
+		{
+			NSPoint loc = [front.window cascadeTopLeftFromPoint:NSZeroPoint];
+			[self.window cascadeTopLeftFromPoint:loc];
+		}
+	}	
+}
+
 - (void)onPathChanged
 {
 	NSString* path = [self path];
 	if (path)
 	{
-		NSRect frame = [WindowsDatabase getFrame:path];
-		if (NSWidth(frame) >= 40)
-			[self.window setFrame:frame display:YES];	// note that Cocoa will ensure that windows with title bars are not moved off screen
+		[self _positionWindow:path];
 		
 		NSString* name = [path lastPathComponent];
 		self.Language = [Languages findWithFileName:name contents:self.text];
@@ -373,6 +398,15 @@
 			[_restorer setPath:path];
 		if (_applier)
 			[_applier addDirtyLocation:0 reason:@"path changed"];
+
+		
+		if ([TimeMachine isSnapshotFile:self.path])
+		{
+			NSString* label = [TimeMachine getSnapshotLabel:path];
+			NSString* title = [NSString stringWithFormat:@"%@ (from %@)", path.lastPathComponent, label];
+			self.customTitle = title;
+			[self synchronizeWindowTitleWithDocumentName];
+		}
 	}
 }
 

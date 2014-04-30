@@ -81,6 +81,13 @@ void initLogLevels(void)
 	initFunctionalTests();
 }
 
+- (void)openTimeMachine:(id)sender
+{
+	NSString* path = [sender representedObject];
+	NSURL* url = [NSURL fileURLWithPath:path isDirectory:FALSE];	
+	[self openWithMimsy:url];
+}
+
 - (void)searchSite:(id)sender
 {
 	NSWindow* window = [NSApp mainWindow];
@@ -195,30 +202,34 @@ void initLogLevels(void)
 	runFunctionalTest([sender representedObject]);
 }
 
-- (void)openHelpFile:(id)sender
+- (void)openWithMimsy:(NSURL*)url
 {
-	NSURL* url = [sender representedObject];
-	
 	if ([url isFileURL])
 	{
 		[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES completionHandler:
-			^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
-			{
-				UNUSED(document, documentWasAlreadyOpen);
-				if (error)
-				{
-					NSString* reason = [error localizedFailureReason];
-					NSString* mesg = [NSString stringWithFormat:@"Couldn't open '%@': %@", url, reason];
-					[TranscriptController writeError:mesg];
-				}
-			}
-		];
+		 ^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
+		 {
+			 UNUSED(document, documentWasAlreadyOpen);
+			 if (error)
+			 {
+				 NSString* reason = [error localizedFailureReason];
+				 NSString* mesg = [NSString stringWithFormat:@"Couldn't open '%@': %@", url, reason];
+				 [TranscriptController writeError:mesg];
+			 }
+		 }
+		 ];
 	}
 	else
 	{
 		if (![[NSWorkspace sharedWorkspace] openURL:url])
 			NSBeep();
 	}
+}
+
+- (void)openHelpFile:(id)sender
+{
+	NSURL* url = [sender representedObject];
+	[self openWithMimsy:url];
 }
 
 - (void)openInstalled:(id)sender

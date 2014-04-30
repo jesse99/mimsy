@@ -1,20 +1,22 @@
+* Work on time machine
+	- need to load the time machine goo in the background
+	  could do it in the background
+	  if it completes fast then use it
+	  otherwise just use a placeholder
+	- do we need a regular menu item?
+	- tmutil supports restore
+* Work on generators
+	- both files and nested directories
+	- git
+	- time machine (compare)
+	- directories can have an optional preflight script
+	- when closing a doc need to delete the file if its in /tmp
+	- might want some sort of short form and linter and maybe compiler
 * Work on context menus:
-	- support time machine
 	- support word wrapping
 	- support copy path
 	- support show in finder
 	- may want some language dependent scripts, eg for Python
-
-	- build menu using observer pattern
-	- observers should register with app delegate?
-	- observer data includes info about text view and selection
-	  maybe also language
-	- one observer uses transforms scripts directory
-	- support spell checking
-	- would be nice to also have global spell checking
-	- may also want some sort of hook for lua scripts
-	- add time machine support
-	- transcript needs a clear window context command
 * Need to special case double-click selections according to the language
 	- eg most languages should not treat period as a word
 * Should there be scripts associated with directory windows?
@@ -34,7 +36,7 @@
 	- only mismatched?
 	- use a script?
 * Would be nice if Mimsy had something to enforce 80 char lines.
-* Could add some simple finf definition support by relying on the styler:
+* Could add some simple find definition support by relying on the styler:
 	- maybe also support paths to library files
 	- might be a bit problematic for languages with overloading
 	- may want to mention in docs that definition style serves two purposes
@@ -43,7 +45,7 @@
 	- contents could be zipped and binhexed
 * Update xcode
 	- see whats changed in cocoa
-* Might be neat to have a small font bace line addon.
+* Might be neat to have a small font brace line addon.
 * Make sure directory window shows the mimsy file
 	- may want a setting for files to always show
 	- or a setting for files to hide?

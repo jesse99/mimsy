@@ -7,8 +7,10 @@ void initLogLevels(void);
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
 + (void)restoreWindowWithIdentifier:(NSString*)identifier state:(NSCoder*)state completionHandler:(void (^)(NSWindow*, NSError*))handler;
 
+- (void)openWithMimsy:(NSURL*)url;
 - (IBAction)openAsBinary:(id)sender;
 - (void)searchSite:(id)sender;
+- (void)openTimeMachine:(id)sender;
 
 + (void)appendContextMenu:(NSMenu*)menu;
 

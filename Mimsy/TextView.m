@@ -5,6 +5,7 @@
 #import "Logger.h"
 #import "SearchSite.h"
 #import "TextController.h"
+#import "TimeMachine.h"
 #import "Utils.h"
 
 @implementation TextView
@@ -55,6 +56,10 @@
 			if ([self _needsSpellCheck])
 				[self _addSpellCheckContextItem:menu];	// 0.9
 		}
+	}
+	else
+	{
+		[self _addTimeMachineContextMenu:menu];			// 0.9
 	}
 	
 	return menu;
@@ -117,6 +122,11 @@
 - (void)_addTransformsContextMenu:(NSMenu*)menu
 {
 	[AppDelegate appendContextMenu:menu];
+}
+
+- (void) _addTimeMachineContextMenu:(NSMenu*)menu
+{
+	[TimeMachine appendContextMenu:menu];
 }
 
 - (void)_addSiteSearchContextItem:(NSMenu*)menu

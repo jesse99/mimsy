@@ -59,6 +59,7 @@
 		377BDE6E16CDACD1008DADA5 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 377BDE6D16CDACD1008DADA5 /* libsqlite3.0.dylib */; };
 		377C2CA8176503B4008E383E /* BuildOptions.xib in Resources */ = {isa = PBXBuildFile; fileRef = 377C2CA7176503B4008E383E /* BuildOptions.xib */; };
 		377C2CAB17650650008E383E /* BuildOptionsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 377C2CAA17650650008E383E /* BuildOptionsController.m */; };
+		3782A8AD190D7CDC005ED276 /* TimeMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = 3782A8AC190D7CDC005ED276 /* TimeMachine.m */; };
 		37862C3E168D20FD00DB9E66 /* VectorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C3D168D20FD00DB9E66 /* VectorTests.m */; };
 		37862C44168D2D1300DB9E66 /* StyleRunsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C43168D2D1300DB9E66 /* StyleRunsTest.m */; };
 		37862C48168D4AF700DB9E66 /* RegexStylerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C47168D4AF700DB9E66 /* RegexStylerTests.m */; };
@@ -200,6 +201,8 @@
 		377C2CA7176503B4008E383E /* BuildOptions.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BuildOptions.xib; sourceTree = "<group>"; };
 		377C2CA917650650008E383E /* BuildOptionsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuildOptionsController.h; sourceTree = "<group>"; };
 		377C2CAA17650650008E383E /* BuildOptionsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuildOptionsController.m; sourceTree = "<group>"; };
+		3782A8AB190D7CDC005ED276 /* TimeMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeMachine.h; sourceTree = "<group>"; };
+		3782A8AC190D7CDC005ED276 /* TimeMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeMachine.m; sourceTree = "<group>"; };
 		37862C3B168D20B200DB9E66 /* TestVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestVector.h; sourceTree = "<group>"; };
 		37862C3C168D20FD00DB9E66 /* VectorTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VectorTests.h; sourceTree = "<group>"; };
 		37862C3D168D20FD00DB9E66 /* VectorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VectorTests.m; sourceTree = "<group>"; };
@@ -449,6 +452,8 @@
 				377BDE6516C006BD008DADA5 /* StartupScripts.m */,
 				37ABF9B118C2EA9C006AFDB7 /* SearchSite.h */,
 				37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */,
+				3782A8AB190D7CDC005ED276 /* TimeMachine.h */,
+				3782A8AC190D7CDC005ED276 /* TimeMachine.m */,
 			);
 			name = App;
 			sourceTree = "<group>";
@@ -752,6 +757,7 @@
 				3751BCFF1846E69000DD2C8A /* ScannerCategory.m in Sources */,
 				370552A618710E15005F1438 /* SelectNameController.m in Sources */,
 				37ABF9B318C2EA9C006AFDB7 /* SearchSite.m in Sources */,
+				3782A8AD190D7CDC005ED276 /* TimeMachine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
