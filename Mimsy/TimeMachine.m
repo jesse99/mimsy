@@ -124,14 +124,9 @@ static NSString* _getTimeStr(double timestamp)
 	
 	if (_timeMachineDir)
 	{
-		double startTime = getTime();
-
-		NSMutableArray* oldFiles = [TimeMachine _findOldFiles];
+		NSArray* oldFiles = [TimeMachine _tryFindOldFiles];
 		if (oldFiles && oldFiles.count > 0)
 		{
-			[TimeMachine removeDupes:oldFiles];
-			[TimeMachine _sortOldFiles:oldFiles];
-			
 			NSMenu* tmMenu = [[NSMenu alloc] initWithTitle:@"Time Machine"];
 			NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:@"Time Machine" action:NULL keyEquivalent:@""];
 			[item setSubmenu:tmMenu];
@@ -140,12 +135,55 @@ static NSString* _getTimeStr(double timestamp)
 			for (OldFile* file in oldFiles)
 			{
 				[TimeMachine _appendFile:file toMenu:tmMenu];
-			}			
+			}
 		}
-
-		double elapsed = getTime() - startTime;
-		LOG_DEBUG("Mimsy", "took %.1f seconds to find Time Machine files", elapsed);
+		else if (!oldFiles)
+		{
+			// _findOldFiles is normally very fast (under 100 ms on a 2009 mac). However
+			// snapshots are often stored on external drives. And if those drives are
+			// asleep it can take seconds for them to spin back up. That's way too long
+			// to wait while we are building a context menu so we'll punt on Time Machine
+			// if it's taking too long.
+			//
+			// The other option is to do as Continuum did and add a menu item to open the
+			// latest snapshot. And then in the snapshot's context menu we could add all
+			// the other snapshots. This avoids spinning up the Time Machine volume
+			// unnecessarily but it would also make the Time Machine functionality even
+			// less discoverable than it is now.
+			NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:@"Spinning up Time Machine" action:NULL keyEquivalent:@""];
+			[item setEnabled:FALSE];
+			[menu addItem:item];
+		}
 	}
+}
+
++(NSArray*)_tryFindOldFiles
+{
+	__block NSCondition* condition = [NSCondition new];
+	__block NSMutableArray* oldFiles = nil;
+	
+	// Grab the lock first thing so that the main thread can block in waitUntilDate
+	// before the async code acquires the lock.
+	[condition lock];
+
+	dispatch_queue_t concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+	dispatch_async(concurrent,
+	   ^{
+		   [condition lock];
+		   
+		   oldFiles = [TimeMachine _findOldFiles];
+		   [TimeMachine removeDupes:oldFiles];
+		   [TimeMachine _sortOldFiles:oldFiles];
+		   
+		   [condition signal];
+		   [condition unlock];
+	   });
+	
+	NSDate* date = [NSDate dateWithTimeIntervalSinceNow:0.25];
+	bool completed = [condition waitUntilDate:date];
+	[condition unlock];
+	
+	return completed ? oldFiles : nil;
 }
 
 + (void)removeDupes:(NSMutableArray*)oldFiles
@@ -245,6 +283,11 @@ static NSString* _getTimeStr(double timestamp)
 		if (path)
 			oldFiles = [TimeMachine _findOldFilesFor:path inVolume:volume];
 	}
+	
+	// It's important to return a non-nil array so that we can distinguish timing out
+	// from no files found.
+	if (!oldFiles)
+		oldFiles = [NSMutableArray new];
 	
 	return oldFiles;
 }

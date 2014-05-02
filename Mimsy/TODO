@@ -1,11 +1,14 @@
 * Work on time machine
+	- commit
+	- may want to fall back to just using Find in Time Machine
 	- need to load the time machine goo in the background
 	  could do it in the background
 	  if it completes fast then use it
-	  otherwise just use a placeholder
+	  otherwise use "Spinning up Time Machine volume"
 	- do we need a regular menu item?
 	- tmutil supports restore
 * Work on generators
+	- or file-transforms
 	- both files and nested directories
 	- git
 	- time machine (compare)
