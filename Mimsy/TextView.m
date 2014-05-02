@@ -60,6 +60,9 @@
 	else
 	{
 		[self _addWordWrapContextMenu:menu];			// 0.853
+		[self _addCopyPathContextMenu:menu];			// 0.891
+		
+		[menu addItem:[NSMenuItem separatorItem]];
 		[self _addTimeMachineContextMenu:menu];			// 0.9
 	}
 	
@@ -144,6 +147,31 @@
 	TextController* controller = _controller;
 	if (controller)
 		[controller toggleWordWrap];
+}
+
+- (void)_addCopyPathContextMenu:(NSMenu*)menu
+{
+	TextController* controller = _controller;
+	if (controller)
+	{
+		NSString* title = @"Copy Path";
+		
+		NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(_processCopyPathItem:) keyEquivalent:@""];
+		[menu addItem:item];
+	}
+}
+
+- (void)_processCopyPathItem:(id)sender
+{
+	UNUSED(sender);
+	
+	TextController* controller = _controller;
+	if (controller)
+	{
+		NSPasteboard* pb = [NSPasteboard generalPasteboard];
+		[pb clearContents];
+		[pb writeObjects:@[controller.path]];
+	}
 }
 
 - (void) _addTimeMachineContextMenu:(NSMenu*)menu
