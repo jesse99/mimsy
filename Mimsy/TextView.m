@@ -59,6 +59,7 @@
 	}
 	else
 	{
+		[self _addWordWrapContextMenu:menu];			// 0.853
 		[self _addTimeMachineContextMenu:menu];			// 0.9
 	}
 	
@@ -122,6 +123,27 @@
 - (void)_addTransformsContextMenu:(NSMenu*)menu
 {
 	[AppDelegate appendContextMenu:menu];
+}
+
+- (void)_addWordWrapContextMenu:(NSMenu*)menu
+{
+	TextController* controller = _controller;
+	if (controller)
+	{
+		NSString* title = controller.isWordWrapping ? @"Don't Wrap Lines" : @"Wrap Lines";
+		
+		NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(_processWordWrapItem:) keyEquivalent:@""];
+		[menu addItem:item];
+	}
+}
+
+- (void)_processWordWrapItem:(id)sender
+{
+	UNUSED(sender);
+	
+	TextController* controller = _controller;
+	if (controller)
+		[controller toggleWordWrap];
 }
 
 - (void) _addTimeMachineContextMenu:(NSMenu*)menu

@@ -10,6 +10,7 @@
 
 - (void)open;
 - (void)onPathChanged;
+- (bool)isWordWrapping;
 - (void)toggleWordWrap;
 - (void)resetAttributes;
 - (void)changeStyle:(NSString*)path;

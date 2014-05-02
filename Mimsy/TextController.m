@@ -398,8 +398,10 @@
 			[_restorer setPath:path];
 		if (_applier)
 			[_applier addDirtyLocation:0 reason:@"path changed"];
-
 		
+		if (!_wordWrap)
+			[self doResetWordWrap];
+
 		if ([TimeMachine isSnapshotFile:self.path])
 		{
 			NSString* label = [TimeMachine getSnapshotLabel:path];
@@ -428,6 +430,11 @@
 	UNUSED(line, col, width);
 	
 	// TODO: this is Editor.ShowLine which calls TextController.ShowLine
+}
+
+- (bool)isWordWrapping
+{
+	return _wordWrap;
 }
 
 - (void)toggleWordWrap

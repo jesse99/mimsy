@@ -1,43 +1,31 @@
-* Work on time machine
-	- commit
-	- may want to fall back to just using Find in Time Machine
-	- need to load the time machine goo in the background
-	  could do it in the background
-	  if it completes fast then use it
-	  otherwise use "Spinning up Time Machine volume"
-	- do we need a regular menu item?
-	- tmutil supports restore
-* Work on generators
-	- or file-transforms
-	- both files and nested directories
-	- git
-	- time machine (compare)
-	- directories can have an optional preflight script
-	- when closing a doc need to delete the file if its in /tmp
-	- might want some sort of short form and linter and maybe compiler
 * Work on context menus:
 	- support word wrapping
+	  need to persist this in a user setting
 	- support copy path
-	- support show in finder
-	- may want some language dependent scripts, eg for Python
+	- support show in finder, do we actually want this one?
+* Support some of the text commands:
+	- balance
+	- show spaces
+	- show tabs
+	- toggle comments
 * Need to special case double-click selections according to the language
 	- eg most languages should not treat period as a word
-* Should there be scripts associated with directory windows?
-	- copy and rename?
-	- add C file?
-	- git helpers?
-	- diff?
-* Would be great if there was a way to skip backward and forward between selections.
-	- xcode uses command-control left and right arrows
-* Jump to selection would also be nice
-* Some sort of placeholder support would be nice too:
-	- maybe something like a bookmarks window
 * Work on find
 	- would be nice if there was a simple way to remove find in files directories
 * Can we add some sort of subtle highlight for the area between the current brackets?
 	- rainbow?
 	- only mismatched?
 	- use a script?
+* Would be great if there was a way to skip backward and forward between selections.
+	- xcode uses command-control left and right arrows
+* Jump to selection would also be nice
+* Some sort of placeholder support would be nice too:
+	- maybe something like a bookmarks window
+* Should there be scripts associated with directory windows?
+	- copy and rename?
+	- add C file?
+	- git helpers?
+	- diff?
 * Would be nice if Mimsy had something to enforce 80 char lines.
 * Could add some simple find definition support by relying on the styler:
 	- maybe also support paths to library files
@@ -92,6 +80,16 @@
 * Make sure builds call reloadIfChanged
 * Should have some sort of field to use when toggling between header and C files:
 	- maybe also stuff like .html and .css and .js
+* Work on generators
+	- provides a way to generate new files based on old files
+	- maybe sub-directories for stuff like git or whatever
+	- would need some fast pre-flighting if used with context menus
+	  maybe could cache result of preflight when the file is opened
+	- new file template
+	- time machine (tmutil has stuff like compare and restore)
+	- directories can have an optional preflight script
+	- when closing a doc need to delete the file if its in /tmp
+	- might want some sort of short form and linter and maybe compiler
 * Work on styling:
 	- add some sort of search key
 		can appear multiple times

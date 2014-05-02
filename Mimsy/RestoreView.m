@@ -27,12 +27,9 @@
 	{
 		if ([WindowsDatabase getInfo:&_info forPath:path])
 		{
-			if (_info.wordWrap)
-			{
-				TextController* tmp = _controller;
-				if (tmp)
-					[tmp toggleWordWrap];
-			}
+			TextController* tmp = _controller;
+			if (tmp && _info.wordWrap != tmp.isWordWrapping)
+				[tmp toggleWordWrap];
 		}
 	}
 }
