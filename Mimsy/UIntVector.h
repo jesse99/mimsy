@@ -1,4 +1,4 @@
-// Generated using `./Mimsy/create-vector.py --element=NSUInteger --struct=UIntVector --size=NSUInteger` on 01 January 2013 06:58.
+// Generated using `./Mimsy/create-vector.py --element=NSUInteger --struct=UIntVector --size=NSUInteger` on 04 May 2014 01:25.
 #import "Assert.h"
 #import <stdlib.h>		// for malloc and free
 #import <string.h>		// for memcpy
@@ -58,10 +58,30 @@ static inline void pushUIntVector(struct UIntVector* vector, NSUInteger element)
 	ASSERT(vector->count < vector->capacity);
 	vector->data[vector->count++] = element;
 }
-
+	
 static inline NSUInteger popUIntVector(struct UIntVector* vector)
 {
 	ASSERT(vector->count > 0);
 	return vector->data[--vector->count];
+}
+	
+static inline void insertAtUIntVector(struct UIntVector* vector, NSUInteger index, NSUInteger element)
+{
+	ASSERT(index <= vector->count);
+
+	if (vector->count == vector->capacity)
+		reserveUIntVector(vector, 2*vector->capacity);
+	
+	memmove(vector->data + index + 1, vector->data + index, sizeof(NSUInteger)*(vector->count - index));
+	vector->data[index] = element;
+	++vector->count;
+}
+
+static inline void removeAtUIntVector(struct UIntVector* vector, NSUInteger index)
+{
+	ASSERT(index < vector->count);
+
+	memmove(vector->data + index, vector->data + index + 1, sizeof(NSUInteger)*(vector->count - index - 1));
+	--vector->count;
 }
 

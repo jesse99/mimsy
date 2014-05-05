@@ -58,4 +58,46 @@
 	freeTestVector(&v);
 }
 
+- (void)testInsertAt
+{
+	struct TestVector v = newTestVector();
+	
+	insertAtTestVector(&v, 0, 3);
+	insertAtTestVector(&v, 0, 5);
+	STAssertEquals(v.count, (NSUInteger) 2, nil);
+	STAssertEquals(v.data[0], 5, nil);
+	STAssertEquals(v.data[1], 3, nil);
+	
+	insertAtTestVector(&v, 1, 7);
+	STAssertEquals(v.count, (NSUInteger) 3, nil);
+	STAssertEquals(v.data[0], 5, nil);
+	STAssertEquals(v.data[1], 7, nil);
+	STAssertEquals(v.data[2], 3, nil);
+	
+	freeTestVector(&v);
+}
+
+- (void)testRemoveAt
+{
+	struct TestVector v = newTestVector();
+	
+	pushTestVector(&v, 1);
+	pushTestVector(&v, 3);
+	pushTestVector(&v, 5);
+	
+	removeAtTestVector(&v, 1);
+	STAssertEquals(v.count, (NSUInteger) 2, nil);
+	STAssertEquals(v.data[0], 1, nil);
+	STAssertEquals(v.data[1], 5, nil);
+	
+	removeAtTestVector(&v, 0);
+	STAssertEquals(v.count, (NSUInteger) 1, nil);
+	STAssertEquals(v.data[0], 5, nil);
+	
+	removeAtTestVector(&v, 0);
+	STAssertEquals(v.count, (NSUInteger) 0, nil);
+	
+	freeTestVector(&v);
+}
+
 @end

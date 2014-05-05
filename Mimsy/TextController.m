@@ -2,6 +2,7 @@
 
 #import "ApplyStyles.h"
 #import "Assert.h"
+#import "Balance.h"
 #import "ConfigParser.h"
 #import "FunctionalTest.h"
 #import "Language.h"
@@ -156,6 +157,27 @@
 - (NSTextView*)getTextView
 {
 	return _textView;
+}
+
+- (void)balance:(id)sender
+{
+	UNUSED(sender);
+	
+	NSString* text = self.textView.textStorage.string;
+	NSRange originalRange = self.textView.selectedRange;
+	
+	NSRange range = balance(text, originalRange);
+	
+	// If we get the same range back then try for a larger range.
+	if (range.length > 2 && range.location + 1 == originalRange.location && range.length - 2 == originalRange.length)
+		range = balance(text, range);
+	
+	if (range.length > 2)
+		[self.textView setSelectedRange:NSMakeRange(range.location + 1, range.length - 2)];
+	else if (range.length > 0)
+		[self.textView setSelectedRange:range];
+	else
+		NSBeep();
 }
 
 - (void)openSelection:(id)sender

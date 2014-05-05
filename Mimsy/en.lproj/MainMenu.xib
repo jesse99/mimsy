@@ -684,7 +684,6 @@
 							<array class="NSMutableArray" key="NSMenuItems">
 								<object class="NSMenuItem" id="578806185">
 									<reference key="NSMenu" ref="128611420"/>
-									<bool key="NSIsDisabled">YES</bool>
 									<string key="NSTitle">Balance</string>
 									<string key="NSKeyEquiv">B</string>
 									<int key="NSKeyEquivModMask">1048576</int>
@@ -1855,6 +1854,14 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
+						<string key="label">balance:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="578806185"/>
+					</object>
+					<int key="connectionID">758</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
 						<string key="label">addFontTrait:</string>
 						<reference key="source" ref="739804602"/>
 						<reference key="destination" ref="994630407"/>
@@ -3001,7 +3008,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">756</int>
+			<int key="maxID">758</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3041,6 +3048,7 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">FirstResponder</string>
 					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="balance:">id</string>
 						<string key="build:">id</string>
 						<string key="changeBackColor:">id</string>
 						<string key="changeForeColor:">id</string>
@@ -3057,6 +3065,10 @@
 						<string key="setStyle:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="balance:">
+							<string key="name">balance:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="build:">
 							<string key="name">build:</string>
 							<string key="candidateClassName">id</string>

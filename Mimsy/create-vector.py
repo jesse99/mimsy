@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# Cocoa's collection classes are rather annoying (and inefficient) when used
+# with primitive types so we use this script to generated hard-coded ADTs
+# for the handful of primitives we want to use in collections.
 import datetime, sys
 
 try:
@@ -68,11 +71,31 @@ static inline void push{NAME}(struct {NAME}* vector, {TYPE} element)
 	ASSERT(vector->count < vector->capacity);
 	vector->data[vector->count++] = element;
 }
-
+	
 static inline {TYPE} pop{NAME}(struct {NAME}* vector)
 {
 	ASSERT(vector->count > 0);
 	return vector->data[--vector->count];
+}
+	
+static inline void insertAt{NAME}(struct {NAME}* vector, {SIZE} index, {TYPE} element)
+{
+	ASSERT(index <= vector->count);
+
+	if (vector->count == vector->capacity)
+		reserve{NAME}(vector, 2*vector->capacity);
+	
+	memmove(vector->data + index + 1, vector->data + index, sizeof({TYPE})*(vector->count - index));
+	vector->data[index] = element;
+	++vector->count;
+}
+
+static inline void removeAt{NAME}(struct {NAME}* vector, {SIZE} index)
+{
+	ASSERT(index < vector->count);
+
+	memmove(vector->data + index, vector->data + index + 1, sizeof({TYPE})*(vector->count - index - 1));
+	--vector->count;
 }
 """
 

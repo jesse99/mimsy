@@ -1,22 +1,46 @@
-* Work on context menus:
-	- support copy path
-	- support show in finder, do we actually want this one?
+underline
+	NSUnderlineStyleThick
+	NSUnderlinePatternSolid
+	NSUnderlineColorAttributeName
+
+style
+back color
+stroke color
+underline color
+
+
+* Work on braces:
+	- use some sort of highlight when cursor is inside a brace
+	  always do this? or only when the cursor is just inside a brace?
+	  will probably need a balanceRight function
+	- double click on a brace should do a balance
+	- mismatched braces should popup a window
+	  look at NSAppearence
 * Support some of the text commands:
-	- balance
 	- show spaces
 	- show tabs
 	- toggle comments
+* Support shift left and right
+* Support option-tab
+	- be sure to document this
 * Need to special case double-click selections according to the language
-	- eg most languages should not treat period as a word
+	- eg most languages should not treat period as a word character
 * Work on find
 	- would be nice if there was a simple way to remove find in files directories
-* Can we add some sort of subtle highlight for the area between the current brackets?
-	- rainbow?
-	- only mismatched?
-	- use a script?
 * Would be great if there was a way to skip backward and forward between selections.
 	- xcode uses command-control left and right arrows
 * Jump to selection would also be nice
+* Add a little view with line and col numbers.
+	- clicking on this shoould work as a goto line
+	- maybe even support 1:100 syntax to goto line and col
+	- probably want to document this
+* Add a command line app to open files in mimsy
+* May need to call the below when switching to Maverics:
+	- setAutomaticQuoteSubstitutionEnabled
+	- setAutomaticDashSubstitutionEnabled
+* NSSavePanel has an opt-in for tagging
+	- https://developer.apple.com/library/mac/releasenotes/AppKit/RN-AppKit/index.html#//apple_ref/doc/uid/TP30000741
+* NSDocument has export as pdf support in Mavericks
 * Some sort of placeholder support would be nice too:
 	- maybe something like a bookmarks window
 * Should there be scripts associated with directory windows?

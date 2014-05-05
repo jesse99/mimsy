@@ -21,7 +21,6 @@
 		3712632516B5A431007AF3BF /* libcrypto.0.9.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */; };
 		372D8FA916F5719E00CBBC96 /* Build.png in Resources */ = {isa = PBXBuildFile; fileRef = 372D8FA816F5719E00CBBC96 /* Build.png */; };
 		372D8FAB16F571A500CBBC96 /* Cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 372D8FAA16F571A500CBBC96 /* Cancel.png */; };
-		37479B831842F42C004D94FC /* C#.mimsy in Resources */ = {isa = PBXBuildFile; fileRef = 37479B821842F42B004D94FC /* C#.mimsy */; };
 		375140D416800FFD00C329AF /* ConfigParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D316800FFD00C329AF /* ConfigParser.m */; };
 		375140D816801A4800C329AF /* ConfigParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D716801A4800C329AF /* ConfigParserTests.m */; };
 		375140E416828EB600C329AF /* WindowsDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140E316828EB600C329AF /* WindowsDatabase.m */; };
@@ -60,6 +59,9 @@
 		377C2CA8176503B4008E383E /* BuildOptions.xib in Resources */ = {isa = PBXBuildFile; fileRef = 377C2CA7176503B4008E383E /* BuildOptions.xib */; };
 		377C2CAB17650650008E383E /* BuildOptionsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 377C2CAA17650650008E383E /* BuildOptionsController.m */; };
 		3782A8AD190D7CDC005ED276 /* TimeMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = 3782A8AC190D7CDC005ED276 /* TimeMachine.m */; };
+		3782A8B01916B425005ED276 /* Balance.m in Sources */ = {isa = PBXBuildFile; fileRef = 3782A8AF1916B425005ED276 /* Balance.m */; };
+		3782A8B21916BAF1005ED276 /* create-vector.py in Resources */ = {isa = PBXBuildFile; fileRef = 3782A8B11916BAF1005ED276 /* create-vector.py */; };
+		3782A8B6191713A5005ED276 /* BalanceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3782A8B5191713A5005ED276 /* BalanceTest.m */; };
 		37862C3E168D20FD00DB9E66 /* VectorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C3D168D20FD00DB9E66 /* VectorTests.m */; };
 		37862C44168D2D1300DB9E66 /* StyleRunsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C43168D2D1300DB9E66 /* StyleRunsTest.m */; };
 		37862C48168D4AF700DB9E66 /* RegexStylerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C47168D4AF700DB9E66 /* RegexStylerTests.m */; };
@@ -132,7 +134,6 @@
 		3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.0.9.8.dylib; path = ../../../usr/lib/libcrypto.0.9.8.dylib; sourceTree = "<group>"; };
 		372D8FA816F5719E00CBBC96 /* Build.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Build.png; path = images/Build.png; sourceTree = "<group>"; };
 		372D8FAA16F571A500CBBC96 /* Cancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Cancel.png; path = images/Cancel.png; sourceTree = "<group>"; };
-		37479B821842F42B004D94FC /* C#.mimsy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "C#.mimsy"; path = "Mimsy/languages/C#.mimsy"; sourceTree = "<group>"; };
 		375140D216800FFD00C329AF /* ConfigParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParser.h; sourceTree = "<group>"; };
 		375140D316800FFD00C329AF /* ConfigParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigParser.m; sourceTree = "<group>"; };
 		375140D616801A4800C329AF /* ConfigParserTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParserTests.h; sourceTree = "<group>"; };
@@ -203,6 +204,12 @@
 		377C2CAA17650650008E383E /* BuildOptionsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuildOptionsController.m; sourceTree = "<group>"; };
 		3782A8AB190D7CDC005ED276 /* TimeMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeMachine.h; sourceTree = "<group>"; };
 		3782A8AC190D7CDC005ED276 /* TimeMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeMachine.m; sourceTree = "<group>"; };
+		3782A8AE1916B425005ED276 /* Balance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Balance.h; sourceTree = "<group>"; };
+		3782A8AF1916B425005ED276 /* Balance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Balance.m; sourceTree = "<group>"; };
+		3782A8B11916BAF1005ED276 /* create-vector.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "create-vector.py"; sourceTree = "<group>"; };
+		3782A8B31916D9DB005ED276 /* UnicharVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnicharVector.h; sourceTree = "<group>"; };
+		3782A8B4191713A5005ED276 /* BalanceTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BalanceTest.h; sourceTree = "<group>"; };
+		3782A8B5191713A5005ED276 /* BalanceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BalanceTest.m; sourceTree = "<group>"; };
 		37862C3B168D20B200DB9E66 /* TestVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestVector.h; sourceTree = "<group>"; };
 		37862C3C168D20FD00DB9E66 /* VectorTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VectorTests.h; sourceTree = "<group>"; };
 		37862C3D168D20FD00DB9E66 /* VectorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VectorTests.m; sourceTree = "<group>"; };
@@ -342,6 +349,7 @@
 				37AD756E171B95460054A75F /* UpdateConfig.h */,
 				37AD756F171B95460054A75F /* UpdateConfig.m */,
 				37862C6C1693ABF100DB9E66 /* UIntVector.h */,
+				3782A8B31916D9DB005ED276 /* UnicharVector.h */,
 				3705C81C167BE9BD00E5D54C /* Utils.h */,
 				3705C81D167BE9BD00E5D54C /* Utils.m */,
 				375140E216828EB500C329AF /* WindowsDatabase.h */,
@@ -389,6 +397,8 @@
 			children = (
 				37862C59168FCA8300DB9E66 /* ApplyStyles.h */,
 				37862C5A168FCA8300DB9E66 /* ApplyStyles.m */,
+				3782A8AE1916B425005ED276 /* Balance.h */,
+				3782A8AF1916B425005ED276 /* Balance.m */,
 				3759B65E1678376000D3F3B8 /* Decode.h */,
 				3759B65F1678376000D3F3B8 /* Decode.m */,
 				37862C6F1694BFB800DB9E66 /* InfoController.h */,
@@ -461,7 +471,6 @@
 		37A8C68716758FF400D4DB13 = {
 			isa = PBXGroup;
 			children = (
-				37479B821842F42B004D94FC /* C#.mimsy */,
 				37A8C69C16758FF400D4DB13 /* Mimsy */,
 				37A8C6BC16758FF400D4DB13 /* MimsyTests */,
 				37A8C69516758FF400D4DB13 /* Frameworks */,
@@ -523,10 +532,11 @@
 			children = (
 				372D8FA816F5719E00CBBC96 /* Build.png */,
 				372D8FAA16F571A500CBBC96 /* Cancel.png */,
-				37A8C6A516758FF400D4DB13 /* Credits.rtf */,
-				37A8C69F16758FF400D4DB13 /* InfoPlist.strings */,
 				3796F6FC169A8CC900659DBD /* convertVIMFiles.h */,
 				3796F6FD169A8CC900659DBD /* convertVIMFiles.m */,
+				3782A8B11916BAF1005ED276 /* create-vector.py */,
+				37A8C6A516758FF400D4DB13 /* Credits.rtf */,
+				37A8C69F16758FF400D4DB13 /* InfoPlist.strings */,
 				37A8C6A216758FF400D4DB13 /* main.m */,
 				37A8C69E16758FF400D4DB13 /* Mimsy-Info.plist */,
 				37A8C6A416758FF400D4DB13 /* Mimsy-Prefix.pch */,
@@ -546,6 +556,8 @@
 		37A8C6BC16758FF400D4DB13 /* MimsyTests */ = {
 			isa = PBXGroup;
 			children = (
+				3782A8B4191713A5005ED276 /* BalanceTest.h */,
+				3782A8B5191713A5005ED276 /* BalanceTest.m */,
 				376407EF16BECC7E000B7AE3 /* ColorTests.h */,
 				376407F016BECC7E000B7AE3 /* ColorTests.m */,
 				37862C4F168DEA7200DB9E66 /* ConditionalGLobTests.h */,
@@ -670,9 +682,9 @@
 				372D8FA916F5719E00CBBC96 /* Build.png in Resources */,
 				372D8FAB16F571A500CBBC96 /* Cancel.png in Resources */,
 				377C2CA8176503B4008E383E /* BuildOptions.xib in Resources */,
-				37479B831842F42C004D94FC /* C#.mimsy in Resources */,
 				370552A318710C27005F1438 /* SelectName.xib in Resources */,
 				37ABF9B518E3C5A5006AFDB7 /* transforms in Resources */,
+				3782A8B21916BAF1005ED276 /* create-vector.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -758,6 +770,7 @@
 				370552A618710E15005F1438 /* SelectNameController.m in Sources */,
 				37ABF9B318C2EA9C006AFDB7 /* SearchSite.m in Sources */,
 				3782A8AD190D7CDC005ED276 /* TimeMachine.m in Sources */,
+				3782A8B01916B425005ED276 /* Balance.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -774,6 +787,7 @@
 				37862C51168DEA7200DB9E66 /* ConditionalGLobTests.m in Sources */,
 				376407F116BECC7E000B7AE3 /* ColorTests.m in Sources */,
 				377BDE6C16CDAC2B008DADA5 /* DatabaseTests.m in Sources */,
+				3782A8B6191713A5005ED276 /* BalanceTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
