@@ -27,12 +27,25 @@
 
 static int _balanceLeft(NSString* text, NSUInteger index)
 {
-	bool indexIsCloseBrace, foundOpenBrace;
+	bool indexIsOpenBrace, indexIsCloseBrace, foundOtherBrace;
 	
-	NSUInteger result = balanceLeft(text, index, &indexIsCloseBrace, &foundOpenBrace);
+	NSUInteger result = tryBalance(text, index, &indexIsOpenBrace, &indexIsCloseBrace, &foundOtherBrace);
 	if (!indexIsCloseBrace)
 		return -2;
-	else if (!foundOpenBrace)
+	else if (!foundOtherBrace)
+		return -1;
+	else
+		return (int) result;
+}
+
+static int _balanceRight(NSString* text, NSUInteger index)
+{
+	bool indexIsOpenBrace, indexIsCloseBrace, foundOtherBrace;
+	
+	NSUInteger result = tryBalance(text, index, &indexIsOpenBrace, &indexIsCloseBrace, &foundOtherBrace);
+	if (!indexIsOpenBrace)
+		return -2;
+	else if (!foundOtherBrace)
 		return -1;
 	else
 		return (int) result;
@@ -92,6 +105,21 @@ static int _balanceLeft(NSString* text, NSUInteger index)
 	STAssertEquals(0, _balanceLeft(@"[(hey)]", 6), @"");
 	
 	STAssertEquals(0, _balanceLeft(@"[]", 1), @"");
+}
+
+- (void)testBalanceRight
+{
+	STAssertEquals(-2, _balanceRight(@"hello", 2), @"");
+	
+	STAssertEquals(-2, _balanceRight(@"(hey)", 4), @"");
+	STAssertEquals(4, _balanceRight(@"(hey)", 1), @"");
+	STAssertEquals(-1, _balanceRight(@"((hey)", 1), @"");
+	STAssertEquals(6, _balanceRight(@"((hey))", 1), @"");
+	STAssertEquals(5, _balanceRight(@"((hey))", 2), @"");
+	
+	STAssertEquals(-1, _balanceRight(@"[(hey))", 1), @"");
+	STAssertEquals(-1, _balanceRight(@"[(hey])", 1), @"");
+	STAssertEquals(6, _balanceRight(@"[(hey)]", 1), @"");
 }
 
 @end

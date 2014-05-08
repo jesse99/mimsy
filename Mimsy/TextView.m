@@ -2,6 +2,7 @@
 
 #import "AppDelegate.h"
 #import "Assert.h"
+#import "Balance.h"
 #import "Logger.h"
 #import "SearchSite.h"
 #import "TextController.h"
@@ -29,6 +30,24 @@
 - (bool)restored
 {
 	return _restored;
+}
+
+- (void)mouseDown:(NSEvent*)event
+{
+	[super mouseDown:event];
+	
+	if (event.clickCount == 2 && self.selectedRange.length == 1)
+	{
+		// This works a bit differently then the Balance menu command in that it
+		// selects the braces. But it would be odd if double-clicking a brace
+		// didn't select that brace. And maybe it's a good idea to have two
+		// methods that do the same thing differently given how people's
+		// preferences differ.
+		NSRange selRange = tryBalanceRange(self.textStorage.string, self.selectedRange);
+		
+		if (selRange.length > 0)
+			[self setSelectedRange:selRange];
+	}
 }
 
 - (NSMenu*)menuForEvent:(NSEvent*)event

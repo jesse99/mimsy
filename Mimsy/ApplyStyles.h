@@ -13,6 +13,8 @@
 // Called with the start of a range which has been edited.
 - (void)addDirtyLocation:(NSUInteger)loc reason:(NSString*)reason;
 
+- (void)toggleBraceHighlightFrom:(NSUInteger)from to:(NSUInteger)to on:(bool)on;
+
 @property (readonly) bool applied;
 
 @end

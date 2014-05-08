@@ -110,54 +110,130 @@ NSRange balance(NSString* text, NSRange range)
 	else if (NSIntersectionRange(result, range).length == 0 || !_isOpenBrace([text characterAtIndex:result.location]))
 		result = NSMakeRange(0, 0);
 	
-	LOG_DEBUG("Text", "%s at %s => %s", STR(text), STR(NSStringFromRange(range)), STR(NSStringFromRange(result)));
+//	LOG_DEBUG("Text", "%s at %s => %s", STR(text), STR(NSStringFromRange(range)), STR(NSStringFromRange(result)));
 	
 	freeUnicharVector(&braces);
 	
 	return result;
 }
 
-NSUInteger balanceLeft(NSString* text, NSUInteger index, bool* indexIsCloseBrace, bool* foundOpenBrace)
+static NSUInteger _balanceLeft(NSString* text, NSUInteger index, bool* foundOpenBrace)
 {
 	NSUInteger openIndex = 0;
-	*indexIsCloseBrace = index < text.length && _isCloseBrace([text characterAtIndex:index]);
-	*foundOpenBrace = false;
 	
-	if (*indexIsCloseBrace)
+	NSUInteger i = index;
+	struct UnicharVector close = newUnicharVector();
+	while (i < text.length)
 	{
-		NSUInteger i = index;
-		struct UnicharVector close = newUnicharVector();
-		while (i < text.length)
+		unichar ch = [text characterAtIndex:i];
+		if (_isCloseBrace(ch))
 		{
-			unichar ch = [text characterAtIndex:i];
-			if (_isCloseBrace(ch))
-			{
-				pushUnicharVector(&close, ch);
-			}
-			else if (close.count > 0 && _closesBrace(ch, close.data[close.count - 1]))
-			{
-				popUnicharVector(&close);
-				
-				if (close.count == 0)
-					break;
-			}
-			else if (_isOpenBrace(ch))
-			{
-				break;
-			}
+			pushUnicharVector(&close, ch);
+		}
+		else if (close.count > 0 && _closesBrace(ch, close.data[close.count - 1]))
+		{
+			popUnicharVector(&close);
 			
-			--i;
+			if (close.count == 0)
+				break;
 		}
-		
-		if (close.count == 0)
+		else if (_isOpenBrace(ch))
 		{
-			*foundOpenBrace = true;
-			openIndex = i;
+			break;
 		}
-		LOG_DEBUG("Text", "%s at %lu => %lu", STR(text), (unsigned long) index, (unsigned long) openIndex);
 		
-		freeUnicharVector(&close);
+		--i;
 	}
 	
+	if (close.count == 0)
+	{
+		*foundOpenBrace = true;
+		openIndex = i;
+	}
+//	LOG_DEBUG("Text", "%s at %lu => %lu", STR(text), (unsigned long) index, (unsigned long) openIndex);
+	
+	freeUnicharVector(&close);
+	
 	return openIndex;
+}
+
+static NSUInteger _balanceRight(NSString* text, NSUInteger index, bool* foundCloseBrace)
+{
+	NSUInteger closeIndex = 0;
+	
+	NSUInteger i = index;
+	struct UnicharVector open = newUnicharVector();
+	while (i < text.length)
+	{
+		unichar ch = [text characterAtIndex:i];
+		if (_isOpenBrace(ch))
+		{
+			pushUnicharVector(&open, ch);
+		}
+		else if (open.count > 0 && _closesBrace(open.data[open.count - 1], ch))
+		{
+			popUnicharVector(&open);
+			
+			if (open.count == 0)
+				break;
+		}
+		else if (_isCloseBrace(ch))
+		{
+			break;
+		}
+		
+		++i;
+	}
+	
+	if (open.count == 0)
+	{
+		*foundCloseBrace = true;
+		closeIndex = i;
+	}
+//	LOG_DEBUG("Text", "%s at %lu => %lu", STR(text), (unsigned long) index, (unsigned long) closeIndex);
+	
+	freeUnicharVector(&open);
+	
+	return closeIndex;
+}
+
+NSUInteger tryBalance(NSString* text, NSUInteger index, bool* indexIsOpenBrace, bool* indexIsCloseBrace, bool* foundOtherBrace)
+{
+	*indexIsOpenBrace = index > 0 && _isOpenBrace([text characterAtIndex:index-1]);
+	*indexIsCloseBrace = index < text.length && _isCloseBrace([text characterAtIndex:index]);
+	*foundOtherBrace = false;
+	
+	NSUInteger otherIndex = 0;
+	if (*indexIsCloseBrace)
+		otherIndex = _balanceLeft(text, index, foundOtherBrace);
+	else if (*indexIsOpenBrace)
+		otherIndex = _balanceRight(text, index-1, foundOtherBrace);
+	
+	return otherIndex;	
+}
+
+NSRange tryBalanceRange(NSString* text, NSRange range)
+{
+	NSRange result = NSMakeRange(0, 0);
+	
+	if (range.length == 1)
+	{
+		bool indexIsOpenBrace = range.location < text.length && _isOpenBrace([text characterAtIndex:range.location]);
+		bool indexIsCloseBrace = range.location < text.length && _isCloseBrace([text characterAtIndex:range.location]);
+		bool foundOtherBrace = false;
+		
+		if (indexIsCloseBrace)
+		{
+			NSUInteger otherIndex = _balanceLeft(text, range.location, &foundOtherBrace);
+			result = NSMakeRange(otherIndex, range.location - otherIndex + 1);
+		}
+		else if (indexIsOpenBrace)
+		{
+			NSUInteger otherIndex = _balanceRight(text, range.location, &foundOtherBrace);
+			result = NSMakeRange(range.location, otherIndex+1 - range.location);
+		}
+	}
+	
+	return result;
+	
 }

@@ -38,12 +38,16 @@
 	NSUInteger _firstDirtyLoc;
 	struct StyleRunVector _appliedRuns;
 	bool _queued;
+	NSDictionary* _braceAttrs;
+	NSUInteger _braceLeft;
+	NSUInteger _braceRight;
 }
 
 - (id)init:(TextController*)controller
 {
 	_controller = controller;
 	_appliedRuns = newStyleRunVector();
+	_braceAttrs = @{NSBackgroundColorAttributeName: [NSColor selectedTextBackgroundColor]};
 	return self;
 }
 
@@ -104,6 +108,27 @@
 	}
 }
 
+- (void)toggleBraceHighlightFrom:(NSUInteger)from to:(NSUInteger)to on:(bool)on
+{
+	if (!on)
+	{
+		from = 0;
+		to = 0;
+	}
+	
+	if (from != _braceLeft || to != _braceRight)
+	{
+		if (!on || to - from > 1)
+		{
+			_braceLeft = from;
+			_braceRight = to;
+			
+			// This is a bit crappy because it will re-apply all the styles.
+			[self addDirtyLocation:0 reason:@"brace selection"];
+		}
+	}
+}
+
 // This is about 50x faster than re-applying the runs.
 - (void)_skipApplied:(StyleRuns*)runs
 {
@@ -115,10 +140,12 @@
 		 {
 			 (void) style;
 			 
+			 NSUInteger loc = _appliedRuns.data[numApplied].range.location;
+			 NSUInteger len = _appliedRuns.data[numApplied].range.length;
 			 if (numApplied < _appliedRuns.count &&
 				 _appliedRuns.data[numApplied].elementIndex == elementIndex &&
-				 _appliedRuns.data[numApplied].range.location == range.location &&
-				 _appliedRuns.data[numApplied].range.length == range.length)
+				 loc == range.location && len == range.length &&
+				 (_braceRight == 0 || loc + len < _braceLeft))
 			 {
 				 ++numApplied; 
 			 }
@@ -161,6 +188,7 @@
 				lastLoc = range.location + range.length;
 				if (lastLoc < _firstDirtyLoc)
 				{
+					[storage removeAttribute:NSBackgroundColorAttributeName range:range];
 					[storage removeAttribute:NSLinkAttributeName range:range];
 					[storage removeAttribute:NSToolTipAttributeName range:range];
 					
@@ -180,6 +208,7 @@
 				}
 			}
 		];
+		[self _applyBraceStylesAt:beginLoc length:endLoc-beginLoc storage:storage];
 		[StartupScripts invokeApplyStyles:tmp.document location:beginLoc length:endLoc-beginLoc];
 		[storage endEditing];
 		
@@ -224,6 +253,18 @@
 	
 	pushStyleRunVector(&_appliedRuns, (struct StyleRun) {.elementIndex = index, .range = range});
 	[storage addAttributes:style range:range];
+}
+
+- (void)_applyBraceStylesAt:(NSUInteger)location length:(NSUInteger)length storage:(NSTextStorage*)storage
+{
+	if (_braceRight > 0)
+	{
+		if (location <= _braceLeft && _braceLeft < location + length)
+			[storage addAttributes:_braceAttrs range:NSMakeRange(_braceLeft, 1)];
+
+		if (location <= _braceRight && _braceRight < location + length)
+			[storage addAttributes:_braceAttrs range:NSMakeRange(_braceRight, 1)];
+	}
 }
 
 @end

@@ -495,6 +495,21 @@
 	UNUSED(notification);
 	
 	NSRange range = _textView.selectedRange;
+	if (range.length == 0)
+	{
+		bool indexIsOpenBrace, indexIsCloseBrace, foundOtherBrace;
+		NSUInteger index = tryBalance(_textView.textStorage.string, range.location, &indexIsOpenBrace, &indexIsCloseBrace, &foundOtherBrace);
+		
+		if (indexIsOpenBrace)
+			[_applier toggleBraceHighlightFrom:range.location-1 to:index on:foundOtherBrace];
+		else
+			[_applier toggleBraceHighlightFrom:index to:range.location on:foundOtherBrace];
+	}
+	else
+	{
+		[_applier toggleBraceHighlightFrom:0 to:0 on:false];
+	}
+
 	[StartupScripts invokeTextSelectionChanged:self.document slocation:range.location slength:range.length];
 }
 

@@ -1,19 +1,4 @@
-underline
-	NSUnderlineStyleThick
-	NSUnderlinePatternSolid
-	NSUnderlineColorAttributeName
-
-style
-back color
-stroke color
-underline color
-
-
 * Work on braces:
-	- use some sort of highlight when cursor is inside a brace
-	  always do this? or only when the cursor is just inside a brace?
-	  will probably need a balanceRight function
-	- double click on a brace should do a balance
 	- mismatched braces should popup a window
 	  look at NSAppearence
 * Support some of the text commands:

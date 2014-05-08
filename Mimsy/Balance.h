@@ -7,7 +7,14 @@
 // or have a zero length if it could not be balanced.
 NSRange balance(NSString* text, NSRange range);
 
-// indexIsCloseBrace will be set according to whether the character at index
-// is a closing brace. foundOpenBrace will be set if a corresponding open brace
-// was found. If foundOpenBrace is true the open brace's index is returned.
-NSUInteger balanceLeft(NSString* text, NSUInteger index, bool* indexIsCloseBrace, bool* foundOpenBrace);
+// Sets indexIsOpenBrace or indexIsCloseBrace if the character at index is a brace.
+// If so, and the corresponding close or open brace is found, then foundOtherBrace
+// is set and that brace's index is returned.
+NSUInteger tryBalance(NSString* text, NSUInteger index, bool* indexIsOpenBrace, bool* indexIsCloseBrace, bool* foundOtherBrace);
+
+// Like tryBalance except that it takes a one character range and attempts to
+// balance if the range contains a brace. If succussful the returned range
+// will be non-empty.
+NSRange tryBalanceRange(NSString* text, NSRange range);
+
+
