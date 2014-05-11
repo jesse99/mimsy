@@ -203,7 +203,7 @@ int app_schedule(struct lua_State* state)
 	LUA_ASSERT(callback != NULL && callback.length > 0, "callback was NULL or empty");
 	
 	dispatch_queue_t main = dispatch_get_main_queue();
-	dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, (int64_t) (secs*1.0e9));
+	dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, (int64_t) (secs*NSEC_PER_SEC));
 	dispatch_after(delay, main,
 		^{
 			// TODO: It would be nice to support calling lua closures, but I'm not
