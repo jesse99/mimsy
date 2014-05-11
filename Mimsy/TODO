@@ -1,21 +1,34 @@
-* Work on braces:
-	- need to set some attribute? lazy text storage?
-	- mismatched braces should popup a window
-	  look at NSAppearence
-* Support some of the text commands:
-	- show spaces
-	- show tabs
-	- toggle comments
+* Work on find
+	- would be nice if there was a simple way to remove find in files directories
+* Get find in files working
+	- needs to be able to search rtf files
+	- may want a unit test for find in files
+* Support remote editing
+	- might be simplest to just have a Python script running remotely
+	- contents could be zipped and binhexed
+* Support goto line
 * Support shift left and right
 * Auto-indent new lines
 * Support option-tab
 	- be sure to document this
-* Special case arrow keys
-* Special case delete key
 * Need to special case double-click selections according to the language
 	- eg most languages should not treat period as a word character
-* Work on find
-	- would be nice if there was a simple way to remove find in files directories
+* Support some of the text commands:
+	- show tabs
+	- toggle comments
+* Add show leading spaces and show leading tabs commands:
+	- perist them in a pref
+	  may want to make this a project pref
+	  maybe even support per-file overrides
+	  emacs (and vim?) support prefs as meta-data within files
+	- regex styler should make use of them
+	- add show interior tabs?
+* Special case arrow keys
+* Special case delete key
+* Maybe also a short view:
+	- remove function bodies
+	- possibly format doc comments
+* Add a command line app to open files in mimsy
 * Would be great if there was a way to skip backward and forward between selections.
 	- xcode uses command-control left and right arrows
 * Jump to selection would also be nice
@@ -24,7 +37,15 @@
 	- clicking on this shoould work as a goto line
 	- maybe even support 1:100 syntax to goto line and col
 	- probably want to document this
-* Add a command line app to open files in mimsy
+* Could add some simple find definition support by relying on the styler:
+	- directory watcher and a task are used to maintain a cache
+	- project pref could have paths to dependencies, eg cocoa headers
+	- might be a bit problematic for languages with overloading
+	- may want to mention in docs that definition style serves two purposes
+	- lua hooks could allow for more sophisticated implementations (eg for clang)
+* May want to extend languages to support bad tokens
+	- e.g. || and && in Python
+* Support named bookmarks.
 * May need to call the below when switching to Maverics:
 	- setAutomaticQuoteSubstitutionEnabled
 	- setAutomaticDashSubstitutionEnabled
@@ -38,16 +59,10 @@
 	- add C file?
 	- git helpers?
 	- diff?
-* May want to extend languages to support bad tokens
-	- e.g. || and && in Python
-* Would be nice if Mimsy had something to enforce 80 char lines.
-* Could add some simple find definition support by relying on the styler:
-	- maybe also support paths to library files
-	- might be a bit problematic for languages with overloading
-	- may want to mention in docs that definition style serves two purposes
-* Support remote editing
-	- might be simplest to just have a Python script running remotely
-	- contents could be zipped and binhexed
+* Would be nice to have a script to warn when lines are over 78 chars
+	- probably disabled by default
+	- or do nothing unless a setting is set
+	- directory settings file would need entries for custom settings
 * Update xcode
 	- see whats changed in cocoa
 * Might be neat to have a small font brace line addon.
@@ -115,8 +130,6 @@
 	- probably should have a way to have fallback element name aliases
 	- would be nice if there was a way to show which elements text ranges belong to
 		could do this by adding a "style name" attribute
-* Get find working
-* Get find in files working
 * Work on directory window hooks:
 	- styling
 	- text annotations
@@ -149,10 +162,6 @@
 		` mapping from group number to standard categories like file, line, col
 	- language files need to include search URL
 	- would be nice to do something for SCCSs
-* Would be nice to have a script to warn when lines are over 78 chars
-	- probably disabled by default
-	- or do nothing unless a setting is set
-	- directory settings file would need entries for custom settings
 * Language files should have support for a run key:
 	- value is command line used to run a single file (or *.c file for C based languages)
 	- probably triggered by option-R
@@ -171,10 +180,6 @@
 	- should be per language
 	- maybe both text and script based (or possibly scripts are refactors)
 * git modified file indicator is nice.
-* Could use styler to support jump to definition:
-	- directory watcher and a task are used to maintain a cache
-	- project pref could have paths to dependencies
-	- lua hooks could allow for more sophisticated implementations (eg for clang)
 * Need to add support for a bunch more languages.
 * Experiment with code folding:
 	- need a language regex or string to indicate range start and end
@@ -189,6 +194,7 @@
 	- its fairly common to open and close large source files
 	- probably want some logging for how large the cache gets
 * Do something special with file rename when a SCCS is present. Also delete.
+- maybe lua hooks
 * Should have a mode where tab uses tab at the start of lines, but spaces once the line starts.
 * Might also want to use that wacky VIM(?) meta-data embedded in files containing info like tab lengths
 	- or support a dot file that does the same thing
@@ -196,7 +202,6 @@
 	- -> and => to unicode arrows
 	- :: to something
 	- probably would also have to do this during editing
-* Find in files needs to be able to search rtf files.
 * Get searching in help files working.
 * Info window should have a popup to override default styler file.
 * Maybe could have an option to get rid of tabs altogether
@@ -208,11 +213,10 @@
 	- mostly helper windows, like find panels and recent files
 	- maybe also directory windows
 	- maybe all the chrome could be toggled via control key, then could use control-k to toggle chrome
-* Can we support references somehow?
-	- ideally per language
-* Maybe also a short view:
-	- remove function bodies
-	- possibly format doc comments
+* Is there an API to get reference docs from Apple?
+	- from rust?
+	- could add lua (or maybe arbotrary) per language scripts
+	- could then do something like xcode's doc window
 * Would be cool if there was a way to configure command keys:
 	- maybe mimsy file or lua script
 * Would be nice to have some sort of indication of dirty files:
@@ -222,10 +226,6 @@
 * Might want to add to the app store:
 	- see what the policy is for open source apps
 	- look at Prepare for Mac App Store Submission link
-* Support named bookmarks.
-* Could replace Mimsy files with lua config files:
-	- regex would be a little annoying, probably would need to use long brackets to avoid escaping
-	- maybe a little annoying to edit too: lua is simple but not as simple as the Mimsy format
 * History of cursor positions?
 * Release checklist:
 	- review log topics
