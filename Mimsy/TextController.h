@@ -19,6 +19,9 @@
 - (NSString*)path;
 - (NSTextView*)getTextView;
 
+- (void)showInfo:(NSString*)text;
+- (void)showWarning:(NSString*)text;
+
 @property IBOutlet TextView* textView;
 @property IBOutlet __weak NSScrollView* scrollView;
 @property NSAttributedString* attributedText;

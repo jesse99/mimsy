@@ -1,4 +1,5 @@
 * Work on braces:
+	- need to set some attribute? lazy text storage?
 	- mismatched braces should popup a window
 	  look at NSAppearence
 * Support some of the text commands:
@@ -6,8 +7,11 @@
 	- show tabs
 	- toggle comments
 * Support shift left and right
+* Auto-indent new lines
 * Support option-tab
 	- be sure to document this
+* Special case arrow keys
+* Special case delete key
 * Need to special case double-click selections according to the language
 	- eg most languages should not treat period as a word character
 * Work on find
@@ -15,6 +19,7 @@
 * Would be great if there was a way to skip backward and forward between selections.
 	- xcode uses command-control left and right arrows
 * Jump to selection would also be nice
+* http://www.emacswiki.org/emacs/uniquify looks neat
 * Add a little view with line and col numbers.
 	- clicking on this shoould work as a goto line
 	- maybe even support 1:100 syntax to goto line and col
@@ -33,6 +38,8 @@
 	- add C file?
 	- git helpers?
 	- diff?
+* May want to extend languages to support bad tokens
+	- e.g. || and && in Python
 * Would be nice if Mimsy had something to enforce 80 char lines.
 * Could add some simple find definition support by relying on the styler:
 	- maybe also support paths to library files

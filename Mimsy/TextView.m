@@ -32,6 +32,63 @@
 	return _restored;
 }
 
+- (void)keyDown:(NSEvent*)event
+{
+	[super keyDown:event];
+	
+	NSString* chars = event.characters;
+	[self _handleCloseBrace:chars];
+}
+
+- (void)_handleCloseBrace:(NSString*)chars
+{
+	if (chars.length == 1 && isBrace([chars characterAtIndex:0]))
+	{
+		NSRange range = self.selectedRange;
+		if (range.length == 0)
+		{
+			TextController* controller = self.window.windowController;
+
+			// If the user typed a closing brace and it is balanced,
+			bool indexIsOpenBrace, indexIsCloseBrace, foundOtherBrace;
+			NSString* text = self.textStorage.string;
+			NSUInteger left = tryBalance(text, range.location + range.length - 1, &indexIsOpenBrace, &indexIsCloseBrace, &foundOtherBrace);
+			if (indexIsCloseBrace)
+			{
+				// then highlight the open brace.
+				if (foundOtherBrace)
+				{
+					NSRange openRange = NSMakeRange(left, 1);
+					[self _showOpenBrace:openRange closedAt:range];
+				}
+				else if (range.location < text.length)
+				{
+					// Otherwise pop up a translucent warning window for a second.
+					unichar ch = [text characterAtIndex:range.location];
+					[controller showWarning:[NSString stringWithFormat:@"Unmatched '%C'", ch]];
+				}
+			}
+		}
+	}
+}
+
+- (void)_showOpenBrace:(NSRange)openRange closedAt:(NSRange)closeRange
+{
+	dispatch_queue_t main = dispatch_get_main_queue();
+	dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_MSEC);
+	dispatch_after(delay, main, ^
+   {
+	   [self scrollRangeToVisible:openRange];
+	   [self showFindIndicatorForRange:openRange];
+	   
+	   dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 333*NSEC_PER_MSEC);
+	   dispatch_after(delay, main, ^
+	  {
+		  [self scrollRangeToVisible:closeRange];
+	  });
+   });
+}
+
 - (void)mouseDown:(NSEvent*)event
 {
 	[super mouseDown:event];

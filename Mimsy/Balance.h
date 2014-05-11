@@ -1,6 +1,8 @@
 // Used to highlight and select matched braces.
 #import <Foundation/Foundation.h>
 
+bool isBrace(unichar ch);
+
 // Returns a range by extending the selection left until an open brace is found
 // which is not closed within the range. Then the range is extended right until
 // the new brace is closed. The returned range will start and end with braces

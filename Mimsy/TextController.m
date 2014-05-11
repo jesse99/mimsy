@@ -17,6 +17,7 @@
 #import "TextStyles.h"
 #import "TimeMachine.h"
 #import "TranscriptController.h"
+#import "WarningWindow.h"
 #import "WindowsDatabase.h"
 
 @implementation TextController
@@ -28,6 +29,7 @@
 	Language* _language;
 	TextStyles* _styles;
 	ApplyStyles* _applier;
+	WarningWindow* _warningWindow;
 }
 
 - (id)init
@@ -178,6 +180,22 @@
 		[self.textView setSelectedRange:range];
 	else
 		NSBeep();
+}
+
+- (void)showInfo:(NSString*)text
+{
+	if (!_warningWindow)
+		_warningWindow = [WarningWindow new];
+	
+	[_warningWindow show:self.window withText:text red:135 green:206 blue:250];
+}
+
+- (void)showWarning:(NSString*)text
+{
+	if (!_warningWindow)
+		_warningWindow = [WarningWindow new];
+	
+	[_warningWindow show:self.window withText:text red:250 green:128 blue:114];
 }
 
 - (void)openSelection:(id)sender
@@ -513,7 +531,17 @@
 	[StartupScripts invokeTextSelectionChanged:self.document slocation:range.location slength:range.length];
 }
 
-// Note that this is called for every key stroke.
+// editedRange is the range of the new text. For example if a character
+// is typed it will be the range of the new character, if text is pasted it
+// will be the range of the inserted text.
+//
+// changeInLength is the difference in length between the old selection
+// and the new text.
+//
+// Note that this is called for every key stroke. Also note that editedRange
+// isn't a very reliable way to determine the number of characters edited
+// (often attribute edits are merged in, not sure from where and it's not
+// via the _applier but they seem to extend to the end of the line).
 - (void)textStorageDidProcessEditing:(NSNotification*)notification
 {
 	UNUSED(notification);
@@ -522,7 +550,7 @@
 	if ((mask & NSTextStorageEditedCharacters))
 	{
 		_editCount++;
-		
+
 		if (_applier)
 		{
 			NSUInteger loc = self.textView.textStorage.editedRange.location;

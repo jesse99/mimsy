@@ -50,6 +50,11 @@ static struct UnicharVector _findBraces(NSString* text, NSRange range)
 	return braces;	
 }
 
+bool isBrace(unichar ch)
+{
+	return _isOpenBrace(ch) || _isCloseBrace(ch);
+}
+
 NSRange balance(NSString* text, NSRange range)
 {
 	NSRange result = NSMakeRange(range.location, range.length);

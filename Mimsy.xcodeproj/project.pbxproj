@@ -62,6 +62,7 @@
 		3782A8B01916B425005ED276 /* Balance.m in Sources */ = {isa = PBXBuildFile; fileRef = 3782A8AF1916B425005ED276 /* Balance.m */; };
 		3782A8B21916BAF1005ED276 /* create-vector.py in Resources */ = {isa = PBXBuildFile; fileRef = 3782A8B11916BAF1005ED276 /* create-vector.py */; };
 		3782A8B6191713A5005ED276 /* BalanceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3782A8B5191713A5005ED276 /* BalanceTest.m */; };
+		3782A8B9191C82A5005ED276 /* WarningWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 3782A8B8191C82A5005ED276 /* WarningWindow.m */; };
 		37862C3E168D20FD00DB9E66 /* VectorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C3D168D20FD00DB9E66 /* VectorTests.m */; };
 		37862C44168D2D1300DB9E66 /* StyleRunsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C43168D2D1300DB9E66 /* StyleRunsTest.m */; };
 		37862C48168D4AF700DB9E66 /* RegexStylerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37862C47168D4AF700DB9E66 /* RegexStylerTests.m */; };
@@ -210,6 +211,8 @@
 		3782A8B31916D9DB005ED276 /* UnicharVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnicharVector.h; sourceTree = "<group>"; };
 		3782A8B4191713A5005ED276 /* BalanceTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BalanceTest.h; sourceTree = "<group>"; };
 		3782A8B5191713A5005ED276 /* BalanceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BalanceTest.m; sourceTree = "<group>"; };
+		3782A8B7191C82A4005ED276 /* WarningWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WarningWindow.h; sourceTree = "<group>"; };
+		3782A8B8191C82A5005ED276 /* WarningWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WarningWindow.m; sourceTree = "<group>"; };
 		37862C3B168D20B200DB9E66 /* TestVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestVector.h; sourceTree = "<group>"; };
 		37862C3C168D20FD00DB9E66 /* VectorTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VectorTests.h; sourceTree = "<group>"; };
 		37862C3D168D20FD00DB9E66 /* VectorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VectorTests.m; sourceTree = "<group>"; };
@@ -417,6 +420,8 @@
 				37862C5D168FEC3A00DB9E66 /* TextStyles.m */,
 				37862C691692070600DB9E66 /* TextView.h */,
 				37862C6A1692070700DB9E66 /* TextView.m */,
+				3782A8B7191C82A4005ED276 /* WarningWindow.h */,
+				3782A8B8191C82A5005ED276 /* WarningWindow.m */,
 			);
 			name = "Text Editor";
 			sourceTree = "<group>";
@@ -771,6 +776,7 @@
 				37ABF9B318C2EA9C006AFDB7 /* SearchSite.m in Sources */,
 				3782A8AD190D7CDC005ED276 /* TimeMachine.m in Sources */,
 				3782A8B01916B425005ED276 /* Balance.m in Sources */,
+				3782A8B9191C82A5005ED276 /* WarningWindow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
