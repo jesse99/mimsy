@@ -83,6 +83,9 @@
 		3796F6FE169A8CC900659DBD /* convertVIMFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 3796F6FD169A8CC900659DBD /* convertVIMFiles.m */; };
 		37979FEA16A999E0009D9944 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 37979FE916A999E0009D9944 /* liblua.a */; };
 		37979FEE16AAEEC1009D9944 /* FunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 37979FED16AAEEC1009D9944 /* FunctionalTest.m */; };
+		379A4116191FDB8B00ACEA5C /* FindWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 379A4115191FDB8B00ACEA5C /* FindWindow.xib */; };
+		379A41191920031500ACEA5C /* FindController.m in Sources */ = {isa = PBXBuildFile; fileRef = 379A41181920031500ACEA5C /* FindController.m */; };
+		379A411C192033BF00ACEA5C /* BaseFindController.m in Sources */ = {isa = PBXBuildFile; fileRef = 379A411B192033BF00ACEA5C /* BaseFindController.m */; };
 		37A8C69716758FF400D4DB13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C69616758FF400D4DB13 /* Cocoa.framework */; };
 		37A8C6A116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C69F16758FF400D4DB13 /* InfoPlist.strings */; };
 		37A8C6A316758FF400D4DB13 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6A216758FF400D4DB13 /* main.m */; };
@@ -253,6 +256,11 @@
 		37979FE916A999E0009D9944 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = /opt/local/lib/liblua.a; sourceTree = "<absolute>"; };
 		37979FEC16AAEEC1009D9944 /* FunctionalTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FunctionalTest.h; sourceTree = "<group>"; };
 		37979FED16AAEEC1009D9944 /* FunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FunctionalTest.m; sourceTree = "<group>"; };
+		379A4115191FDB8B00ACEA5C /* FindWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FindWindow.xib; sourceTree = "<group>"; };
+		379A41171920031500ACEA5C /* FindController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindController.h; sourceTree = "<group>"; };
+		379A41181920031500ACEA5C /* FindController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindController.m; sourceTree = "<group>"; };
+		379A411A192033BF00ACEA5C /* BaseFindController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseFindController.h; sourceTree = "<group>"; };
+		379A411B192033BF00ACEA5C /* BaseFindController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseFindController.m; sourceTree = "<group>"; };
 		37A8C69216758FF400D4DB13 /* Mimsy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mimsy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37A8C69616758FF400D4DB13 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		37A8C69916758FF400D4DB13 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -347,6 +355,9 @@
 				375140E616835CB400C329AF /* Paths.m */,
 				3751BCFD1846E69000DD2C8A /* ScannerCategory.h */,
 				3751BCFE1846E69000DD2C8A /* ScannerCategory.m */,
+				370552A218710C27005F1438 /* SelectName.xib */,
+				370552A418710E14005F1438 /* SelectNameController.h */,
+				370552A518710E15005F1438 /* SelectNameController.m */,
 				3752CC1616A2F7EA00B623F5 /* StringCategory.h */,
 				3752CC1716A2F7EA00B623F5 /* StringCategory.m */,
 				37AD756E171B95460054A75F /* UpdateConfig.h */,
@@ -357,9 +368,6 @@
 				3705C81D167BE9BD00E5D54C /* Utils.m */,
 				375140E216828EB500C329AF /* WindowsDatabase.h */,
 				375140E316828EB600C329AF /* WindowsDatabase.m */,
-				370552A218710C27005F1438 /* SelectName.xib */,
-				370552A418710E14005F1438 /* SelectNameController.h */,
-				370552A518710E15005F1438 /* SelectNameController.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -473,6 +481,18 @@
 			name = App;
 			sourceTree = "<group>";
 		};
+		379A4114191FDB3B00ACEA5C /* Find */ = {
+			isa = PBXGroup;
+			children = (
+				379A411A192033BF00ACEA5C /* BaseFindController.h */,
+				379A411B192033BF00ACEA5C /* BaseFindController.m */,
+				379A41171920031500ACEA5C /* FindController.h */,
+				379A41181920031500ACEA5C /* FindController.m */,
+				379A4115191FDB8B00ACEA5C /* FindWindow.xib */,
+			);
+			name = Find;
+			sourceTree = "<group>";
+		};
 		37A8C68716758FF400D4DB13 = {
 			isa = PBXGroup;
 			children = (
@@ -522,6 +542,7 @@
 				370040351676C89C0009907A /* README.md */,
 				37979FEB16AAEE94009D9944 /* App */,
 				3768CCC316CDD9DF00D5CB57 /* Directory Editor */,
+				379A4114191FDB3B00ACEA5C /* Find */,
 				3751410A168CE11100C329AF /* Scripts */,
 				375140F3168BD64500C329AF /* Styler */,
 				3759B65D1678338600D3F3B8 /* Text Editor */,
@@ -690,6 +711,7 @@
 				370552A318710C27005F1438 /* SelectName.xib in Resources */,
 				37ABF9B518E3C5A5006AFDB7 /* transforms in Resources */,
 				3782A8B21916BAF1005ED276 /* create-vector.py in Resources */,
+				379A4116191FDB8B00ACEA5C /* FindWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -777,6 +799,8 @@
 				3782A8AD190D7CDC005ED276 /* TimeMachine.m in Sources */,
 				3782A8B01916B425005ED276 /* Balance.m in Sources */,
 				3782A8B9191C82A5005ED276 /* WarningWindow.m in Sources */,
+				379A41191920031500ACEA5C /* FindController.m in Sources */,
+				379A411C192033BF00ACEA5C /* BaseFindController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

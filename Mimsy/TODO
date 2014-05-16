@@ -1,8 +1,21 @@
-* Work on find
-	- would be nice if there was a simple way to remove find in files directories
+* Get find working
+	- use a pref to control word wrap
+* Work on find:
+	- get find again working
+	- get the checkboxes working
+	- get find previous working
+	- get command-e working
+	- get the find dropdown working
+	- see if we need special case code in replaceText method
+	- may want a little button to pull up mimsy help
+	  include a regex summary
+	  include a link to apple's regex docs
+	- probably want a pref for search within strings
+	- look at search notes
 * Get find in files working
-	- needs to be able to search rtf files
 	- may want a unit test for find in files
+	- needs to be able to search rtf files
+	- would be nice if there was a simple way to remove find in files directories
 * Support remote editing
 	- might be simplest to just have a Python script running remotely
 	- contents could be zipped and binhexed

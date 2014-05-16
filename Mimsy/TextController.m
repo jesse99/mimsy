@@ -4,6 +4,7 @@
 #import "Assert.h"
 #import "Balance.h"
 #import "ConfigParser.h"
+#import "FindController.h"
 #import "FunctionalTest.h"
 #import "Language.h"
 #import "Languages.h"
@@ -159,6 +160,13 @@
 - (NSTextView*)getTextView
 {
 	return _textView;
+}
+
+- (void)find:(id)sender
+{
+	UNUSED(sender);
+	
+	[FindController show];
 }
 
 - (void)balance:(id)sender
