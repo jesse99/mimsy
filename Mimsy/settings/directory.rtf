@@ -121,15 +121,15 @@
 \f2\fs24 \cf0 \
 \pard\pardeftab480\pardirnatural
 
-\f0\i\fs28 \cf2 # The entries below are used to style items in directory windows. Directory and File\
-# are used if none of the globs match.
+\f0\i\fs28 \cf2 # The entries below are used to style items in directory windows. DirectoryStyle and \
+# FileStyle are used if none of the GlobStyles match.
 \i0 \cf0 \
 \pard\pardeftab480\pardirnatural
 
-\f1\b\fs36 \cf0 Directory: 
+\f1\b\fs36 \cf0 DirectoryStyle: 
 \b0 \
-File: note that packages are considered to be files\
-Size: used for the second column in the view (byte size of files and packages)\
+FileStyle: note that packages are considered to be files\
+SizeStyle: used for the second column in the view (byte size of files and packages)\
 \
 \pard\pardeftab480\pardirnatural
 
@@ -137,9 +137,7 @@ Size: used for the second column in the view (byte size of files and packages)\
 \i0 \cf0 \
 \pard\pardeftab480\pardirnatural
 
-\f1\fs36 \cf2 *.dll: \
-*.dylib: \
-*.exe: \
+\f1\fs36 \cf2 GlobStyles: *.dll *.dylib *.exe *.lib\
 \pard\pardeftab480\pardirnatural
 
 \f2\fs24 \cf0 \
@@ -149,16 +147,7 @@ Size: used for the second column in the view (byte size of files and packages)\
 \i0 \cf0 \
 \pard\pardeftab480\pardirnatural
 
-\f1\fs36 \cf4 Makefile: \
-Make.shared: \
-SConscript: \
-SConstruct: \
-wscript:\
-wscript_build:\
-*.am: \
-*.make: \
-*.mk: \
-*.rc: rust\
+\f1\fs36 \cf4 GlobStyles: *.am *.make *.mk Makefile Make.shared *.rc SConscript SConstruct wscript wscript_build\
 \pard\pardeftab480\pardirnatural
 \cf0 \
 \pard\pardeftab480\pardirnatural
@@ -167,20 +156,7 @@ wscript_build:\
 \i0 \cf0 \
 \pard\pardeftab480\pardirnatural
 
-\f1\fs36 \cf5 *.config: \
-*.css: \
-*.htm: \
-*.html: \
-*.json: \
-*.mimsy: \
-*.plist: \
-*.rtf: \
-*.schema: \
-*.sdef: \
-*.xml: \
-*.xsd: \
-*.xsdl: \
-*.xsl: \
+\f1\fs36 \cf5 GlobStyles: *.config *.css *.htm *.html *.json *.mimsy *.plist *.rtf *.schema *.sdef *.xml *.xsd *.xsdl *.xsl\
 \pard\pardeftab480\pardirnatural
 \cf0 \
 \pard\pardeftab480\pardirnatural
@@ -188,14 +164,7 @@ wscript_build:\
 \f0\i\fs28 \cf2 # Resources\
 \pard\pardeftab480\pardirnatural
 
-\f1\i0\fs36 \cf6 favicon.ico\
-*.icns: \
-*.gif: \
-*.jpeg: \
-*.jpg: \
-*.nib: \
-*.png: \
-*.xib: \
+\f1\i0\fs36 \cf6 GlobStyles: favicon.ico *.gif *.icns *.jpeg *.jpg *.nib *.png *.xib:\
 \pard\pardeftab480\pardirnatural
 \cf0 \
 \pard\pardeftab480\pardirnatural
@@ -204,12 +173,7 @@ wscript_build:\
 \i0 \cf0 \
 \pard\pardeftab480\pardirnatural
 
-\f1\fs36 \cf7 *.pl: \
-*.py: \
-*.rb: \
-*.R: \
-*.ref: \
-*.sh: \
+\f1\fs36 \cf7 GlobStyles: *.pl *.py *.R *.rb *.ref *.sh\
 \pard\pardeftab480\pardirnatural
 \cf0 \
 \pard\pardeftab480\pardirnatural
@@ -218,12 +182,5 @@ wscript_build:\
 \i0 \cf0 \
 \pard\pardeftab480\pardirnatural
 
-\f1\fs36 \cf0 *.c: \
-*.cpp: \
-*.cs: c#\
-*.h: \
-*.hpp: \
-*.js: \
-*.lua: \
-*.rs: rust\
+\f1\fs36 \cf0 GlobStyles: *.c *.cpp *.cs *.h *.hpp *.go *.js *.lua *.rs\
 }

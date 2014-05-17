@@ -14,6 +14,7 @@
 #import "Logger.h"
 #import "OpenFile.h"
 #import "Paths.h"
+#import "Settings.h"
 #import "StringCategory.h"
 #import "TranscriptController.h"
 #import "UpdateConfig.h"
@@ -41,6 +42,7 @@ static DirectoryController* _lastBuilt;
 	BuildOptionsController* _optionsController;
 	NSMutableArray* _targets;
 	NSMutableArray* _flags;
+	NSMutableDictionary* _settings;
 }
 
 + (DirectoryController*)getCurrentController
@@ -129,6 +131,7 @@ static DirectoryController* _lastBuilt;
 		self.preferredPaths = [[Glob alloc] initWithGlobs:@[]];
 		self.ignoredPaths = [[Glob alloc] initWithGlobs:@[]];
 		self.searchIn = @[];
+		_settings = [NSMutableDictionary new];
 		
 		if (!_controllers)
 			_controllers = [NSMutableArray new];
@@ -807,6 +810,11 @@ static DirectoryController* _lastBuilt;
 	}
 }
 
+- (NSString*)findSetting:(NSString*)name
+{
+	return [_settings objectForKey:name];
+}
+
 - (void)_loadPrefs
 {
 	_ignores = nil;
@@ -844,6 +852,8 @@ static DirectoryController* _lastBuilt;
 			return;
 		}
 		
+		_settings = [NSMutableDictionary new];
+
 		NSMutableArray* ignores = [NSMutableArray new];
 		[parser enumerate:
 		 ^(ConfigParserEntry* entry)
@@ -852,17 +862,17 @@ static DirectoryController* _lastBuilt;
 			 {
 				 [ignores addObject:entry.value];
 			 }
-			 else if ([entry.key isEqualToString:@"Directory"])
+			 else if ([entry.key isEqualToString:@"DirectoryStyle"])
 			 {
 				 NSDictionary* attrs = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
 				 [dirAttrs addEntriesFromDictionary:attrs];
 			 }
-			 else if ([entry.key isEqualToString:@"File"])
+			 else if ([entry.key isEqualToString:@"FileStyle"])
 			 {
 				 NSDictionary* attrs = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
 				 [fileAttrs addEntriesFromDictionary:attrs];
 			 }
-			 else if ([entry.key isEqualToString:@"Size"])
+			 else if ([entry.key isEqualToString:@"SizeStyle"])
 			 {
 				 NSDictionary* a = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
 				 NSMutableDictionary* attrs = [NSMutableDictionary dictionaryWithDictionary:a];
@@ -937,14 +947,22 @@ static DirectoryController* _lastBuilt;
 			 {
 				 _defaultTarget = entry.value;
 			 }
-			 else
+			 else if ([entry.key isEqualToString:@"GlobStyles"])
 			 {
 				 NSDictionary* attrs = [text fontAttributesInRange:NSMakeRange(entry.offset, 1)];
-				 Glob* g = [[Glob alloc] initWithGlob:entry.key];
-				 if (![globs objectForKey:g])
-					 globs[g] = attrs;
-				 else
-					 [TranscriptController writeError:[NSString stringWithFormat:@"%@ appears twice in %@", entry.key, path]];
+				 NSArray* patterns = [entry.value splitByChars:[NSCharacterSet whitespaceCharacterSet]];
+				 for (NSString* pattern in patterns)
+				 {
+					 Glob* g = [[Glob alloc] initWithGlob:pattern];
+					 if (![globs objectForKey:g])
+						 globs[g] = attrs;
+					 else
+						 [TranscriptController writeError:[NSString stringWithFormat:@"%@ appears twice in GlobStyles values for %@", entry.key, path]];
+				 }
+			 }
+			 else
+			 {
+				 [_settings setValue:entry.value forKey:entry.key];
 			 }
 		 }
 		 ];
