@@ -131,9 +131,15 @@
 	{
 		++_index;
 	}
+	else if (_index < _length)
+	{
+		NSString* mesg = [[NSString alloc] initWithFormat:@"Expected a colon on line %lu but found %C.", _line, [contents characterAtIndex:_index]];
+		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
+		*error = [NSError errorWithDomain:@"mimsy" code:3 userInfo:dict];
+	}
 	else
 	{
-		NSString* mesg = [[NSString alloc] initWithFormat:@"Expected a colon on line %lu.", _line];
+		NSString* mesg = [[NSString alloc] initWithFormat:@"Expected a colon but found EOF."];
 		NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
 		*error = [NSError errorWithDomain:@"mimsy" code:3 userInfo:dict];
 	}
