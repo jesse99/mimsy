@@ -14,6 +14,9 @@ void initLogLevels(void);
 
 + (void)appendContextMenu:(NSMenu*)menu;
 
+// Use the Settings class instead of this.
++ (NSString*)findSetting:(NSString*)name;
+
 - (void)runFTest:(id)sender;
 - (void)runFTests:(id)sender;
 

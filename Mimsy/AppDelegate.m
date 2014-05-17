@@ -20,6 +20,8 @@
 #import "Utils.h"
 #import "WindowsDatabase.h"
 
+NSMutableDictionary* _settings;
+
 void initLogLevels(void)
 {
 	NSString* path = [Paths installedDir:@"settings"];
@@ -66,6 +68,8 @@ void initLogLevels(void)
 	ASSERT([NSThread isMultiThreaded]);
 	LOG_DEBUG("App", "Finished launching");
 
+	_settings = [NSMutableDictionary new];
+
 	__weak AppDelegate* this = self;
 	[[NSApp helpMenu] setDelegate:this];
 	
@@ -77,6 +81,7 @@ void initLogLevels(void)
 	[StartupScripts setup];
 	[WindowsDatabase setup];
 	[Languages setup];
+	[self _loadSettings];
 	
 	initFunctionalTests();
 }
@@ -682,6 +687,38 @@ void initLogLevels(void)
 	}
 }
 
++ (NSString*)findSetting:(NSString*)name
+{
+	return [_settings objectForKey:name];
+}
+
+- (void)_loadSettings
+{
+	_settings = [NSMutableDictionary new];
+	
+	NSString* path = [Paths installedDir:@"settings"];
+	path = [path stringByAppendingPathComponent:@"app.mimsy"];
+	
+	if ([[NSFileManager defaultManager] fileExistsAtPath:path])
+	{
+		NSError* error = nil;
+		ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
+		if (parser)
+		{
+			[parser enumerate:
+			 ^(ConfigParserEntry* entry)
+			 {
+				 [_settings setValue:entry.value forKey:entry.key];
+			 }];
+		}
+		else
+		{
+			NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load %@:\n%@.", path, [error localizedFailureReason]];
+			LOG_ERROR("Mimsy", "%s", STR(mesg));
+		}
+	}
+}
+
 - (void)_watchInstalledFiles
 {
 	// files in the help directory are loaded when used so no need to watch those
@@ -723,6 +760,7 @@ void initLogLevels(void)
 		{
 			UNUSED(path, flags);
 			initLogLevels();
+			[self _loadSettings];
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
 		}
 	];

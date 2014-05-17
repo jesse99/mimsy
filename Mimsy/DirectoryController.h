@@ -20,6 +20,9 @@
 - (void)buildTarget:(id)sender;
 - (void)saveBuildFlags;
 
+// Use the Settings class instead of this.
+- (NSString*)findSetting:(NSString*)name;
+
 - (NSDictionary*)getDirAttrs:(NSString*)path;
 - (NSDictionary*)getFileAttrs:(NSString*)path;
 - (NSDictionary*)getSizeAttrs;

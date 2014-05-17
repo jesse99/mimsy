@@ -1,0 +1,7 @@
+# Various settings that control the behavior of Mimsy.
+# Note that, if a project.mimsy file exists, any s
+# ettings there will override these settings.
+
+# The find command defaults to searching from the
+# beginning of a document when it hits the end.
+FindWraps: true
