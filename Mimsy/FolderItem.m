@@ -180,7 +180,8 @@
 	bool ok = [Utils enumerateDir:self.path glob:nil error:&error block:
 		^(NSString* item)
 		{
-			if (!controller || ![controller.ignores matchName:[item lastPathComponent]])
+			NSString* fileName = [item lastPathComponent];
+			if (!controller || [fileName compare:@".mimsy.rtf"] == NSOrderedSame || ![controller.ignores matchName:fileName])
 				[paths addObject:item];
 		}
 	];
