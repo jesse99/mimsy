@@ -30,6 +30,16 @@ static FindController* _findController = nil;
     return self;
 }
 
++ (FindController*)getController
+{
+	if (!_findController)
+	{
+		_findController = [FindController new];
+		(void) _findController.window;				// this forces the controls to be initialized (so we can set the text within the find combo box before the window is ever displayed)
+	}
+	return _findController;
+}
+
 + (void)show
 {
 	if (!_findController)

@@ -1,10 +1,5 @@
-* Add a Visible directory setting
-	- or maybe DontIgnore
-	- put .mimsy.rtf there
-	- remove the .minsy.rtf special case
 * Work on find:
-	- get command-e working
-	- get find again working
+	- do a regex search
 	- get the checkboxes working
 	- get find previous working
 	- get the find dropdown working

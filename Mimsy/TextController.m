@@ -169,6 +169,32 @@
 	[FindController show];
 }
 
+- (void)findNext:(id)sender
+{
+	UNUSED(sender);
+	
+	FindController* controller = [FindController getController];
+	[controller find:self];
+}
+
+- (void)findPevious:(id)sender
+{
+	UNUSED(sender);
+	
+	NSBeep();
+}
+
+- (void)useSelection:(id)sender
+{
+	UNUSED(sender);
+	
+	NSRange range = self.textView.selectedRange;
+	NSString* selection = [self.text substringWithRange:range];
+	
+	FindController* controller = [FindController getController];
+	controller.findText = selection;
+}
+
 - (void)balance:(id)sender
 {
 	UNUSED(sender);
@@ -188,6 +214,33 @@
 		[self.textView setSelectedRange:range];
 	else
 		NSBeep();
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem*)item
+{
+	BOOL enabled = NO;
+	
+	SEL sel = [item action];
+	if (sel == @selector(useSelection:) || sel == @selector(openSelection:))
+	{
+		NSRange range = self.textView.selectedRange;
+		enabled = range.length > 0;
+	}
+	else if (sel == @selector(findNext:) || sel == @selector(findPevious:))
+	{
+		FindController* controller = [FindController getController];
+		enabled = controller.findText.length > 0;
+	}
+	else if ([self respondsToSelector:sel])
+	{
+		enabled = YES;
+	}
+	else if ([super respondsToSelector:@selector(validateMenuItem:)])
+	{
+		enabled = [super validateMenuItem:item];
+	}
+	
+	return enabled;
 }
 
 - (void)showInfo:(NSString*)text

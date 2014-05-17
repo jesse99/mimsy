@@ -3,6 +3,7 @@
 @interface FindController : BaseFindController
 
 + (void)show;
++ (FindController*)getController;
 
 - (IBAction)find:(id)sender;
 - (IBAction)replace:(id)sender;
