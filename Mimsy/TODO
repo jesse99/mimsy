@@ -1,3 +1,7 @@
+* Add a Visible directory setting
+	- or maybe DontIgnore
+	- put .mimsy.rtf there
+	- remove the .minsy.rtf special case
 * Get find working
 	- use a pref to control word wrap
 * Work on find:
@@ -21,7 +25,11 @@
 	- contents could be zipped and binhexed
 * Support goto line
 * Support shift left and right
+* Might want a help window dedidated to just special keys
+	- for both text windows and the directory window
+	- maybe for the app as well (ie window navigation)
 * Auto-indent new lines
+* Can we use map kit to navigate code?
 * Support option-tab
 	- be sure to document this
 * Need to special case double-click selections according to the language

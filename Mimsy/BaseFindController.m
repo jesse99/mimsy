@@ -4,6 +4,12 @@
 
 @implementation BaseFindController
 
+- (void)windowDidLoad
+{
+    [super windowDidLoad];
+	[self.window setExcludedFromWindowsMenu:TRUE];
+}
+
 - (NSString*)findText
 {
 	return self.findComboBox.stringValue;

@@ -86,6 +86,7 @@
 		379A4116191FDB8B00ACEA5C /* FindWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 379A4115191FDB8B00ACEA5C /* FindWindow.xib */; };
 		379A41191920031500ACEA5C /* FindController.m in Sources */ = {isa = PBXBuildFile; fileRef = 379A41181920031500ACEA5C /* FindController.m */; };
 		379A411C192033BF00ACEA5C /* BaseFindController.m in Sources */ = {isa = PBXBuildFile; fileRef = 379A411B192033BF00ACEA5C /* BaseFindController.m */; };
+		379A41211925B17F00ACEA5C /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 379A41201925B17F00ACEA5C /* Settings.m */; };
 		37A8C69716758FF400D4DB13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C69616758FF400D4DB13 /* Cocoa.framework */; };
 		37A8C6A116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C69F16758FF400D4DB13 /* InfoPlist.strings */; };
 		37A8C6A316758FF400D4DB13 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6A216758FF400D4DB13 /* main.m */; };
@@ -261,6 +262,8 @@
 		379A41181920031500ACEA5C /* FindController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindController.m; sourceTree = "<group>"; };
 		379A411A192033BF00ACEA5C /* BaseFindController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseFindController.h; sourceTree = "<group>"; };
 		379A411B192033BF00ACEA5C /* BaseFindController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseFindController.m; sourceTree = "<group>"; };
+		379A411F1925B17F00ACEA5C /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		379A41201925B17F00ACEA5C /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
 		37A8C69216758FF400D4DB13 /* Mimsy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mimsy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37A8C69616758FF400D4DB13 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		37A8C69916758FF400D4DB13 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -475,6 +478,8 @@
 				377BDE6516C006BD008DADA5 /* StartupScripts.m */,
 				37ABF9B118C2EA9C006AFDB7 /* SearchSite.h */,
 				37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */,
+				379A411F1925B17F00ACEA5C /* Settings.h */,
+				379A41201925B17F00ACEA5C /* Settings.m */,
 				3782A8AB190D7CDC005ED276 /* TimeMachine.h */,
 				3782A8AC190D7CDC005ED276 /* TimeMachine.m */,
 			);
@@ -801,6 +806,7 @@
 				3782A8B9191C82A5005ED276 /* WarningWindow.m in Sources */,
 				379A41191920031500ACEA5C /* FindController.m in Sources */,
 				379A411C192033BF00ACEA5C /* BaseFindController.m in Sources */,
+				379A41211925B17F00ACEA5C /* Settings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

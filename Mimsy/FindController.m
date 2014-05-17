@@ -2,6 +2,7 @@
 
 #import "Assert.h"
 #import "Logger.h"
+#import "Settings.h"
 #import "TextController.h"
 
 static FindController* _findController = nil;
@@ -41,11 +42,6 @@ static FindController* _findController = nil;
 	[_findController _enableButtons];
 }
 
-- (void)windowDidLoad
-{
-    [super windowDidLoad];
-}
-
 NSUInteger _initialSearchFrom;
 bool _wrappedAround;
 
@@ -62,7 +58,7 @@ bool _wrappedAround;
 		__block NSRange searchRange = NSMakeRange(searchFrom, _text.length - searchFrom);
 		NSString* findText = [self.findText copy];
 		_finding = true;
-		bool wrap = true;			// TODO: get this from a pref
+		bool wrap = [Settings boolValue:@"FindWraps" missing:true];
 				
 		if ([findText compare:_initialFindText] != NSOrderedSame)
 		{
@@ -95,7 +91,10 @@ bool _wrappedAround;
 					   if (controller)
 					   {
 						   if (_wrappedAround && range.location >= _initialSearchFrom)
+						   {
 							   [controller showInfo:@"Reached Start"];
+							   _wrappedAround = false;
+						   }
 						   
 						   [self _showSelection:range in:controller];
 					   }
