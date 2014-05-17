@@ -181,7 +181,7 @@
 		^(NSString* item)
 		{
 			NSString* fileName = [item lastPathComponent];
-			if (!controller || [fileName compare:@".mimsy.rtf"] == NSOrderedSame || ![controller.ignores matchName:fileName])
+			if (!controller || [controller.dontIgnores matchName:fileName] || ![controller.ignores matchName:fileName])
 				[paths addObject:item];
 		}
 	];

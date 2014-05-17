@@ -818,6 +818,7 @@ static DirectoryController* _lastBuilt;
 - (void)_loadPrefs
 {
 	_ignores = nil;
+	_dontIgnores = nil;
 	
 	NSString* path = [_path stringByAppendingPathComponent:@".mimsy.rtf"];
 	NSFileManager* fm = [NSFileManager defaultManager];
@@ -855,12 +856,17 @@ static DirectoryController* _lastBuilt;
 		_settings = [NSMutableDictionary new];
 
 		NSMutableArray* ignores = [NSMutableArray new];
+		NSMutableArray* dontIgnores = [NSMutableArray new];
 		[parser enumerate:
 		 ^(ConfigParserEntry* entry)
 		 {
 			 if ([entry.key isEqualToString:@"Ignore"])
 			 {
 				 [ignores addObject:entry.value];
+			 }
+			 else if ([entry.key isEqualToString:@"DontIgnore"])
+			 {
+				 [dontIgnores addObject:entry.value];
 			 }
 			 else if ([entry.key isEqualToString:@"DirectoryStyle"])
 			 {
@@ -968,6 +974,7 @@ static DirectoryController* _lastBuilt;
 		 ];
 		
 		_ignores = [[ConditionalGlob alloc] initWithGlobs:ignores];
+		_dontIgnores = [[ConditionalGlob alloc] initWithGlobs:dontIgnores];
 	}
 	
 	_dirAttrs = dirAttrs;

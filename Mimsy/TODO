@@ -2,13 +2,11 @@
 	- or maybe DontIgnore
 	- put .mimsy.rtf there
 	- remove the .minsy.rtf special case
-* Get find working
-	- use a pref to control word wrap
 * Work on find:
+	- get command-e working
 	- get find again working
 	- get the checkboxes working
 	- get find previous working
-	- get command-e working
 	- get the find dropdown working
 	- see if we need special case code in replaceText method
 	- may want a little button to pull up mimsy help
@@ -16,6 +14,8 @@
 	  include a link to apple's regex docs
 	- probably want a pref for search within strings
 	- look at search notes
+* Get replace working
+	- make sure escapes are legit (both find and replace texts)
 * Get find in files working
 	- may want a unit test for find in files
 	- needs to be able to search rtf files

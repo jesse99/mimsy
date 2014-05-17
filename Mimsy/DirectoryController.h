@@ -29,6 +29,7 @@
 
 @property NSString* path;
 @property Glob* ignores;
+@property Glob* dontIgnores;
 @property NSMutableArray* targetGlobs;
 @property NSMutableArray* flags;
 @property Glob* preferredPaths;
