@@ -1,5 +1,6 @@
 #import "RestoreView.h"
 
+#import "Constants.h"
 #import "Logger.h"
 #import "TextController.h"
 #import "TextView.h"

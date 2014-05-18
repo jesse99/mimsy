@@ -2,7 +2,6 @@
 
 @class Glob;
 
-extern const NSRange NSZeroRange;
 extern const time_t NoTimeOut;
 extern const time_t MainThreadTimeOut;
 

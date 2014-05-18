@@ -2,6 +2,7 @@
 
 #import "Assert.h"
 #import "ConfigParser.h"
+#import "Constants.h"
 #import "DirectoryController.h"
 #import "DirectoryWatcher.h"
 #import "FunctionalTest.h"
@@ -46,6 +47,9 @@ void initLogLevels(void)
 
 @implementation AppDelegate
 {
+	DirectoryController* _oldDirectory;
+	bool _updatingMainWindow;
+	
 	DirectoryWatcher* _languagesWatcher;
 	DirectoryWatcher* _settingsWatcher;
 	DirectoryWatcher* _stylesWatcher;
@@ -72,7 +76,8 @@ void initLogLevels(void)
 	__weak AppDelegate* this = self;
 	[[NSApp helpMenu] setDelegate:this];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecameMain:) name:NSWindowDidBecomeMainNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowOrderChanged:) name:NSWindowDidBecomeMainNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowOrderChanged:) name:NSWindowWillCloseNotification object:nil];
 	
 	[self _installFiles];
 	[self _addTransformItems];
@@ -129,19 +134,31 @@ void initLogLevels(void)
 	[self reloadIfChanged];
 }
 
-- (void)windowBecameMain:(NSNotification*)notification
+- (void)windowOrderChanged:(NSNotification*)notification
 {
 	UNUSED(notification);
 	
-	// This seems to be called a bit too early: before NSApplication's orderedWindows
-	// has been updated. So we wait a little while to ensure that we can get the
-	// right TextController for the new window.
-	[self performSelector:@selector(updateSearchers) withObject:nil afterDelay:0.250];
+	if (!_updatingMainWindow)
+	{
+		// NSWindowDidBecomeMainNotification and NSWindowWillCloseNotification are called
+		// before NSApplication's orderedWindows has been updated. So we wait a little
+		// while to ensure that we can get the controller for the new window.
+		[self performSelector:@selector(updateMainWindow) withObject:nil afterDelay:0.250];
+		_updatingMainWindow = true;
+	}
 }
 
-- (void)updateSearchers
+- (void)updateMainWindow
 {
+	DirectoryController* directory = [DirectoryController getCurrentController];
+	if (directory != _oldDirectory)
+	{
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"CurrentDirectoryChanged" object:directory];
+		_oldDirectory = directory;
+	}
+	
 	[SearchSite updateMainMenu:self.searchMenu];
+	_updatingMainWindow = false;
 }
 
 // Don't open a new unitled window when we are activated and don't have a window open.
@@ -710,6 +727,8 @@ void initLogLevels(void)
 			NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load %@:\n%@.", path, [error localizedFailureReason]];
 			LOG_ERROR("Mimsy", "%s", STR(mesg));
 		}
+
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
 	}
 }
 

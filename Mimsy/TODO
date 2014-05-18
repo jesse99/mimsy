@@ -1,11 +1,11 @@
+if window has language then
+	add stuff to the search within combo box
+	to match look at "element name" attribute
+
 * Get search within working:
-	- broadcast when app or directory settings change
-	- broadcast when active directory window changes
-	  maybe directory editor can listen for front window changes
-	- populate the SearchWithin combo box
 	- update the regex according to the combo box selection
 * Work on find:
-	- . should match new lines
+	- dot should match newlines? make this an option?
 	- get the find dropdown working
 	- may want a little button to pull up mimsy help
 	  include a regex summary

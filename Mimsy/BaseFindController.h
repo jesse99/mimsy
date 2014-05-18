@@ -11,6 +11,7 @@
 - (void)_enableButtons;
 - (bool)_findEnabled;
 - (bool)_replaceEnabled;
+- (void)_settingsChanged:(NSNotification*)notification;
 
 - (NSRegularExpression*)_getRegex;
 

@@ -7,9 +7,9 @@
 FindWraps: true
 
 # These make it easier to use the find windows to search within regions
-# of code, e.g. comments. 
-SearchWithin: ...
-SearchWithin: "..."
-SearchWithin: //...
-SearchWithin: /*...*/
-SearchWithin: <!-...-->
+# of code, e.g. comments. (Ellipsis is option-;).
+SearchWithin: …
+SearchWithin: "…"
+SearchWithin: //…
+SearchWithin: /*…*/
+SearchWithin: <!-…-->

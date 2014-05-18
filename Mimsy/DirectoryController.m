@@ -65,6 +65,10 @@ static DirectoryController* _lastBuilt;
 				DirectoryController* candidate = [DirectoryController getController:path];
 				return candidate;
 			}
+			// if it hides on deactivate we'll ignore it (this is for stuff like Find windows),
+			else if (window.hidesOnDeactivate)
+			{
+			}
 			else
 			{
 				// otherwise return whichever last did a build (useful with the transcript window).
@@ -81,10 +85,10 @@ static DirectoryController* _lastBuilt;
 	path = [path stringByStandardizingPath];
 	for (DirectoryController* controller in _controllers)
 	{
-		if (!controller->_closing)
+		if (path && !controller->_closing)
 		{
 			NSString* candidate = [controller->_path stringByStandardizingPath];
-			if ([path rangeOfString:candidate].location == 0)
+			if (candidate && [path rangeOfString:candidate].location == 0)
 				return controller;
 		}
 	}
@@ -982,6 +986,9 @@ static DirectoryController* _lastBuilt;
 	_ignoredPaths = [[Glob alloc] initWithGlobs:ignoredPaths];
 	_searchIn = searchIn;
 	_flags = flags;
+
+	if (self == [DirectoryController getCurrentController])
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
 }
 
 - (NSAttributedString*)_loadPrefFile:(NSString*)path

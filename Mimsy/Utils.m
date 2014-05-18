@@ -1,22 +1,11 @@
 #import "Utils.h"
 
 #import "Assert.h"
+#import "Constants.h"
 #import "Glob.h"
 
-const NSRange NSZeroRange = {0};
 const time_t NoTimeOut = -1;
 const time_t MainThreadTimeOut = 5;
-
-// These are more technically correct but the new-line and tab symbols are really hard
-// to read unless the font's point size is very large.
-//    static NSString* NewLineSymbol = @"\u2424";
-//    static NSString* ReturnSymbol = @"\u23CE";
-//    static NSString* TabSymbol = @"\u2409";
-
-static NSString* RightArrow = @"\u2192";
-static NSString* DownArrow = @"\u2193";
-static NSString* DownHookedArrow = @"\u21A9";
-static NSString* Replacement = @"\uFFFD";
 
 bool rangeIntersectsIndex(NSRange range, NSUInteger index)
 {
@@ -84,17 +73,22 @@ bool rangeIntersects(NSRange lhs, NSRange rhs)
 		[result appendString:@"\t"];
 		for (NSUInteger d = 0; d < 16 && i + d < length; ++d)
 		{
+			// These are more technically correct but the new-line and tab symbols are really hard
+			// to read unless the font's point size is very large.
+			//    static NSString* NewLineSymbol = @"\u2424";
+			//    static NSString* ReturnSymbol = @"\u23CE";
+			//    static NSString* TabSymbol = @"\u2409";
 			if (data[i + d] == '\n')
-				[result appendString:DownArrow];
+				[result appendString:DownArrowChar];
 			
 			else if (data[i + d] == '\r')
-				[result appendString:DownHookedArrow];
+				[result appendString:DownHookedArrowChar];
 			
 			else if (data[i + d] == '\t')
-				[result appendString:RightArrow];
+				[result appendString:RightArrowChar];
 			
 			else if (data[i + d] < 0x20 || data[i + d] >= 0x7f)
-				[result appendString:Replacement];
+				[result appendString:ReplacementChar];
 			
 			else
 				[result appendFormat:@"%c", (char) data[i + d]];
