@@ -88,10 +88,14 @@
 
 - (NSRegularExpression*)_getRegex
 {
-	NSRegularExpression* regex = _cachedRegex;
+	NSRegularExpression* regex = nil;
 	
 	NSString* pattern = [self _getRegexPattern];
-	if ([pattern compare:_cachedPattern] != NSOrderedSame)
+	if ([pattern compare:_cachedPattern] == NSOrderedSame)
+	{
+		regex = _cachedRegex;
+	}
+	else
 	{
 		NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
 		if (_caseSensitiveCheckBox.state == NSOffState)

@@ -36,4 +36,18 @@
 	return result;
 }
 
++ (NSArray*)stringValues:(NSString*)name
+{
+	NSMutableArray* result = [NSMutableArray new];
+	
+	AppDelegate* delegate = [NSApp delegate];
+	[result addObjectsFromArray:[delegate.settings findAllKeys:name]];
+	
+	DirectoryController* controller = [DirectoryController getCurrentController];
+	if (controller)
+		[result addObjectsFromArray:[controller.settings findAllKeys:name]];
+	
+	return result;
+}
+
 @end

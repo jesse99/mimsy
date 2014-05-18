@@ -8,4 +8,6 @@
 
 + (NSString*)stringValue:(NSString*)name missing:(NSString*)value;
 
++ (NSArray*)stringValues:(NSString*)name;
+
 @end

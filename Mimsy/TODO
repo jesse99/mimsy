@@ -1,8 +1,8 @@
 * Get search within working:
-	- read in the SearchWithin setting
-	- be sure to handle dynamic changes to the settings
-	  possible use an observer when settings or front window changes
-	- build the combo box menu
+	- broadcast when app or directory settings change
+	- broadcast when active directory window changes
+	  maybe directory editor can listen for front window changes
+	- populate the SearchWithin combo box
 	- update the regex according to the combo box selection
 * Work on find:
 	- . should match new lines
@@ -16,6 +16,7 @@
 	- make sure escapes are legit (both find and replace texts)
 	- may need to escape space in find
 	- make sure search and replace works with \t
+	- get he dropdown working
 * Review the Continum find code
 * Look at the search notes
 * Should be able to find in the transcript window.
