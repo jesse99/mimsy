@@ -1,6 +1,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class Glob;
+@class LocalSettings;
 
 // This is the controller for the windows which display the contents of a directory.
 // These windows work a bit like project windows in IDEs.
@@ -20,9 +21,6 @@
 - (void)buildTarget:(id)sender;
 - (void)saveBuildFlags;
 
-// Use the Settings class instead of this.
-- (NSString*)findSetting:(NSString*)name;
-
 - (NSDictionary*)getDirAttrs:(NSString*)path;
 - (NSDictionary*)getFileAttrs:(NSString*)path;
 - (NSDictionary*)getSizeAttrs;
@@ -35,6 +33,7 @@
 @property Glob* preferredPaths;
 @property Glob* ignoredPaths;
 @property NSArray* searchIn;
+@property (readonly) LocalSettings *settings;
 
 @property (weak) IBOutlet NSOutlineView* table;
 @property (weak) IBOutlet NSPopUpButton* targetsMenu;

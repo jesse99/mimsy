@@ -101,6 +101,7 @@
 		37AD7570171B95460054A75F /* UpdateConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AD756F171B95460054A75F /* UpdateConfig.m */; };
 		37BF4DFA16F56CB3008FD480 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 37BF4DF916F56CB3008FD480 /* images */; };
 		37CF062616AB998A00069A20 /* LuaSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF062516AB998A00069A20 /* LuaSupport.m */; };
+		37ECF06119291A0500061C0A /* LocalSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ECF06019291A0500061C0A /* LocalSettings.m */; };
 		37EECF4D16A64A9E00BEB493 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 37EECF4C16A64A9E00BEB493 /* help */; };
 		37F2C58B169E7B92009C5355 /* ArrayCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 37F2C58A169E7B92009C5355 /* ArrayCategory.m */; };
 /* End PBXBuildFile section */
@@ -290,6 +291,8 @@
 		37BF4DF916F56CB3008FD480 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
 		37CF062416AB998A00069A20 /* LuaSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaSupport.h; sourceTree = "<group>"; };
 		37CF062516AB998A00069A20 /* LuaSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LuaSupport.m; sourceTree = "<group>"; };
+		37ECF05F19291A0500061C0A /* LocalSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalSettings.h; sourceTree = "<group>"; };
+		37ECF06019291A0500061C0A /* LocalSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalSettings.m; sourceTree = "<group>"; };
 		37EECF4C16A64A9E00BEB493 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
 		37F2C589169E7B92009C5355 /* ArrayCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArrayCategory.h; sourceTree = "<group>"; };
 		37F2C58A169E7B92009C5355 /* ArrayCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArrayCategory.m; sourceTree = "<group>"; };
@@ -469,6 +472,8 @@
 				37979FED16AAEEC1009D9944 /* FunctionalTest.m */,
 				3712631D16B4AA53007AF3BF /* InstallFiles.h */,
 				3712631E16B4AA53007AF3BF /* InstallFiles.m */,
+				37ECF05F19291A0500061C0A /* LocalSettings.h */,
+				37ECF06019291A0500061C0A /* LocalSettings.m */,
 				37CF062416AB998A00069A20 /* LuaSupport.h */,
 				37CF062516AB998A00069A20 /* LuaSupport.m */,
 				37A8C6AE16758FF400D4DB13 /* MainMenu.xib */,
@@ -807,6 +812,7 @@
 				379A41191920031500ACEA5C /* FindController.m in Sources */,
 				379A411C192033BF00ACEA5C /* BaseFindController.m in Sources */,
 				379A41211925B17F00ACEA5C /* Settings.m in Sources */,
+				37ECF06119291A0500061C0A /* LocalSettings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

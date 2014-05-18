@@ -11,10 +11,10 @@
 #import "FileItem.h"
 #import "FolderItem.h"
 #import "FunctionalTest.h"
+#import "LocalSettings.h"
 #import "Logger.h"
 #import "OpenFile.h"
 #import "Paths.h"
-#import "Settings.h"
 #import "StringCategory.h"
 #import "TranscriptController.h"
 #import "UpdateConfig.h"
@@ -42,7 +42,6 @@ static DirectoryController* _lastBuilt;
 	BuildOptionsController* _optionsController;
 	NSMutableArray* _targets;
 	NSMutableArray* _flags;
-	NSMutableDictionary* _settings;
 }
 
 + (DirectoryController*)getCurrentController
@@ -131,7 +130,7 @@ static DirectoryController* _lastBuilt;
 		self.preferredPaths = [[Glob alloc] initWithGlobs:@[]];
 		self.ignoredPaths = [[Glob alloc] initWithGlobs:@[]];
 		self.searchIn = @[];
-		_settings = [NSMutableDictionary new];
+		_settings = [[LocalSettings alloc] initWithFileName:@".mimsy.rtf"];
 		
 		if (!_controllers)
 			_controllers = [NSMutableArray new];
@@ -810,11 +809,6 @@ static DirectoryController* _lastBuilt;
 	}
 }
 
-- (NSString*)findSetting:(NSString*)name
-{
-	return [_settings objectForKey:name];
-}
-
 - (void)_loadPrefs
 {
 	_ignores = nil;
@@ -853,7 +847,7 @@ static DirectoryController* _lastBuilt;
 			return;
 		}
 		
-		_settings = [NSMutableDictionary new];
+		_settings = [[LocalSettings alloc] initWithFileName:@".mimsy.rtf"];
 
 		NSMutableArray* ignores = [NSMutableArray new];
 		NSMutableArray* dontIgnores = [NSMutableArray new];
@@ -968,7 +962,7 @@ static DirectoryController* _lastBuilt;
 			 }
 			 else
 			 {
-				 [_settings setValue:entry.value forKey:entry.key];
+				 [_settings addKey:entry.key value:entry.value];
 			 }
 		 }
 		 ];

@@ -9,6 +9,7 @@
 #import "InstallFiles.h"
 #import "Language.h"
 #import "Languages.h"
+#import "LocalSettings.h"
 #import "Logger.h"
 #import "Paths.h"
 #import "SearchSite.h"
@@ -19,8 +20,6 @@
 #import "TranscriptController.h"
 #import "Utils.h"
 #import "WindowsDatabase.h"
-
-NSMutableDictionary* _settings;
 
 void initLogLevels(void)
 {
@@ -68,7 +67,7 @@ void initLogLevels(void)
 	ASSERT([NSThread isMultiThreaded]);
 	LOG_DEBUG("App", "Finished launching");
 
-	_settings = [NSMutableDictionary new];
+	_settings = [[LocalSettings alloc] initWithFileName:@"app.mimsy"];
 
 	__weak AppDelegate* this = self;
 	[[NSApp helpMenu] setDelegate:this];
@@ -687,14 +686,9 @@ void initLogLevels(void)
 	}
 }
 
-+ (NSString*)findSetting:(NSString*)name
-{
-	return [_settings objectForKey:name];
-}
-
 - (void)_loadSettings
 {
-	_settings = [NSMutableDictionary new];
+	_settings = [[LocalSettings alloc] initWithFileName:@"app.mimsy"];
 	
 	NSString* path = [Paths installedDir:@"settings"];
 	path = [path stringByAppendingPathComponent:@"app.mimsy"];
@@ -708,7 +702,7 @@ void initLogLevels(void)
 			[parser enumerate:
 			 ^(ConfigParserEntry* entry)
 			 {
-				 [_settings setValue:entry.value forKey:entry.key];
+				 [_settings addKey:entry.key value:entry.value];
 			 }];
 		}
 		else

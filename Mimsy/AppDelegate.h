@@ -1,5 +1,7 @@
 #import <Foundation/Foundation.h>
 
+@class LocalSettings;
+
 void initLogLevels(void);
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate, NSWindowRestoration>
@@ -14,12 +16,10 @@ void initLogLevels(void);
 
 + (void)appendContextMenu:(NSMenu*)menu;
 
-// Use the Settings class instead of this.
-+ (NSString*)findSetting:(NSString*)name;
-
 - (void)runFTest:(id)sender;
 - (void)runFTests:(id)sender;
 
+@property (readonly) LocalSettings *settings;
 @property (weak) IBOutlet NSMenu *searchMenu;
 @property (weak) IBOutlet NSMenu *textMenu;
 

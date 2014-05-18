@@ -2,15 +2,14 @@
 
 #import "AppDelegate.h"
 #import "DirectoryController.h"
+#import "LocalSettings.h"
 #import "Logger.h"
 
 @implementation Settings
 
 + (bool)boolValue:(NSString*)name missing:(bool)value
 {
-	NSString* result = [[DirectoryController getCurrentController] findSetting:name];
-	if (!result)
-		result = [AppDelegate findSetting:name];
+	NSString* result = [Settings stringValue:name missing:nil];
 	
 	if (result)
 		return [result compare:@"true"] == NSOrderedSame;
@@ -20,14 +19,21 @@
 
 + (NSString*)stringValue:(NSString*)name missing:(NSString*)value
 {
-	NSString* result = [[DirectoryController getCurrentController] findSetting:name];
-	if (!result)
-		result = [AppDelegate findSetting:name];
+	DirectoryController* controller = [DirectoryController getCurrentController];
+	NSString* result = controller != nil ? [controller.settings findKey:name] : nil;
 	
-	if (result)
-		return result;
-	else
-		return value;
+	if (!result)
+	{
+		AppDelegate* delegate = [NSApp delegate];
+		result = [delegate.settings findKey:name];
+	}
+
+	if (!result)
+	{
+		result = value;
+	}
+	
+	return result;
 }
 
 @end

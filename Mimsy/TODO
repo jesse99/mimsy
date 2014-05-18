@@ -1,16 +1,28 @@
+* Get search within working:
+	- figure out how to handle multimap sort of settings
+	   maybe use an array instead of a dictionary
+	   single getter could scan in reverse order
+	   or search from front and warn
+	- read in the SearchWithin setting
+	- be sure to handle dynamic chanegs to the settings
+	- build the combo box menu
+	- update the regex according to the combo box selection
 * Work on find:
-	- do a regex search
-	- get the checkboxes working
-	- get find previous working
+	- . should match new lines
 	- get the find dropdown working
-	- see if we need special case code in replaceText method
 	- may want a little button to pull up mimsy help
 	  include a regex summary
 	  include a link to apple's regex docs
-	- probably want a pref for search within strings
-	- look at search notes
+	  be sure to list the regex options
+	- probably want a pref for the search within strings
 * Get replace working
 	- make sure escapes are legit (both find and replace texts)
+	- may need to escape space in find
+	- make sure search and replace works with \t
+* Review the Continum find code
+* Look at the search notes
+* Should be able to find in the transcript window.
+* Make sure no where uses !err or !error.
 * Get find in files working
 	- may want a unit test for find in files
 	- needs to be able to search rtf files
