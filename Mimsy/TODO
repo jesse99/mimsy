@@ -1,10 +1,7 @@
 * Get search within working:
-	- figure out how to handle multimap sort of settings
-	   maybe use an array instead of a dictionary
-	   single getter could scan in reverse order
-	   or search from front and warn
 	- read in the SearchWithin setting
-	- be sure to handle dynamic chanegs to the settings
+	- be sure to handle dynamic changes to the settings
+	  possible use an observer when settings or front window changes
 	- build the combo box menu
 	- update the regex according to the combo box selection
 * Work on find:

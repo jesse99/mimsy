@@ -7,7 +7,7 @@
 
 @implementation BaseFindController
 {
-	NSString* _cachedFindText;
+	NSString* _cachedPattern;
 	NSRegularExpression* _cachedRegex;
 }
 
@@ -88,33 +88,32 @@
 
 - (NSRegularExpression*)_getRegex
 {
-	NSString* cachedText = self.findText;
-	if (_caseSensitiveCheckBox.state == NSOnState)
-		cachedText = [cachedText stringByAppendingString:@"-case_sensitive"];
-	if (_matchEntireWordCheckBox.state == NSOnState)
-		cachedText = [cachedText stringByAppendingString:@"-match_entire_word"];
-	if (_useRegexCheckBox.state == NSOnState)
-		cachedText = [cachedText stringByAppendingString:@"-use_regex"];
-	
-	if (cachedText == _cachedFindText)
-		return _cachedRegex;
+	NSRegularExpression* regex = _cachedRegex;
 	
 	NSString* pattern = [self _getRegexPattern];
-	NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
-	if (_caseSensitiveCheckBox.state == NSOffState)
-		options |= NSRegularExpressionCaseInsensitive;
-	NSError* error = nil;
-	_cachedRegex = [NSRegularExpression regularExpressionWithPattern:pattern options:options error:&error];
-	_cachedFindText = cachedText;
-	
-	if (!_cachedRegex)
+	if ([pattern compare:_cachedPattern] != NSOrderedSame)
 	{
-		NSString* reason = [error localizedFailureReason];
-		NSString* mesg = [NSString stringWithFormat:@"Failed compiling find regex '%@': %@", pattern, reason];
-		[TranscriptController writeError:mesg];
+		NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
+		if (_caseSensitiveCheckBox.state == NSOffState)
+			options |= NSRegularExpressionCaseInsensitive;
+
+		NSError* error = nil;
+		regex = [NSRegularExpression regularExpressionWithPattern:pattern options:options error:&error];
+		
+		if (regex)
+		{
+			_cachedRegex = regex;
+			_cachedPattern = pattern;
+		}
+		else
+		{
+			NSString* reason = [error localizedFailureReason];
+			NSString* mesg = [NSString stringWithFormat:@"Failed compiling find regex '%@': %@", pattern, reason];
+			[TranscriptController writeError:mesg];
+		}
 	}
 	
-	return _cachedRegex;
+	return regex;
 }
 
 - (NSString*)_getRegexPattern
@@ -139,7 +138,7 @@
 			pattern = [pattern stringByAppendingString:@"\\b"];
 	}
 	
-	LOG_Debug("Text", "finding with '%s'", STR(pattern));
+	LOG_DEBUG("Text", "finding with '%s'", STR(pattern));
 	
 	return pattern;
 }
