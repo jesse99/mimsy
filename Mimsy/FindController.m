@@ -60,7 +60,8 @@ bool _wrappedAround;
 	UNUSED(sender);
 	
 	TextController* controller = [TextController frontmost];
-	if (controller && !_finding)
+	NSRegularExpression* regex = [self _getRegex];
+	if (controller && !_finding && regex)
 	{
 		[self _cacheText:controller];
 		NSRange selRange = [controller getTextView].selectedRange;
@@ -82,11 +83,12 @@ bool _wrappedAround;
 		dispatch_queue_t main = dispatch_get_main_queue();
 		dispatch_async(concurrent,
 		   ^{
-			   NSRange range = [_text rangeOfString:findText options:NSCaseInsensitiveSearch range:searchRange];
+			   NSMatchingOptions options = NSMatchingWithTransparentBounds | NSMatchingWithoutAnchoringBounds;
+			    NSRange range = [regex rangeOfFirstMatchInString:_text options:options range:searchRange];
 			   if (range.location == NSNotFound && wrap)
 			   {
 				   searchRange = NSMakeRange(0, searchFrom - 1);
-				   range = [_text rangeOfString:findText options:NSCaseInsensitiveSearch range:searchRange];
+				   range = [regex rangeOfFirstMatchInString:_text options:options range:searchRange];
 				   wrappedAround = true;
 			   }
 			   
@@ -113,6 +115,54 @@ bool _wrappedAround;
 					   NSBeep();
 				   _finding = false;
 			   });
+		   });
+	}
+}
+
+// TODO: this doesn't respectFindWrap though I am not sure how that would work
+// especially when mixing find next and find previous.
+- (IBAction)findPrevious:(id)sender
+{
+	UNUSED(sender);
+	
+	TextController* controller = [TextController frontmost];
+	NSRegularExpression* regex = [self _getRegex];
+	if (controller && !_finding && regex)
+	{
+		[self _cacheText:controller];
+		NSRange selRange = [controller getTextView].selectedRange;
+		NSUInteger searchUntil = selRange.location;
+		__block NSRange searchRange = NSMakeRange(0, searchUntil);
+		_finding = true;
+		
+		dispatch_queue_t concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+		dispatch_queue_t main = dispatch_get_main_queue();
+		dispatch_async(concurrent,
+		   ^{
+			   __block NSRange candidate = NSMakeRange(NSNotFound, 0);
+			   
+			   // There's no good way to search backwards so we'll use a bad way...
+			   NSMatchingOptions options = NSMatchingWithTransparentBounds | NSMatchingWithoutAnchoringBounds;
+			   [regex enumerateMatchesInString:_text options:options range:searchRange usingBlock:
+					^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop)
+				   {
+					   UNUSED(flags, stop);
+					   if (result)
+						   candidate = result.range;
+				   }];
+			   
+			   dispatch_async(main,
+				  ^{
+					  if (candidate.location != NSNotFound)
+					  {
+						  TextController* controller = _controller;
+						  if (controller)
+							  [self _showSelection:candidate in:controller];
+					  }
+					  else
+						  NSBeep();
+					  _finding = false;
+				  });
 		   });
 	}
 }

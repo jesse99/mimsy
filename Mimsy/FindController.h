@@ -6,6 +6,7 @@
 + (FindController*)getController;
 
 - (IBAction)find:(id)sender;
+- (IBAction)findPrevious:(id)sender;
 - (IBAction)replace:(id)sender;
 - (IBAction)replaceAll:(id)sender;
 - (IBAction)replaceAndFind:(id)sender;

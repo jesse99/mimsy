@@ -12,6 +12,8 @@
 - (bool)_findEnabled;
 - (bool)_replaceEnabled;
 
+- (NSRegularExpression*)_getRegex;
+
 @property (strong) IBOutlet NSComboBox *findComboBox;
 @property (strong) IBOutlet NSComboBox *replaceWithComboBox;
 @property (strong) IBOutlet NSComboBox *searchWithinComboBox;

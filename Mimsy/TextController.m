@@ -177,11 +177,12 @@
 	[controller find:self];
 }
 
-- (void)findPevious:(id)sender
+- (void)findPrevious:(id)sender
 {
 	UNUSED(sender);
 	
-	NSBeep();
+	FindController* controller = [FindController getController];
+	[controller findPrevious:self];
 }
 
 - (void)useSelection:(id)sender
@@ -226,7 +227,7 @@
 		NSRange range = self.textView.selectedRange;
 		enabled = range.length > 0;
 	}
-	else if (sel == @selector(findNext:) || sel == @selector(findPevious:))
+	else if (sel == @selector(findNext:) || sel == @selector(findPrevious:))
 	{
 		FindController* controller = [FindController getController];
 		enabled = controller.findText.length > 0;
