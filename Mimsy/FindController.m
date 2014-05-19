@@ -84,7 +84,19 @@ bool _wrappedAround;
 		dispatch_async(concurrent,
 		   ^{
 			   NSMatchingOptions options = NSMatchingWithTransparentBounds | NSMatchingWithoutAnchoringBounds;
-			    NSRange range = [regex rangeOfFirstMatchInString:_text options:options range:searchRange];
+			   
+			   __block NSRange range = NSMakeRange(NSNotFound, 0);
+			   [regex enumerateMatchesInString:_text options:options range:searchRange usingBlock:
+					^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop)
+					{
+						UNUSED(flags);
+						if (result && [self _rangeMatches:result.range])
+						{
+							range = result.range;
+							*stop = true;
+						}
+					}];
+
 			   if (range.location == NSNotFound && wrap)
 			   {
 				   searchRange = NSMakeRange(0, searchFrom - 1);
@@ -147,7 +159,7 @@ bool _wrappedAround;
 					^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop)
 				   {
 					   UNUSED(flags, stop);
-					   if (result)
+					   if (result && [self _rangeMatches:result.range])
 						   candidate = result.range;
 				   }];
 			   

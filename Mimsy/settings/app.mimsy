@@ -7,9 +7,12 @@
 FindWraps: true
 
 # These make it easier to use the find windows to search within regions
-# of code, e.g. comments. (Ellipsis is option-;).
-SearchWithin: …
-SearchWithin: "…"
-SearchWithin: //…
-SearchWithin: /*…*/
-SearchWithin: <!-…-->
+# of code. The names are elements from language files.
+SearchWithin: everything
+SearchWithin: Argument
+SearchWithin: Comment
+SearchWithin: DocComment
+SearchWithin: Function
+SearchWithin: Identifier
+SearchWithin: String
+SearchWithin: Type

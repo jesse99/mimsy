@@ -1,10 +1,14 @@
 #import "BaseFindController.h"
 
+#import "ArrayCategory.h"
 #import "Assert.h"
 #import "Constants.h"
+#import "Language.h"
 #import "Logger.h"
+#import "RegexStyler.h"
 #import "Settings.h"
 #import "StringCategory.h"
+#import "TextController.h"
 #import "TranscriptController.h"
 
 @implementation BaseFindController
@@ -18,8 +22,8 @@
 	self = [super initWithWindowNibName:name];
     if (self)
 	{
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_settingsChanged:) name:@"CurrentDirectoryChanged" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_settingsChanged:) name:@"SettingsChanged" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_settingsChanged:) name:NSWindowDidBecomeMainNotification object:nil];
     }
     
     return self;
@@ -32,15 +36,57 @@
 	[self _settingsChanged:nil];
 }
 
+static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
+{
+	NSMutableArray* result = [[NSMutableArray alloc] initWithCapacity:lhs.count];
+	
+	for (NSUInteger i = 0; i < lhs.count; ++i)
+	{
+		NSString* element = lhs[i];
+		if ([element caseInsensitiveCompare:@"everything"] == NSOrderedSame)
+		{
+			[result addObject:element];			
+		}
+		else
+		{
+			for (NSUInteger j = 0; j < rhs.count; ++j)
+			{
+				NSString* candidate = rhs[j];
+				if ([element caseInsensitiveCompare:candidate] == NSOrderedSame)
+				{
+					[result addObject:element];
+					break;
+				}
+			}
+		}
+	}
+	
+	return result;
+}
+
 - (void)_settingsChanged:(NSNotification*)notification
 {
 	UNUSED(notification);
 	
 	NSString* oldSelection = [_searchWithinComboBox stringValue];
 	
-	NSArray* patterns = [Settings stringValues:@"SearchWithin"];
-	[_searchWithinComboBox removeAllItems];
-	[_searchWithinComboBox addItemsWithObjectValues:patterns];
+	NSArray* patterns;
+	TextController* controller = [TextController frontmost];
+	if (controller && controller.language)
+	{
+		NSArray* elements = controller.language.styler.names;
+		patterns = [Settings stringValues:@"SearchWithin"];
+		patterns = intersectElements(patterns, elements);
+		
+		[_searchWithinComboBox removeAllItems];
+		[_searchWithinComboBox addItemsWithObjectValues:patterns];
+		
+	}
+	else
+	{
+		patterns = [NSArray new];
+		[_searchWithinComboBox removeAllItems];
+	}
 	
 	// If the new search within strings include whatever the user
 	// was using then keep on using that.
@@ -62,7 +108,7 @@
 	// just search within everything.
 	else
 	{
-		[_searchWithinComboBox setStringValue:@"..."];
+		[_searchWithinComboBox setStringValue:@"everything"];
 	}
 }
 
@@ -135,18 +181,32 @@
 	ASSERT(false);	// subclasses implement this
 }
 
+- (bool)_rangeMatches:(NSRange)range
+{
+	bool matches = true;
+	
+	TextController* controller = [TextController frontmost];
+	if (controller && controller.language && [_searchWithinComboBox.stringValue compare:@"everything"] != NSOrderedSame)
+	{
+		NSString* element = [controller getElementNameFor:range];
+		matches = element != nil && [element caseInsensitiveCompare:_searchWithinComboBox.stringValue] == NSOrderedSame;
+	}
+	
+	return matches;
+}
+
 - (NSRegularExpression*)_getRegex
 {
 	NSRegularExpression* regex = nil;
 	
-	NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
-	NSString* pattern = [self _getRegexPattern:&options];
+	NSString* pattern = [self _getRegexPattern];
 	if ([pattern compare:_cachedPattern] == NSOrderedSame)
 	{
 		regex = _cachedRegex;
 	}
 	else
 	{
+		NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
 		if (_caseSensitiveCheckBox.state == NSOffState)
 			options |= NSRegularExpressionCaseInsensitive;
 
@@ -169,7 +229,7 @@
 	return regex;
 }
 
-- (NSString*)_getRegexPattern:(NSRegularExpressionOptions*)options
+- (NSString*)_getRegexPattern
 {
 	NSString* pattern = self.findText;
 	
@@ -191,62 +251,9 @@
 			pattern = [pattern stringByAppendingString:@"\\b"];
 	}
 	
-	if ([_searchWithinComboBox.stringValue compare:@"..."] != NSOrderedSame)
-		pattern = [self _getSearchWithinPattern:pattern options:options];
-	
 	LOG_DEBUG("Text", "finding with '%s'", STR(pattern));
 	
 	return pattern;
-}
-
-- (NSString*)_getSearchWithinPattern:(NSString*)pattern options:(NSRegularExpressionOptions*)options
-{
-	NSString* within = _searchWithinComboBox.stringValue;
-	NSRange range = [within rangeOfString:EllipsisChar];
-	if (range.location == NSNotFound)
-	{
-		[TranscriptController writeError:@"Search within pattern has no ellipsis"];
-		return pattern;
-	}
-	
-	NSString* prefix = [NSRegularExpression escapedPatternForString:[within substringToIndex:range.location]];
-	NSString* suffix = [NSRegularExpression escapedPatternForString:[within substringFromIndex:range.location+1]];
-	
-	NSString* result = @"";
-	
-	if (prefix.length > 0)
-	{
-		// zero width match of prefix
-		result = [result stringByAppendingFormat:@"(?<= %@", prefix];
-		
-		// match zero or more characters, but not the suffix
-		if (suffix.length > 0 && [prefix compare:suffix] != NSOrderedSame)
-			result = [result stringByAppendingFormat:@"(?:.(?!%@))*?)", suffix];
-		else
-			result = [result stringByAppendingString:@".*?)"];
-	}
-	
-	// match the user's re
-	result = [result stringByAppendingString:pattern];
-	
-	if (suffix.length > 0)
-	{
-		// match zero or more characters, but not the prefix
-		if (prefix.length > 0 && [prefix compare:suffix] != NSOrderedSame)
-			result = [result stringByAppendingFormat:@"(?=(?:.(?!%@))*?", prefix];
-		else
-			result = [result stringByAppendingString:@"(?=.*?"];
-		
-		// zero width match the suffix
-		result = [result stringByAppendingFormat:@"%@)", suffix];
-	}
-	
-	// If we can distinguish between the prefix and the suffix then allow
-	// . to match new lines.
-	if (prefix.length > 0 && suffix.length > 0 && [prefix compare:suffix] != NSOrderedSame)
-		*options |= NSRegularExpressionDotMatchesLineSeparators;
-	
-	return result;
 }
 
 @end

@@ -19,6 +19,11 @@
 - (NSString*)path;
 - (NSTextView*)getTextView;
 
+// Returns the language element name the range is within, e.g. String, Comment, Identifier, etc.
+// Returns nil if the window has no language or the range crosses multiple elements. Note that
+// this returns a lower case version of the element name.
+- (NSString*)getElementNameFor:(NSRange)range;
+
 - (void)showInfo:(NSString*)text;
 - (void)showWarning:(NSString*)text;
 

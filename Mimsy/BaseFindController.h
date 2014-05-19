@@ -14,6 +14,7 @@
 - (void)_settingsChanged:(NSNotification*)notification;
 
 - (NSRegularExpression*)_getRegex;
+- (bool)_rangeMatches:(NSRange)range;
 
 @property (strong) IBOutlet NSComboBox *findComboBox;
 @property (strong) IBOutlet NSComboBox *replaceWithComboBox;

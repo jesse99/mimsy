@@ -16,6 +16,7 @@ Keyword: \b(?: by | on | ascending | descending | from | get | group | into | jo
 Operator: \b(?: sizeof | typeof)\b
 Repeat: \b(?: do | foreach | for | while)\b
 StorageClass: \b(?: const | explicit | extern | out | readonly | unsafe  | implicit | internal | ref | virtual | sealed | volatile | static)\b
+Identifier: \b [a-zA-Z_] [\w_]* \b
 
 Boolean: \b(?: false | true)\b
 Float: (?<= \W) \d+ \. \d+ (?: [eE] [\+-]? \d+)? [FfDdMm]? (?= \W)

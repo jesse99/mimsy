@@ -1,11 +1,4 @@
-if window has language then
-	add stuff to the search within combo box
-	to match look at "element name" attribute
-
-* Get search within working:
-	- update the regex according to the combo box selection
 * Work on find:
-	- dot should match newlines? make this an option?
 	- get the find dropdown working
 	- may want a little button to pull up mimsy help
 	  include a regex summary

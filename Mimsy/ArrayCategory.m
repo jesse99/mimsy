@@ -53,6 +53,20 @@
 	return result;
 }
 
+- (NSArray*)intersectArray:(NSArray*)rhs
+{
+	NSMutableArray* result = [[NSMutableArray alloc] initWithCapacity:self.count];
+	
+	for (NSUInteger i = 0; i < self.count; ++i)
+	{
+		id element = self[i];
+		if ([rhs containsObject:element])
+			[result addObject:element];
+	}
+	
+	return result;
+}
+
 @end
 
 @implementation NSMutableArray (MutableArrayCategory)

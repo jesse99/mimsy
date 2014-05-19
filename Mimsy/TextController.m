@@ -132,6 +132,20 @@
 	[self.textView.layoutManager setDelegate:nil];
 }
 
+- (NSString*)getElementNameFor:(NSRange)range
+{
+	NSString* element = nil;
+	
+	if (_language)
+	{
+		NSAttributedString* str = self.textView.textStorage;
+		NSDictionary* attrs = [str attributesAtIndex:range.location longestEffectiveRange:NULL inRange:range];
+		element = attrs ? [attrs objectForKey:@"element name"] : nil;
+	}
+	
+	return element;
+}
+
 - (void)open
 {
 	if (self.path)

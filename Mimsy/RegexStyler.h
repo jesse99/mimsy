@@ -11,4 +11,6 @@
 
 - (StyleRuns*)computeStyles:(NSString*)text editCount:(NSUInteger)count;
 
+@property (readonly) NSArray* names;
+
 @end

@@ -6,7 +6,6 @@
 @implementation RegexStyler
 {
 	NSRegularExpression* _regex;
-	NSArray* _names;
 	struct UIntVector _groupToName;
 }
 
