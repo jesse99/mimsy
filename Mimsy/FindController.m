@@ -52,6 +52,11 @@ static FindController* _findController = nil;
 	[_findController _enableButtons];
 }
 
+- (NSArray*)getHelpContext
+{
+	return @[@"find"];
+}
+
 - (IBAction)find:(id)sender
 {
 	UNUSED(sender);

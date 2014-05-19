@@ -4,6 +4,8 @@
 	  include a link to apple's regex docs
 	  be sure to list the regex options
 	- probably want to support \n and \r (with and without regex)
+	- make sure regex searches work with #
+	- make sure ^ and $ work
 * Get replace working
 	- make sure escapes are legit (both find and replace texts)
 	- may need to escape space in find

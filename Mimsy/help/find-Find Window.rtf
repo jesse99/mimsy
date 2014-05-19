@@ -1,0 +1,101 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
+{\fonttbl\f0\froman\fcharset0 Times-Roman;}
+{\colortbl;\red255\green255\blue255;}
+\viewkind0
+\deftab480
+\pard\pardeftab480\pardirnatural
+
+\f0\fs36 \cf0 Search within is used to find text within elements defined by language files (to view or edit these use the Open Installed command). The elements are things like Comment, String, Identifier, etc. So if you select String then find will only find text within string literals.\
+\
+Regex searches use Cocoa regular expressions as defined in <{\field{\*\fldinst{HYPERLINK "https://developer.apple.com/library/mac/documentation/Foundation/Reference/NSRegularExpression_Class/Reference/Reference.html#//apple_ref/doc/uid/TP40009708-CH1-SW48"}}{\fldrslt https://developer.apple.com/library/mac/documentation/Foundation/Reference/NSRegularExpression_Class/Reference/Reference.html#//apple_ref/doc/uid/TP40009708-CH1-SW48>.\
+}}\
+Commonly used meta-characters include:\
+	
+\b \\b
+\b0 			Match if the current position is a word boundary\
+	
+\b \\d \\D
+\b0 		Match a decimal digit (or the inverse)\
+	
+\b \\s \\S
+\b0 		Match whitespace (or the inverse)\
+	
+\b \\w \\W
+\b0 		Match a word character (or the inverse)\
+	
+\b \\n
+\b0 			Back reference. Matches the nth capturing group (i.e. parens). One based.\
+	
+\b [chars]
+\b0 	Matches any character within the brackets. A dash can be used to define a range of chars, e.g. 
+\b [0-9]
+\b0 .\
+	
+\b [^chars]
+\b0 	Matches any character not within the brackets.\
+	
+\b .
+\b0 			Matches any character (except new lines).\
+	
+\b ^
+\b0 			Matches the start of a line.\
+	
+\b $
+\b0 			Matches the end of a line.\
+	
+\b \\c
+\b0 			Used to escape a meta-character.\
+\
+Commonly used operators include:\
+	
+\b p | q
+\b0 		Match either p or q.\
+	
+\b e*
+\b0 			Match zero or more times (a 
+\b ?
+\b0  character can be appended to do a non-greedy match).\
+	
+\b e+
+\b0 			Match one or more times (a 
+\b ?
+\b0  character can be appended to do a non-greedy match).\
+	
+\b e?
+\b0 			Match zero or one times, preferring one.\
+	
+\b (e)
+\b0 			Capturing group. Used with replacing and back referencing.\
+	
+\b (?: e)
+\b0 		Non-capturing group.\
+	
+\b (?= e)
+\b0 		Zero-width positive look ahead assertion\
+	
+\b (?! e)
+\b0 		Zero-width negative look ahead assertion\
+	
+\b (?<= e)
+\b0 	Zero-width positive look behind assertion (must be bounded: no 
+\b *
+\b0  or 
+\b +
+\b0  operators)\
+	
+\b (?<! e)
+\b0 	Zero-width negative look behind assertion (must be bounded: no 
+\b *
+\b0  or 
+\b +
+\b0  operators)\
+\
+Within the replacement text 
+\b $n
+\b0  will be replaced with the nth captured group. 
+\b $0
+\b0  will be replaced with the entire matched text.\
+	\
+Note that the regular expressions ignore white space and comments (which start with the 
+\b #
+\b0  character). }
