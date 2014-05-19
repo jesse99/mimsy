@@ -34,6 +34,32 @@
     [super windowDidLoad];
 	[self.window setExcludedFromWindowsMenu:TRUE];
 	[self _settingsChanged:nil];
+
+	[_findComboBox setNumberOfVisibleItems:8];
+	[_replaceWithComboBox setNumberOfVisibleItems:8];
+	[_searchWithinComboBox setNumberOfVisibleItems:8];
+}
+
+- (void)_updateFindComboBox:(NSString*)text
+{
+	NSArray* values = [_findComboBox objectValues];
+	
+	NSUInteger i = [values indexOfObject:text];
+	if (i == NSNotFound)
+	{
+		[_findComboBox insertItemWithObjectValue:text atIndex:0];
+		
+		NSInteger max = [Settings intValue:@"NumFindItems" missing:8];
+		while (_findComboBox.numberOfItems > max)
+		{
+			[_findComboBox removeItemAtIndex:_findComboBox.numberOfItems-1];
+		}
+	}
+	else if (i != 0)
+	{
+		[_findComboBox removeItemAtIndex:(NSInteger) i];
+		[_findComboBox insertItemWithObjectValue:text atIndex:0];
+	}
 }
 
 static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)

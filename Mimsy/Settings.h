@@ -6,6 +6,8 @@
 
 + (bool)boolValue:(NSString*)name missing:(bool)value;
 
++ (int)intValue:(NSString*)name missing:(int)value;
+
 + (NSString*)stringValue:(NSString*)name missing:(NSString*)value;
 
 + (NSArray*)stringValues:(NSString*)name;

@@ -52,9 +52,6 @@ static FindController* _findController = nil;
 	[_findController _enableButtons];
 }
 
-NSUInteger _initialSearchFrom;
-bool _wrappedAround;
-
 - (IBAction)find:(id)sender
 {
 	UNUSED(sender);
@@ -70,6 +67,8 @@ bool _wrappedAround;
 		NSString* findText = [self.findText copy];
 		_finding = true;
 		bool wrap = [Settings boolValue:@"FindWraps" missing:true];
+		
+		[self _updateFindComboBox:findText];
 				
 		if ([findText compare:_initialFindText] != NSOrderedSame)
 		{

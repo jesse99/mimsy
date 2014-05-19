@@ -4,17 +4,50 @@
 #import "DirectoryController.h"
 #import "LocalSettings.h"
 #import "Logger.h"
+#import "TranscriptController.h"
 
 @implementation Settings
 
 + (bool)boolValue:(NSString*)name missing:(bool)value
 {
-	NSString* result = [Settings stringValue:name missing:nil];
+	NSString* str = [Settings stringValue:name missing:nil];
 	
-	if (result)
-		return [result compare:@"true"] == NSOrderedSame;
+	if (str)
+		return [str compare:@"true"] == NSOrderedSame;
 	else
 		return value;
+}
+
++ (int)intValue:(NSString*)name missing:(int)value
+{
+	NSString* str = [Settings stringValue:name missing:nil];
+	
+	if (str)
+	{
+		int result = [str intValue];
+		if (result != 0)
+		{
+			return result;
+		}
+		else
+		{
+			if ([str compare:@"0"] == NSOrderedSame)
+			{
+				return 0;
+			}
+			else
+			{
+				NSString* mesg = [NSString stringWithFormat:@"Setting %@'s value is '%@' which is not a valid integer.", name, str];
+				[TranscriptController writeError:mesg];
+
+				return value;
+			}
+		}
+	}
+	else
+	{
+		return value;
+	}
 }
 
 + (NSString*)stringValue:(NSString*)name missing:(NSString*)value
