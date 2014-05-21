@@ -291,8 +291,12 @@
 	NSRange range = self.textView.selectedRange;
 	if (range.length > 0)
 	{
-		NSTextStorage* storage = self.textView.textStorage;
-		[storage setAttributes:[TextStyles fallbackStyle] range:range];
+		if ([self.textView shouldChangeTextInRange:range replacementString:nil])
+		{
+			NSTextStorage* storage = self.textView.textStorage;
+			[storage setAttributes:[TextStyles fallbackStyle] range:range];
+			[self.textView didChangeText];
+		}
 	}
 	else
 	{
