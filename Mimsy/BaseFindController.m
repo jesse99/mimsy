@@ -158,7 +158,7 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 
 - (NSString*)replaceText
 {
-	NSString* text = self.findComboBox.stringValue;
+	NSString* text = self.replaceWithComboBox.stringValue;
 	
 //	text = [text stringByReplacingOccurrencesOfString:@"\\'" withString:@"'"];
 //	text = [text stringByReplacingOccurrencesOfString:@"\\\"" withString:@"\""];
@@ -263,7 +263,10 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	{
 		pattern = [NSRegularExpression escapedPatternForString:pattern];
 		pattern = [pattern stringByReplacingOccurrencesOfString:@" " withString:@"\\ "];
-		pattern = [pattern stringByReplacingOccurrencesOfString:@"\\t" withString:@"	"];
+		pattern = [pattern stringByReplacingOccurrencesOfString:@"\\t" withString:@"\t"];
+		pattern = [pattern stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
+		pattern = [pattern stringByReplacingOccurrencesOfString:@"\\r" withString:@"\r"];
+		pattern = [pattern stringByReplacingOccurrencesOfString:@"#" withString:@"\\#"];
 	}
 	
 	if (_matchEntireWordCheckBox.state == NSOnState && pattern.length > 0)

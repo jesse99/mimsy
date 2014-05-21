@@ -57,10 +57,11 @@ static FindController* _findController = nil;
 	return @[@"find"];
 }
 
-- (IBAction)find:(id)sender
+typedef void (^FindBlock)(TextController* controller, NSRegularExpression* regex, NSTextCheckingResult* match);
+
+// The block is called on the main thread if the find succeeded.
+- (void)_find:(FindBlock)block
 {
-	UNUSED(sender);
-	
 	TextController* controller = [TextController frontmost];
 	NSRegularExpression* regex = [self _getRegex];
 	if (controller && !_finding && regex)
@@ -74,7 +75,7 @@ static FindController* _findController = nil;
 		bool wrap = [Settings boolValue:@"FindWraps" missing:true];
 		
 		[self _updateFindComboBox:findText];
-				
+		
 		if ([findText compare:_initialFindText] != NSOrderedSame)
 		{
 			_initialFindText = findText;
@@ -82,6 +83,7 @@ static FindController* _findController = nil;
 			_wrappedAround = false;
 		}
 		__block bool wrappedAround = false;
+		__block NSTextCheckingResult* match = nil;
 		
 		dispatch_queue_t concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 		dispatch_queue_t main = dispatch_get_main_queue();
@@ -96,11 +98,12 @@ static FindController* _findController = nil;
 						UNUSED(flags);
 						if (result && [self _rangeMatches:result.range])
 						{
+							match = result;
 							range = result.range;
-							*stop = true;
+							*stop = TRUE;
 						}
 					}];
-
+			   
 			   if (range.location == NSNotFound && wrap)
 			   {
 				   searchRange = NSMakeRange(0, searchFrom - 1);
@@ -109,30 +112,42 @@ static FindController* _findController = nil;
 			   }
 			   
 			   dispatch_async(main,
-			   ^{
-				   if (wrappedAround)
-					   _wrappedAround = true;
-				   
-				   if (range.location != NSNotFound)
-				   {
-					   TextController* controller = _controller;
-					   if (controller)
-					   {
-						   if (_wrappedAround && range.location >= _initialSearchFrom)
-						   {
-							   [controller showInfo:@"Reached Start"];
-							   _wrappedAround = false;
-						   }
-						   
-						   [self _showSelection:range in:controller];
-					   }
-				   }
-				   else
-					   NSBeep();
-				   _finding = false;
-			   });
+				  ^{
+					  if (wrappedAround)
+						  _wrappedAround = true;
+					  
+					  if (range.location != NSNotFound)
+					  {
+						  TextController* controller = _controller;
+						  if (controller)
+						  {
+							  if (_wrappedAround && range.location >= _initialSearchFrom)
+							  {
+								  [controller showInfo:@"Reached Start"];
+								  _wrappedAround = false;
+							  }
+							  
+							  block(controller, regex, match);
+						  }
+					  }
+					  else
+						  NSBeep();
+					  _finding = false;
+				  });
 		   });
 	}
+}
+
+- (IBAction)find:(id)sender
+{
+	UNUSED(sender);
+	
+	[self _find:
+		 ^(TextController* controller, NSRegularExpression* regex, NSTextCheckingResult* match)
+		 {
+			 UNUSED(regex);
+			 [self _showSelection:match.range in:controller];
+		 }];
 }
 
 // TODO: this doesn't respectFindWrap though I am not sure how that would work
@@ -183,6 +198,86 @@ static FindController* _findController = nil;
 	}
 }
 
+- (void)_replace:(TextController*)controller regex:(NSRegularExpression*)regex match:(NSTextCheckingResult*)match
+{
+	NSString* replaceText = [self replaceText];
+
+	NSTextView* view = [controller getTextView];
+	NSMutableString* text = view.textStorage.mutableString;
+	NSString* newText = [regex replacementStringForResult:match inString:text offset:0 template:replaceText];
+
+	if ([view shouldChangeTextInRange:match.range replacementString:newText])
+	{
+		NSRange newRange = NSMakeRange(match.range.location, newText.length);
+		[text replaceCharactersInRange:match.range withString:newText];
+		[view.undoManager setActionName:@"Replace"];
+		[view didChangeText];
+
+		[self _showSelection:newRange in:controller];
+	}
+}
+
+- (IBAction)replace:(id)sender
+{
+	UNUSED(sender);
+		
+	[self _find:
+		 ^(TextController* controller, NSRegularExpression* regex, NSTextCheckingResult* match)
+		 {
+			 [self _replace:controller regex:regex match:match];
+		 }];
+}
+
+// It'd be simpler to use replaceMatchesInString but I couldn't get undo to undo the changes.
+- (IBAction)replaceAll:(id)sender
+{
+	UNUSED(sender);
+
+	NSRegularExpression* regex = [self _getRegex];
+	if (!_finding && regex)
+	{
+		TextController* controller = [TextController frontmost];
+		NSTextView* view = [controller getTextView];
+
+		NSMutableString* text = view.textStorage.mutableString;
+		NSRange searchRange = NSMakeRange(0, text.length);
+
+		[self _updateFindComboBox:self.findText];
+		
+		__block int numMatches = 0;
+	   [regex enumerateMatchesInString:text options:0 range:searchRange usingBlock:
+			^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop)
+			{
+				UNUSED(flags, stop);
+				if (match && [self _rangeMatches:match.range])
+				{
+					if (++numMatches == 1)
+						[view.undoManager beginUndoGrouping];
+					[self _replace:controller regex:regex match:match];
+				}
+			}];
+		
+		if (numMatches)
+		{
+			[view.undoManager endUndoGrouping];
+			[view.undoManager setActionName:@"Replace All"];
+		}
+		
+		if (numMatches == 1)
+			[controller showInfo:@"Replaced 1 match"];
+		else if (numMatches > 1)
+			[controller showInfo:[NSString stringWithFormat:@"Replaced %d matches", numMatches]];
+		else
+			NSBeep();
+	}
+}
+
+- (IBAction)replaceAndFind:(id)sender
+{
+	[self replace:sender];
+	[self find:sender];
+}
+
 - (void)_showSelection:(NSRange)range in:(TextController*)controller
 {
 	[controller.window makeKeyAndOrderFront:self];
@@ -199,22 +294,6 @@ static FindController* _findController = nil;
 		_text = [controller.text copy];
 		_editCount = controller.editCount;
 	}
-}
-
-- (IBAction)replace:(id)sender
-{
-	UNUSED(sender);
-	LOG_INFO("Mimsy", "replace");
-}
-
-- (IBAction)replaceAll:(id)sender
-{
-	UNUSED(sender);
-}
-
-- (IBAction)replaceAndFind:(id)sender
-{
-	UNUSED(sender);
 }
 
 - (void)_enableButtons

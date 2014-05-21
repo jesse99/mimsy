@@ -1,26 +1,22 @@
-* Work on find:
-	- add a help window for find
-	  include a regex summary
-	  include a link to apple's regex docs
-	  be sure to list the regex options
-	- probably want to support \n and \r (with and without regex)
-	- make sure regex searches work with #
-	- make sure ^ and $ work
 * Get replace working
+	- make sure substutions work
 	- make sure escapes are legit (both find and replace texts)
 	- may need to escape space in find
 	- make sure search and replace works with \t
 	- get the dropdown working
 * Should be able to find in the transcript window.
-* Review the Continum find code
 * Look at the search notes
 * Make sure no where uses !err or !error.
 * See if balance would be better off using element names.
 * Get find in files working
+	- is there a way we can have a thread safe way to get cached text?
 	- may want a unit test for find in files
+	- will need a setting to exclude files from being searched
+	  possibly reuse whatever the directory window uses
 	- needs to be able to search rtf files
 	- would be nice if there was a simple way to remove find in files directories
 	- make sure that it has a help window
+* Review the Continum find code
 * Support goto line
 * Support shift left and right
 * Support remote editing
