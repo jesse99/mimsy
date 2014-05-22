@@ -39,6 +39,38 @@
 			{
 				NSString* mesg = [NSString stringWithFormat:@"Setting %@'s value is '%@' which is not a valid integer.", name, str];
 				[TranscriptController writeError:mesg];
+				
+				return value;
+			}
+		}
+	}
+	else
+	{
+		return value;
+	}
+}
+
++ (unsigned int)uintValue:(NSString*)name missing:(unsigned int)value
+{
+	NSString* str = [Settings stringValue:name missing:nil];
+	
+	if (str)
+	{
+		int result = [str intValue];
+		if (result > 0)
+		{
+			return (unsigned int) result;
+		}
+		else
+		{
+			if ([str compare:@"0"] == NSOrderedSame)
+			{
+				return 0;
+			}
+			else
+			{
+				NSString* mesg = [NSString stringWithFormat:@"Setting %@'s value is '%@' which is not a valid unsigned integer.", name, str];
+				[TranscriptController writeError:mesg];
 
 				return value;
 			}

@@ -8,6 +8,8 @@
 
 + (int)intValue:(NSString*)name missing:(int)value;
 
++ (unsigned int)uintValue:(NSString*)name missing:(unsigned int)value;
+
 + (NSString*)stringValue:(NSString*)name missing:(NSString*)value;
 
 + (NSArray*)stringValues:(NSString*)name;

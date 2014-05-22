@@ -1,5 +1,8 @@
 #import "WarningWindow.h"
 
+#import "Logger.h"
+#import "Settings.h"
+
 const int MinAlpha = 20;
 
 @implementation WarningWindow
@@ -7,11 +10,18 @@ const int MinAlpha = 20;
 	NSWindow* _window;
 	bool _opening;
 	int _alpha;
+	unsigned int _delay;
 	NSString* _text;
 	NSMutableDictionary* _attrs;
 	
 	NSBezierPath* _background;
 	NSColor* _color;
+}
+
+static NSSize getTextSize(NSString* text, NSDictionary* attrs)
+{
+	NSAttributedString* str = [[NSAttributedString alloc] initWithString:text attributes:attrs];
+	return str.size;
 }
 
 - (id)init
@@ -33,11 +43,6 @@ const int MinAlpha = 20;
 	[style setAlignment:NSCenterTextAlignment];
 	[_attrs setObject:style forKey:NSParagraphStyleAttributeName];
 	
-	// Initialize the background bezier.
-	_background = [NSBezierPath new];
-	NSView* view = _window.contentView;
-	[_background appendBezierPathWithRoundedRect:view.bounds xRadius:20.0f yRadius:20.0f];
-	
 	_color = [NSColor colorWithDeviceRed:250/255.0f green:128/255.0f blue:114/255.0f alpha:1.0f];
 	return self;
 }
@@ -46,6 +51,9 @@ const int MinAlpha = 20;
 {
 	_color = [NSColor colorWithDeviceRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:1.0f];
 	_text = text;
+	_delay = [Settings uintValue:@"WarnWindowDelay" missing:60];
+		
+	[self _resize:text];
 	
 	NSRect pframe = parent.frame;
 	NSRect cframe = _window.frame;
@@ -56,6 +64,17 @@ const int MinAlpha = 20;
 	_alpha = MinAlpha;
 	
 	[self _animate];
+}
+
+- (void)_resize:(NSString*)text
+{
+	NSSize size = getTextSize(text, _attrs);
+	[_window setFrame:NSMakeRect(0, 0, 1.2*size.width, size.height) display:FALSE];
+
+	// Initialize the background bezier.
+	_background = [NSBezierPath new];
+	NSView* view = _window.contentView;
+	[_background appendBezierPathWithRoundedRect:view.bounds xRadius:20.0f yRadius:20.0f];
 }
 
 - (void)_animate
@@ -80,7 +99,7 @@ const int MinAlpha = 20;
 		[self _draw];
 		
 		dispatch_queue_t main = dispatch_get_main_queue();
-		dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 40*NSEC_PER_MSEC);
+		dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, _delay*NSEC_PER_MSEC);
 		dispatch_after(delay, main, ^{[self _animate];});
 	}
 }

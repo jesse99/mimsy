@@ -9,6 +9,12 @@ FindWraps: true
 # Maximum number of items to save in the find and replace combo boxes.
 NumFindItems: 8
 
+# Number of milliseconds before changing the alpha for the translucent 
+# warning and info windows displayed above text windows, e.g. the unmatched 
+# brace warning window or the info window displayed saying how many replacements
+# replace all performed.
+WarnWindowDelay: 60
+
 # These make it easier to use the find windows to search within regions
 # of code. The names are elements from language files.
 SearchWithin: everything
