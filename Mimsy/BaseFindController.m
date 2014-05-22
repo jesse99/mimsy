@@ -40,25 +40,25 @@
 	[_searchWithinComboBox setNumberOfVisibleItems:8];
 }
 
-- (void)_updateFindComboBox:(NSString*)text
+- (void)_updateComboBox:(NSComboBox*)box with:(NSString*)text
 {
-	NSArray* values = [_findComboBox objectValues];
+	NSArray* values = [box objectValues];
 	
 	NSUInteger i = [values indexOfObject:text];
 	if (i == NSNotFound)
 	{
-		[_findComboBox insertItemWithObjectValue:text atIndex:0];
+		[box insertItemWithObjectValue:text atIndex:0];
 		
 		NSInteger max = [Settings intValue:@"NumFindItems" missing:8];
-		while (_findComboBox.numberOfItems > max)
+		while (box.numberOfItems > max)
 		{
-			[_findComboBox removeItemAtIndex:_findComboBox.numberOfItems-1];
+			[box removeItemAtIndex:box.numberOfItems-1];
 		}
 	}
 	else if (i != 0)
 	{
-		[_findComboBox removeItemAtIndex:(NSInteger) i];
-		[_findComboBox insertItemWithObjectValue:text atIndex:0];
+		[box removeItemAtIndex:(NSInteger) i];
+		[box insertItemWithObjectValue:text atIndex:0];
 	}
 }
 
@@ -160,18 +160,10 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 {
 	NSString* text = self.replaceWithComboBox.stringValue;
 	
-//	text = [text stringByReplacingOccurrencesOfString:@"\\'" withString:@"'"];
-//	text = [text stringByReplacingOccurrencesOfString:@"\\\"" withString:@"\""];
-//	text = [text stringByReplacingOccurrencesOfString:@"\\\\" withString:@"\\"];
-//	text = [text stringByReplacingOccurrencesOfString:@"\\f" withString:@"\f"];
-//	text = [text stringByReplacingOccurrencesOfString:@"\n" withString:@"\n"];
-//	text = [text stringByReplacingOccurrencesOfString:@"\\r" withString:@"\r"];
-//	text = [text stringByReplacingOccurrencesOfString:@"\\t" withString:@"\t"];
-//	text = [text stringByReplacingOccurrencesOfString:@"\\v" withString:@"\v"];
-
 	return text;
 }
 
+// This isn't used atm, may well be incorrect.
 - (void)setReplaceText:(NSString*)text
 {
 	text = [text stringByReplacingOccurrencesOfString:@"\\'" withString:@"\\\\"];
@@ -225,7 +217,7 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 {
 	NSRegularExpression* regex = nil;
 	
-	NSString* pattern = [self _getRegexPattern];
+	NSString* pattern = [self _getFindPattern];
 	if ([pattern compare:_cachedPattern] == NSOrderedSame)
 	{
 		regex = _cachedRegex;
@@ -255,7 +247,7 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	return regex;
 }
 
-- (NSString*)_getRegexPattern
+- (NSString*)_getFindPattern
 {
 	NSString* pattern = self.findText;
 	
@@ -283,6 +275,19 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	LOG_DEBUG("Text", "finding with '%s'", STR(pattern));
 	
 	return pattern;
+}
+
+- (NSString*)_getReplaceTemplate
+{
+	NSString* template = self.replaceText;
+	
+	template = [template stringByReplacingOccurrencesOfString:@"\\t" withString:@"\t"];
+	template = [template stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
+	template = [template stringByReplacingOccurrencesOfString:@"\\r" withString:@"\r"];
+	
+	LOG_DEBUG("Text", "replacing with '%s'", STR(template));
+	
+	return template;
 }
 
 @end

@@ -1,9 +1,6 @@
-* Get replace working
-	- make sure substutions work
-	- make sure escapes are legit (both find and replace texts)
-	- may need to escape space in find
-	- make sure search and replace works with \t
-	- get the dropdown working
+* Fix show info window size
+* May want to make the Found N Matches window last longer.
+* Make sure text scripts have decent undo text.
 * Should be able to find in the transcript window.
 * Look at the search notes
 * Make sure no where uses !err or !error.
@@ -17,6 +14,23 @@
 	- would be nice if there was a simple way to remove find in files directories
 	- make sure that it has a help window
 * Review the Continum find code
+* Look into supporting code folding:
+	- maybe just fold selections
+	- click could unfold
+	- NSGlyphInfoAttributeName looks like it might be good
+	- glyph should be a setting
+      Open Book
+      Right-Pointing Magnifying Glass
+	- getting glyphs
+	  http://www.cocoabuilder.com/archive/cocoa/102837-getting-glyphs-and-their-outlines.html
+	  http://www.cocoabuilder.com/archive/cocoa/22415-how-to-get-glyph-from-character.html
+	  http://partners.adobe.com/public/developer/en/opentype/glyphlist.txt
+	- maybe a command to unfold all
+* Could use NSGlyphInfoAttributeName to re-render special chars?
+	- python colons
+	- rust arrows, matches
+	- braces
+	- maybe characters (or regexen) not in string or comment
 * Support goto line
 * Support shift left and right
 * Support remote editing

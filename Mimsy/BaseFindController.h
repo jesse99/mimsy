@@ -15,7 +15,9 @@
 
 - (NSRegularExpression*)_getRegex;
 - (bool)_rangeMatches:(NSRange)range;
-- (void)_updateFindComboBox:(NSString*)text;
+- (void)_updateComboBox:(NSComboBox*)box with:(NSString*)text;
+
+- (NSString*)_getReplaceTemplate;
 
 @property (strong) IBOutlet NSComboBox *findComboBox;
 @property (strong) IBOutlet NSComboBox *replaceWithComboBox;

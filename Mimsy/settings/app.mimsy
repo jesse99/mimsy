@@ -8,7 +8,6 @@ FindWraps: true
 
 # Maximum number of items to save in the find and replace combo boxes.
 NumFindItems: 8
-NumReplaceItems: 8
 
 # These make it easier to use the find windows to search within regions
 # of code. The names are elements from language files.
