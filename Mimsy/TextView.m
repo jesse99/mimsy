@@ -65,8 +65,8 @@
 				else if (range.location < text.length)
 				{
 					// Otherwise pop up a translucent warning window for a second.
-					unichar ch = [text characterAtIndex:range.location];
-					[controller showWarning:[NSString stringWithFormat:@"Unmatched '%C'", ch]];
+					unichar ch = [text characterAtIndex:range.location-1];
+					[controller showWarning:[NSString stringWithFormat:@"Unmatched %C", ch]];
 				}
 			}
 		}
