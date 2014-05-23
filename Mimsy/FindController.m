@@ -1,15 +1,15 @@
 #import "FindController.h"
 
 #import "Assert.h"
+#import "BaseTextController.h"
 #import "Logger.h"
 #import "Settings.h"
-#import "TextController.h"
 
 static FindController* _findController = nil;
 
 @implementation FindController
 {
-	__weak TextController* _controller;
+	__weak BaseTextController* _controller;
 	NSString* _text;
 	NSUInteger _editCount;
 	bool _finding;
@@ -57,12 +57,12 @@ static FindController* _findController = nil;
 	return @[@"find"];
 }
 
-typedef void (^FindBlock)(TextController* controller, NSRegularExpression* regex, NSTextCheckingResult* match);
+typedef void (^FindBlock)(BaseTextController* controller, NSRegularExpression* regex, NSTextCheckingResult* match);
 
 // The block is called on the main thread if the find succeeded.
 - (void)_find:(FindBlock)block
 {
-	TextController* controller = [TextController frontmost];
+	BaseTextController* controller = [BaseTextController frontmost];
 	NSRegularExpression* regex = [self _getRegex];
 	if (controller && !_finding && regex)
 	{
@@ -118,7 +118,7 @@ typedef void (^FindBlock)(TextController* controller, NSRegularExpression* regex
 					  
 					  if (range.location != NSNotFound)
 					  {
-						  TextController* controller = _controller;
+						  BaseTextController* controller = _controller;
 						  if (controller)
 						  {
 							  if (_wrappedAround && range.location >= _initialSearchFrom)
@@ -143,7 +143,7 @@ typedef void (^FindBlock)(TextController* controller, NSRegularExpression* regex
 	UNUSED(sender);
 	
 	[self _find:
-		 ^(TextController* controller, NSRegularExpression* regex, NSTextCheckingResult* match)
+		 ^(BaseTextController* controller, NSRegularExpression* regex, NSTextCheckingResult* match)
 		 {
 			 UNUSED(regex);
 			 [self _showSelection:match.range in:controller];
@@ -156,7 +156,7 @@ typedef void (^FindBlock)(TextController* controller, NSRegularExpression* regex
 {
 	UNUSED(sender);
 	
-	TextController* controller = [TextController frontmost];
+	BaseTextController* controller = [BaseTextController frontmost];
 	NSRegularExpression* regex = [self _getRegex];
 	if (controller && !_finding && regex)
 	{
@@ -186,7 +186,7 @@ typedef void (^FindBlock)(TextController* controller, NSRegularExpression* regex
 				  ^{
 					  if (candidate.location != NSNotFound)
 					  {
-						  TextController* controller = _controller;
+						  BaseTextController* controller = _controller;
 						  if (controller)
 							  [self _showSelection:candidate in:controller];
 					  }
@@ -198,7 +198,7 @@ typedef void (^FindBlock)(TextController* controller, NSRegularExpression* regex
 	}
 }
 
-- (void)_replace:(TextController*)controller regex:(NSRegularExpression*)regex match:(NSTextCheckingResult*)match with:(NSString*)template showSelection:(bool)showSelection
+- (void)_replace:(BaseTextController*)controller regex:(NSRegularExpression*)regex match:(NSTextCheckingResult*)match with:(NSString*)template showSelection:(bool)showSelection
 {
 	NSTextView* view = [controller getTextView];
 	NSMutableString* text = view.textStorage.mutableString;
@@ -223,7 +223,7 @@ typedef void (^FindBlock)(TextController* controller, NSRegularExpression* regex
 	[self _updateComboBox:self.replaceWithComboBox with:self.replaceText];
 
 	[self _find:
-		 ^(TextController* controller, NSRegularExpression* regex, NSTextCheckingResult* match)
+		 ^(BaseTextController* controller, NSRegularExpression* regex, NSTextCheckingResult* match)
 		 {
 			 NSString* template = [self _getReplaceTemplate];
 			 [self _replace:controller regex:regex match:match with:template showSelection:true];
@@ -238,7 +238,7 @@ typedef void (^FindBlock)(TextController* controller, NSRegularExpression* regex
 	NSRegularExpression* regex = [self _getRegex];
 	if (!_finding && regex)
 	{
-		TextController* controller = [TextController frontmost];
+		BaseTextController* controller = [BaseTextController frontmost];
 		NSTextView* view = [controller getTextView];
 
 		NSMutableString* text = view.textStorage.mutableString;
@@ -259,11 +259,13 @@ typedef void (^FindBlock)(TextController* controller, NSRegularExpression* regex
 		if (matches.count > 0)
 		{
 			[view.undoManager beginUndoGrouping];
+			[view.textStorage beginEditing];
 
 			NSString* template = [self _getReplaceTemplate];
 			for (NSUInteger i = matches.count - 1; i < matches.count; --i)
 				[self _replace:controller regex:regex match:matches[i] with:template showSelection:false];
 
+			[view.textStorage endEditing];
 			[view.undoManager endUndoGrouping];
 			[view.undoManager setActionName:@"Replace All"];
 			
@@ -288,7 +290,7 @@ typedef void (^FindBlock)(TextController* controller, NSRegularExpression* regex
 	[self find:sender];
 }
 
-- (void)_showSelection:(NSRange)range in:(TextController*)controller
+- (void)_showSelection:(NSRange)range in:(BaseTextController*)controller
 {
 	[controller.window makeKeyAndOrderFront:self];
 	[[controller getTextView] setSelectedRange:range];
@@ -296,21 +298,21 @@ typedef void (^FindBlock)(TextController* controller, NSRegularExpression* regex
 	[[controller getTextView] showFindIndicatorForRange:range];
 }
 
-- (void)_cacheText:(TextController*)controller
+- (void)_cacheText:(BaseTextController*)controller
 {
-	if (controller != _controller || controller.editCount != _editCount)
+	if (controller != _controller || controller.getEditCount != _editCount)
 	{
 		_controller = controller;
-		_text = [controller.text copy];
-		_editCount = controller.editCount;
+		_text = [controller.getTextView.textStorage.string copy];
+		_editCount = controller.getEditCount;
 	}
 }
 
 - (void)_enableButtons
 {
-	TextController* controller = [TextController frontmost];
+	BaseTextController* controller = [BaseTextController frontmost];
 	NSTextView* view = controller ? [controller getTextView] : nil;
-	bool findable = controller && controller.text.length > 0 && self.findText.length > 0 && !_finding;
+	bool findable = controller && controller.getTextView.textStorage.string.length > 0 && self.findText.length > 0 && !_finding;
 	bool editable = view && view.isEditable;
 	
 	[self.findButton setEnabled:findable];

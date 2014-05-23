@@ -97,7 +97,7 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	NSString* oldSelection = [_searchWithinComboBox stringValue];
 	
 	NSArray* patterns;
-	TextController* controller = [TextController frontmost];
+	BaseTextController* controller = [BaseTextController frontmost];
 	if (controller && controller.language)
 	{
 		NSArray* elements = controller.language.styler.names;
@@ -203,11 +203,15 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 {
 	bool matches = true;
 	
-	TextController* controller = [TextController frontmost];
+	BaseTextController* controller = [BaseTextController frontmost];
 	if (controller && controller.language && [_searchWithinComboBox.stringValue compare:@"everything"] != NSOrderedSame)
 	{
-		NSString* element = [controller getElementNameFor:range];
-		matches = element != nil && [element caseInsensitiveCompare:_searchWithinComboBox.stringValue] == NSOrderedSame;
+		if ([controller respondsToSelector:@selector(getElementNameFor:)])
+		{
+			id obj = controller;
+			NSString* element = [obj getElementNameFor:range];
+			matches = element != nil && [element caseInsensitiveCompare:_searchWithinComboBox.stringValue] == NSOrderedSame;
+		}
 	}
 	
 	return matches;

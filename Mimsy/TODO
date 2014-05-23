@@ -1,5 +1,4 @@
-* Make sure text scripts have decent undo text.
-* Should be able to find in the transcript window.
+* When find wraps around it selects zero'th char index.
 * Make sure no where uses !err or !error.
 * See if balance would be better off using element names.
 * Get find in files working

@@ -1,5 +1,6 @@
 #import "TranscriptController.h"
 
+#import "Assert.h"
 #import "FunctionalTest.h"
 #import "Logger.h"
 #import "Paths.h"
@@ -12,6 +13,7 @@ static TranscriptController* controller;
 	NSDictionary* _commandAttrs;
 	NSDictionary* _stdoutAttrs;
 	NSDictionary* _stderrAttrs;
+	NSUInteger _editCount;
 	double _maxChars;
 }
 
@@ -31,6 +33,9 @@ static TranscriptController* controller;
 - (void)windowDidLoad
 {
     [super windowDidLoad];
+
+	__weak id this = self;
+	[self.view.textStorage setDelegate:this];
 }
 
 + (TranscriptController*)getInstance
@@ -49,9 +54,25 @@ static TranscriptController* controller;
 	return _view;
 }
 
+- (NSUInteger)getEditCount
+{
+	return _editCount;
+}
+
 - (NSArray*)getHelpContext
 {
 	return @[@"transcript"];
+}
+
+- (void)textStorageDidProcessEditing:(NSNotification*)notification
+{
+	UNUSED(notification);
+	
+	NSUInteger mask = self.view.textStorage.editedMask;
+	if ((mask & NSTextStorageEditedCharacters))
+	{
+		_editCount++;
+	}
 }
 
 - (void)clear:(id)sender
@@ -60,6 +81,8 @@ static TranscriptController* controller;
 	
 	NSRange range = NSMakeRange(0, self.view.textStorage.length);
 	[self.view.textStorage deleteCharactersInRange:range];
+	
+	++_editCount;
 }
 
 + (bool)empty
@@ -76,6 +99,7 @@ static TranscriptController* controller;
 	[instance.view.textStorage appendAttributedString:str];
 	[instance _trimExtra];
 	[instance _scrollLastIntoView];
+	instance->_editCount += 1;
 }
 
 + (void)writeStderr:(NSString*)text
@@ -87,6 +111,7 @@ static TranscriptController* controller;
 	[instance _trimExtra];
 	[instance.window makeKeyAndOrderFront:self];
 	[instance _scrollLastIntoView];
+	instance->_editCount += 1;
 }
 
 + (void)writeStdout:(NSString*)text
@@ -97,6 +122,7 @@ static TranscriptController* controller;
 	[instance.view.textStorage appendAttributedString:str];
 	[instance _trimExtra];
 	[instance _scrollLastIntoView];
+	instance->_editCount += 1;
 }
 
 + (void)writeError:(NSString*)text
@@ -112,6 +138,7 @@ static TranscriptController* controller;
 		[instance _trimExtra];
 		[instance.window makeKeyAndOrderFront:self];
 		[instance _scrollLastIntoView];
+		instance->_editCount += 1;
 	}
 	else
 	{

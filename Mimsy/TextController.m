@@ -4,12 +4,10 @@
 #import "Assert.h"
 #import "Balance.h"
 #import "ConfigParser.h"
-#import "FindController.h"
 #import "FunctionalTest.h"
 #import "Language.h"
 #import "Languages.h"
 #import "Logger.h"
-#import "OpenSelection.h"
 #import "Paths.h"
 #import "RestoreView.h"
 #import "StartupScripts.h"
@@ -30,7 +28,6 @@
 	Language* _language;
 	TextStyles* _styles;
 	ApplyStyles* _applier;
-	WarningWindow* _warningWindow;
 }
 
 - (id)init
@@ -176,38 +173,9 @@
 	return _textView;
 }
 
-- (void)find:(id)sender
+- (NSUInteger)getEditCount
 {
-	UNUSED(sender);
-	
-	[FindController show];
-}
-
-- (void)findNext:(id)sender
-{
-	UNUSED(sender);
-	
-	FindController* controller = [FindController getController];
-	[controller find:self];
-}
-
-- (void)findPrevious:(id)sender
-{
-	UNUSED(sender);
-	
-	FindController* controller = [FindController getController];
-	[controller findPrevious:self];
-}
-
-- (void)useSelection:(id)sender
-{
-	UNUSED(sender);
-	
-	NSRange range = self.textView.selectedRange;
-	NSString* selection = [self.text substringWithRange:range];
-	
-	FindController* controller = [FindController getController];
-	controller.findText = selection;
+	return _editCount;
 }
 
 - (void)balance:(id)sender
@@ -236,17 +204,7 @@
 	BOOL enabled = NO;
 	
 	SEL sel = [item action];
-	if (sel == @selector(useSelection:) || sel == @selector(openSelection:))
-	{
-		NSRange range = self.textView.selectedRange;
-		enabled = range.length > 0;
-	}
-	else if (sel == @selector(findNext:) || sel == @selector(findPrevious:))
-	{
-		FindController* controller = [FindController getController];
-		enabled = controller.findText.length > 0;
-	}
-	else if ([self respondsToSelector:sel])
+	if ([self respondsToSelector:sel])
 	{
 		enabled = YES;
 	}
@@ -256,32 +214,6 @@
 	}
 	
 	return enabled;
-}
-
-- (void)showInfo:(NSString*)text
-{
-	if (!_warningWindow)
-		_warningWindow = [WarningWindow new];
-	
-	[_warningWindow show:self.window withText:text red:135 green:206 blue:250];
-}
-
-- (void)showWarning:(NSString*)text
-{
-	if (!_warningWindow)
-		_warningWindow = [WarningWindow new];
-	
-	[_warningWindow show:self.window withText:text red:250 green:128 blue:114];
-}
-
-- (void)openSelection:(id)sender
-{
-	UNUSED(sender);
-	
-	NSTextStorage* storage = self.textView.textStorage;
-	NSRange range = self.textView.selectedRange;
-	if (!openTextRange(storage, range))
-		NSBeep();
 }
 
 - (void)removeStyle:(id)sender

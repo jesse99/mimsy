@@ -103,6 +103,7 @@
 		37CF062616AB998A00069A20 /* LuaSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF062516AB998A00069A20 /* LuaSupport.m */; };
 		37ECF06119291A0500061C0A /* LocalSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ECF06019291A0500061C0A /* LocalSettings.m */; };
 		37ECF06419296C7A00061C0A /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ECF06319296C7A00061C0A /* Constants.m */; };
+		37ECF067192EFCC100061C0A /* BaseTextController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ECF066192EFCC100061C0A /* BaseTextController.m */; };
 		37EECF4D16A64A9E00BEB493 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 37EECF4C16A64A9E00BEB493 /* help */; };
 		37F2C58B169E7B92009C5355 /* ArrayCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 37F2C58A169E7B92009C5355 /* ArrayCategory.m */; };
 /* End PBXBuildFile section */
@@ -296,6 +297,8 @@
 		37ECF06019291A0500061C0A /* LocalSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalSettings.m; sourceTree = "<group>"; };
 		37ECF06219296C7A00061C0A /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		37ECF06319296C7A00061C0A /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		37ECF065192EFCC000061C0A /* BaseTextController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseTextController.h; sourceTree = "<group>"; };
+		37ECF066192EFCC100061C0A /* BaseTextController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseTextController.m; sourceTree = "<group>"; };
 		37EECF4C16A64A9E00BEB493 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
 		37F2C589169E7B92009C5355 /* ArrayCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArrayCategory.h; sourceTree = "<group>"; };
 		37F2C58A169E7B92009C5355 /* ArrayCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArrayCategory.m; sourceTree = "<group>"; };
@@ -421,6 +424,8 @@
 				37862C5A168FCA8300DB9E66 /* ApplyStyles.m */,
 				3782A8AE1916B425005ED276 /* Balance.h */,
 				3782A8AF1916B425005ED276 /* Balance.m */,
+				37ECF065192EFCC000061C0A /* BaseTextController.h */,
+				37ECF066192EFCC100061C0A /* BaseTextController.m */,
 				3759B65E1678376000D3F3B8 /* Decode.h */,
 				3759B65F1678376000D3F3B8 /* Decode.m */,
 				37862C6F1694BFB800DB9E66 /* InfoController.h */,
@@ -819,6 +824,7 @@
 				379A41211925B17F00ACEA5C /* Settings.m in Sources */,
 				37ECF06119291A0500061C0A /* LocalSettings.m in Sources */,
 				37ECF06419296C7A00061C0A /* Constants.m in Sources */,
+				37ECF067192EFCC100061C0A /* BaseTextController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
