@@ -85,11 +85,11 @@
 		// Checking the hashs makes the install process a bit more efficient because we don't have to
 		// copy over files which haven't changed. But even more important this allows us to minimize
 		// our overwriting of files the user has changed.
-		if (![newHash isEqualToString:installedHash])
+		NSString* srcPath = [_srcPath stringByAppendingPathComponent:rpath];
+		NSString* dstPath = [_dstPath stringByAppendingPathComponent:rpath];
+		
+		if (![newHash isEqualToString:installedHash] || ![fm fileExistsAtPath:dstPath])
 		{
-			NSString* srcPath = [_srcPath stringByAppendingPathComponent:rpath];
-			NSString* dstPath = [_dstPath stringByAppendingPathComponent:rpath];
-			
 			NSError* error = nil;
 			if ([fm fileExistsAtPath:dstPath])
 			{
