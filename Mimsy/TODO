@@ -5,6 +5,7 @@
 	- may want a unit test for find in files
 	- will need a setting to exclude files from being searched
 	  possibly reuse whatever the directory window uses
+	- should be keys to go forward and backwards in find list
 	- needs to be able to search rtf files
 	- would be nice if there was a simple way to remove find in files directories
 	- make sure that it has a help window

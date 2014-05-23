@@ -453,7 +453,7 @@ void initLogLevels(void)
 	NSString* helpDir = [Paths installedDir:@"settings"];
 	NSString* path = [helpDir stringByAppendingPathComponent:@"help.mimsy"];
 	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
-	if (!error)
+	if (parser)
 	{
 		__block NSMutableDictionary* helpDict = [NSMutableDictionary new];
 		
