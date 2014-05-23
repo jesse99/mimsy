@@ -1,4 +1,3 @@
-* When find wraps around it selects zero'th char index.
 * Make sure no where uses !err or !error.
 * See if balance would be better off using element names.
 * Get find in files working
