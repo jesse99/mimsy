@@ -605,7 +605,11 @@ void initLogLevels(void)
 		if (!err)
 		{
 			if ([view shouldChangeTextInRange:range replacementString:stdout])
+			{
 				[view replaceCharactersInRange:range withString:stdout];
+				[view.undoManager setActionName:path.stringByDeletingPathExtension.lastPathComponent];
+				[view didChangeText];
+			}
 		}
 		else
 		{
@@ -643,11 +647,14 @@ void initLogLevels(void)
 		 NSString* name = path.lastPathComponent;
 		 if ([[NSFileManager defaultManager] isExecutableFileAtPath:path])
 		 {
-			 NSString* title = [name stringByDeletingPathExtension];
-			 NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(_runTransformFile:) keyEquivalent:@""];
-			 [item setRepresentedObject:path];
-			 
-			[menu addItem:item];
+			 if (![path endsWith:@".old"])
+			 {
+				 NSString* title = [name stringByDeletingPathExtension];
+				 NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(_runTransformFile:) keyEquivalent:@""];
+				 [item setRepresentedObject:path];
+				 
+				[menu addItem:item];
+			 }
 		 }
 		 else
 		 {
