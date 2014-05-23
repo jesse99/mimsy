@@ -2,6 +2,7 @@
 
 #import "Assert.h"
 #import "ConfigParser.h"
+#import "Logger.h"
 
 @implementation ConfigParserTests
 
@@ -39,17 +40,17 @@
 
 - (void)testMissingColon
 {
-	[self checkBad:@"alpha: one\nbeta: two\nalpha three\n" errorContains:@"Expected a colon" line:3 func:__func__];
+	[self checkBad:@"alpha: one\nbeta: two\nalpha three\n" errors:@[@"Expected a colon", @"found EOF"] func:__func__];
 }
 
 - (void)testNonBlankLine
 {
-	[self checkBad:@"alpha: one\n beta: two\nalpha: three\n" errorContains:@"Expected EOL" line:2 func:__func__];
+	[self checkBad:@"alpha: one\n beta: two\nalpha: three\n" errors:@[@"Expected EOL", @"line 2"] func:__func__];
 }
 
 - (void)testWindowsLines
 {
-	[self checkBad:@"alpha: one\r\nbeta: two\r\nalpha three\r\n" errorContains:@"Expected a colon" line:3 func:__func__];
+	[self checkBad:@"alpha: one\r\nbeta: two\r\nalpha three\r\n" errors:@[@"Expected a colon", @"line 3"] func:__func__];
 }
 
 // For now we don't check offsets.
@@ -71,21 +72,17 @@
 	}
 }
 
-- (void)checkBad:(NSString*)content errorContains:(NSString*)text line:(NSUInteger)line func:(const char*)func
+- (void)checkBad:(NSString*)content errors:(NSArray*)errors func:(const char*)func
 {	
-	NSString* fname = [[NSString alloc] initWithFormat:@"%s", func];
-	
 	NSError* error = nil;
 	(void) [[ConfigParser alloc] initWithContent:content outError:&error];
 	STAssertNotNil(error, nil);
-	if (text)
+	
+	for (NSString* err in errors)
 	{
-		STAssertTrue([[error localizedFailureReason] rangeOfString:text].location != NSNotFound, fname);
-	}
-	if (line)
-	{
-		NSString* str = [[NSString alloc] initWithFormat:@"line %lu", line];
-		STAssertTrue([[error localizedFailureReason] rangeOfString:str].location != NSNotFound, fname);
+		NSRange range = [[error localizedFailureReason] rangeOfString:err];
+		if (range.location == NSNotFound)
+			STFail(@"Expected '%@' within '%@' for %s", err, error.localizedFailureReason, func);
 	}
 }
 
