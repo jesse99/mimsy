@@ -25,6 +25,10 @@
 // this returns a lower case version of the element name.
 - (NSString*)getElementNameFor:(NSRange)range;
 
+- (bool)isBrace:(unichar)ch;
+- (bool)isOpenBrace:(NSUInteger)index;
+- (bool)isCloseBrace:(NSUInteger)index;
+
 - (NSTextView*)getTextView;
 - (NSUInteger)getEditCount;
 

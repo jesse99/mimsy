@@ -43,17 +43,16 @@
 
 - (void)_handleCloseBrace:(NSString*)chars
 {
-	if (chars.length == 1 && isBrace([chars characterAtIndex:0]))
+	TextController* controller = self.window.windowController;
+	if (chars.length == 1 && [controller isBrace:[chars characterAtIndex:0]])
 	{
 		NSRange range = self.selectedRange;
 		if (range.length == 0)
 		{
-			TextController* controller = self.window.windowController;
-
 			// If the user typed a closing brace and it is balanced,
 			bool indexIsOpenBrace, indexIsCloseBrace, foundOtherBrace;
 			NSString* text = self.textStorage.string;
-			NSUInteger left = tryBalance(text, range.location + range.length - 1, &indexIsOpenBrace, &indexIsCloseBrace, &foundOtherBrace);
+			NSUInteger left = tryBalance(text, range.location + range.length - 1, &indexIsOpenBrace, &indexIsCloseBrace, &foundOtherBrace, ^(NSUInteger index){return [controller isOpenBrace:index];}, ^(NSUInteger index){return [controller isCloseBrace:index];});
 			if (indexIsCloseBrace)
 			{
 				// then highlight the open brace.
@@ -101,7 +100,8 @@
 		// didn't select that brace. And maybe it's a good idea to have two
 		// methods that do the same thing differently given how people's
 		// preferences differ.
-		NSRange selRange = tryBalanceRange(self.textStorage.string, self.selectedRange);
+		TextController* controller = self.window.windowController;
+		NSRange selRange = tryBalanceRange(self.textStorage.string, self.selectedRange, ^(NSUInteger index){return [controller isOpenBrace:index];}, ^(NSUInteger index){return [controller isCloseBrace:index];});
 		
 		if (selRange.length > 0)
 			[self setSelectedRange:selRange];

@@ -178,6 +178,39 @@
 	return _editCount;
 }
 
+- (bool)canBalanceIndex:(NSUInteger)index
+{
+	bool can = true;
+	
+	if (_language)
+	{
+		NSString* element = [self getElementNameFor:NSMakeRange(index, 1)];
+		can = [@"DocComment" caseInsensitiveCompare:element] != NSOrderedSame &&
+		[@"Comment" caseInsensitiveCompare:element] != NSOrderedSame &&
+		[@"String" caseInsensitiveCompare:element] != NSOrderedSame &&
+		[@"Character" caseInsensitiveCompare:element] != NSOrderedSame;
+	}
+	
+	return can;
+}
+
+- (bool)isBrace:(unichar)ch
+{
+	return ch == '(' || ch == '[' || ch == '{' || (ch == ')' || ch == ']' || ch == '}');	
+}
+
+- (bool)isOpenBrace:(NSUInteger)index
+{
+	unichar ch = [self.text characterAtIndex:index];
+	return (ch == '(' || ch == '[' || ch == '{') && [self canBalanceIndex:index];
+}
+
+- (bool)isCloseBrace:(NSUInteger)index
+{
+	unichar ch = [self.text characterAtIndex:index];
+	return (ch == ')' || ch == ']' || ch == '}') && [self canBalanceIndex:index];
+}
+
 - (void)balance:(id)sender
 {
 	UNUSED(sender);
@@ -185,11 +218,11 @@
 	NSString* text = self.textView.textStorage.string;
 	NSRange originalRange = self.textView.selectedRange;
 	
-	NSRange range = balance(text, originalRange);
+	NSRange range = balance(text, originalRange, ^(NSUInteger index){return [self isOpenBrace:index];}, ^(NSUInteger index){return [self isCloseBrace:index];});
 	
 	// If we get the same range back then try for a larger range.
 	if (range.length > 2 && range.location + 1 == originalRange.location && range.length - 2 == originalRange.length)
-		range = balance(text, range);
+		range = balance(text, range, ^(NSUInteger index){return [self isOpenBrace:index];}, ^(NSUInteger index){return [self isCloseBrace:index];});
 	
 	if (range.length > 2)
 		[self.textView setSelectedRange:NSMakeRange(range.location + 1, range.length - 2)];
@@ -528,7 +561,7 @@
 	if (range.length == 0)
 	{
 		bool indexIsOpenBrace, indexIsCloseBrace, foundOtherBrace;
-		NSUInteger index = tryBalance(_textView.textStorage.string, range.location, &indexIsOpenBrace, &indexIsCloseBrace, &foundOtherBrace);
+		NSUInteger index = tryBalance(_textView.textStorage.string, range.location, &indexIsOpenBrace, &indexIsCloseBrace, &foundOtherBrace, ^(NSUInteger index){return [self isOpenBrace:index];}, ^(NSUInteger index){return [self isCloseBrace:index];});
 		
 		if (indexIsOpenBrace)
 			[_applier toggleBraceHighlightFrom:range.location-1 to:index on:foundOtherBrace];

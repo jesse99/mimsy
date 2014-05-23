@@ -25,11 +25,26 @@
 		}\
 	} while(0)
 
+static bool isOpenBrace(NSString* text, NSUInteger index)
+{
+	unichar ch = [text characterAtIndex:index];
+	return ch == '(' || ch == '[' || ch == '{';
+}
+
+static bool isCloseBrace(NSString* text, NSUInteger index)
+{
+	unichar ch = [text characterAtIndex:index];
+	return ch == ')' || ch == ']' || ch == '}';
+}
+
 static int _balanceLeft(NSString* text, NSUInteger index)
 {
 	bool indexIsOpenBrace, indexIsCloseBrace, foundOtherBrace;
 	
-	NSUInteger result = tryBalance(text, index, &indexIsOpenBrace, &indexIsCloseBrace, &foundOtherBrace);
+	bool (^isOpen)(NSUInteger)  = ^(NSUInteger index){return isOpenBrace(text, index);};
+	bool (^isClose)(NSUInteger) = ^(NSUInteger index){return isCloseBrace(text, index);};
+	
+	NSUInteger result = tryBalance(text, index, &indexIsOpenBrace, &indexIsCloseBrace, &foundOtherBrace, isOpen, isClose);
 	if (!indexIsCloseBrace)
 		return -2;
 	else if (!foundOtherBrace)
@@ -42,7 +57,10 @@ static int _balanceRight(NSString* text, NSUInteger index)
 {
 	bool indexIsOpenBrace, indexIsCloseBrace, foundOtherBrace;
 	
-	NSUInteger result = tryBalance(text, index, &indexIsOpenBrace, &indexIsCloseBrace, &foundOtherBrace);
+	bool (^isOpen)(NSUInteger)  = ^(NSUInteger index){return isOpenBrace(text, index);};
+	bool (^isClose)(NSUInteger) = ^(NSUInteger index){return isCloseBrace(text, index);};
+	
+	NSUInteger result = tryBalance(text, index, &indexIsOpenBrace, &indexIsCloseBrace, &foundOtherBrace, isOpen, isClose);
 	if (!indexIsOpenBrace)
 		return -2;
 	else if (!foundOtherBrace)
@@ -51,43 +69,51 @@ static int _balanceRight(NSString* text, NSUInteger index)
 		return (int) result;
 }
 
+static NSRange _balance(NSString* text, NSRange range)
+{
+	bool (^isOpen)(NSUInteger)  = ^(NSUInteger index){return isOpenBrace(text, index);};
+	bool (^isClose)(NSUInteger) = ^(NSUInteger index){return isCloseBrace(text, index);};
+	
+	return balance(text, range, isOpen, isClose);
+}
+
 @implementation BalanceTest
 
 - (void)testBalance
 {
-	STAssertEqualRanges(NSMakeRange(0, 0), balance(@"hello", NSMakeRange(2, 0)));
+	STAssertEqualRanges(NSMakeRange(0, 0), _balance(@"hello", NSMakeRange(2, 0)));
 	
-	STAssertEqualRanges(NSMakeRange(0, 0), balance(@"(hey)", NSMakeRange(0, 0)));
-	STAssertEqualRanges(NSMakeRange(0, 5), balance(@"(hey)", NSMakeRange(1, 0)));
-	STAssertEqualRanges(NSMakeRange(0, 5), balance(@"(hey)", NSMakeRange(2, 0)));
-	STAssertEqualRanges(NSMakeRange(0, 5), balance(@"(hey)", NSMakeRange(3, 0)));
-	STAssertEqualRanges(NSMakeRange(0, 5), balance(@"(hey)", NSMakeRange(4, 0)));
-	STAssertEqualRanges(NSMakeRange(0, 0), balance(@"(hey)", NSMakeRange(5, 0)));	// balanced range doesn't intersect the original range
+	STAssertEqualRanges(NSMakeRange(0, 0), _balance(@"(hey)", NSMakeRange(0, 0)));
+	STAssertEqualRanges(NSMakeRange(0, 5), _balance(@"(hey)", NSMakeRange(1, 0)));
+	STAssertEqualRanges(NSMakeRange(0, 5), _balance(@"(hey)", NSMakeRange(2, 0)));
+	STAssertEqualRanges(NSMakeRange(0, 5), _balance(@"(hey)", NSMakeRange(3, 0)));
+	STAssertEqualRanges(NSMakeRange(0, 5), _balance(@"(hey)", NSMakeRange(4, 0)));
+	STAssertEqualRanges(NSMakeRange(0, 0), _balance(@"(hey)", NSMakeRange(5, 0)));	// balanced range doesn't intersect the original range
 	
-	STAssertEqualRanges(NSMakeRange(0, 0), balance(@"(hey])", NSMakeRange(1, 0)));
-	STAssertEqualRanges(NSMakeRange(0, 0), balance(@"(hey[)", NSMakeRange(1, 0)));
-	STAssertEqualRanges(NSMakeRange(0, 7), balance(@"(h[ey])", NSMakeRange(1, 0)));
+	STAssertEqualRanges(NSMakeRange(0, 0), _balance(@"(hey])", NSMakeRange(1, 0)));
+	STAssertEqualRanges(NSMakeRange(0, 0), _balance(@"(hey[)", NSMakeRange(1, 0)));
+	STAssertEqualRanges(NSMakeRange(0, 7), _balance(@"(h[ey])", NSMakeRange(1, 0)));
 	
-	STAssertEqualRanges(NSMakeRange(0, 0), balance(@"(())", NSMakeRange(0, 0)));
-	STAssertEqualRanges(NSMakeRange(0, 4), balance(@"(())", NSMakeRange(1, 0)));
-	STAssertEqualRanges(NSMakeRange(1, 2), balance(@"(())", NSMakeRange(2, 0)));
-	STAssertEqualRanges(NSMakeRange(0, 4), balance(@"(())", NSMakeRange(3, 0)));
-	STAssertEqualRanges(NSMakeRange(0, 0), balance(@"(())", NSMakeRange(4, 0)));
+	STAssertEqualRanges(NSMakeRange(0, 0), _balance(@"(())", NSMakeRange(0, 0)));
+	STAssertEqualRanges(NSMakeRange(0, 4), _balance(@"(())", NSMakeRange(1, 0)));
+	STAssertEqualRanges(NSMakeRange(1, 2), _balance(@"(())", NSMakeRange(2, 0)));
+	STAssertEqualRanges(NSMakeRange(0, 4), _balance(@"(())", NSMakeRange(3, 0)));
+	STAssertEqualRanges(NSMakeRange(0, 0), _balance(@"(())", NSMakeRange(4, 0)));
 	
-	STAssertEqualRanges(NSMakeRange(0, 13), balance(@"(xx(yy) (zz))", NSMakeRange(8, 4)));
-	STAssertEqualRanges(NSMakeRange(0, 13), balance(@"(xx(yy) (zz))", NSMakeRange(5, 5)));
+	STAssertEqualRanges(NSMakeRange(0, 13), _balance(@"(xx(yy) (zz))", NSMakeRange(8, 4)));
+	STAssertEqualRanges(NSMakeRange(0, 13), _balance(@"(xx(yy) (zz))", NSMakeRange(5, 5)));
 	
-	STAssertEqualRanges(NSMakeRange(0, 10), balance(@"(foo(bar))", NSMakeRange(1,  2)));
-	STAssertEqualRanges(NSMakeRange(0, 10), balance(@"(foo(bar))", NSMakeRange(4,  5)));
-	STAssertEqualRanges(NSMakeRange(0, 10), balance(@"(foo(bar))", NSMakeRange(6,  4)));
+	STAssertEqualRanges(NSMakeRange(0, 10), _balance(@"(foo(bar))", NSMakeRange(1,  2)));
+	STAssertEqualRanges(NSMakeRange(0, 10), _balance(@"(foo(bar))", NSMakeRange(4,  5)));
+	STAssertEqualRanges(NSMakeRange(0, 10), _balance(@"(foo(bar))", NSMakeRange(6,  4)));
 	
-	STAssertEqualRanges(NSMakeRange(0, 0), balance(@"(hey[hey)", NSMakeRange(4, 5)));
+	STAssertEqualRanges(NSMakeRange(0, 0), _balance(@"(hey[hey)", NSMakeRange(4, 5)));
 	
 	NSString* text = @"x(string text, NSRange range)y";
 	NSRange first = [text rangeOfString:@"("];
 	NSRange last = [text rangeOfString:@")"];
-	STAssertEqualRanges(NSMakeRange(first.location, text.length - 2), balance(text, NSMakeRange(first.location + 1, 0)));
-	STAssertEqualRanges(NSMakeRange(first.location, text.length - 2), balance(text, NSMakeRange(last.location, 0)));
+	STAssertEqualRanges(NSMakeRange(first.location, text.length - 2), _balance(text, NSMakeRange(first.location + 1, 0)));
+	STAssertEqualRanges(NSMakeRange(first.location, text.length - 2), _balance(text, NSMakeRange(last.location, 0)));
 }
 
 - (void)testBalanceLeft
