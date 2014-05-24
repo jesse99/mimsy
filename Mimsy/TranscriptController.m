@@ -19,7 +19,7 @@ static TranscriptController* controller;
 
 - (id)init
 {
-	self = [super initWithWindowNibName:@"Transcript"];
+	self = [super initWithWindowNibName:@"TranscriptWindow"];
 	if (self)
 	{
 		_maxChars = INFINITY;

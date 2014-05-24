@@ -1356,19 +1356,19 @@
 								<float key="scoringTypeFloat">29</float>
 								<int key="contentType">3</int>
 							</object>
-							<reference ref="997226641"/>
-							<reference ref="963786272"/>
-							<reference ref="402560648"/>
 							<reference ref="926353227"/>
+							<reference ref="963786272"/>
+							<reference ref="579292960"/>
+							<reference ref="997226641"/>
 							<reference ref="569342314"/>
+							<reference ref="402560648"/>
+							<reference ref="440443929"/>
+							<reference ref="773308004"/>
+							<reference ref="2872247"/>
+							<reference ref="966657520"/>
 							<reference ref="727636904"/>
 							<reference ref="318621619"/>
-							<reference ref="2872247"/>
-							<reference ref="440443929"/>
-							<reference ref="966657520"/>
-							<reference ref="773308004"/>
 							<reference ref="834186823"/>
-							<reference ref="579292960"/>
 						</array>
 						<reference key="parent" ref="1005"/>
 					</object>
@@ -1900,6 +1900,7 @@
 					<string key="superclassName">BaseFindController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="find:">id</string>
+						<string key="findPrevious:">id</string>
 						<string key="replace:">id</string>
 						<string key="replaceAll:">id</string>
 						<string key="replaceAndFind:">id</string>
@@ -1907,6 +1908,10 @@
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="find:">
 							<string key="name">find:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="findPrevious:">
+							<string key="name">findPrevious:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="replace:">

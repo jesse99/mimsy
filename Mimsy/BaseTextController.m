@@ -58,6 +58,7 @@
 	[FindController show];
 }
 
+
 - (void)findNext:(id)sender
 {
 	UNUSED(sender);

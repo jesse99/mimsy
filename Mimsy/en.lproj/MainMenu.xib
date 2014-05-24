@@ -1811,14 +1811,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">performTextFinderAction:</string>
-						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="640068961"/>
-					</object>
-					<int key="connectionID">681</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">balance:</string>
 						<reference key="source" ref="1014"/>
 						<reference key="destination" ref="578806185"/>
@@ -1856,6 +1848,14 @@
 						<reference key="destination" ref="522055024"/>
 					</object>
 					<int key="connectionID">762</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">findInFiles:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="640068961"/>
+					</object>
+					<int key="connectionID">763</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -3005,141 +3005,10 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">762</int>
+			<int key="maxID">763</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
-				<object class="IBPartialClassDescription">
-					<string key="className">AppDelegate</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">openAsBinary:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">openAsBinary:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">openAsBinary:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
-					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="searchMenu">NSMenu</string>
-						<string key="textMenu">NSMenu</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="searchMenu">
-							<string key="name">searchMenu</string>
-							<string key="candidateClassName">NSMenu</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="textMenu">
-							<string key="name">textMenu</string>
-							<string key="candidateClassName">NSMenu</string>
-						</object>
-					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/AppDelegate.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">BaseFindController</string>
-					<string key="superclassName">NSWindowController</string>
-					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="caseSensitiveCheckBox">NSButton</string>
-						<string key="findComboBox">NSComboBox</string>
-						<string key="matchEntireWordCheckBox">NSButton</string>
-						<string key="replaceWithComboBox">NSComboBox</string>
-						<string key="searchWithinComboBox">NSComboBox</string>
-						<string key="useRegexCheckBox">NSButton</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="caseSensitiveCheckBox">
-							<string key="name">caseSensitiveCheckBox</string>
-							<string key="candidateClassName">NSButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="findComboBox">
-							<string key="name">findComboBox</string>
-							<string key="candidateClassName">NSComboBox</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="matchEntireWordCheckBox">
-							<string key="name">matchEntireWordCheckBox</string>
-							<string key="candidateClassName">NSButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="replaceWithComboBox">
-							<string key="name">replaceWithComboBox</string>
-							<string key="candidateClassName">NSComboBox</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="searchWithinComboBox">
-							<string key="name">searchWithinComboBox</string>
-							<string key="candidateClassName">NSComboBox</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="useRegexCheckBox">
-							<string key="name">useRegexCheckBox</string>
-							<string key="candidateClassName">NSButton</string>
-						</object>
-					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/BaseFindController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">FindController</string>
-					<string key="superclassName">BaseFindController</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="find:">id</string>
-						<string key="replace:">id</string>
-						<string key="replaceAll:">id</string>
-						<string key="replaceAndFind:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="find:">
-							<string key="name">find:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="replace:">
-							<string key="name">replace:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="replaceAll:">
-							<string key="name">replaceAll:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="replaceAndFind:">
-							<string key="name">replaceAndFind:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="findButton">NSButton</string>
-						<string key="replaceAllButton">NSButton</string>
-						<string key="replaceAndFindButton">NSButton</string>
-						<string key="replaceButton">NSButton</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="findButton">
-							<string key="name">findButton</string>
-							<string key="candidateClassName">NSButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="replaceAllButton">
-							<string key="name">replaceAllButton</string>
-							<string key="candidateClassName">NSButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="replaceAndFindButton">
-							<string key="name">replaceAndFindButton</string>
-							<string key="candidateClassName">NSButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="replaceButton">
-							<string key="name">replaceButton</string>
-							<string key="candidateClassName">NSButton</string>
-						</object>
-					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/FindController.h</string>
-					</object>
-				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">FirstResponder</string>
 					<dictionary class="NSMutableDictionary" key="actions">
@@ -3151,6 +3020,7 @@
 						<string key="duplicate:">id</string>
 						<string key="duplicateDocument:">id</string>
 						<string key="find:">id</string>
+						<string key="findInFiles:">id</string>
 						<string key="findNext:">id</string>
 						<string key="findPrevious:">id</string>
 						<string key="getInfo:">id</string>
@@ -3194,6 +3064,10 @@
 						</object>
 						<object class="IBActionInfo" key="find:">
 							<string key="name">find:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="findInFiles:">
+							<string key="name">findInFiles:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="findNext:">

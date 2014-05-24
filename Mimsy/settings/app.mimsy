@@ -2,18 +2,13 @@
 # project.mimsy file exists, any settings there will override these 
 # settings.
 
+#### Find and Find All ####################################################
 # The find command defaults to searching from the beginning of a document
 # when it hits the end.
 FindWraps: true
 
 # Maximum number of items to save in the find and replace combo boxes.
 NumFindItems: 8
-
-# Number of milliseconds before changing the alpha for the translucent 
-# warning and info windows displayed above text windows, e.g. the unmatched 
-# brace warning window or the info window displayed saying how many replacements
-# replace all performed.
-WarnWindowDelay: 60
 
 # These make it easier to use the find windows to search within regions
 # of code. The names are elements from language files.
@@ -25,3 +20,43 @@ SearchWithin: Function
 SearchWithin: Identifier
 SearchWithin: String
 SearchWithin: Type
+
+# These are used to control which files Find All searches within. The
+# first is a good canidate for overriding in your project's .mimsy.rtf
+# setting file. Note that there is no UI for the last one; set it in
+# a settings file and then press the Reset button in the Find All window.
+FindAllIncludes: *.c *.cpp *.c++ *.h *.hpp *.m *.rs *.js
+FindAllExcludes:
+FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll *.dylib *.exe *.gif *.icns *.jpeg *.jpg *.mdb *.nib *.pdb *.X11
+
+# These directories, as well as any directories that the user opens, are
+# are added to the directory dropdown menu in the Find All window. Currently
+# there is no way to remove directories from the menu other than using the 
+# Reset button.
+DefaultFindAllDirectory: /System/Library/Frameworks/AppKit.framework/Versions/C/Headers
+DefaultFindAllDirectory: /System/Library/Frameworks/Foundation.framework/Versions/C/Headers
+DefaultFindAllDirectory: /System/Library/Frameworks/CoreFoundation.framework/Versions/Current/Headers
+
+#### Open Selection ####################################################
+# These are globs for paths that open selection will open preferentially: when open
+# selection uses the locate command and finds files matching these paths it will open 
+# those instead of any other files it happens to find. Dot and dot dot are special cased
+# and match the active directory window's path and the parent directory of that path.
+PreferredPath: .
+
+# These are globs for paths that open selection will not open.
+IgnoredPath: */.svn/*
+IgnoredPath: */Backups.backupdb/*
+IgnoredPath: */Xcode.app/*
+
+#### Misc Settings ####################################################
+# Number of milliseconds before changing the alpha for the translucent
+# warning and info windows displayed above text windows, e.g. the unmatched 
+# brace warning window or the info window displayed saying how many replacements
+# replace all performed.
+WarnWindowDelay: 60
+
+# These are added to the Search menu to allow you to search for the selection
+# using different sites. Note that you can also specify these in language files.
+SearchIn: [Stack Overflow]http://stackoverflow.com/search?q=${TEXT}
+

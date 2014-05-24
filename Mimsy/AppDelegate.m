@@ -5,6 +5,7 @@
 #import "Constants.h"
 #import "DirectoryController.h"
 #import "DirectoryWatcher.h"
+#import "FindInFilesController.h"
 #import "FunctionalTest.h"
 #import "Glob.h"
 #import "InstallFiles.h"
@@ -95,6 +96,13 @@ void initLogLevels(void)
 	NSString* path = [sender representedObject];
 	NSURL* url = [NSURL fileURLWithPath:path isDirectory:FALSE];	
 	[self openWithMimsy:url];
+}
+
+- (void)findInFiles:(id)sender
+{
+	UNUSED(sender);
+	
+	[FindInFilesController show];
 }
 
 - (void)searchSite:(id)sender
