@@ -771,6 +771,7 @@ static DirectoryController* _lastBuilt;
 {
 	_path = path;
 	[self _loadPrefs];
+	[self appSettingsChanged:nil];
 	
 	_root = [[FolderItem alloc] initWithPath:path controller:self];
 	NSOutlineView* table = self.table;
@@ -819,26 +820,29 @@ static DirectoryController* _lastBuilt;
 {
 	UNUSED(notification);
 
-	NSArray* globs = [AppSettings stringValues:@"IgnoredPath"];
-	_ignoredPaths = [[Glob alloc] initWithGlobs:globs];
+	if (self.path)
+	{
+		NSArray* globs = [AppSettings stringValues:@"IgnoredPath"];
+		_ignoredPaths = [[Glob alloc] initWithGlobs:globs];
 
-	globs = [[AppSettings stringValues:@"PreferredPath"] map:
-		^id (NSString* glob)
-		{
-			if ([glob isEqualToString:@"."])
+		globs = [[AppSettings stringValues:@"PreferredPath"] map:
+			^id (NSString* glob)
 			{
-				return [self.path stringByAppendingPathComponent:@"*"];
-			}
-			else if ([glob isEqualToString:@".."])
-			{
-				return [[self.path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"*"];
-			}
-			else
-			{
-				return glob;
-			}
-		}];
-	_preferredPaths = [[Glob alloc] initWithGlobs:globs];
+				if ([glob isEqualToString:@"."])
+				{
+					return [self.path stringByAppendingPathComponent:@"*"];
+				}
+				else if ([glob isEqualToString:@".."])
+				{
+					return [[self.path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"*"];
+				}
+				else
+				{
+					return glob;
+				}
+			}];
+		_preferredPaths = [[Glob alloc] initWithGlobs:globs];
+	}
 }
 
 - (void)_loadPrefs
