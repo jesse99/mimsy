@@ -294,7 +294,9 @@ static NSString* getTaskOutput(id handle)
 	}
 	@catch (NSException *exception)
 	{
-		// launch will raise exceptions for things like the process not being executable
+		// launch will raise exceptions for things like the process not being executable.
+		// Note that because we have to use a run loop it is possible that we'll get errors
+		// for stuff like performSelector calls. But if we do those should be bugs.
 		NSDictionary* dict = @{
 			 NSLocalizedFailureReasonErrorKey:[NSString stringWithFormat:@"%@ failed: %@", task.launchPath, exception.reason]};
 		result = [NSError errorWithDomain:@"task failed" code:0 userInfo:dict];
