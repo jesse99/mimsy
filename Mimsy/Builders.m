@@ -177,8 +177,16 @@ static NSDictionary* _globs;	// name => glob
 	else
 	{
 		int returncode = [err.userInfo[@"return code"] intValue];
-		NSString* mesg = [NSString stringWithFormat:@"Error running %@ %@: it returned with code %d", task.launchPath, [task.arguments componentsJoinedByString:@" "], returncode];
-		[TranscriptController writeError:mesg];
+		if (returncode)
+		{
+			NSString* mesg = [NSString stringWithFormat:@"Error running %@ %@: it returned with code %d", task.launchPath, [task.arguments componentsJoinedByString:@" "], returncode];
+			[TranscriptController writeError:mesg];
+		}
+		else
+		{
+			NSString* mesg = [NSString stringWithFormat:@"Error running %@ %@: %@", task.launchPath, [task.arguments componentsJoinedByString:@" "], [err localizedFailureReason]];
+			[TranscriptController writeError:mesg];
+		}
 	}
 	
 	return result;
