@@ -186,6 +186,7 @@
 	{
 		NSString* element = [self getElementNameFor:NSMakeRange(index, 1)];
 		can = [@"DocComment" caseInsensitiveCompare:element] != NSOrderedSame &&
+		[@"LineComment" caseInsensitiveCompare:element] != NSOrderedSame &&
 		[@"Comment" caseInsensitiveCompare:element] != NSOrderedSame &&
 		[@"String" caseInsensitiveCompare:element] != NSOrderedSame &&
 		[@"Character" caseInsensitiveCompare:element] != NSOrderedSame;
