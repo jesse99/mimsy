@@ -47,7 +47,7 @@
 					 TextController* controller = (TextController*) document.windowControllers[0];
 					 [controller showLine:line atCol:col withTabWidth:width];
 				 }
-				 else if (error)
+				 else if (error && error.code != NSUserCancelledError)
 				 {
 					 NSString* reason = [error localizedFailureReason];
 					 NSString* mesg = [NSString stringWithFormat:@"Couldn't open '%@': %@", url, reason];
