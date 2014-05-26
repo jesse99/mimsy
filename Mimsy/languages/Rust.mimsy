@@ -1,10 +1,10 @@
 Language: rust
 Globs: *.rs *.rc
 LineComment: //
-Help: [Rust Std Lib]http://static.rust-lang.org/doc/std/index.html
-Help: [Rust Core Lib]http://static.rust-lang.org/doc/core/index.html
-Help: [Rust Tutorial]http://static.rust-lang.org/doc/tutorial.html
-Help: [Rust Language Manual]http://static.rust-lang.org/doc/rust.html
+ContextHelp: {rust}[Rust Std Lib]http://static.rust-lang.org/doc/std/index.html
+ContextHelp: {rust}[Rust Core Lib]http://static.rust-lang.org/doc/core/index.html
+ContextHelp: {rust}[Rust Tutorial]http://static.rust-lang.org/doc/tutorial.html
+ContextHelp: {rust}[Rust Language Manual]http://static.rust-lang.org/doc/rust.html
 SearchIn: [Rust]https://www.google.com/#q=${TEXT}+site:static.rust-lang.org%2Fdoc%2Fmaster
 
 DocComment: /// .* $

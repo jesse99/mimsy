@@ -21,6 +21,7 @@
 		3712632516B5A431007AF3BF /* libcrypto.0.9.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */; };
 		372D8FA916F5719E00CBBC96 /* Build.png in Resources */ = {isa = PBXBuildFile; fileRef = 372D8FA816F5719E00CBBC96 /* Build.png */; };
 		372D8FAB16F571A500CBBC96 /* Cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 372D8FAA16F571A500CBBC96 /* Cancel.png */; };
+		373B97181933B1CB0084CCC1 /* HelpItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B97171933B1CA0084CCC1 /* HelpItem.m */; };
 		375140D416800FFD00C329AF /* ConfigParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D316800FFD00C329AF /* ConfigParser.m */; };
 		375140D816801A4800C329AF /* ConfigParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D716801A4800C329AF /* ConfigParserTests.m */; };
 		375140E416828EB600C329AF /* WindowsDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140E316828EB600C329AF /* WindowsDatabase.m */; };
@@ -144,6 +145,8 @@
 		3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.0.9.8.dylib; path = ../../../usr/lib/libcrypto.0.9.8.dylib; sourceTree = "<group>"; };
 		372D8FA816F5719E00CBBC96 /* Build.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Build.png; path = images/Build.png; sourceTree = "<group>"; };
 		372D8FAA16F571A500CBBC96 /* Cancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Cancel.png; path = images/Cancel.png; sourceTree = "<group>"; };
+		373B97161933B1CA0084CCC1 /* HelpItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpItem.h; sourceTree = "<group>"; };
+		373B97171933B1CA0084CCC1 /* HelpItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpItem.m; sourceTree = "<group>"; };
 		375140D216800FFD00C329AF /* ConfigParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParser.h; sourceTree = "<group>"; };
 		375140D316800FFD00C329AF /* ConfigParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigParser.m; sourceTree = "<group>"; };
 		375140D616801A4800C329AF /* ConfigParserTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParserTests.h; sourceTree = "<group>"; };
@@ -487,6 +490,8 @@
 				379A41201925B17F00ACEA5C /* AppSettings.m */,
 				37979FEC16AAEEC1009D9944 /* FunctionalTest.h */,
 				37979FED16AAEEC1009D9944 /* FunctionalTest.m */,
+				373B97161933B1CA0084CCC1 /* HelpItem.h */,
+				373B97171933B1CA0084CCC1 /* HelpItem.m */,
 				3712631D16B4AA53007AF3BF /* InstallFiles.h */,
 				3712631E16B4AA53007AF3BF /* InstallFiles.m */,
 				37ECF05F19291A0500061C0A /* LocalSettings.h */,
@@ -835,6 +840,7 @@
 				37ECF06419296C7A00061C0A /* Constants.m in Sources */,
 				37ECF067192EFCC100061C0A /* BaseTextController.m in Sources */,
 				37ECF06C193024B800061C0A /* FindInFilesController.m in Sources */,
+				373B97181933B1CB0084CCC1 /* HelpItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

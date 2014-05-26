@@ -1,8 +1,8 @@
 Language: c
 Globs: *.c *.h
 LineComment: //
-Help: [C Library]http://www.cplusplus.com/reference/clibrary/
-Help: [C Language]http://www.gnu.org/software/gnu-c-manual/gnu-c-manual.html
+ContextHelp: {c}[C Library]http://www.cplusplus.com/reference/clibrary/
+ContextHelp: {c}[C Language]http://www.gnu.org/software/gnu-c-manual/gnu-c-manual.html
 SearchIn: [cplusplus]http://www.cplusplus.com/search.do?q=${TEXT}&kwr=no
 
 Comment: // .* $

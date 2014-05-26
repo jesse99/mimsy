@@ -61,3 +61,12 @@ WarnWindowDelay: 60
 SearchIn: [Stack Overflow]http://stackoverflow.com/search?q=${TEXT}
 SearchIn: [Google]http://www.google.com/search?q=${TEXT}
 
+# These are used to add context sensitive help to the Help menu. The string within
+# the braces is a dash separated list of context names (see Help Files in the Help 
+# menu for a list of context names). The name within the square brackets is used 
+# for the menu title. After the brackers is either an URL or an absolute path to a file.
+#
+# It's also possible to add new context help menu items by editing the files
+# within the Help directory (again see Help Files in the Help menu).
+ContextHelp: {app}[Mimsy Web Site]https://github.com/jesse99/mimsy
+

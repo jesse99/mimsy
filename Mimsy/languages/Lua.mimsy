@@ -2,9 +2,9 @@ Language: lua
 Globs: *.lua
 Shebang: lua
 LineComment: --
-Help: [Lua Wiki]http://lua-users.org/wiki/
-Help: [Lua Tech Notes]http://www.lua.org/notes/
-Help: [Lua Reference Manual]http://www.lua.org/manual/5.1/
+ContextHelp: {lua}[Lua Wiki]http://lua-users.org/wiki/
+ContextHelp: {lua}[Lua Tech Notes]http://www.lua.org/notes/
+ContextHelp: {lua}[Lua Reference Manual]http://www.lua.org/manual/5.1/
 SearchIn: [lua.org]https://www.google.com/search?q=${TEXT}&sitesearch=lua.org
 
 Function: (?<=\b function) \s+ (\w+)

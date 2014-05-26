@@ -3,8 +3,8 @@ Globs: *.cpp *.hpp *.cxx *.cc *.hxx algorithm bitset cassert cctype cerrno cfloa
 ConditionalGlob: *.h (std::) | (public:) | (virtual) | (^ \s* \x23 \s* include \s+ < \w+ >)
 Word: [\w_~]+
 LineComment: //
-Help: [C++ Library]http://www.cplusplus.com/reference/
-Help: [C++ Language]http://msdn.microsoft.com/en-us/library/3bstk3k5.aspx
+ContextHelp: {c++}[C++ Library]http://www.cplusplus.com/reference/
+ContextHelp: {c++}[C++ Language]http://msdn.microsoft.com/en-us/library/3bstk3k5.aspx
 SearchIn: [cplusplus]http://www.cplusplus.com/search.do?q=${TEXT}&kwr=no
 
 Comment: // .* $

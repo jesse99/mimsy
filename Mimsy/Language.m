@@ -26,11 +26,11 @@
 		NSMutableArray* conditionals = [NSMutableArray new];
 		NSMutableArray* errors = [NSMutableArray new];
 		
-		NSMutableDictionary* settings = [NSMutableDictionary new];
+		NSMutableArray* settingNames = [NSMutableArray new];
+		NSMutableArray* settingValues = [NSMutableArray new];
 		NSMutableArray* names = [NSMutableArray new];
 		NSMutableArray* patterns = [NSMutableArray new];
 		NSMutableArray* lines = [NSMutableArray new];
-		NSMutableArray* help = [NSMutableArray new];
 		
 		[names addObject:@"normal"];
 		
@@ -51,11 +51,6 @@
 						[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
 					
 					_lineComment = entry.value;	
-				}
-				else if ([key isEqualToString:@"help"])
-				{
-					if (![Language parseHelp:entry.value help:help])
-						[errors addObject:[NSString stringWithFormat:@"malformed help on line %ld: expected '[<title>]<url or full path>'", entry.line]];
 				}
 				else if ([key isEqualToString:@"word"])	// TODO: reserved
 				{
@@ -108,7 +103,8 @@
 				}
 				else
 				{
-					[settings setObject:entry.value forKey:entry.key];
+					[settingNames addObject:entry.key];
+					[settingValues addObject:entry.value];
 				}
 			}
 		];
@@ -123,15 +119,14 @@
 		_glob = [[ConditionalGlob alloc] initWithGlobs:globs regexen:regexen conditionals:conditionals];
 		_shebangs = shebangs;
 		_styler = [self _createStyler:names patterns:patterns lines:lines errors:errors];
-		_help = help;
 		
 		if (_name)
 		{
 			_settings = [[LocalSettings alloc] initWithFileName:[NSString stringWithFormat:@"%@ language file", _name]];
 			
-			for (NSString* key in settings)
+			for (NSUInteger i = 0; i < settingNames.count; ++i)
 			{
-				[_settings addKey:key value:settings[key]];
+				[_settings addKey:settingNames[i] value:settingValues[i]];
 			}
 		}
 		else

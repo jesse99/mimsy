@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 
 #import "AppSettings.h"
+#import "ArrayCategory.h"
 #import "Assert.h"
 #import "ConfigParser.h"
 #import "Constants.h"
@@ -9,6 +10,7 @@
 #import "FindInFilesController.h"
 #import "FunctionalTest.h"
 #import "Glob.h"
+#import "HelpItem.h"
 #import "InstallFiles.h"
 #import "Language.h"
 #import "Languages.h"
@@ -56,8 +58,11 @@ typedef void (^NullaryBlock)();
 	DirectoryWatcher* _stylesWatcher;
 	DirectoryWatcher* _scriptsStartupWatcher;
 	DirectoryWatcher* _transformsWatcher;
+	DirectoryWatcher* _helpWatcher;
 	
 	NSMutableDictionary* _pendingBlocks;
+	NSArray* _helpFileItems;
+	NSArray* _helpSettingsItems;
 }
 
 // Note that windows will still be open when this is called.
@@ -85,6 +90,7 @@ typedef void (^NullaryBlock)();
 	[self _installFiles];
 	[self _registerAppSettings];
 	[self _loadSettings];
+	[self _loadHelpFiles];
 	[self _addTransformItems];
 	[self _watchInstalledFiles];
 	[StartupScripts setup];
@@ -97,7 +103,15 @@ typedef void (^NullaryBlock)();
 - (void)_executeSelector:(NSString*)name
 {
 	NullaryBlock block = [self->_pendingBlocks objectForKey:name];
-	block();
+	@try
+	{
+		block();
+	}
+	@catch (NSException *exception)
+	{
+		NSString* mesg = [NSString stringWithFormat:@"Internal '%@' error: %@", name, exception.reason];
+		[TranscriptController writeError:mesg];
+	}
 	[self->_pendingBlocks removeObjectForKey:name];
 }
 
@@ -179,6 +193,25 @@ typedef void (^NullaryBlock)();
 	UNUSED(notification);
 	
 	[SearchSite updateMainMenu:self.searchMenu];
+	
+	NSMutableArray* helps = [NSMutableArray new];
+	[AppSettings enumerate:@"ContextHelp" with:
+		^(NSString *fileName, NSString *value)
+		{
+			NSError* error = nil;
+			HelpItem* help = [[HelpItem alloc] initFromSetting:fileName value:value err:&error];
+			if (help)
+			{
+				[helps addObject:help];
+			}
+			else
+			{
+				NSString* reason = [error localizedFailureReason];
+				NSString* mesg = [NSString stringWithFormat:@"Error parsing ContextHelp from %@: %@", fileName, reason];
+				[TranscriptController writeError:mesg];
+			}
+		}];
+	_helpSettingsItems = helps;
 }
 
 // Don't open a new unitled window when we are activated and don't have a window open.
@@ -215,16 +248,96 @@ typedef void (^NullaryBlock)();
 	}
 }
 
+// This isn't used (the app is part of the responder chain, but not the app delegate).
+// But we need a getHelpContext declaration to shut the compiler up.
+- (NSArray*)getHelpContext
+{
+	return @[];
+}
+
+// Returns an array of active context names from most to least specific.
+- (NSArray*)_getActiveHelpContexts
+{
+	NSMutableArray* result = [NSMutableArray new];
+	
+	id target = [NSApp targetForAction:@selector(getHelpContext)];
+	while (target)
+	{
+		if ([target respondsToSelector:@selector(getHelpContext)])
+		{
+			id tmp = target;
+			[result addObjectsFromArray:[tmp getHelpContext]];
+		}
+		
+		if ([target isKindOfClass:[NSResponder class]])	// using isKindOfClass because @selector(nextResponder) didn't work with Xcode 4.6
+			target = [target nextResponder];
+		else
+			target = nil;
+	}
+	[result addObject:@"app"];
+	
+	return result;
+}
+
+- (void)_addMatchingHelp:(NSArray*)candidates context:(NSString*)context to:(NSMutableArray*)helps
+{
+	for (HelpItem* candidate in candidates)
+	{
+		if ([candidate matchesContext:context])
+			[helps addObject:candidate];
+	}
+}
+
+- (NSArray*)_getHelpForActiveContexts
+{
+	NSArray* contexts = [self _getActiveHelpContexts];	
+	
+	NSMutableArray* helps = [NSMutableArray new];
+	for (NSString* context in contexts)
+	{
+		NSMutableArray* temp = [NSMutableArray new];
+		[self _addMatchingHelp:_helpFileItems context:context to:temp];
+		[self _addMatchingHelp:_helpSettingsItems context:context to:temp];
+		[temp sortUsingComparator:
+			 ^NSComparisonResult(HelpItem* lhs, HelpItem* rhs)
+			 {
+				 return [rhs.title compare:lhs.title];
+			 }];
+		
+		[helps addObjectsFromArray:temp];
+	}
+	
+	return helps;
+}
+
+- (void)openHelpFile:(id)sender
+{
+	NSURL* url = [sender representedObject];
+	[self openWithMimsy:url];
+}
+
+- (NSArray*)_createHelpMenuItems:(NSArray*)helps
+{
+	NSMutableArray* items = [NSMutableArray new];
+	
+	for (HelpItem* help in helps)
+	{
+		NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:help.title action:@selector(openHelpFile:) keyEquivalent:@""];
+		[item setRepresentedObject:help.url];
+		[items addObject:item];
+	}
+	
+	return items;
+}
+
 - (void)menuNeedsUpdate:(NSMenu*)menu
 {
 	if (menu == [NSApp helpMenu])
 	{
-		NSArray* contexts = [self _buildHelpContext];
-		NSArray* items = [self _getHelpSettingsItems:contexts];
-		items = [items arrayByAddingObjectsFromArray:[self _getHelpLangItems:contexts]];
-		items = [items arrayByAddingObjectsFromArray:[self _getHelpFileItems:contexts]];
+		NSArray* helps = [self _getHelpForActiveContexts];
 		
 		[menu removeAllItems];
+		NSArray* items = [self _createHelpMenuItems:[helps reverse]];	// most general first so items don't move around as much
 		for (NSMenuItem* item in items)
 		{
 			[menu addItem:item];
@@ -265,12 +378,6 @@ typedef void (^NullaryBlock)();
 		if (![[NSWorkspace sharedWorkspace] openURL:url])
 			NSBeep();
 	}
-}
-
-- (void)openHelpFile:(id)sender
-{
-	NSURL* url = [sender representedObject];
-	[self openWithMimsy:url];
 }
 
 - (void)openInstalled:(id)sender
@@ -435,168 +542,6 @@ typedef void (^NullaryBlock)();
 	return enabled;
 }
 
-// This isn't used (the app is part of the responder chain, but not the app delegate).
-// But we need a getHelpContext declaration to shut the compiler up.
-- (NSArray*)getHelpContext
-{
-	return @[];
-}
-
-- (NSArray*)_buildHelpContext
-{
-	NSMutableArray* result = [NSMutableArray new];
-	
-	id target = [NSApp targetForAction:@selector(getHelpContext)];
-	while (target)
-	{
-		if ([target respondsToSelector:@selector(getHelpContext)])
-		{
-			id tmp = target;
-			[result addObjectsFromArray:[tmp getHelpContext]];
-		}
-		
-		if ([target isKindOfClass:[NSResponder class]])	// using isKindOfClass because @selector(nextResponder) didn't work with Xcode 4.6
-			target = [target nextResponder];
-		else
-			target = nil;
-	}
-	[result addObject:@"app"];
-	
-	return result;
-}
-
-- (NSArray*)_getHelpSettingsItems:(NSArray*)context
-{
-	NSMutableArray* items = [NSMutableArray new];
-	
-	__block NSError* error = nil;
-	NSString* helpDir = [Paths installedDir:@"settings"];
-	NSString* path = [helpDir stringByAppendingPathComponent:@"help.mimsy"];
-	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
-	if (parser)
-	{
-		__block NSMutableDictionary* helpDict = [NSMutableDictionary new];
-		
-		[parser enumerate:
-			 ^(ConfigParserEntry* entry)
-			 {
-				 NSMutableArray* help = helpDict[entry.key];
-				 if (!help)
-				 {
-					 help = [NSMutableArray new];
-					 helpDict[entry.key] = help;
-				 }
-				 
-				 if (![Language parseHelp:entry.value help:help] && !error)
-				 {
-					 NSString* mesg = [NSString stringWithFormat:@"malformed help on line %ld: expected '[<title>]<url or full path>'", entry.line];
-					 NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
-					 error = [NSError errorWithDomain:@"mimsy" code:4 userInfo:dict];
-				 }
-			 }
-		 ];
-		
-		if (!error)
-		{
-			for (NSString* name in context)
-			{
-				NSArray* help = helpDict[name];
-				if (help)
-					[self _processHelpLangItems:items help:help];
-			}
-		}
-	}
-	
-	if (error)
-	{
-		NSString* reason = [error localizedFailureReason];
-		NSString* mesg = [NSString stringWithFormat:@"Couldn't load settings/help.mimsy: %@", reason];
-		[TranscriptController writeError:mesg];
-	}
-	
-	return items;
-}
-
-- (NSArray*)_getHelpLangItems:(NSArray*)context
-{
-	NSMutableArray* items = [NSMutableArray new];
-	
-	for (NSString* name in context)
-	{
-		Language* lang = [Languages findWithlangName:name];
-		if (lang && lang.help)
-			[self _processHelpLangItems:items help:lang.help];
-	}
-	
-	return items;
-}
-
-- (void)_processHelpLangItems:(NSMutableArray*)items help:(NSArray*)help
-{
-	for (NSUInteger i = 0; i < help.count;)
-	{
-		NSString* title = help[i++];
-		NSURL* url = help[i++];
-		
-		NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(openHelpFile:) keyEquivalent:@""];
-		[item setRepresentedObject:url];
-		[items addObject:item];
-	}
-}
-
-- (NSArray*)_getHelpFileItems:(NSArray*)context
-{
-	__block NSMutableArray* items = [NSMutableArray new];
-	
-	NSString* helpDir = [Paths installedDir:@"help"];
-	for (NSString* name in context)
-	{
-		NSString* pattern = [NSString stringWithFormat:@"%@-*.rtf", name];
-		Glob* glob = [[Glob alloc] initWithGlob:pattern];
-		
-		NSError* error = nil;
-		[Utils enumerateDir:helpDir glob:glob error:&error block:
-		 ^(NSString* path)
-		 {
-			 // file names look like "app-Overview.rtf"
-			 NSMenuItem* item = [self _createHelpItem:path];
-			 if (item)
-				 [items addObject:item];
-		 }
-		 ];
-		
-		if (error)
-		{
-			NSString* reason = [error localizedFailureReason];
-			LOG_ERROR("Mimsy", "Error building help menu: %s\n", STR(reason));
-		}
-	}
-	
-	return items;
-}
-
-- (NSMenuItem*)_createHelpItem:(NSString*)path
-{
-	NSMenuItem* item = nil;
-	
-	NSString* fileName = [path lastPathComponent];
-	NSRange range = [fileName rangeOfString:@"-"];
-	if (range.location != NSNotFound)
-	{
-		NSString* title = [[fileName stringByDeletingPathExtension] substringFromIndex:range.location+1];
-		item = [[NSMenuItem alloc] initWithTitle:title action:@selector(openHelpFile:) keyEquivalent:@""];
-
-		NSURL* url = [NSURL fileURLWithPath:path];
-		[item setRepresentedObject:url];
-	}
-	else
-	{
-		LOG_WARN("Mimsy", "'%s' is in the help directory, but not formatted as '<context>-<item name>.rtf", STR(fileName));
-	}
-	
-	return item;
-}
-
 - (void)_runTransformFile:(id)sender
 {
 	TextController* controller = [TextController frontmost];
@@ -730,6 +675,40 @@ typedef void (^NullaryBlock)();
 	}
 }
 
+- (void)_loadHelpFiles
+{
+	NSString* helpDir = [Paths installedDir:@"help"];
+	Glob* glob = [[Glob alloc] initWithGlob:@"*-*.*"];
+	
+	NSError* error = nil;
+	NSMutableArray* items = [NSMutableArray new];
+	[Utils enumerateDir:helpDir glob:glob error:&error block:
+		 ^(NSString* path)
+		 {
+			 NSError* err = nil;
+			 HelpItem* help = [[HelpItem alloc] initFromPath:path err:&err];
+			 if (help)
+			 {
+				 [items addObject:help];
+			 }
+			 else
+			 {
+				NSString* reason = [err localizedFailureReason];
+				NSString* mesg = [NSString stringWithFormat:@"Failed to load '%@': %@", path, reason];
+				[TranscriptController writeError:mesg];
+			 }
+		 }];
+	
+	if (error)
+	{
+		NSString* reason = [error localizedFailureReason];
+		NSString* mesg = [NSString stringWithFormat:@"Error enumerating help directory: %@", reason];
+		[TranscriptController writeError:mesg];
+	}
+
+	_helpFileItems = items;
+}
+
 - (void)_loadSettings
 {
 	_settings = [[LocalSettings alloc] initWithFileName:@"app.mimsy"];
@@ -744,10 +723,10 @@ typedef void (^NullaryBlock)();
 		if (parser)
 		{
 			[parser enumerate:
-			 ^(ConfigParserEntry* entry)
-			 {
-				 [_settings addKey:entry.key value:entry.value];
-			 }];
+				 ^(ConfigParserEntry* entry)
+				 {
+					 [_settings addKey:entry.key value:entry.value];
+				 }];
 		}
 		else
 		{
@@ -759,8 +738,6 @@ typedef void (^NullaryBlock)();
 
 - (void)_watchInstalledFiles
 {
-	// files in the help directory are loaded when used so no need to watch those
-	
 	NSString* dir = [Paths installedDir:@"languages"];
 	_languagesWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		^(NSString* path, FSEventStreamEventFlags flags)
@@ -801,6 +778,15 @@ typedef void (^NullaryBlock)();
 			[self _loadSettings];
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
 		}
+		];
+	
+	dir = [Paths installedDir:@"help"];
+	_helpWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
+		^(NSString* path, FSEventStreamEventFlags flags)
+		{
+			UNUSED(path, flags);
+			[self _loadHelpFiles];
+		}
 	];
 	
 	dir = [Paths installedDir:@"styles"];
@@ -825,7 +811,8 @@ typedef void (^NullaryBlock)();
 // These need to be registered rather early so, for the sake of convenience we do them all here.
 - (void)_registerAppSettings
 {
-	[AppSettings registerSetting:@"DefaultFindAllDirectory"];	
+	[AppSettings registerSetting:@"ContextHelp"];
+	[AppSettings registerSetting:@"DefaultFindAllDirectory"];
 	[AppSettings registerSetting:@"FindAllAlwaysExclude"];
 	[AppSettings registerSetting:@"FindAllExcludes"];
 	[AppSettings registerSetting:@"FindAllIncludes"];

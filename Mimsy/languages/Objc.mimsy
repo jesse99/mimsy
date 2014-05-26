@@ -3,8 +3,8 @@ Globs: *.m
 ConditionalGlob: *.h (@end) | (^ \s* \x23 \s* import \s+)
 Word: [\w_:]+
 LineComment: //
-Help: [Objective-C]https://developer.apple.com/search/index.php?q=objective-c
-Help: [Programming with Objective-C]http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html
+ContextHelp: {objective-c}[Objective-C]https://developer.apple.com/search/index.php?q=objective-c
+ContextHelp: {objective-c}[Programming with Objective-C]http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html
 SearchIn: [Apple]https://developer.apple.com/library/mac/search/?q=${TEXT}
 
 Comment: // .* $
