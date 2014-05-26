@@ -29,11 +29,24 @@
 
 - (NSArray*)arrayByRemovingObject:(id)object
 {
-	NSMutableArray* result = [[NSMutableArray alloc] initWithCapacity:self.count - 1];
+	NSMutableArray* result = [[NSMutableArray alloc] initWithCapacity:self.count];
 	
 	for (id element in self)
 	{
 		if (![element isEqualTo:object])
+			[result addObject:element];
+	}
+	
+	return result;
+}
+
+- (NSArray*)arrayByRemovingObjects:(NSArray*)objects
+{
+	NSMutableArray* result = [[NSMutableArray alloc] initWithCapacity:self.count];
+	
+	for (id element in self)
+	{
+		if (![objects containsObject:element])
 			[result addObject:element];
 	}
 	

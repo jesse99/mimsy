@@ -6,7 +6,7 @@
 #import "Language.h"
 #import "Logger.h"
 #import "RegexStyler.h"
-#import "Settings.h"
+#import "AppSettings.h"
 #import "StringCategory.h"
 #import "TextController.h"
 #import "TranscriptController.h"
@@ -22,8 +22,7 @@
 	self = [super initWithWindowNibName:name];
     if (self)
 	{
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_settingsChanged:) name:@"SettingsChanged" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_settingsChanged:) name:NSWindowDidBecomeMainNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_settingsChanged:) name:@"AppSettingsChanged" object:nil];
     }
     
     return self;
@@ -49,7 +48,7 @@
 	{
 		[box insertItemWithObjectValue:text atIndex:0];
 		
-		NSInteger max = [Settings intValue:@"NumFindItems" missing:8];
+		NSInteger max = [AppSettings intValue:@"NumFindItems" missing:8];
 		while (box.numberOfItems > max)
 		{
 			[box removeItemAtIndex:box.numberOfItems-1];
@@ -93,7 +92,7 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 - (void)_settingsChanged:(NSNotification*)notification
 {
 	UNUSED(notification);
-	
+
 	NSString* oldSelection = [_searchWithinComboBox stringValue];
 	
 	NSArray* patterns;
@@ -101,7 +100,7 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	if (controller && controller.language)
 	{
 		NSArray* elements = controller.language.styler.names;
-		patterns = [Settings stringValues:@"SearchWithin"];
+		patterns = [AppSettings stringValues:@"SearchWithin"];
 		patterns = intersectElements(patterns, elements);
 		
 		[_searchWithinComboBox removeAllItems];

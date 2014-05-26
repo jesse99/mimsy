@@ -16,6 +16,10 @@ void initLogLevels(void);
 
 + (void)appendContextMenu:(NSMenu*)menu;
 
+// This works like performSelector:withObject:afterDelay: except that calling it with a
+// name that is pending is a no-op.
++ (void)execute:(NSString*)name withSelector:(SEL)selector withObject:(id) object afterDelay:(NSTimeInterval)delay;
+
 - (void)runFTest:(id)sender;
 - (void)runFTests:(id)sender;
 

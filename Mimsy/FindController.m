@@ -3,7 +3,7 @@
 #import "Assert.h"
 #import "BaseTextController.h"
 #import "Logger.h"
-#import "Settings.h"
+#import "AppSettings.h"
 
 static FindController* _findController = nil;
 
@@ -72,7 +72,7 @@ typedef void (^FindBlock)(BaseTextController* controller, NSRegularExpression* r
 		__block NSRange searchRange = NSMakeRange(searchFrom, _text.length - searchFrom);
 		NSString* findText = [self.findText copy];
 		_finding = true;
-		bool wrap = [Settings boolValue:@"FindWraps" missing:true];
+		bool wrap = [AppSettings boolValue:@"FindWraps" missing:true];
 		
 		[self _updateComboBox:self.findComboBox with:findText];
 		

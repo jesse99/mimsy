@@ -59,4 +59,5 @@ WarnWindowDelay: 60
 # These are added to the Search menu to allow you to search for the selection
 # using different sites. Note that you can also specify these in language files.
 SearchIn: [Stack Overflow]http://stackoverflow.com/search?q=${TEXT}
+SearchIn: [Google]http://www.google.com/search?q=${TEXT}
 

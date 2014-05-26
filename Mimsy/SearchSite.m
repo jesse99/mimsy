@@ -1,11 +1,10 @@
 #import "SearchSite.h"
 
 #import "AppDelegate.h"
+#import "AppSettings.h"
 #import "Assert.h"
-#import "DirectoryController.h"
 #import "Language.h"
 #import "StringCategory.h"
-#import "TextController.h"
 #import "TranscriptController.h"
 
 @implementation SearchSite
@@ -32,33 +31,12 @@
 // sources is used when reporting errors within the search URL
 + (void)_findSearchers:(NSMutableArray*)searchers sources:(NSMutableArray*)sources
 {
-	// First add language specific searchers.
-	TextController* text = [TextController frontmost];
-	if (text && text.language)
-	{
-		NSString* source = [NSString stringWithFormat:@"%@ language file", text.language.name];
-		for (NSString* searcher in text.language.searchIn)
-		{
-			[sources addObject:source];
-			[searchers addObject:searcher];
-		}
-	}
-	
-	// Then add project specific searchers.
-	DirectoryController* directory = [DirectoryController getCurrentController];
-	if (directory)
-	{
-		NSString* source = [directory.path stringByAppendingPathComponent:@".mimsy.rtf"];
-		for (NSString* searcher in directory.searchIn)
-		{
-			[sources addObject:source];
-			[searchers addObject:searcher];
-		}
-	}
-	
-	// And finally add google.
-	[sources addObject:@"AppDelegate.m"];		// TODO: probably should pull this from app setting file
-	[searchers addObject:@"[Google]http://www.google.com/search?q=${TEXT}"];
+	[AppSettings enumerate:@"SearchIn" with:
+		 ^(NSString *fileName, NSString *value)
+		 {
+			 [sources addObject:fileName];
+			 [searchers addObject:value];
+		 }];
 }
 
 + (void)_clearSearchers:(NSMenu*)searchMenu

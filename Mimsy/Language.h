@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@class ConditionalGlob, ConfigParser, RegexStyler;
+@class ConditionalGlob, ConfigParser, LocalSettings, RegexStyler;
 
 // Encapsulates the information from a language file.
 @interface Language : NSObject
@@ -8,6 +8,8 @@
 - (id)initWithParser:(ConfigParser*)parser outError:(NSError**)error;
 
 + (bool)parseHelp:(NSString*)value help:(NSMutableArray*)help;
+
+@property (readonly) LocalSettings *settings;
 
 // ---- Required Elements -----------------------------------------
 
@@ -31,8 +33,5 @@
 
 // Sequence of menu item titles and url pairs.
 @property (readonly) NSArray* help;
-
-// Sequence of "[label]query url".
-@property (readonly) NSArray* searchIn;
 
 @end

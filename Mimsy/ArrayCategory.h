@@ -11,6 +11,8 @@
 // Returns a new array with each element equal to object removed.
 - (NSArray*)arrayByRemovingObject:(id)object;
 
+- (NSArray*)arrayByRemovingObjects:(NSArray*)objects;
+
 - (NSArray*)intersectArray:(NSArray*)rhs;
 
 - (NSArray*)reverse;

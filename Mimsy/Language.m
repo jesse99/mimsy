@@ -1,9 +1,11 @@
 #import "Language.h"
 
+#import "AppSettings.h"
 #import "ArrayCategory.h"
 #import "Assert.h"
 #import "ConditionalGlob.h"
 #import "ConfigParser.h"
+#import "LocalSettings.h"
 #import "RegexStyler.h"
 #import "StringCategory.h"
 #import "Utils.h"
@@ -24,11 +26,11 @@
 		NSMutableArray* conditionals = [NSMutableArray new];
 		NSMutableArray* errors = [NSMutableArray new];
 		
+		NSMutableDictionary* settings = [NSMutableDictionary new];
 		NSMutableArray* names = [NSMutableArray new];
 		NSMutableArray* patterns = [NSMutableArray new];
 		NSMutableArray* lines = [NSMutableArray new];
 		NSMutableArray* help = [NSMutableArray new];
-		NSMutableArray* searchIn = [NSMutableArray new];
 		
 		[names addObject:@"normal"];
 		
@@ -54,10 +56,6 @@
 				{
 					if (![Language parseHelp:entry.value help:help])
 						[errors addObject:[NSString stringWithFormat:@"malformed help on line %ld: expected '[<title>]<url or full path>'", entry.line]];
-				}
-				else if ([key isEqualToString:@"searchin"])
-				{
-					[searchIn addObject:entry.value];
 				}
 				else if ([key isEqualToString:@"word"])	// TODO: reserved
 				{
@@ -101,12 +99,16 @@
 						[errors addObject:[NSString stringWithFormat:@"expected space separating a glob from a regex on line %ld", entry.line]];
 					}
 				}
-				else
+				else if (![AppSettings isSetting:entry.key])
 				{
 					// Note that it is OK to use the same element name multiple times.
 					[names addObject:key];
 					[patterns addObject:entry.value];
 					[lines addObject:[NSNumber numberWithUnsignedLong:entry.line]];
+				}
+				else
+				{
+					[settings setObject:entry.value forKey:entry.key];
 				}
 			}
 		];
@@ -122,7 +124,20 @@
 		_shebangs = shebangs;
 		_styler = [self _createStyler:names patterns:patterns lines:lines errors:errors];
 		_help = help;
-		_searchIn = searchIn;
+		
+		if (_name)
+		{
+			_settings = [[LocalSettings alloc] initWithFileName:[NSString stringWithFormat:@"%@ language file", _name]];
+			
+			for (NSString* key in settings)
+			{
+				[_settings addKey:key value:settings[key]];
+			}
+		}
+		else
+		{
+			_settings = [[LocalSettings alloc] initWithFileName:@"language file"];
+		}
 
 		if (errors.count > 0)
 		{

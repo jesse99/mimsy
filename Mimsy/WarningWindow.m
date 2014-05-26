@@ -1,7 +1,7 @@
 #import "WarningWindow.h"
 
 #import "Logger.h"
-#import "Settings.h"
+#import "AppSettings.h"
 
 const int MinAlpha = 20;
 
@@ -51,7 +51,7 @@ static NSSize getTextSize(NSString* text, NSDictionary* attrs)
 {
 	_color = [NSColor colorWithDeviceRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:1.0f];
 	_text = text;
-	_delay = [Settings uintValue:@"WarnWindowDelay" missing:60];
+	_delay = [AppSettings uintValue:@"WarnWindowDelay" missing:60];
 		
 	[self _resize:text];
 	

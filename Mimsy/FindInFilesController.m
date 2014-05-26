@@ -3,7 +3,7 @@
 #import "Assert.h"
 #import "BaseTextController.h"
 #import "Logger.h"
-#import "Settings.h"
+#import "AppSettings.h"
 
 static FindInFilesController* _findFilesController = nil;
 
@@ -67,16 +67,16 @@ static FindInFilesController* _findFilesController = nil;
 {
 	UNUSED(sender);
 
-	NSString* value = [Settings stringValue:@"FindAllIncludes" missing:@""];
+	NSString* value = [AppSettings stringValue:@"FindAllIncludes" missing:@""];
 	[self.includedGlobsComboBox setStringValue:value];
 	
-	value = [Settings stringValue:@"FindAllExcludes" missing:@""];
+	value = [AppSettings stringValue:@"FindAllExcludes" missing:@""];
 	[self.excludedGlobsComboBox setStringValue:value];
 	
-	value = [Settings stringValue:@"FindAllAlwaysExclude" missing:@""];
+	value = [AppSettings stringValue:@"FindAllAlwaysExclude" missing:@""];
 	self->_alwaysExcludeGlobs = value;
 
-	NSArray* values = [Settings stringValues:@"DefaultFindAllDirectory"];
+	NSArray* values = [AppSettings stringValues:@"DefaultFindAllDirectory"];
 	[self.directoryMenu removeAllItems];
 	[self.directoryMenu addItemsWithTitles:values];
 }

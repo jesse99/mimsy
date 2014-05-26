@@ -32,7 +32,6 @@
 @property NSMutableArray* flags;
 @property Glob* preferredPaths;
 @property Glob* ignoredPaths;
-@property NSArray* searchIn;
 @property (readonly) LocalSettings *settings;
 
 @property (weak) IBOutlet NSOutlineView* table;

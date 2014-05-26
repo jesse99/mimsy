@@ -7,6 +7,8 @@
 
 \f0\fs36 \cf0 The language files are used to do syntax hilighting for text files and to control what qualifies as a word for operations like double-clicking. Language globs are patterns used to associate a file with a language. Typically they are the exact name of a file (\cf2 'Makefile'\cf0 ) or based on the file's extension (\cf2 '*.cs'\cf0 ).\
 \
+These settings can also override app settings in directory .app.mimsy files which override the global app.mimsy file. There's not much point in overriding most app settings in a language file, but one exception is the SearchIn setting. Adding this to a language file makes it easy to search language specific web sites for the current selection.\
+\
 New languages can be added to the user directory. Languages are defined using a simple line-based file format consisting of settings and elements. The settings configure various aspects of the language and the elements affect highlighting.\
 \
 The settings are:\
@@ -38,10 +40,6 @@ The settings are:\
 \b \
 Help
 \b0 : are URLs added to the Help menu when the main window matches this language.\
-
-\b \
-SearchIn
-\b0 : are query URLs added to the Search menu when the main window matches this language. They are used to search sites using the current selection. Note that query URLs can also be added to .mimsy.rtf directory settings files.\
 \
 
 \b Shebangs

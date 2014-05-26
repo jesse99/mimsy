@@ -1,6 +1,7 @@
 #import "DirectoryController.h"
 
 #import "AppDelegate.h"
+#import "AppSettings.h"
 #import "ArrayCategory.h"
 #import "Assert.h"
 #import "Builders.h"
@@ -133,7 +134,6 @@ static DirectoryController* _lastBuilt;
 		self.flags = [NSMutableArray new];
 		self.preferredPaths = [[Glob alloc] initWithGlobs:@[]];
 		self.ignoredPaths = [[Glob alloc] initWithGlobs:@[]];
-		self.searchIn = @[];
 		_settings = [[LocalSettings alloc] initWithFileName:@".mimsy.rtf"];
 		
 		if (!_controllers)
@@ -150,6 +150,8 @@ static DirectoryController* _lastBuilt;
 		if (![path isEqualToString:@":restoring:"])
 			[self _loadPath:path];
 		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appSettingsChanged:) name:@"AppSettingsChanged" object:nil];
+
 		updateInstanceCount(@"DirectoryController", +1);
 		updateInstanceCount(@"DirectoryWindow", +1);
 	}
@@ -813,6 +815,32 @@ static DirectoryController* _lastBuilt;
 	}
 }
 
+- (void)appSettingsChanged:(NSNotification*)notification
+{
+	UNUSED(notification);
+
+	NSArray* globs = [AppSettings stringValues:@"IgnoredPath"];
+	_ignoredPaths = [[Glob alloc] initWithGlobs:globs];
+
+	globs = [[AppSettings stringValues:@"PreferredPath"] map:
+		^id (NSString* glob)
+		{
+			if ([glob isEqualToString:@"."])
+			{
+				return [self.path stringByAppendingPathComponent:@"*"];
+			}
+			else if ([glob isEqualToString:@".."])
+			{
+				return [[self.path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"*"];
+			}
+			else
+			{
+				return glob;
+			}
+		}];
+	_preferredPaths = [[Glob alloc] initWithGlobs:globs];
+}
+
 - (void)_loadPrefs
 {
 	_ignores = nil;
@@ -831,9 +859,6 @@ static DirectoryController* _lastBuilt;
 	NSMutableArray* openWithMimsy = [NSMutableArray new];
 	NSMutableArray* targets = [NSMutableArray new];
 	NSMutableArray* flags = [NSMutableArray new];
-	NSMutableArray* preferredPaths = [NSMutableArray new];
-	NSMutableArray* ignoredPaths = [NSMutableArray new];
-	NSMutableArray* searchIn = [NSMutableArray new];
 	
 	NSProcessInfo* info = [NSProcessInfo processInfo];
 	[buildVars addEntriesFromDictionary:info.environment];
@@ -892,29 +917,6 @@ static DirectoryController* _lastBuilt;
 			 {
 				 Glob* g = [[Glob alloc] initWithGlob:entry.value];
 				 [openWithMimsy addObject:g];
-			 }
-			 else if ([entry.key isEqualToString:@"PreferredPath"])
-			 {
-				 if ([entry.value isEqualToString:@"."])
-				 {
-					 [preferredPaths addObject:[self.path stringByAppendingPathComponent:@"*"]];
-				 }
-				 else if ([entry.value isEqualToString:@".."])
-				 {
-					 [preferredPaths addObject:[[self.path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"*" ]];
-				 }
-				 else
-				 {
-					 [preferredPaths addObject:entry.value];
-				 }
-			 }
-			 else if ([entry.key isEqualToString:@"IgnoredPath"])
-			 {
-				 [ignoredPaths addObject:entry.value];
-			 }
-			 else if ([entry.key isEqualToString:@"SearchIn"])
-			 {
-				[searchIn addObject:entry.value];
 			 }
 			 else if ([entry.key isEqualToString:@"BuildEnv"])
 			 {
@@ -982,13 +984,9 @@ static DirectoryController* _lastBuilt;
 	_buildVars = buildVars;
 	_openWithMimsy = openWithMimsy;
 	_targetGlobs = targets;
-	_preferredPaths = [[Glob alloc] initWithGlobs:preferredPaths];
-	_ignoredPaths = [[Glob alloc] initWithGlobs:ignoredPaths];
-	_searchIn = searchIn;
 	_flags = flags;
 
-	if (self == [DirectoryController getCurrentController])
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"DirectoryChanged" object:self];
 }
 
 - (NSAttributedString*)_loadPrefFile:(NSString*)path

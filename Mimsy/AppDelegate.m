@@ -1,5 +1,6 @@
 #import "AppDelegate.h"
 
+#import "AppSettings.h"
 #import "Assert.h"
 #import "ConfigParser.h"
 #import "Constants.h"
@@ -46,16 +47,17 @@ void initLogLevels(void)
 	}
 }
 
+typedef void (^NullaryBlock)();
+
 @implementation AppDelegate
 {
-	DirectoryController* _oldDirectory;
-	bool _updatingMainWindow;
-	
 	DirectoryWatcher* _languagesWatcher;
 	DirectoryWatcher* _settingsWatcher;
 	DirectoryWatcher* _stylesWatcher;
 	DirectoryWatcher* _scriptsStartupWatcher;
 	DirectoryWatcher* _transformsWatcher;
+	
+	NSMutableDictionary* _pendingBlocks;
 }
 
 // Note that windows will still be open when this is called.
@@ -73,22 +75,52 @@ void initLogLevels(void)
 	LOG_DEBUG("App", "Finished launching");
 
 	_settings = [[LocalSettings alloc] initWithFileName:@"app.mimsy"];
+	_pendingBlocks = [NSMutableDictionary new];
 
 	__weak AppDelegate* this = self;
 	[[NSApp helpMenu] setDelegate:this];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowOrderChanged:) name:NSWindowDidBecomeMainNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowOrderChanged:) name:NSWindowWillCloseNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appSettingsChanged:) name:@"AppSettingsChanged" object:nil];
 	
 	[self _installFiles];
+	[self _registerAppSettings];
+	[self _loadSettings];
 	[self _addTransformItems];
 	[self _watchInstalledFiles];
 	[StartupScripts setup];
 	[WindowsDatabase setup];
 	[Languages setup];
-	[self _loadSettings];
 	
 	initFunctionalTests();
+}
+
+- (void)_executeSelector:(NSString*)name
+{
+	NullaryBlock block = [self->_pendingBlocks objectForKey:name];
+	block();
+	[self->_pendingBlocks removeObjectForKey:name];
+}
+
++ (void)execute:(NSString*)name withSelector:(SEL)selector withObject:(id) object afterDelay:(NSTimeInterval)delay
+{
+	AppDelegate* delegate = [NSApp delegate];
+	
+	if (![delegate->_pendingBlocks objectForKey:name])
+	{
+		NullaryBlock block = ^()
+			{
+				#pragma clang diagnostic push
+				#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+				
+				id result = [object performSelector:selector];
+				ASSERT(result == nil);
+				
+				#pragma clang diagnostic pop
+			};
+		
+		[delegate->_pendingBlocks setObject:block forKey:name];
+		[delegate performSelector:@selector(_executeSelector:) withObject:name afterDelay:delay];
+	}
 }
 
 - (void)openTimeMachine:(id)sender
@@ -142,31 +174,11 @@ void initLogLevels(void)
 	[self reloadIfChanged];
 }
 
-- (void)windowOrderChanged:(NSNotification*)notification
+- (void)appSettingsChanged:(NSNotification*)notification
 {
 	UNUSED(notification);
 	
-	if (!_updatingMainWindow)
-	{
-		// NSWindowDidBecomeMainNotification and NSWindowWillCloseNotification are called
-		// before NSApplication's orderedWindows has been updated. So we wait a little
-		// while to ensure that we can get the controller for the new window.
-		[self performSelector:@selector(updateMainWindow) withObject:nil afterDelay:0.250];
-		_updatingMainWindow = true;
-	}
-}
-
-- (void)updateMainWindow
-{
-	DirectoryController* directory = [DirectoryController getCurrentController];
-	if (directory != _oldDirectory)
-	{
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"CurrentDirectoryChanged" object:directory];
-		_oldDirectory = directory;
-	}
-	
 	[SearchSite updateMainMenu:self.searchMenu];
-	_updatingMainWindow = false;
 }
 
 // Don't open a new unitled window when we are activated and don't have a window open.
@@ -239,7 +251,7 @@ void initLogLevels(void)
 		 ^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
 		 {
 			 UNUSED(document, documentWasAlreadyOpen);
-			 if (error)
+			 if (error && error.code != NSUserCancelledError)
 			 {
 				 NSString* reason = [error localizedFailureReason];
 				 NSString* mesg = [NSString stringWithFormat:@"Couldn't open '%@': %@", url, reason];
@@ -742,8 +754,6 @@ void initLogLevels(void)
 			NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load %@:\n%@.", path, [error localizedFailureReason]];
 			LOG_ERROR("Mimsy", "%s", STR(mesg));
 		}
-
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
 	}
 }
 
@@ -810,6 +820,22 @@ void initLogLevels(void)
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"TransformsChanged" object:self];
 		}
 	];
+}
+
+// These need to be registered rather early so, for the sake of convenience we do them all here.
+- (void)_registerAppSettings
+{
+	[AppSettings registerSetting:@"DefaultFindAllDirectory"];	
+	[AppSettings registerSetting:@"FindAllAlwaysExclude"];
+	[AppSettings registerSetting:@"FindAllExcludes"];
+	[AppSettings registerSetting:@"FindAllIncludes"];
+	[AppSettings registerSetting:@"FindWraps"];
+	[AppSettings registerSetting:@"IgnoredPath"];
+	[AppSettings registerSetting:@"NumFindItems"];
+	[AppSettings registerSetting:@"PreferredPath"];
+	[AppSettings registerSetting:@"SearchIn"];
+	[AppSettings registerSetting:@"SearchWithin"];
+	[AppSettings registerSetting:@"WarnWindowDelay"];
 }
 
 @end

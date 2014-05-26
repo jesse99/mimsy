@@ -3,12 +3,9 @@ FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
 * Do a commit
-* Work on settings:
-	- lanuage files need to be able to override these
-	- make sure help says that
-	- verify that language files don't already override anything
-	- settings like SearchIn need to use the Setting class
-	- make sure search in still has stack overflow
+* Can we replace help.mimsy with app settings?
+	- if not update the settings help file
+* See if anywhere that uses stringValues should use enumerateStrings
 * Get find in files working
 	- use settings for include/exclude files
 	- update the include/exclude combo boxes
@@ -39,6 +36,7 @@ FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 * Review the Continum find code
 * Look at the search notes
 * Analyze the code
+* Directory windows need to appear in bold in the window menu.
 * Look into supporting code folding:
 	- maybe just fold selections
 	- click could unfold
