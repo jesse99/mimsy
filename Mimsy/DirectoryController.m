@@ -151,6 +151,7 @@ static DirectoryController* _lastBuilt;
 			[self _loadPath:path];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appSettingsChanged:) name:@"AppSettingsChanged" object:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"OpenedDirectory" object:self];
 
 		updateInstanceCount(@"DirectoryController", +1);
 		updateInstanceCount(@"DirectoryWindow", +1);

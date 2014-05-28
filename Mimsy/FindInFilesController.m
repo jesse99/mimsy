@@ -2,6 +2,7 @@
 
 #import "Assert.h"
 #import "BaseTextController.h"
+#import "DirectoryController.h"
 #import "Logger.h"
 #import "AppSettings.h"
 
@@ -17,7 +18,7 @@ static FindInFilesController* _findFilesController = nil;
 	self = [super initWithWindowNibName:@"FindInFilesWindow"];
     if (self)
 	{
-        // Initialization code here.
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(openedDir:) name:@"OpenedDirectory" object:nil];
     }
     
     return self;
@@ -54,16 +55,49 @@ static FindInFilesController* _findFilesController = nil;
 - (IBAction)findAll:(id)sender
 {
 	UNUSED(sender);
-	LOG_INFO("Mimsy", "find all");
+
+	NSString* findText = self.findText;
+	[self _updateComboBox:self.findComboBox with:findText];
+	[self _updateComboBox:self.includedGlobsComboBox with:self.includedGlobsComboBox.stringValue];
+	[self _updateComboBox:self.excludedGlobsComboBox with:self.excludedGlobsComboBox.stringValue];
 }
 
 - (IBAction)replaceAll:(id)sender
 {
 	UNUSED(sender);
-	LOG_INFO("Mimsy", "replace all");
+
+	NSString* findText = self.findText;
+	[self _updateComboBox:self.findComboBox with:findText];
+	[self _updateComboBox:self.includedGlobsComboBox with:self.includedGlobsComboBox.stringValue];
+	[self _updateComboBox:self.excludedGlobsComboBox with:self.excludedGlobsComboBox.stringValue];
 }
 
-- (IBAction)reset:(id)sender	
+- (IBAction)addDirectory:(id)sender
+{
+	UNUSED(sender);
+
+	NSOpenPanel* panel = [NSOpenPanel new];
+	[panel setTitle:@"Open Directory"];
+	[panel setCanChooseDirectories:YES];
+	[panel setCanChooseFiles:NO];
+	[panel setCanCreateDirectories:YES];
+	[panel setAllowsMultipleSelection:YES];
+	
+	NSInteger button = [panel runModal];
+	if (button == NSOKButton)
+	{
+		for (NSURL* url in panel.URLs)
+		{
+			if (url.isFileURL)
+			{
+				[self.directoryMenu addItemWithTitle:url.path];
+				[self.directoryMenu selectItemWithTitle:url.path];
+			}
+		}
+	}
+}
+
+- (IBAction)reset:(id)sender
 {
 	UNUSED(sender);
 
@@ -79,12 +113,26 @@ static FindInFilesController* _findFilesController = nil;
 	NSArray* values = [AppSettings stringValues:@"DefaultFindAllDirectory"];
 	[self.directoryMenu removeAllItems];
 	[self.directoryMenu addItemsWithTitles:values];
+	[self _addOpenDirectoriesToMenu];
+	
+	DirectoryController* controller = [DirectoryController getCurrentController];
+	if (controller)
+		[self.directoryMenu selectItemWithTitle:controller.path];
 }
 
-- (IBAction)addDirectory:(id)sender
+- (void)openedDir:(NSNotification*)notification
 {
-	UNUSED(sender);
-	LOG_INFO("Mimsy", "add directory");
+	DirectoryController* controller = notification.object;
+	[self.directoryMenu addItemWithTitle:controller.path];	
+}
+
+- (void)_addOpenDirectoriesToMenu
+{
+	[DirectoryController enumerate:
+		^(DirectoryController *controller)
+		{
+			[self.directoryMenu addItemWithTitle:controller.path];
+		}];
 }
 
 - (void)_enableButtons

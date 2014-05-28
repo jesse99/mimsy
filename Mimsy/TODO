@@ -2,20 +2,17 @@ FindAllIncludes: *.c *.cpp *.c++ *.h *.hpp *.m *.rs *.js
 FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
-* See if anywhere that uses stringValues should use enumerateStrings
 * Get find in files working
-	- use settings for include/exclude files
-	- update the include/exclude combo boxes
-	- add a setting for default directory menu 
-	- init should add open directories to the menu
-	- when opening a directory update the directory menu
-	- get add directory button working
+	- do a commit
+	- add a setting for reversed paths
+	- add an undoReversedPath method
 	- should the directory menu use reversed paths? setting?
 	- reset should reset directory menu and include/exclude combo boxes, directories need to include whatever are open
 	- may want to add a help context for find all
+	  probably should include find context too
 
-	- need settings for include, exclude, default directories
 	- get paths to search within from a thread
+	- make sure searching works with and without reversed paths
 	- use a thread to find matches
 	- sort results (setting for by name or by path?)
 	- in main thread populate a table
