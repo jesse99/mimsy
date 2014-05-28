@@ -26,24 +26,30 @@ static NSSize getTextSize(NSString* text, NSDictionary* attrs)
 
 - (id)init
 {
-	// Interface Builder won't allow us to create a window with no title bar
-	// so we have to create it manually. But we could use IB if we display
-	// the window with a sheet...
-	NSRect rect = NSMakeRect(0, 0, 460, 105);
-	_window = [[NSWindow alloc] initWithContentRect:rect styleMask:0 backing:NSBackingStoreBuffered defer:false];
-	[_window setHasShadow:false];
+	self = [super init];
 	
-	// Initialize the text attributes.
-	_attrs = [NSMutableDictionary new];
+	if (self)
+	{
+		// Interface Builder won't allow us to create a window with no title bar
+		// so we have to create it manually. But we could use IB if we display
+		// the window with a sheet...
+		NSRect rect = NSMakeRect(0, 0, 460, 105);
+		_window = [[NSWindow alloc] initWithContentRect:rect styleMask:0 backing:NSBackingStoreBuffered defer:false];
+		[_window setHasShadow:false];
+		
+		// Initialize the text attributes.
+		_attrs = [NSMutableDictionary new];
+		
+		NSFont* font = [NSFont fontWithName:@"Georgia" size:64.0f];
+		[_attrs setObject:font forKey:NSFontAttributeName];
+		
+		NSMutableParagraphStyle* style = [NSMutableParagraphStyle new];
+		[style setAlignment:NSCenterTextAlignment];
+		[_attrs setObject:style forKey:NSParagraphStyleAttributeName];
+		
+		_color = [NSColor colorWithDeviceRed:250/255.0f green:128/255.0f blue:114/255.0f alpha:1.0f];
+	}
 	
-	NSFont* font = [NSFont fontWithName:@"Georgia" size:64.0f];
-	[_attrs setObject:font forKey:NSFontAttributeName];
-	
-	NSMutableParagraphStyle* style = [NSMutableParagraphStyle new];
-	[style setAlignment:NSCenterTextAlignment];
-	[_attrs setObject:style forKey:NSParagraphStyleAttributeName];
-	
-	_color = [NSColor colorWithDeviceRed:250/255.0f green:128/255.0f blue:114/255.0f alpha:1.0f];
 	return self;
 }
 

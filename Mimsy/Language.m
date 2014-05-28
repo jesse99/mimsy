@@ -196,6 +196,7 @@
 		{
 			NSString* reason = [error localizedFailureReason];
 			[errors addObject:[NSString stringWithFormat:@"aggregate regex failed to parse: %@", reason]];
+			freeUIntVector(&groupToName);
 			return nil;
 		}
 	}
