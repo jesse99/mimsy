@@ -3,10 +3,6 @@ FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
 * Get find in files working
-	- add an undoReversedPath method
-	- may want to add a help context for find all
-	  probably should include find context too
-
 	- get paths to search within from a thread
 	- make sure searching works with and without reversed paths
 	- use a thread to find matches

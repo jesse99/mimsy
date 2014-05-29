@@ -27,7 +27,7 @@ SearchWithin: Type
 # a settings file and then press the Reset button in the Find All window.
 FindAllIncludes: *.c *.cpp *.c++ *.h *.hpp *.m *.rs *.js
 FindAllExcludes:
-FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll *.dylib *.exe *.gif *.icns *.jpeg *.jpg *.mdb *.nib *.pdb *.X11
+FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll *.dylib *.exe *.gif *.icns *.jpeg *.jpg *.mdb *.nib *.pdb *.X11 *.xib
 
 # These directories, as well as any directories that the user opens, are
 # are added to the directory dropdown menu in the Find All window. Currently

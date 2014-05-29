@@ -13,6 +13,7 @@ static FindInFilesController* _findFilesController = nil;
 {
 	NSString* _alwaysExcludeGlobs;
 	bool _reversedPaths;
+	NSMutableDictionary* _normalPaths;
 }
 
 - (id)init
@@ -22,6 +23,7 @@ static FindInFilesController* _findFilesController = nil;
 	{
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(openedDir:) name:@"OpenedDirectory" object:nil];
 		_reversedPaths = [AppSettings boolValue:@"ReversePaths" missing:true];
+		_normalPaths = [NSMutableDictionary new];
     }
     
     return self;
@@ -52,7 +54,7 @@ static FindInFilesController* _findFilesController = nil;
 
 - (NSArray*)getHelpContext
 {
-	return @[@"find"];
+	return @[@"find all", @"find"];
 }
 
 - (IBAction)findAll:(id)sender
@@ -103,9 +105,15 @@ static FindInFilesController* _findFilesController = nil;
 - (void)_addPathToDirectoryMenu:(NSString*)path
 {
 	if (_reversedPaths)
-		[self.directoryMenu addItemWithTitle:[path reversePath]];
+	{
+		NSString* reversed = [path reversePath];
+		[_normalPaths setValue:path forKey:reversed];
+		[self.directoryMenu addItemWithTitle:reversed];
+	}
 	else
+	{
 		[self.directoryMenu addItemWithTitle:path];
+	}
 }
 
 - (void)_selectPathInDirectoryMenu:(NSString*)path
@@ -121,6 +129,7 @@ static FindInFilesController* _findFilesController = nil;
 	UNUSED(sender);
 
 	_reversedPaths = [AppSettings boolValue:@"ReversePaths" missing:true];
+	_normalPaths = [NSMutableDictionary new];
 
 	NSString* value = [AppSettings stringValue:@"FindAllIncludes" missing:@""];
 	[self.includedGlobsComboBox setStringValue:value];

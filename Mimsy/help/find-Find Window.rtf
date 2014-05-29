@@ -5,7 +5,7 @@
 \deftab480
 \pard\pardeftab480\pardirnatural
 
-\f0\fs36 \cf0 Search within is used to find text within elements defined by language files (to view or edit these use the Open Installed command). The elements are things like Comment, String, Identifier, etc. So if you select String then find will only find text within string literals.\
+\f0\fs36 \cf0 Search Within is used to find text within elements defined by language files (to view or edit these use the Open Installed command). The elements are things like Comment, String, Identifier, etc. So if you select String then find will only find text within string literals. This, and other things like find wrapping around, can be changed using settings files (e.g. app.mimsy).\
 \
 Regex searches use Cocoa regular expressions as defined in <{\field{\*\fldinst{HYPERLINK "https://developer.apple.com/library/mac/documentation/Foundation/Reference/NSRegularExpression_Class/Reference/Reference.html#//apple_ref/doc/uid/TP40009708-CH1-SW48"}}{\fldrslt https://developer.apple.com/library/mac/documentation/Foundation/Reference/NSRegularExpression_Class/Reference/Reference.html#//apple_ref/doc/uid/TP40009708-CH1-SW48>.\
 }}\
@@ -23,7 +23,7 @@ Commonly used meta-characters include:\
 \b \\w \\W
 \b0 		Match a word character (or the inverse)\
 	
-\b \\n
+\b \\d
 \b0 			Back reference. Matches the nth capturing group (i.e. parens). One based.\
 	
 \b [chars]
@@ -104,4 +104,7 @@ Within the replacement text
 	\
 Note that the regular expressions ignore white space and comments (which start with the 
 \b #
-\b0  character). }
+\b0  character). \
+\
+The Find and Replace text strings support a few special escape sequences (even when Use Regex is off): \\n, \\r, \\t, \\xhh (two digit hex ASCII character), \\uhhhh (four digit hex unicode character).\
+}
