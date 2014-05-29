@@ -70,3 +70,7 @@ SearchIn: [Google]http://www.google.com/search?q=${TEXT}
 # within the Help directory (again see Help Files in the Help menu).
 ContextHelp: {app}[Mimsy Web Site]https://github.com/jesse99/mimsy
 
+# If this is true then paths are shown in reverse order under the assumption
+# that the later parts of the path are the most important and should be displayed
+# first. So a path like /tmp/foo/bar would be displayed as bar • foo • tmp.
+ReversePaths: true

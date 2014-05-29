@@ -1,16 +1,18 @@
 #import "FindInFilesController.h"
 
+#import "AppSettings.h"
 #import "Assert.h"
 #import "BaseTextController.h"
 #import "DirectoryController.h"
 #import "Logger.h"
-#import "AppSettings.h"
+#import "StringCategory.h"
 
 static FindInFilesController* _findFilesController = nil;
 
 @implementation FindInFilesController
 {
 	NSString* _alwaysExcludeGlobs;
+	bool _reversedPaths;
 }
 
 - (id)init
@@ -19,6 +21,7 @@ static FindInFilesController* _findFilesController = nil;
     if (self)
 	{
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(openedDir:) name:@"OpenedDirectory" object:nil];
+		_reversedPaths = [AppSettings boolValue:@"ReversePaths" missing:true];
     }
     
     return self;
@@ -90,16 +93,34 @@ static FindInFilesController* _findFilesController = nil;
 		{
 			if (url.isFileURL)
 			{
-				[self.directoryMenu addItemWithTitle:url.path];
-				[self.directoryMenu selectItemWithTitle:url.path];
+				[self _addPathToDirectoryMenu:url.path];
+				[self _selectPathInDirectoryMenu:url.path];
 			}
 		}
 	}
 }
 
+- (void)_addPathToDirectoryMenu:(NSString*)path
+{
+	if (_reversedPaths)
+		[self.directoryMenu addItemWithTitle:[path reversePath]];
+	else
+		[self.directoryMenu addItemWithTitle:path];
+}
+
+- (void)_selectPathInDirectoryMenu:(NSString*)path
+{
+	if (_reversedPaths)
+		[self.directoryMenu selectItemWithTitle:[path reversePath]];
+	else
+		[self.directoryMenu selectItemWithTitle:path];
+}
+
 - (IBAction)reset:(id)sender
 {
 	UNUSED(sender);
+
+	_reversedPaths = [AppSettings boolValue:@"ReversePaths" missing:true];
 
 	NSString* value = [AppSettings stringValue:@"FindAllIncludes" missing:@""];
 	[self.includedGlobsComboBox setStringValue:value];
@@ -112,18 +133,21 @@ static FindInFilesController* _findFilesController = nil;
 
 	NSArray* values = [AppSettings stringValues:@"DefaultFindAllDirectory"];
 	[self.directoryMenu removeAllItems];
-	[self.directoryMenu addItemsWithTitles:values];
+	for (NSString* title in values)
+	{
+		[self _addPathToDirectoryMenu:title];
+	}
 	[self _addOpenDirectoriesToMenu];
 	
 	DirectoryController* controller = [DirectoryController getCurrentController];
 	if (controller)
-		[self.directoryMenu selectItemWithTitle:controller.path];
+		[self _selectPathInDirectoryMenu:controller.path];
 }
 
 - (void)openedDir:(NSNotification*)notification
 {
 	DirectoryController* controller = notification.object;
-	[self.directoryMenu addItemWithTitle:controller.path];	
+	[self _addPathToDirectoryMenu:controller.path];
 }
 
 - (void)_addOpenDirectoriesToMenu
@@ -131,7 +155,7 @@ static FindInFilesController* _findFilesController = nil;
 	[DirectoryController enumerate:
 		^(DirectoryController *controller)
 		{
-			[self.directoryMenu addItemWithTitle:controller.path];
+			[self _addPathToDirectoryMenu:controller.path];
 		}];
 }
 

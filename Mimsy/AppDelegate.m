@@ -820,6 +820,7 @@ typedef void (^NullaryBlock)();
 	[AppSettings registerSetting:@"IgnoredPath"];
 	[AppSettings registerSetting:@"NumFindItems"];
 	[AppSettings registerSetting:@"PreferredPath"];
+	[AppSettings registerSetting:@"ReversePaths"];
 	[AppSettings registerSetting:@"SearchIn"];
 	[AppSettings registerSetting:@"SearchWithin"];
 	[AppSettings registerSetting:@"WarnWindowDelay"];

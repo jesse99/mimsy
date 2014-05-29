@@ -3,11 +3,7 @@ FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
 * Get find in files working
-	- do a commit
-	- add a setting for reversed paths
 	- add an undoReversedPath method
-	- should the directory menu use reversed paths? setting?
-	- reset should reset directory menu and include/exclude combo boxes, directories need to include whatever are open
 	- may want to add a help context for find all
 	  probably should include find context too
 

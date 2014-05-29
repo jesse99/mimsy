@@ -1,6 +1,7 @@
 #import "OpenSelection.h"
 
 #import "ArrayCategory.h"
+#import "AppSettings.h"
 #import "Assert.h"
 #import "DirectoryController.h"
 #import "Glob.h"
@@ -198,10 +199,16 @@ static bool _selectLocatedFiles(NSArray* files, int line, int col)
 {
 	__block bool opened = false;
 
-	NSArray* reversed = [files map:^id(id element)
+	NSArray* reversed = files;
+	if ([AppSettings boolValue:@"ReversePaths" missing:true])
 	{
-		return [element reversePath];
-	}];
+		reversed = [files map:
+					 ^id(id element)
+					 {
+						 return [element reversePath];
+					 }];
+	}
+	
 	SelectNameController* controller = [[SelectNameController alloc] initWithTitle:@"Open Selection" names:reversed];
 	(void) [NSApp runModalForWindow:controller.window];
 	
