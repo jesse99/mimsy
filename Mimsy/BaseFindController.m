@@ -15,6 +15,8 @@
 {
 	NSString* _cachedPattern;
 	NSRegularExpression* _cachedRegex;
+	NSRegularExpression* _asciiRegex;
+	NSRegularExpression* _uniRegex;
 }
 
 - (id)initWithWindowNibName:(NSString*)name
@@ -147,7 +149,6 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	if (self.useRegexCheckBox.state == NSOnState)
 	{
 		text = [NSRegularExpression escapedPatternForString:text];
-		text = [text stringByReplacingOccurrencesOfString:@"\t" withString:@"\\t"];
 		text = [text stringByReplacingOccurrencesOfString:@" " withString:@"\\ "];
 	}
 	
@@ -256,6 +257,9 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	
 	if (_useRegexCheckBox.state == NSOffState)
 	{
+		// If use regex is off then we want to escape almost all meta-characters
+		// except for a few patterns that are really nice to have even when not
+		// doing regex searches.
 		pattern = [NSRegularExpression escapedPatternForString:pattern];
 		pattern = [pattern stringByReplacingOccurrencesOfString:@" " withString:@"\\ "];
 		pattern = [pattern stringByReplacingOccurrencesOfString:@"\\t" withString:@"\t"];
@@ -280,6 +284,79 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	return pattern;
 }
 
+static unichar parseHexChar(NSString* text, NSUInteger i)
+{
+	unichar ch = [text characterAtIndex:i];
+	
+	if (ch >= '0' && ch <= '9')
+		return ch - '0';
+	
+	else if (ch >= 'a' && ch <= 'f')
+		return 10 + ch - 'a';
+	
+	else if (ch >= 'A' && ch <= 'F')
+		return 10 + ch - 'A';
+
+	else
+		ASSERT(false);
+}
+
+- (NSString*)_replaceAsciiEscapes:(NSString*)str
+{
+	if (!_asciiRegex)
+	{
+		NSError* error = nil;
+		_asciiRegex = [NSRegularExpression regularExpressionWithPattern:@"\\\\x([0-9a-fA-F]{2})" options:0 error:&error];
+		ASSERT(_asciiRegex);
+	}
+	
+	NSMutableString* result = [str mutableCopy];
+	NSArray* matches = [_asciiRegex matchesInString:str options:0 range:NSMakeRange(0, str.length)];
+	if (matches && matches.count > 0)
+	{
+		for (NSUInteger i = matches.count - 1; i < matches.count; --i)
+		{
+			NSTextCheckingResult* match = matches[i];
+			NSRange range = [match rangeAtIndex:1];
+			unichar ch = 16*parseHexChar(str, range.location) + parseHexChar(str, range.location + 1);
+			
+			range = [match rangeAtIndex:0];
+			[result deleteCharactersInRange:range];
+			[result insertString:[NSString stringWithCharacters:&ch length:1] atIndex:range.location];
+		}
+	}
+	
+	return result;
+}
+
+- (NSString*)_replaceUniEscapes:(NSString*)str
+{
+	if (!_uniRegex)
+	{
+		NSError* error = nil;
+		_uniRegex = [NSRegularExpression regularExpressionWithPattern:@"\\\\u([0-9a-fA-F]{4})" options:0 error:&error];
+		ASSERT(_uniRegex);
+	}
+	
+	NSMutableString* result = [str mutableCopy];
+	NSArray* matches = [_uniRegex matchesInString:str options:0 range:NSMakeRange(0, str.length)];
+	if (matches && matches.count > 0)
+	{
+		for (NSUInteger i = matches.count - 1; i < matches.count; --i)
+		{
+			NSTextCheckingResult* match = matches[i];
+			NSRange range = [match rangeAtIndex:1];
+			unichar ch = 16*16*16*parseHexChar(str, range.location) + 16*16*parseHexChar(str, range.location + 1) + 16*parseHexChar(str, range.location + 2) + parseHexChar(str, range.location + 3);
+			
+			range = [match rangeAtIndex:0];
+			[result deleteCharactersInRange:range];
+			[result insertString:[NSString stringWithCharacters:&ch length:1] atIndex:range.location];
+		}
+	}
+	
+	return result;
+}
+
 - (NSString*)_getReplaceTemplate
 {
 	NSString* template = self.replaceText;
@@ -287,6 +364,11 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	template = [template stringByReplacingOccurrencesOfString:@"\\t" withString:@"\t"];
 	template = [template stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
 	template = [template stringByReplacingOccurrencesOfString:@"\\r" withString:@"\r"];
+
+	// Replacement templates don't support character escapes (\u and \x) which
+	// is rather annoying.
+	template = [self _replaceAsciiEscapes:template];
+	template = [self _replaceUniEscapes:template];
 	
 	LOG_DEBUG("Text", "replacing with '%s'", STR(template));
 	
