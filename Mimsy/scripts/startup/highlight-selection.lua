@@ -42,7 +42,7 @@ function underlineselection(doc, loc, len)
 		local text = doc:data()
 		while index < loc + len do
 			i, j = string.find(text, word, index, true)
-			if i then
+			if i and i < j then
 				if i ~= selstart then
 					if isword(doc, i, #word) then
 						doc:setunderline(i, j - i + 1, 'thick', 'solid', 'underlined color')
