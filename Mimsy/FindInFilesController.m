@@ -4,6 +4,7 @@
 #import "Assert.h"
 #import "BaseTextController.h"
 #import "DirectoryController.h"
+#import "FindInFiles.h"
 #import "Logger.h"
 #import "StringCategory.h"
 
@@ -57,24 +58,35 @@ static FindInFilesController* _findFilesController = nil;
 	return @[@"find all", @"find"];
 }
 
+- (void)_updateControlsForReplace:(bool)replacing
+{
+	[self _updateComboBox:self.findComboBox with:self.findText];
+	[self _updateComboBox:self.includedGlobsComboBox with:self.includedGlobsComboBox.stringValue];
+	[self _updateComboBox:self.excludedGlobsComboBox with:self.excludedGlobsComboBox.stringValue];
+	if (replacing)
+		[self _updateComboBox:self.replaceWithComboBox with:self.replaceText];
+}
+
 - (IBAction)findAll:(id)sender
 {
 	UNUSED(sender);
-
-	NSString* findText = self.findText;
-	[self _updateComboBox:self.findComboBox with:findText];
-	[self _updateComboBox:self.includedGlobsComboBox with:self.includedGlobsComboBox.stringValue];
-	[self _updateComboBox:self.excludedGlobsComboBox with:self.excludedGlobsComboBox.stringValue];
+	
+	NSString* directory = [self _getSelectedDirectory];
+	if (directory)
+	{
+		[self _updateControlsForReplace:false];
+		
+		FindInFiles* finder = [[FindInFiles alloc] init:self path:[self _getSelectedDirectory]];
+		[finder findAll];
+	}
 }
 
 - (IBAction)replaceAll:(id)sender
 {
 	UNUSED(sender);
 
-	NSString* findText = self.findText;
-	[self _updateComboBox:self.findComboBox with:findText];
-	[self _updateComboBox:self.includedGlobsComboBox with:self.includedGlobsComboBox.stringValue];
-	[self _updateComboBox:self.excludedGlobsComboBox with:self.excludedGlobsComboBox.stringValue];
+	[self _updateControlsForReplace:true];
+	// TODO: works a lot like find (window should show changed lines)
 }
 
 - (IBAction)addDirectory:(id)sender
@@ -100,6 +112,18 @@ static FindInFilesController* _findFilesController = nil;
 			}
 		}
 	}
+}
+
+- (NSString*)_getSelectedDirectory
+{
+	NSString* selected = [self.directoryMenu titleOfSelectedItem];
+	
+	if (_reversedPaths)
+	{
+		selected = [_normalPaths valueForKey:selected];
+	}
+	
+	return selected;
 }
 
 - (void)_addPathToDirectoryMenu:(NSString*)path

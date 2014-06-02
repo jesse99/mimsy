@@ -49,6 +49,19 @@ FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 * Might want a help window dedidated to just special keys
 	- for both text windows and the directory window
 	- maybe for the app as well (ie window navigation)
+	- would be great if some help file explained what the glyphs for special keys (like control) are (note that there are unicode characters for these, see https://news.ycombinator.com/item?id=7752257)
+	- also point them to shortcuts tab in keyboard system prefs
+* Would be cool if there was a way to configure command keys:
+	- maybe mimsy file or lua script
+	- or can users do this using shortcuts tab in ketboard system prefs?
+	- if so document how to do that
+	- http://mattgemmell.com/mac-keyboard-shortcuts/
+* Make sure the most important emacs keys work:
+	- control-a, control-e, control-u
+	- probably want to document these
+* Document fancy open recent:
+	- command-tab, then up or down arrow and release
+	- might want a help file for hidden mac features
 * Auto-indent new lines
 * Can we use map kit to navigate code?
 * Support option-tab
@@ -259,8 +272,6 @@ FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 	- from rust?
 	- could add lua (or maybe arbotrary) per language scripts
 	- could then do something like xcode's doc window
-* Would be cool if there was a way to configure command keys:
-	- maybe mimsy file or lua script
 * Would be nice to have some sort of indication of dirty files:
 	- probably from git's perspective
 * XCode and (I guess) TextMate have a bunch of macros:

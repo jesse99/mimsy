@@ -22,6 +22,9 @@
 		372D8FA916F5719E00CBBC96 /* Build.png in Resources */ = {isa = PBXBuildFile; fileRef = 372D8FA816F5719E00CBBC96 /* Build.png */; };
 		372D8FAB16F571A500CBBC96 /* Cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 372D8FAA16F571A500CBBC96 /* Cancel.png */; };
 		373B97181933B1CB0084CCC1 /* HelpItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B97171933B1CA0084CCC1 /* HelpItem.m */; };
+		373B971A1937F1240084CCC1 /* FindResultsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 373B97191937F1240084CCC1 /* FindResultsWindow.xib */; };
+		373B971D1937F1A40084CCC1 /* FindResultsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B971C1937F1A40084CCC1 /* FindResultsController.m */; };
+		373B97201937F3D90084CCC1 /* FindInFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B971F1937F3D90084CCC1 /* FindInFiles.m */; };
 		375140D416800FFD00C329AF /* ConfigParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D316800FFD00C329AF /* ConfigParser.m */; };
 		375140D816801A4800C329AF /* ConfigParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D716801A4800C329AF /* ConfigParserTests.m */; };
 		375140E416828EB600C329AF /* WindowsDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140E316828EB600C329AF /* WindowsDatabase.m */; };
@@ -147,6 +150,11 @@
 		372D8FAA16F571A500CBBC96 /* Cancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Cancel.png; path = images/Cancel.png; sourceTree = "<group>"; };
 		373B97161933B1CA0084CCC1 /* HelpItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpItem.h; sourceTree = "<group>"; };
 		373B97171933B1CA0084CCC1 /* HelpItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpItem.m; sourceTree = "<group>"; };
+		373B97191937F1240084CCC1 /* FindResultsWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FindResultsWindow.xib; sourceTree = "<group>"; };
+		373B971B1937F1A30084CCC1 /* FindResultsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindResultsController.h; sourceTree = "<group>"; };
+		373B971C1937F1A40084CCC1 /* FindResultsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindResultsController.m; sourceTree = "<group>"; };
+		373B971E1937F3D90084CCC1 /* FindInFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindInFiles.h; sourceTree = "<group>"; };
+		373B971F1937F3D90084CCC1 /* FindInFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindInFiles.m; sourceTree = "<group>"; };
 		375140D216800FFD00C329AF /* ConfigParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParser.h; sourceTree = "<group>"; };
 		375140D316800FFD00C329AF /* ConfigParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigParser.m; sourceTree = "<group>"; };
 		375140D616801A4800C329AF /* ConfigParserTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParserTests.h; sourceTree = "<group>"; };
@@ -518,9 +526,14 @@
 				379A411B192033BF00ACEA5C /* BaseFindController.m */,
 				379A41171920031500ACEA5C /* FindController.h */,
 				379A41181920031500ACEA5C /* FindController.m */,
+				373B971E1937F3D90084CCC1 /* FindInFiles.h */,
+				373B971F1937F3D90084CCC1 /* FindInFiles.m */,
 				37ECF06A193024B800061C0A /* FindInFilesController.h */,
 				37ECF06B193024B800061C0A /* FindInFilesController.m */,
 				37ECF0681930201A00061C0A /* FindInFilesWindow.xib */,
+				373B971B1937F1A30084CCC1 /* FindResultsController.h */,
+				373B971C1937F1A40084CCC1 /* FindResultsController.m */,
+				373B97191937F1240084CCC1 /* FindResultsWindow.xib */,
 				379A4115191FDB8B00ACEA5C /* FindWindow.xib */,
 			);
 			name = Find;
@@ -746,6 +759,7 @@
 				3782A8B21916BAF1005ED276 /* create-vector.py in Resources */,
 				379A4116191FDB8B00ACEA5C /* FindWindow.xib in Resources */,
 				37ECF0691930201A00061C0A /* FindInFilesWindow.xib in Resources */,
+				373B971A1937F1240084CCC1 /* FindResultsWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -841,6 +855,8 @@
 				37ECF067192EFCC100061C0A /* BaseTextController.m in Sources */,
 				37ECF06C193024B800061C0A /* FindInFilesController.m in Sources */,
 				373B97181933B1CB0084CCC1 /* HelpItem.m in Sources */,
+				373B971D1937F1A40084CCC1 /* FindResultsController.m in Sources */,
+				373B97201937F3D90084CCC1 /* FindInFiles.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
