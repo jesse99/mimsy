@@ -33,19 +33,68 @@
 	if ([self _mimsyCanOpen:path])
 	{
 		NSURL* url = [NSURL fileURLWithPath:path];
-		[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES completionHandler:
-		 ^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
+		NSDocumentController* dc = [NSDocumentController sharedDocumentController];
+		[dc openDocumentWithContentsOfURL:url display:YES completionHandler:
+			 ^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
+				 {
+					 (void) document;
+					 (void) documentWasAlreadyOpen;
+					 
+					 if (!error && line != -1)
+					 {
+						 // Note that we need to scroll even if the document was already open
+						 // so that errors are scrolled into view.
+						 ASSERT(document.windowControllers.count == 1);
+						 TextController* controller = (TextController*) document.windowControllers[0];
+						 [controller showLine:line atCol:col withTabWidth:width];
+					 }
+					 else if (error && error.code != NSUserCancelledError)
+					 {
+						 NSString* reason = [error localizedFailureReason];
+						 NSString* mesg = [NSString stringWithFormat:@"Couldn't open '%@': %@", url, reason];
+						 [TranscriptController writeError:mesg];
+					 }
+				 }
+			 ];
+		
+		// openDocumentWithContentsOfURL should have been able to open it but it's an asynchronous
+		// method so we can't know for sure if it has actually succeeded until some time later.
+		opened = true;
+	}
+	else
+	{
+		opened = [[NSWorkspace sharedWorkspace] openFile:path];
+	}
+	
+	return opened;
+}
+
++ (bool)openPath:(NSString*)path withRange:(NSRange)range
+{
+	bool opened = false;
+	
+	if ([self _mimsyCanOpen:path])
+	{
+		NSURL* url = [NSURL fileURLWithPath:path];
+		NSDocumentController* dc = [NSDocumentController sharedDocumentController];
+		[dc openDocumentWithContentsOfURL:url display:YES completionHandler:
+			 ^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
 			 {
 				 (void) document;
-				 (void) documentWasAlreadyOpen;
 				 
-				 if (!error && line != -1)
+				 if (!error && range.location != NSNotFound)
 				 {
-					 // Note that we need to scroll even if the document was already open
-					 // so that errors are scrolled into view.
-					 ASSERT(document.windowControllers.count == 1);
+					 LayoutCallback callback = ^(TextController *controller)
+					 {
+						 [controller.getTextView scrollRangeToVisible:range];
+						 [controller.getTextView showFindIndicatorForRange:range];
+					 };
+					 
 					 TextController* controller = (TextController*) document.windowControllers[0];
-					 [controller showLine:line atCol:col withTabWidth:width];
+					 if (documentWasAlreadyOpen)
+						 callback(controller);
+					 else
+						 [controller registerBlockWhenLayoutCompletes:callback];
 				 }
 				 else if (error && error.code != NSUserCancelledError)
 				 {
@@ -54,7 +103,7 @@
 					 [TranscriptController writeError:mesg];
 				 }
 			 }
-		 ];
+			 ];
 		
 		// openDocumentWithContentsOfURL should have been able to open it but it's an asynchronous
 		// method so we can't know for sure if it has actually succeeded until some time later.

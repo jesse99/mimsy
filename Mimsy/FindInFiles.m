@@ -3,6 +3,7 @@
 #import "AppDelegate.h"
 #import "AppSettings.h"
 #import "Assert.h"
+#import "Decode.h"
 #import "FindInFilesController.h"
 #import "FindResultsController.h"
 #import "Glob.h"
@@ -16,12 +17,14 @@
 	FindResultsController* _controller;
 	int _filesLeft;
 	int _matches;
+	NSRegularExpression* _regex;
 	
 	NSString* _root;
 	NSString* _findText;
 	Glob* _includeGlobs;
 	Glob* _excludeGlobs;
 	Glob* _excludeAllGlobs;
+	bool _reversePaths;
 }
 
 - (id)init:(FindInFilesController*)controller path:(NSString*)path
@@ -31,6 +34,7 @@
 	if (self)
 	{
 		_root = path;
+		_regex = [controller _getRegex];	// note that NSRegularExpression is documented to be thread safe
 		_findText = controller.findText;
 		_controller = [[FindResultsController alloc] initWith:self];
 		
@@ -42,6 +46,8 @@
 
 		globs = [[AppSettings stringValue:@"FindAllAlwaysExclude" missing:@""] splitByString:@" "];
 		_excludeAllGlobs = [[Glob alloc] initWithGlobs:globs];
+
+		_reversePaths = [AppSettings boolValue:@"ReversePaths" missing:true];
 	}
 	
 	return self;
@@ -53,34 +59,104 @@
 }
 
 // TODO: this may be a little slow, may want to batch things up
-- (void)_updateResults:(NSString*)path
+- (void)_updateResults:(NSString*)path withMatches:(NSArray*)matches
 {
 	UNUSED(path);
-
 	ASSERT(_filesLeft > 0);
+	
+	if (_controller.window.isVisible)
+	{
+		NSString* title;
+		if (--_filesLeft == 0)
+			title = [NSString stringWithFormat:@"Find '%@' has %d matches", _findText, _matches];
+		else if (_filesLeft == 1)
+			title = [NSString stringWithFormat:@"Find '%@' with 1 file left", _findText];
+		else
+			title = [NSString stringWithFormat:@"Find '%@' with %d files left", _findText, _filesLeft];
+		[_controller.window setTitle:title];
+		
+		if (matches.count > 0)
+		{
+			NSMutableAttributedString* str = [NSMutableAttributedString new];
+			if (_reversePaths)
+				[str.mutableString appendString:[path reversePath]];
+			else
+				[str.mutableString appendString:path];
+			
+			NSRange range = NSMakeRange(0, str.string.length);
+			[str addAttribute:NSStrokeWidthAttributeName value:[NSNumber numberWithInt:-4] range:range];
+			[str addAttribute:@"FindPath" value:path range:range];
 
-	// TODO:
-	// set _controller to nil if the window isn't visible
-	// also need to call some sort of okToClose method
-	NSString* title;
-	if (--_filesLeft == 0)
-		title = [NSString stringWithFormat:@"Find '%@' has %d matches", _findText, _matches];
-	else if (_filesLeft == 1)
-		title = [NSString stringWithFormat:@"Find '%@' with 1 file left", _findText];
+			[_controller addPath:str matches:matches];
+		}
+	}
 	else
-		title = [NSString stringWithFormat:@"Find '%@' with %d files left", _findText, _filesLeft];
-	[_controller.window setTitle:title];
-	LOG_INFO("Mimsy", "%s", STR(title));
+	{
+		[_controller releaseWindow];
+		_controller = nil;
+	}
+}
+
+- (NSString*)_findLineWithin:(NSString*)contents at:(NSRange)range newRange:(NSRange*)newRange
+{
+	NSUInteger begin = range.location;
+	NSUInteger end = range.location + range.length;
+	
+	while (begin > 0)
+	{
+		unichar ch = [contents characterAtIndex:begin-1];
+		if (ch == '\r' || ch == '\n')
+			break;
+		--begin;
+	}
+	
+	while (end < contents.length)
+	{
+		unichar ch = [contents characterAtIndex:end];
+		if (ch == '\r' || ch == '\n')
+			break;
+		++end;
+	}
+	
+	*newRange = NSMakeRange(range.location - begin, range.length);
+	
+	return [contents substringWithRange:NSMakeRange(begin, end - begin)];
 }
 
 - (void)_processPath:(NSString*)path withContents:(NSString*)contents	// threaded
 {
-	LOG_INFO("Mimsy", "find all in %s: %s", STR(path.lastPathComponent), STR([contents substringToIndex:MIN(32, contents.length)]));
+	//LOG_INFO("Mimsy", "find all in %s: %s", STR(path.lastPathComponent), STR([contents substringToIndex:MIN(32, contents.length)]));
+	
+	NSMutableArray* matches = [NSMutableArray new];
+	
+	NSRange range = NSMakeRange(0, contents.length);
+	[_regex enumerateMatchesInString:contents options:0 range:range usingBlock:
+		^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop)
+		{
+			UNUSED(flags, stop);
+			
+			if (match)
+			{
+				NSRange newRange;
+				NSString* line = [self _findLineWithin:contents at:match.range newRange:&newRange];
+				
+				NSMutableAttributedString* str = [NSMutableAttributedString new];
+				[str.mutableString appendString:line];
+				[str addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:newRange];
+
+				NSRange fullRange = NSMakeRange(0, line.length);
+				[str addAttribute:@"FindPath" value:path range:fullRange];
+				[str addAttribute:@"FindLocation" value:[NSNumber numberWithUnsignedInteger:match.range.location] range:fullRange];
+				[str addAttribute:@"FindLength" value:[NSNumber numberWithUnsignedInteger:match.range.length] range:fullRange];
+				
+				[matches addObject:str];
+			}
+		}];
 	
 	dispatch_queue_t main = dispatch_get_main_queue();
 	dispatch_async(main,
 	   ^{
-		   [self _updateResults:path];
+		   [self _updateResults:path withMatches:matches];
 	   });
 }
 
@@ -200,25 +276,38 @@
 	}
 }
 
-// TODO:
-// read in the file
-// do the search
-// maybe when finder checks for closed window it can call an allDone method on the controller
-// make sure that we don't crash when window closes (maybe sleep in enumerate)
-// pop up a window
-// make sure the finder bails if the window is closed
-// search the unopened paths in a thread
-// periodically update the window (and the title with progress)
-// update the window if the user edits an opened window
-//
 // 3b) process files on disk
 - (void)_step3bWithUnopenedPaths:(NSArray*)paths begin:(NSUInteger)begin end:(NSUInteger)end	// threaded
 {
+	NSString* errStr = nil;
+	NSError* error = nil;
 	for (NSUInteger i = begin; i < end && _controller; ++i)
 	{
 		NSString* path = paths[i];
-		NSString* contents = @"...";
-		[self _processPath:path withContents:contents];
+
+		NSData* data = [NSData dataWithContentsOfFile:path options:0 error:&error];
+		if (data)
+		{
+			Decode* decoded = [[Decode alloc] initWithData:data];
+			if (decoded.text)
+				[self _processPath:path withContents:decoded.text];
+			else
+				errStr = decoded.error;
+		}
+		else
+		{
+			errStr = [error localizedFailureReason];
+		}
+		
+		if (errStr)
+		{
+			dispatch_queue_t main = dispatch_get_main_queue();
+			dispatch_async(main,
+			   ^{
+				   NSString* mesg = [NSString stringWithFormat:@"Error reading '%@': %@", path, errStr];
+				   [TranscriptController writeError:mesg];
+			   });
+		}
 	}
 }
 

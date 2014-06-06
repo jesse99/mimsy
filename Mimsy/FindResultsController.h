@@ -6,5 +6,11 @@
 @interface FindResultsController : NSWindowController
 
 - (id)initWith:(FindInFiles*)finder;
+- (void)releaseWindow;
+
+- (void)addPath:(NSAttributedString*)path matches:(NSArray*)matches;
+- (void)doubleClicked:(id)sender;
+
+@property (strong) IBOutlet NSOutlineView *_tableView;
 
 @end

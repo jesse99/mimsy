@@ -3,26 +3,30 @@ FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
 * Get find in files working
-	- get paths to search within from a thread
-	- make sure searching works with and without reversed paths
-	- use a thread to find matches
-	- sort results (setting for by name or by path?)
-	- in main thread populate a table
-	- make sure hits are color coded
-	- need progress bar
-	- may want a setting for hit attributes
+	- should be a settings for fonts used in find results window
+	  also match attributes
 	- make sure errors are handled (e.g. can't write to file or non-editable window)
-	- match up dirty(?) windows with paths
+	- watch for edits and update find results window items
+	- directory menu should always have an open windows item
+	  or maybe use a setting for this
+	- get replace working
 
 	- is there a way we can have a thread safe way to get cached text?
 	- may want a unit test for find in files
 	- should be keys to go forward and backwards in find list
 	- needs to be able to search rtf files
+		NSDictionary* options = @{NSDocumentTypeDocumentAttribute:NSRTFTextDocumentType};
+		_text = [[NSMutableAttributedString alloc] initWithData:data options:options documentAttributes:NULL error:outError];
 	- make sure that it has a help window
+* Context menu takes too long to pop down
+	- probably time machine
+	- may want to just pop up a picker dialog
 * Get replace all in files working
 * Review the Continum find code
 * Look at the search notes
 * Analyze the code
+* Tabs don't work correctly
+	- can see this by doing a find all for TODO in gnos
 * Directory windows need to appear in bold in the window menu.
 * Look into supporting code folding:
 	- maybe just fold selections

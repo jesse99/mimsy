@@ -28,6 +28,7 @@
 	Language* _language;
 	TextStyles* _styles;
 	ApplyStyles* _applier;
+	NSMutableArray* _layoutBlocks;
 }
 
 - (id)init
@@ -39,6 +40,8 @@
 
 		// This will be set to nil once the view has been restored.
 		_restorer = [[RestoreView alloc] init:self];
+		
+		_layoutBlocks = [NSMutableArray new];
 		
  		updateInstanceCount(@"TextController", +1);
 		updateInstanceCount(@"TextWindow", +1);
@@ -72,6 +75,11 @@
 		[self.textView setTypingAttributes:TextStyles.fallbackStyle];
 	else
 		[self _setDefaultUntitledStyles];
+}
+
+- (void)registerBlockWhenLayoutCompletes:(LayoutCallback)block
+{
+	[_layoutBlocks addObject:block];
 }
 
 - (void)windowWillClose:(NSNotification*)notification
@@ -616,7 +624,7 @@
 		if (_restorer)
 		{
 			// If there is no language then we can attempt to restore the scroll position
-			// immediatelty. Otherwise we need to wait until styles have begun to be
+			// immediately. Otherwise we need to wait until styles have begun to be
 			// applied (we can't restore scrollers until line heights are correct).
 			if (_language == nil || (_applier && _applier.applied))
 			{
@@ -629,11 +637,17 @@
 			}
 		}
 		
-//		if (atEnd)
-//		{
+		if (atEnd)
+		{
+			for (LayoutCallback callback in _layoutBlocks)
+			{
+				callback(self);
+			}
+			[_layoutBlocks removeAllObjects];
+			
 //			Broadcaster.Invoke("layout completed", m_boss);
 //			DoPruneRanges();
-//		}
+		}
 	}
 }
 

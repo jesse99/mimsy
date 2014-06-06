@@ -2,7 +2,9 @@
 
 #import "BaseTextController.h"
 
-@class Language, TextStyles, TextView;
+@class Language, TextController, TextStyles, TextView;
+
+typedef void (^LayoutCallback)(TextController* controller);
 
 // Contoller used to mediate between text documents and the NSTextView in the associated window.
 @interface TextController : BaseTextController
@@ -28,6 +30,8 @@
 - (bool)isBrace:(unichar)ch;
 - (bool)isOpenBrace:(NSUInteger)index;
 - (bool)isCloseBrace:(NSUInteger)index;
+
+- (void)registerBlockWhenLayoutCompletes:(LayoutCallback)block;
 
 - (NSTextView*)getTextView;
 - (NSUInteger)getEditCount;
