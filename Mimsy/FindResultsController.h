@@ -11,6 +11,8 @@
 - (void)addPath:(NSAttributedString*)path matches:(NSArray*)matches;
 - (void)doubleClicked:(id)sender;
 
+- (void)setLeading:(CGFloat)leading;
+
 @property (strong) IBOutlet NSOutlineView *_tableView;
 
 @end

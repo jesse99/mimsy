@@ -17,7 +17,7 @@ static NSDictionary* _baseAttrs;
 	NSDictionary* _values;
 }
 
-- (id)initWithPath:(NSString*)path
+- (id)initWithPath:(NSString*)path expectBackColor:(bool)expectBackColor
 {
 	if (_baseAttrs == nil)
 	{
@@ -55,9 +55,12 @@ static NSDictionary* _baseAttrs;
 	{
 		_backColor = [NSColor whiteColor];
 		
-		NSString* reason = [error localizedFailureReason];
-		NSString* mesg = [NSString stringWithFormat:@"Couldn't read back-color from '%@':\n%@.", _path, reason];
-		[TranscriptController writeError:mesg];
+		if (expectBackColor)
+		{
+			NSString* reason = [error localizedFailureReason];
+			NSString* mesg = [NSString stringWithFormat:@"Couldn't read back-color from '%@':\n%@.", _path, reason];
+			[TranscriptController writeError:mesg];
+		}
 	}
 	
 	return self;

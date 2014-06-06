@@ -6,7 +6,7 @@
 @interface TextStyles : NSObject
 
 // Path should be a full path to a styles rtf file.
-- (id)initWithPath:(NSString*)path;
+- (id)initWithPath:(NSString*)path expectBackColor:(bool)expectBackColor;
 
 // The style used when a style from a styles file is not available.
 + (NSDictionary*)fallbackStyle;

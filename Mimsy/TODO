@@ -2,9 +2,8 @@ FindAllIncludes: *.c *.cpp *.c++ *.h *.hpp *.m *.rs *.js
 FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
+* Directory window needs to do a leading sort of thing.
 * Get find in files working
-	- should be a settings for fonts used in find results window
-	  also match attributes
 	- make sure errors are handled (e.g. can't write to file or non-editable window)
 	- watch for edits and update find results window items
 	- directory menu should always have an open windows item

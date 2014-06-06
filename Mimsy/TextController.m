@@ -441,7 +441,7 @@
 	
 	if (_styles)
 	{
-		_styles = [[TextStyles alloc] initWithPath:_styles.path];
+		_styles = [[TextStyles alloc] initWithPath:_styles.path expectBackColor:true];
 		if (_applier)
 			[_applier resetStyles];
 	}
@@ -450,7 +450,7 @@
 - (void)changeStyle:(NSString*)path
 {
 	assert(_language);
-	_styles = [[TextStyles alloc] initWithPath:path];
+	_styles = [[TextStyles alloc] initWithPath:path expectBackColor:true];
 	if (_applier)
 		[_applier resetStyles];
 }
@@ -662,7 +662,7 @@
 {
 	NSString* dir = [Paths installedDir:@"styles"];
 	NSString* path = [dir stringByAppendingPathComponent:self._getDefaultStyleName];
-	return [[TextStyles alloc] initWithPath:path];
+	return [[TextStyles alloc] initWithPath:path expectBackColor:true];
 }
 
 @end

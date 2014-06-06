@@ -8,8 +8,10 @@
 #import "FindResultsController.h"
 #import "Glob.h"
 #import "Logger.h"
+#import "Paths.h"
 #import "StringCategory.h"
 #import "TextController.h"
+#import "TextStyles.h"
 #import "TranscriptController.h"
 
 @implementation FindInFiles
@@ -25,6 +27,10 @@
 	Glob* _excludeGlobs;
 	Glob* _excludeAllGlobs;
 	bool _reversePaths;
+
+	NSDictionary* _pathAttrs;
+	NSDictionary* _lineAttrs;
+	NSDictionary* _matchAttrs;
 }
 
 - (id)init:(FindInFilesController*)controller path:(NSString*)path
@@ -48,6 +54,9 @@
 		_excludeAllGlobs = [[Glob alloc] initWithGlobs:globs];
 
 		_reversePaths = [AppSettings boolValue:@"ReversePaths" missing:true];
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
+		[self _loadPrefs];
 	}
 	
 	return self;
@@ -84,7 +93,7 @@
 				[str.mutableString appendString:path];
 			
 			NSRange range = NSMakeRange(0, str.string.length);
-			[str addAttribute:NSStrokeWidthAttributeName value:[NSNumber numberWithInt:-4] range:range];
+			[str setAttributes:_pathAttrs range:range];
 			[str addAttribute:@"FindPath" value:path range:range];
 
 			[_controller addPath:str matches:matches];
@@ -102,6 +111,7 @@
 	NSUInteger begin = range.location;
 	NSUInteger end = range.location + range.length;
 	
+	// Find the start of the line.
 	while (begin > 0)
 	{
 		unichar ch = [contents characterAtIndex:begin-1];
@@ -110,6 +120,17 @@
 		--begin;
 	}
 	
+	// Looks nicer if we skip leading whitespace.
+	while (begin < range.location)
+	{
+		unichar ch = [contents characterAtIndex:begin];
+		if ([[NSCharacterSet whitespaceCharacterSet] characterIsMember:ch])
+			++begin;
+		else
+			break;
+	}
+	
+	// Find the end of the line.
 	while (end < contents.length)
 	{
 		unichar ch = [contents characterAtIndex:end];
@@ -142,9 +163,11 @@
 				
 				NSMutableAttributedString* str = [NSMutableAttributedString new];
 				[str.mutableString appendString:line];
-				[str addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:newRange];
 
 				NSRange fullRange = NSMakeRange(0, line.length);
+				[str setAttributes:_lineAttrs range:fullRange];
+				[str setAttributes:_matchAttrs range:newRange];
+
 				[str addAttribute:@"FindPath" value:path range:fullRange];
 				[str addAttribute:@"FindLocation" value:[NSNumber numberWithUnsignedInteger:match.range.location] range:fullRange];
 				[str addAttribute:@"FindLength" value:[NSNumber numberWithUnsignedInteger:match.range.length] range:fullRange];
@@ -307,6 +330,39 @@
 				   NSString* mesg = [NSString stringWithFormat:@"Error reading '%@': %@", path, errStr];
 				   [TranscriptController writeError:mesg];
 			   });
+		}
+	}
+}
+
+- (void)settingsChanged:(NSNotification*)notification
+{
+	(void) notification;
+	
+	[self _loadPrefs];
+}
+
+- (void)_loadPrefs
+{
+	NSString* dir = [Paths installedDir:@"settings"];
+	NSString* path = [dir stringByAppendingPathComponent:@"find-results.rtf"];
+	TextStyles* styles = [[TextStyles new] initWithPath:path expectBackColor:false];
+	
+	_pathAttrs  = [styles attributesForElement:@"pathstyle"];
+	_lineAttrs  = [styles attributesForElement:@"linestyle"];
+	_matchAttrs = [styles attributesForElement:@"matchstyle"];
+	
+	NSString* str = [styles valueForKey:@"Leading"];
+	if (str)
+	{
+		float value = str.floatValue;
+		if (value > 0.0)
+		{
+			[_controller setLeading:str.floatValue];
+		}
+		else
+		{
+			NSString* mesg = [NSString stringWithFormat:@"Expected a positive floating-point number for Leading in find-results.rtf but found '%@'", str];
+			[TranscriptController writeError:mesg];
 		}
 	}
 }

@@ -159,7 +159,7 @@ static TranscriptController* controller;
 {
 	NSString* dir = [Paths installedDir:@"settings"];
 	NSString* path = [dir stringByAppendingPathComponent:@"transcript.rtf"];
-	TextStyles* styles = [[TextStyles new] initWithPath:path];
+	TextStyles* styles = [[TextStyles new] initWithPath:path expectBackColor:true];
 	_commandAttrs = [styles attributesForElement:@"command"];
 	_stdoutAttrs = [styles attributesForElement:@"stdout"];
 	_stderrAttrs = [styles attributesForElement:@"stderr"];

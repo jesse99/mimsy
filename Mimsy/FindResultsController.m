@@ -11,6 +11,7 @@ static NSMutableArray* opened;
 	FindInFiles* _finder;			// retain a reference to keep the finder alive
 	NSMutableArray* _paths;
 	NSMutableDictionary* _data;		// path => matches
+	CGFloat _leading;
 }
 
 - (id)initWith:(FindInFiles*)finder
@@ -30,6 +31,8 @@ static NSMutableArray* opened;
 		[__tableView setTarget:self];
 		
 		_finder = finder;
+		_leading = 4.0;
+
 		[self showWindow:window];
 		[self.window makeKeyAndOrderFront:self];
 
@@ -37,6 +40,11 @@ static NSMutableArray* opened;
     }
     
     return self;
+}
+
+- (void)setLeading:(CGFloat)leading
+{
+	_leading = leading;
 }
 
 - (void)releaseWindow
@@ -82,6 +90,32 @@ static NSMutableArray* opened;
 				[self->__tableView expandItem:item];
 		}
 	}
+}
+
+- (CGFloat)outlineView:(NSOutlineView*)table heightOfRowByItem:(id)item
+{
+	NSTableColumn* col = [[NSTableColumn alloc] initWithIdentifier:@"1"];
+	CGFloat height = [self _getItemHeight:table col:col item:item];
+	return height;
+}
+
+- (CGFloat)_getItemHeight:(NSOutlineView*)table col:(NSTableColumn*)column item:(id)item
+{
+	__block CGFloat size = 0.0;
+	
+	NSAttributedString* str = [self outlineView:table objectValueForTableColumn:column byItem:item];
+		[str enumerateAttribute:NSFontAttributeName inRange:NSMakeRange(0, str.length) options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:
+		 ^(NSFont* font, NSRange range, BOOL *stop)
+		 {
+			 UNUSED(range, stop);
+			 
+			 size = MAX(font.pointSize, size);
+		 }];
+	
+	
+	// Couldn't get decent results with just using NSFont state so we use this
+	// lame _leading setting.
+	return size + _leading;
 }
 
 - (NSArray*)_getSelectedItems
