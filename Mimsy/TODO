@@ -2,7 +2,6 @@ FindAllIncludes: *.c *.cpp *.c++ *.h *.hpp *.m *.rs *.js
 FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
-* Do a push
 * Command-e doesn't update find all.
 * Get find in files working
 	- directory menu should always have an open windows item

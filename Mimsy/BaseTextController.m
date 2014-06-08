@@ -2,6 +2,7 @@
 
 #import "Assert.h"
 #import "FindController.h"
+#import "FindInFilesController.h"
 #import "OpenSelection.h"
 #import "WarningWindow.h"
 
@@ -84,6 +85,9 @@
 	
 	FindController* controller = [FindController getController];
 	controller.findText = selection;
+
+	FindInFilesController* controller2 = [FindInFilesController getController];
+	controller2.findText = selection;
 }
 
 - (void)openSelection:(id)sender
