@@ -51,7 +51,7 @@ static NSMutableArray* opened;
 - (void)addPath:(NSAttributedString*)path matches:(NSArray*)matches
 {
 	[_paths addObject:path];
-	[_data setObject:matches forKey:path];
+	_data[path] = matches;
 	
 	[self->__tableView reloadData];
 	[self->__tableView expandItem:path];
@@ -73,7 +73,7 @@ static NSMutableArray* opened;
 			NSAttributedString* newMatch = matchBlock(match);
 			[newMatches addObject:newMatch];
 		}
-		[newData setObject:newMatches forKey:newPath];
+		newData[newPath] = newMatches;
 	}
 	
 	_paths = newPaths;

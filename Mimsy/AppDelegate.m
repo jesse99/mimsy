@@ -132,7 +132,7 @@ typedef void (^NullaryBlock)();
 				#pragma clang diagnostic pop
 			};
 		
-		[delegate->_pendingBlocks setObject:block forKey:name];
+		delegate->_pendingBlocks[name] = block;
 		[delegate performSelector:@selector(_executeSelector:) withObject:name afterDelay:delay];
 	}
 }

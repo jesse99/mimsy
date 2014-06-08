@@ -41,11 +41,11 @@ static NSSize getTextSize(NSString* text, NSDictionary* attrs)
 		_attrs = [NSMutableDictionary new];
 		
 		NSFont* font = [NSFont fontWithName:@"Georgia" size:64.0f];
-		[_attrs setObject:font forKey:NSFontAttributeName];
+		_attrs[NSFontAttributeName] = font;
 		
 		NSMutableParagraphStyle* style = [NSMutableParagraphStyle new];
 		[style setAlignment:NSCenterTextAlignment];
-		[_attrs setObject:style forKey:NSParagraphStyleAttributeName];
+		_attrs[NSParagraphStyleAttributeName] = style;
 		
 		_color = [NSColor colorWithDeviceRed:250/255.0f green:128/255.0f blue:114/255.0f alpha:1.0f];
 	}

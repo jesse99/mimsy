@@ -131,7 +131,7 @@ static FindInFilesController* _findFilesController = nil;
 	if (_reversedPaths)
 	{
 		NSString* reversed = [path reversePath];
-		[_normalPaths setValue:path forKey:reversed];
+		_normalPaths[reversed] = path;
 		[self.directoryMenu addItemWithTitle:reversed];
 	}
 	else

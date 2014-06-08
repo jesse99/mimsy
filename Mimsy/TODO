@@ -2,9 +2,9 @@ FindAllIncludes: *.c *.cpp *.c++ *.h *.hpp *.m *.rs *.js
 FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
+* Make sure stuff is comitted.
+* Use the dict[key] = value syntax
 * Get find in files working
-	- directory menu should always have an open windows item
-	  or maybe use a setting for this
 	- get replace working
 	- make sure errors are handled (e.g. can't write to file or non-editable window)
 

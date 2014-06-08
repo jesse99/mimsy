@@ -227,7 +227,7 @@
 			 if (controller.path)
 			 {
 				 NSString* contents = [controller.text copy];	// kind of sucks to do a copy, but it's not nearly as bad as reading into memory zillions of files
-				 [allOpenPaths setValue:contents forKey:controller.path];
+				 allOpenPaths[controller.path] = contents;
 			 }
 		 }];
 	
@@ -254,7 +254,7 @@
 		{
 			NSString* contents = [allOpenPaths valueForKey:path];
 			if (contents)
-				[openPaths setValue:contents forKey:path];
+				openPaths[path] = contents;
 		}
 	}
 	
@@ -299,7 +299,7 @@
 						{
 							NSString* contents = [allOpenPaths valueForKey:path];
 							if (contents)
-								[openPaths setValue:contents forKey:path];
+								openPaths[path] = contents;
 							else
 								[unopenedPaths addObject:path];
 						}
