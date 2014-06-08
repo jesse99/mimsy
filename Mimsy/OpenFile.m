@@ -88,6 +88,7 @@
 					 {
 						 [controller.getTextView scrollRangeToVisible:range];
 						 [controller.getTextView showFindIndicatorForRange:range];
+						 [controller.getTextView setSelectedRange:range];
 					 };
 					 
 					 TextController* controller = (TextController*) document.windowControllers[0];
@@ -102,8 +103,7 @@
 					 NSString* mesg = [NSString stringWithFormat:@"Couldn't open '%@': %@", url, reason];
 					 [TranscriptController writeError:mesg];
 				 }
-			 }
-			 ];
+			 }];
 		
 		// openDocumentWithContentsOfURL should have been able to open it but it's an asynchronous
 		// method so we can't know for sure if it has actually succeeded until some time later.

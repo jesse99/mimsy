@@ -3,6 +3,7 @@
 #import "Assert.h"
 #import "FindInFiles.h"
 #import "OpenFile.h"
+#import "PersistentRange.h"
 
 static NSMutableArray* opened;
 
@@ -11,7 +12,6 @@ static NSMutableArray* opened;
 	FindInFiles* _finder;			// retain a reference to keep the finder alive
 	NSMutableArray* _paths;
 	NSMutableDictionary* _data;		// path => matches
-	CGFloat _leading;
 }
 
 - (id)initWith:(FindInFiles*)finder
@@ -31,7 +31,6 @@ static NSMutableArray* opened;
 		[__tableView setTarget:self];
 		
 		_finder = finder;
-		_leading = 4.0;
 
 		[self showWindow:window];
 		[self.window makeKeyAndOrderFront:self];
@@ -40,11 +39,6 @@ static NSMutableArray* opened;
     }
     
     return self;
-}
-
-- (void)setLeading:(CGFloat)leading
-{
-	_leading = leading;
 }
 
 - (void)releaseWindow
@@ -63,6 +57,31 @@ static NSMutableArray* opened;
 	[self->__tableView expandItem:path];
 }
 
+- (void)resetPath:(RefreshStr)pathBlock andMatchStyles:(RefreshStr)matchBlock
+{
+	NSMutableArray* newPaths = [NSMutableArray new];
+	NSMutableDictionary* newData = [NSMutableDictionary new];
+	
+	for (NSAttributedString* path in _paths)
+	{
+		NSAttributedString* newPath = pathBlock(path);
+		[newPaths addObject:newPath];
+
+		NSMutableArray* newMatches = [NSMutableArray new];
+		for (NSAttributedString* match in _data[path])
+		{
+			NSAttributedString* newMatch = matchBlock(match);
+			[newMatches addObject:newMatch];
+		}
+		[newData setObject:newMatches forKey:newPath];
+	}
+	
+	_paths = newPaths;
+	_data = newData;
+	
+	[self->__tableView reloadData];
+}
+
 - (void)doubleClicked:(id)sender
 {
 	UNUSED(sender);
@@ -70,16 +89,12 @@ static NSMutableArray* opened;
 	NSArray* selectedItems = [self _getSelectedItems];
 	for (NSAttributedString* item in selectedItems)
 	{
-		NSString* path = [item attribute:@"FindPath" atIndex:0 effectiveRange:NULL];
-		NSNumber* loc = [item attribute:@"FindLocation" atIndex:0 effectiveRange:NULL];
-		if (loc)
+		PersistentRange* range = [item attribute:@"FindRange" atIndex:0 effectiveRange:NULL];
+		if (range)
 		{
 			// The item is a match line.
-			NSNumber* length = [item attribute:@"FindLength" atIndex:0 effectiveRange:NULL];
-			ASSERT(length);
-
-			NSRange range = NSMakeRange(loc.unsignedIntegerValue, length.unsignedIntegerValue);
-			[OpenFile openPath:path withRange:range];
+			if (range.range.location != NSNotFound)		// happens if the user edits the match
+				[OpenFile openPath:range.path withRange:range.range];
 		}
 		else
 		{
@@ -94,28 +109,9 @@ static NSMutableArray* opened;
 
 - (CGFloat)outlineView:(NSOutlineView*)table heightOfRowByItem:(id)item
 {
-	NSTableColumn* col = [[NSTableColumn alloc] initWithIdentifier:@"1"];
-	CGFloat height = [self _getItemHeight:table col:col item:item];
-	return height;
-}
-
-- (CGFloat)_getItemHeight:(NSOutlineView*)table col:(NSTableColumn*)column item:(id)item
-{
-	__block CGFloat size = 0.0;
-	
+	NSTableColumn* column = [[NSTableColumn alloc] initWithIdentifier:@"1"];
 	NSAttributedString* str = [self outlineView:table objectValueForTableColumn:column byItem:item];
-		[str enumerateAttribute:NSFontAttributeName inRange:NSMakeRange(0, str.length) options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:
-		 ^(NSFont* font, NSRange range, BOOL *stop)
-		 {
-			 UNUSED(range, stop);
-			 
-			 size = MAX(font.pointSize, size);
-		 }];
-	
-	
-	// Couldn't get decent results with just using NSFont state so we use this
-	// lame _leading setting.
-	return size + _leading;
+	return str.size.height;
 }
 
 - (NSArray*)_getSelectedItems

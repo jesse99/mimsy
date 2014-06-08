@@ -3,12 +3,14 @@
 #import "AppDelegate.h"
 #import "AppSettings.h"
 #import "Assert.h"
+#import "AttributedStringCategory.h"
 #import "Decode.h"
 #import "FindInFilesController.h"
 #import "FindResultsController.h"
 #import "Glob.h"
 #import "Logger.h"
 #import "Paths.h"
+#import "PersistentRange.h"
 #import "StringCategory.h"
 #import "TextController.h"
 #import "TextStyles.h"
@@ -27,9 +29,10 @@
 	Glob* _excludeGlobs;
 	Glob* _excludeAllGlobs;
 	bool _reversePaths;
-
+	
 	NSDictionary* _pathAttrs;
 	NSDictionary* _lineAttrs;
+	NSDictionary* _disabledAttrs;
 	NSDictionary* _matchAttrs;
 }
 
@@ -49,12 +52,12 @@
 		
 		globs = [controller.excludedGlobsComboBox.stringValue splitByString:@" "];
 		_excludeGlobs = [[Glob alloc] initWithGlobs:globs];
-
+		
 		globs = [[AppSettings stringValue:@"FindAllAlwaysExclude" missing:@""] splitByString:@" "];
 		_excludeAllGlobs = [[Glob alloc] initWithGlobs:globs];
-
+		
 		_reversePaths = [AppSettings boolValue:@"ReversePaths" missing:true];
-
+				
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
 		[self _loadPrefs];
 	}
@@ -95,7 +98,7 @@
 			NSRange range = NSMakeRange(0, str.string.length);
 			[str setAttributes:_pathAttrs range:range];
 			[str addAttribute:@"FindPath" value:path range:range];
-
+			
 			[_controller addPath:str matches:matches];
 		}
 	}
@@ -144,43 +147,68 @@
 	return [contents substringWithRange:NSMakeRange(begin, end - begin)];
 }
 
+- (NSMutableAttributedString*)_getMatchStr:(NSString*)contents match:(NSTextCheckingResult*)match	// threaded
+{
+	NSRange newRange;
+	NSString* line = [self _findLineWithin:contents at:match.range newRange:&newRange];
+	
+	NSMutableAttributedString* str = [NSMutableAttributedString new];
+	[str.mutableString appendString:line];
+	
+	NSRange fullRange = NSMakeRange(0, line.length);
+	[str setAttributes:_lineAttrs range:fullRange];
+	[str setAttributes:_matchAttrs range:newRange];
+	[str addAttribute:@"MatchedText" value:@"" range:newRange];
+	
+	return str;
+}
+
 - (void)_processPath:(NSString*)path withContents:(NSString*)contents	// threaded
 {
-	//LOG_INFO("Mimsy", "find all in %s: %s", STR(path.lastPathComponent), STR([contents substringToIndex:MIN(32, contents.length)]));
-	
+	NSMutableArray* strings = [NSMutableArray new];
 	NSMutableArray* matches = [NSMutableArray new];
 	
 	NSRange range = NSMakeRange(0, contents.length);
 	[_regex enumerateMatchesInString:contents options:0 range:range usingBlock:
-		^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop)
-		{
-			UNUSED(flags, stop);
-			
-			if (match)
-			{
-				NSRange newRange;
-				NSString* line = [self _findLineWithin:contents at:match.range newRange:&newRange];
-				
-				NSMutableAttributedString* str = [NSMutableAttributedString new];
-				[str.mutableString appendString:line];
-
-				NSRange fullRange = NSMakeRange(0, line.length);
-				[str setAttributes:_lineAttrs range:fullRange];
-				[str setAttributes:_matchAttrs range:newRange];
-
-				[str addAttribute:@"FindPath" value:path range:fullRange];
-				[str addAttribute:@"FindLocation" value:[NSNumber numberWithUnsignedInteger:match.range.location] range:fullRange];
-				[str addAttribute:@"FindLength" value:[NSNumber numberWithUnsignedInteger:match.range.length] range:fullRange];
-				
-				[matches addObject:str];
-			}
-		}];
+		 ^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop)
+		 {
+			 UNUSED(flags, stop);
+			 
+			 if (match)
+			 {
+				 NSMutableAttributedString* str = [self _getMatchStr:contents match:match];
+				 [strings addObject:str];
+				 [matches addObject:match];
+			 }
+		 }];
 	
-	dispatch_queue_t main = dispatch_get_main_queue();
-	dispatch_async(main,
-	   ^{
-		   [self _updateResults:path withMatches:matches];
-	   });
+	if (strings.count > 0)
+	{
+		dispatch_queue_t main = dispatch_get_main_queue();
+		dispatch_async(main,
+		   ^{
+			   for (NSUInteger i = 0; i < strings.count; ++i)
+			   {
+				   NSMutableAttributedString* str = strings[i];
+				   NSTextCheckingResult* match = matches[i];
+				   NSRange fullRange = NSMakeRange(0, str.string.length);
+				   
+				   PersistentRange* pr = [[PersistentRange alloc] init:path range:match.range block:
+					  ^(PersistentRange* range)
+					  {
+						  if (range.range.location == NSNotFound)
+						  {
+							  [str setAttributes:_disabledAttrs range:fullRange];
+							  [str addAttribute:@"FindRange" value:range range:fullRange];
+							  [_controller.window display];
+						  }
+					  }];
+				   [str addAttribute:@"FindRange" value:pr range:fullRange];
+			   }
+			   
+			   [self _updateResults:path withMatches:strings];
+		   });
+	}
 }
 
 // We do as much work as we can off the main thread so these functions chain
@@ -188,20 +216,20 @@
 // 1) snapshot paths for all the open windows
 - (void)step1
 {
-	NSMutableDictionary* allOpenPaths = [NSMutableDictionary new];
+	NSMutableDictionary* allOpenPaths = [NSMutableDictionary new];	// path => contents
 	
 	NSString* title = [NSString stringWithFormat:@"Find '%@' gathering paths", _findText];
 	[_controller.window setTitle:title];
-
+	
 	[TextController enumerate:
-		^(TextController *controller)
-		{
-			if (controller.path)
-			{
-				NSString* contents = [controller.text copy];	// kind of sucks to do a copy, but it's not nearly as bad as reading into memory zillions of files
-				[allOpenPaths setValue:contents forKey:controller.path];
-			}
-		}];
+	 ^(TextController *controller)
+	 {
+		 if (controller.path)
+		 {
+			 NSString* contents = [controller.text copy];	// kind of sucks to do a copy, but it's not nearly as bad as reading into memory zillions of files
+			 [allOpenPaths setValue:contents forKey:controller.path];
+		 }
+	 }];
 	
 	dispatch_queue_t concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	dispatch_async(concurrent,
@@ -212,11 +240,11 @@
 
 // 2) get a list of paths to the files we need to process
 // in the main thread and a worker thread
-- (void)step2WithOpenPaths:(NSDictionary*)allOpenPaths			// threaded
+- (void)step2WithOpenPaths:(NSDictionary*)allOpenPaths	// threaded
 {
 	NSFileManager* fm = [NSFileManager new];
-	NSMutableDictionary* openPaths = [NSMutableDictionary new];
-	NSMutableArray* unopenedPaths = [NSMutableArray new];
+	NSMutableDictionary* openPaths = [NSMutableDictionary new];	// path => contents
+	NSMutableArray* unopenedPaths = [NSMutableArray new];		// paths
 	
 	NSMutableArray* dirPaths = [NSMutableArray new];
 	[dirPaths addObject:_root];
@@ -281,13 +309,13 @@
 			   [self _step3bWithUnopenedPaths:unopenedPaths begin:middle end:unopenedPaths.count];
 		   });
 	}
-
+	
 	if (openPaths.count > 0)
 		[self _step3aWithOpenPaths:openPaths];
 }
 
 // 3a) process the windows which were open
-- (void)_step3aWithOpenPaths:(NSDictionary*)paths			// threaded
+- (void)_step3aWithOpenPaths:(NSDictionary*)paths		// threaded
 {
 	for (NSString* path in paths)
 	{
@@ -307,7 +335,7 @@
 	for (NSUInteger i = begin; i < end && _controller; ++i)
 	{
 		NSString* path = paths[i];
-
+		
 		NSData* data = [NSData dataWithContentsOfFile:path options:0 error:&error];
 		if (data)
 		{
@@ -347,24 +375,61 @@
 	NSString* path = [dir stringByAppendingPathComponent:@"find-results.rtf"];
 	TextStyles* styles = [[TextStyles new] initWithPath:path expectBackColor:false];
 	
-	_pathAttrs  = [styles attributesForElement:@"pathstyle"];
-	_lineAttrs  = [styles attributesForElement:@"linestyle"];
-	_matchAttrs = [styles attributesForElement:@"matchstyle"];
+	_pathAttrs     = [styles attributesForElement:@"pathstyle"];
+	_lineAttrs     = [styles attributesForElement:@"linestyle"];
+	_matchAttrs    = [styles attributesForElement:@"matchstyle"];
+	_disabledAttrs = [styles attributesForElement:@"disabledstyle"];
 	
-	NSString* str = [styles valueForKey:@"Leading"];
-	if (str)
+	[_controller
+		 resetPath:^NSAttributedString* (NSAttributedString* str)
+			{return [self _resetPathAttributes:str];}
+		 andMatchStyles:^NSAttributedString* (NSAttributedString* str)
+			{return [self _resetMatchAttributes:str];
+		 }];
+}
+
+- (NSAttributedString*)_resetPathAttributes:(NSAttributedString*)oldStr
+{
+	NSMutableAttributedString* newStr = [NSMutableAttributedString new];
+	[newStr.mutableString appendString:oldStr.string];
+	
+	NSRange range = NSMakeRange(0, newStr.string.length);
+	[newStr setAttributes:_pathAttrs range:range];
+	[newStr copyAttributes:@[@"FindPath"] from:oldStr];
+	
+	return newStr;
+}
+
+- (NSAttributedString*)_resetMatchAttributes:(NSAttributedString*)oldStr
+{
+	NSMutableAttributedString* newStr = [NSMutableAttributedString new];
+	[newStr.mutableString appendString:oldStr.string];	
+	NSRange fullRange = NSMakeRange(0, newStr.string.length);
+	
+	PersistentRange* range = [oldStr attribute:@"FindRange" atIndex:0 effectiveRange:NULL];
+	if (range.range.location == NSNotFound)
 	{
-		float value = str.floatValue;
-		if (value > 0.0)
-		{
-			[_controller setLeading:str.floatValue];
-		}
-		else
-		{
-			NSString* mesg = [NSString stringWithFormat:@"Expected a positive floating-point number for Leading in find-results.rtf but found '%@'", str];
-			[TranscriptController writeError:mesg];
-		}
+		[newStr setAttributes:_disabledAttrs range:fullRange];
 	}
+	else
+	{
+		[newStr setAttributes:_lineAttrs range:fullRange];
+		[oldStr enumerateAttribute:@"MatchedText" inRange:fullRange options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:
+			 ^(id value, NSRange range, BOOL *stop)
+			 {
+				 UNUSED(value, stop);
+				 
+				 if (value)
+				 {
+					 [newStr setAttributes:_matchAttrs range:range];
+					 [newStr addAttribute:@"MatchedText" value:@"" range:range];
+				 }
+			 }];
+	}
+
+	[newStr addAttribute:@"FindRange" value:range range:fullRange];
+	
+	return newStr;
 }
 
 @end

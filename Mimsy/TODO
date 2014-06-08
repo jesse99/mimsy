@@ -2,15 +2,14 @@ FindAllIncludes: *.c *.cpp *.c++ *.h *.hpp *.m *.rs *.js
 FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
-* Directory window needs to do a leading sort of thing.
+* Do a push
+* Command-e doesn't update find all.
 * Get find in files working
-	- make sure errors are handled (e.g. can't write to file or non-editable window)
-	- watch for edits and update find results window items
 	- directory menu should always have an open windows item
 	  or maybe use a setting for this
 	- get replace working
+	- make sure errors are handled (e.g. can't write to file or non-editable window)
 
-	- is there a way we can have a thread safe way to get cached text?
 	- may want a unit test for find in files
 	- should be keys to go forward and backwards in find list
 	- needs to be able to search rtf files
@@ -20,10 +19,14 @@ FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 * Context menu takes too long to pop down
 	- probably time machine
 	- may want to just pop up a picker dialog
+* Layout object has support for showing invisible chars.
+* Layout object has support for showing control chars.
 * Get replace all in files working
 * Review the Continum find code
 * Look at the search notes
 * Analyze the code
+* Might be nice if directory window styled dirty windows somehow
+	- maybe back color
 * Tabs don't work correctly
 	- can see this by doing a find all for TODO in gnos
 * Directory windows need to appear in bold in the window menu.
@@ -46,6 +49,7 @@ FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 	- maybe characters (or regexen) not in string or comment
 * Support goto line
 * Support shift left and right
+* Linters or other static analyzers might be cool.
 * Support remote editing
 	- might be simplest to just have a Python script running remotely
 	- contents could be zipped and binhexed

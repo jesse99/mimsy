@@ -11,6 +11,7 @@ typedef void (^LayoutCallback)(TextController* controller);
 
 + (TextController*)frontmost;
 + (void)enumerate:(void (^)(TextController* controller))block;
++ (TextController*)find:(NSString*)path;
 
 - (void)open;
 - (void)onPathChanged;

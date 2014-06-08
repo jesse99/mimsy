@@ -86,6 +86,8 @@
 {
 	UNUSED(notification);
 	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowClosing" object:self];
+	
 	_closed = true;
 	updateInstanceCount(@"TextWindow", -1);
 
@@ -157,11 +159,11 @@
 		LOG_INFO("Text", "Window for %s opened", STR([self.path lastPathComponent]));
 	else
 		LOG_INFO("Text", "Untitled window opened");
-	// TODO: need to do this stuff
-	//Broadcaster.Invoke("opening document window", m_boss);
 		
 	[self.window makeKeyAndOrderFront:self];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowOpened" object:self];
 	
+	// TODO: need to do this stuff
 	//Broadcaster.Invoke("opened document window", m_boss);
 	//synchronizeWindowTitleWithDocumentName();		// bit of a hack, but we need something like this for IDocumentWindowTitle to work
 
@@ -301,6 +303,27 @@
 				if ([window.windowController isKindOfClass:[TextController class]])
 					block(window.windowController);
 	}
+}
+
++ (TextController*)find:(NSString*)path
+{
+	for (NSWindow* window in [NSApp orderedWindows])
+	{
+		if (window.isVisible || window.isMiniaturized)
+		{
+			if (window.windowController)
+			{
+				if ([window.windowController isKindOfClass:[TextController class]])
+				{
+					TextController* controller = window.windowController;
+					if (controller.path && [controller.path compare:path] == NSOrderedSame)
+						return controller;
+				}
+			}
+		}
+	}
+	
+	return nil;
 }
 
 - (NSArray*)getHelpContext
@@ -606,11 +629,15 @@
 	{
 		_editCount++;
 
+		NSTextStorage* storage = self.textView.textStorage;
+		NSRange range = storage.editedRange;
 		if (_applier)
 		{
-			NSUInteger loc = self.textView.textStorage.editedRange.location;
+			NSUInteger loc = range.location;
 			[_applier addDirtyLocation:loc reason:@"user edit"];
 		}
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowEdited" object:self];
 	}
 }
 
@@ -645,7 +672,7 @@
 			}
 			[_layoutBlocks removeAllObjects];
 			
-//			Broadcaster.Invoke("layout completed", m_boss);
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowFinishedLayout" object:self];
 //			DoPruneRanges();
 		}
 	}

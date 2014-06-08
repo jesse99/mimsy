@@ -1050,6 +1050,12 @@ static DirectoryController* _lastBuilt;
 		// Continuum used the argument to reload to manually preserve the selection.
 		// But it seems that newer versions of Cocoa do a better job at preserving
 		// the selection.
+		//
+		// TODO: But it's not perfect, I have seen the find results window collapse
+		// all the items after changing the styles. If it is also a problem here we
+		// should write some sort of helper to reload without changing expansions.
+		// But note that this is a bit more complex for find results because the
+		// items are replaced with brand new items.
 		if ([item reload:nil])
 		{
 			if (table && item != _root)

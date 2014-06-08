@@ -26,6 +26,8 @@
 		373B971D1937F1A40084CCC1 /* FindResultsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B971C1937F1A40084CCC1 /* FindResultsController.m */; };
 		373B97201937F3D90084CCC1 /* FindInFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B971F1937F3D90084CCC1 /* FindInFiles.m */; };
 		373B9723194167680084CCC1 /* FindResultsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B9722194167670084CCC1 /* FindResultsView.m */; };
+		373B97281942BC110084CCC1 /* AttributedStringCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B97271942BC100084CCC1 /* AttributedStringCategory.m */; };
+		373B972C194374FA0084CCC1 /* PersistentRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B972B194374F90084CCC1 /* PersistentRange.m */; };
 		375140D416800FFD00C329AF /* ConfigParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D316800FFD00C329AF /* ConfigParser.m */; };
 		375140D816801A4800C329AF /* ConfigParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D716801A4800C329AF /* ConfigParserTests.m */; };
 		375140E416828EB600C329AF /* WindowsDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140E316828EB600C329AF /* WindowsDatabase.m */; };
@@ -158,6 +160,10 @@
 		373B971F1937F3D90084CCC1 /* FindInFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindInFiles.m; sourceTree = "<group>"; };
 		373B9721194167660084CCC1 /* FindResultsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindResultsView.h; sourceTree = "<group>"; };
 		373B9722194167670084CCC1 /* FindResultsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindResultsView.m; sourceTree = "<group>"; };
+		373B97261942BC0F0084CCC1 /* AttributedStringCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttributedStringCategory.h; sourceTree = "<group>"; };
+		373B97271942BC100084CCC1 /* AttributedStringCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttributedStringCategory.m; sourceTree = "<group>"; };
+		373B972A194374F90084CCC1 /* PersistentRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersistentRange.h; sourceTree = "<group>"; };
+		373B972B194374F90084CCC1 /* PersistentRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersistentRange.m; sourceTree = "<group>"; };
 		375140D216800FFD00C329AF /* ConfigParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParser.h; sourceTree = "<group>"; };
 		375140D316800FFD00C329AF /* ConfigParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigParser.m; sourceTree = "<group>"; };
 		375140D616801A4800C329AF /* ConfigParserTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParserTests.h; sourceTree = "<group>"; };
@@ -357,15 +363,30 @@
 			name = Transcript;
 			sourceTree = "<group>";
 		};
-		375140D91682352000C329AF /* Utils */ = {
+		373B9729194370A00084CCC1 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
 				37F2C589169E7B92009C5355 /* ArrayCategory.h */,
 				37F2C58A169E7B92009C5355 /* ArrayCategory.m */,
-				37862C6616912ECA00DB9E66 /* Assert.h */,
-				37862C6716912ECB00DB9E66 /* Assert.m */,
+				373B97261942BC0F0084CCC1 /* AttributedStringCategory.h */,
+				373B97271942BC100084CCC1 /* AttributedStringCategory.m */,
 				376407EC16BEB856000B7AE3 /* ColorCategory.h */,
 				376407ED16BEB856000B7AE3 /* ColorCategory.m */,
+				3712632116B5A079007AF3BF /* DataCategory.h */,
+				3712632216B5A079007AF3BF /* DataCategory.m */,
+				3751BCFD1846E69000DD2C8A /* ScannerCategory.h */,
+				3751BCFE1846E69000DD2C8A /* ScannerCategory.m */,
+				3752CC1616A2F7EA00B623F5 /* StringCategory.h */,
+				3752CC1716A2F7EA00B623F5 /* StringCategory.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
+		375140D91682352000C329AF /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				37862C6616912ECA00DB9E66 /* Assert.h */,
+				37862C6716912ECB00DB9E66 /* Assert.m */,
 				37862C4C168DE83D00DB9E66 /* ConditionalGlob.h */,
 				37862C4D168DE83D00DB9E66 /* ConditionalGlob.m */,
 				375140D216800FFD00C329AF /* ConfigParser.h */,
@@ -374,8 +395,6 @@
 				37ECF06319296C7A00061C0A /* Constants.m */,
 				377BDE6716CDA8F2008DADA5 /* Database.h */,
 				377BDE6816CDA8F2008DADA5 /* Database.m */,
-				3712632116B5A079007AF3BF /* DataCategory.h */,
-				3712632216B5A079007AF3BF /* DataCategory.m */,
 				376407E916BB60D4000B7AE3 /* DirectoryWatcher.h */,
 				376407EA16BB60D4000B7AE3 /* DirectoryWatcher.m */,
 				37862C49168DE67200DB9E66 /* Glob.h */,
@@ -386,13 +405,9 @@
 				37862C731698755000DB9E66 /* Metadata.m */,
 				375140E516835CB400C329AF /* Paths.h */,
 				375140E616835CB400C329AF /* Paths.m */,
-				3751BCFD1846E69000DD2C8A /* ScannerCategory.h */,
-				3751BCFE1846E69000DD2C8A /* ScannerCategory.m */,
 				370552A218710C27005F1438 /* SelectName.xib */,
 				370552A418710E14005F1438 /* SelectNameController.h */,
 				370552A518710E15005F1438 /* SelectNameController.m */,
-				3752CC1616A2F7EA00B623F5 /* StringCategory.h */,
-				3752CC1716A2F7EA00B623F5 /* StringCategory.m */,
 				37AD756E171B95460054A75F /* UpdateConfig.h */,
 				37AD756F171B95460054A75F /* UpdateConfig.m */,
 				37862C6C1693ABF100DB9E66 /* UIntVector.h */,
@@ -452,6 +467,8 @@
 				37862C6D1694BE7300DB9E66 /* InfoWindow.xib */,
 				3751BCFA18445CCD00DD2C8A /* OpenSelection.h */,
 				3751BCFB18445CCD00DD2C8A /* OpenSelection.m */,
+				373B972A194374F90084CCC1 /* PersistentRange.h */,
+				373B972B194374F90084CCC1 /* PersistentRange.m */,
 				375140E81684B21B00C329AF /* RestoreView.h */,
 				375140E91684B21B00C329AF /* RestoreView.m */,
 				3759B6551676F01900D3F3B8 /* TextController.h */,
@@ -598,6 +615,7 @@
 				375140F3168BD64500C329AF /* Styler */,
 				3759B65D1678338600D3F3B8 /* Text Editor */,
 				3705C817167BCF7000E5D54C /* Transcript */,
+				373B9729194370A00084CCC1 /* Categories */,
 				375140D91682352000C329AF /* Utils */,
 				37A8C69D16758FF400D4DB13 /* Supporting Files */,
 			);
@@ -863,6 +881,8 @@
 				373B971D1937F1A40084CCC1 /* FindResultsController.m in Sources */,
 				373B97201937F3D90084CCC1 /* FindInFiles.m in Sources */,
 				373B9723194167680084CCC1 /* FindResultsView.m in Sources */,
+				373B97281942BC110084CCC1 /* AttributedStringCategory.m in Sources */,
+				373B972C194374FA0084CCC1 /* PersistentRange.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -407,6 +407,8 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	if ([data length] > MaxBytes)
 		[self confirmOpen:data error:outError];
 
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"ReadingTextDocument" object:self];
+
 	if (*outError == nil)
 		[self doReadFromData:data ofType:typeName error:outError];
 	
@@ -575,6 +577,8 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		}
 	}
 	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"TextDocumentSaved" object:self];
+
 	return data;
 }
 

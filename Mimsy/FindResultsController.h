@@ -2,6 +2,8 @@
 
 @class FindInFiles;
 
+typedef NSAttributedString* (^RefreshStr)(NSAttributedString*);
+
 // Controller for the window used to show the results of find all.
 @interface FindResultsController : NSWindowController
 
@@ -9,9 +11,9 @@
 - (void)releaseWindow;
 
 - (void)addPath:(NSAttributedString*)path matches:(NSArray*)matches;
-- (void)doubleClicked:(id)sender;
+- (void)resetPath:(RefreshStr)pathBlock andMatchStyles:(RefreshStr)matchBlock;
 
-- (void)setLeading:(CGFloat)leading;
+- (void)doubleClicked:(id)sender;
 
 @property (strong) IBOutlet NSOutlineView *_tableView;
 
