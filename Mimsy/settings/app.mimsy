@@ -33,6 +33,7 @@ FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll *.dylib *.exe *.gif *.
 # are added to the directory dropdown menu in the Find All window. Currently
 # there is no way to remove directories from the menu other than using the 
 # Reset button.
+DefaultFindAllDirectory: Open Windows
 DefaultFindAllDirectory: /System/Library/Frameworks/AppKit.framework/Versions/C/Headers
 DefaultFindAllDirectory: /System/Library/Frameworks/Foundation.framework/Versions/C/Headers
 DefaultFindAllDirectory: /System/Library/Frameworks/CoreFoundation.framework/Versions/Current/Headers

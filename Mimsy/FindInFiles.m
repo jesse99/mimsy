@@ -222,20 +222,46 @@
 	[_controller.window setTitle:title];
 	
 	[TextController enumerate:
-	 ^(TextController *controller)
-	 {
-		 if (controller.path)
+		 ^(TextController *controller)
 		 {
-			 NSString* contents = [controller.text copy];	// kind of sucks to do a copy, but it's not nearly as bad as reading into memory zillions of files
-			 [allOpenPaths setValue:contents forKey:controller.path];
-		 }
-	 }];
+			 if (controller.path)
+			 {
+				 NSString* contents = [controller.text copy];	// kind of sucks to do a copy, but it's not nearly as bad as reading into memory zillions of files
+				 [allOpenPaths setValue:contents forKey:controller.path];
+			 }
+		 }];
 	
 	dispatch_queue_t concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	dispatch_async(concurrent,
 	   ^{
-		   [self step2WithOpenPaths:allOpenPaths];
+		   if ([_root compare:@"Open Windows"] == NSOrderedSame)
+			   [self step2WithOnlyOpenPaths:allOpenPaths];
+			else
+				[self step2WithOpenPaths:allOpenPaths];
 	   });
+}
+
+// 2) get a list of paths to the files we need to process
+// in the main thread and a worker thread
+- (void)step2WithOnlyOpenPaths:(NSDictionary*)allOpenPaths	// threaded
+{
+	NSMutableDictionary* openPaths = [NSMutableDictionary new];	// path => contents
+	
+	for (NSString* path in allOpenPaths)
+	{
+		NSString* fileName = [path lastPathComponent];
+		if ([_includeGlobs matchName:fileName])
+		{
+			NSString* contents = [allOpenPaths valueForKey:path];
+			if (contents)
+				[openPaths setValue:contents forKey:path];
+		}
+	}
+	
+	_filesLeft = (int) openPaths.count;
+	
+	if (openPaths.count > 0)
+		[self _step3aWithOpenPaths:openPaths];
 }
 
 // 2) get a list of paths to the files we need to process
