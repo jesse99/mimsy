@@ -11,6 +11,42 @@
 #import "TextController.h"
 #import "TranscriptController.h"
 
+// It'd be simpler to use replaceMatchesInString but I couldn't get undo to undo the changes.
+NSUInteger replaceAll(BaseFindController* findController, BaseTextController* textController, NSRegularExpression* regex, NSString* template)
+{
+	NSTextView* view = [textController getTextView];
+	
+	NSMutableString* text = view.textStorage.mutableString;
+	NSRange searchRange = NSMakeRange(0, text.length);
+	NSMutableArray* matches = [NSMutableArray new];	// used to avoid changing the text as we enumerate over it
+	
+	[regex enumerateMatchesInString:text options:0 range:searchRange usingBlock:
+	 ^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop)
+	 {
+		 UNUSED(flags, stop);
+		 if (match && [findController _rangeMatches:match.range])
+			 [matches addObject:match];
+	 }];
+	
+	if (matches.count > 0)
+	{
+		[view.undoManager beginUndoGrouping];
+		[view.textStorage beginEditing];
+		
+		for (NSUInteger i = matches.count - 1; i < matches.count; --i)
+			[findController _replace:textController regex:regex match:matches[i] with:template showSelection:false];
+		
+		[view.textStorage endEditing];
+		[view.undoManager endUndoGrouping];
+		[view.undoManager setActionName:@"Replace All"];
+		
+		NSTextCheckingResult* match = matches[matches.count-1];
+		[findController _showSelection:match.range in:textController];
+	}
+	
+	return matches.count;
+}
+
 @implementation BaseFindController
 {
 	NSString* _cachedPattern;
@@ -215,6 +251,32 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	}
 	
 	return matches;
+}
+
+- (void)_replace:(BaseTextController*)controller regex:(NSRegularExpression*)regex match:(NSTextCheckingResult*)match with:(NSString*)template showSelection:(bool)showSelection
+{
+	NSTextView* view = [controller getTextView];
+	NSMutableString* text = view.textStorage.mutableString;
+	NSString* newText = [regex replacementStringForResult:match inString:text offset:0 template:template];
+	
+	if ([view shouldChangeTextInRange:match.range replacementString:newText])
+	{
+		NSRange newRange = NSMakeRange(match.range.location, newText.length);
+		[text replaceCharactersInRange:match.range withString:newText];
+		[view.undoManager setActionName:@"Replace"];
+		[view didChangeText];
+		
+		if (showSelection)
+			[self _showSelection:newRange in:controller];
+	}
+}
+
+- (void)_showSelection:(NSRange)range in:(BaseTextController*)controller
+{
+	[controller.window makeKeyAndOrderFront:self];
+	[[controller getTextView] setSelectedRange:range];
+	[[controller getTextView] scrollRangeToVisible:range];
+	[[controller getTextView] showFindIndicatorForRange:range];
 }
 
 - (NSRegularExpression*)_getRegex

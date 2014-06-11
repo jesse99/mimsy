@@ -200,24 +200,6 @@ typedef void (^FindBlock)(BaseTextController* controller, NSRegularExpression* r
 	}
 }
 
-- (void)_replace:(BaseTextController*)controller regex:(NSRegularExpression*)regex match:(NSTextCheckingResult*)match with:(NSString*)template showSelection:(bool)showSelection
-{
-	NSTextView* view = [controller getTextView];
-	NSMutableString* text = view.textStorage.mutableString;
-	NSString* newText = [regex replacementStringForResult:match inString:text offset:0 template:template];
-
-	if ([view shouldChangeTextInRange:match.range replacementString:newText])
-	{
-		NSRange newRange = NSMakeRange(match.range.location, newText.length);
-		[text replaceCharactersInRange:match.range withString:newText];
-		[view.undoManager setActionName:@"Replace"];
-		[view didChangeText];
-
-		if (showSelection)
-			[self _showSelection:newRange in:controller];
-	}
-}
-
 - (IBAction)replace:(id)sender
 {
 	UNUSED(sender);
@@ -232,7 +214,6 @@ typedef void (^FindBlock)(BaseTextController* controller, NSRegularExpression* r
 		 }];
 }
 
-// It'd be simpler to use replaceMatchesInString but I couldn't get undo to undo the changes.
 - (IBAction)replaceAll:(id)sender
 {
 	UNUSED(sender);
@@ -240,44 +221,21 @@ typedef void (^FindBlock)(BaseTextController* controller, NSRegularExpression* r
 	NSRegularExpression* regex = [self _getRegex];
 	if (!_finding && regex)
 	{
-		BaseTextController* controller = [BaseTextController frontmost];
-		NSTextView* view = [controller getTextView];
-
-		NSMutableString* text = view.textStorage.mutableString;
-		NSRange searchRange = NSMakeRange(0, text.length);
-
 		[self _updateComboBox:self.findComboBox with:self.findText];
 		[self _updateComboBox:self.replaceWithComboBox with:self.replaceText];
-		NSMutableArray* matches = [NSMutableArray new];	// used to avoid changing the text as we enumerate over it
+
+		NSString* template = [self _getReplaceTemplate];
+		BaseTextController* textController = [BaseTextController frontmost];
+		NSUInteger count = replaceAll(self, textController, regex, template);
 		
-	   [regex enumerateMatchesInString:text options:0 range:searchRange usingBlock:
-			^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop)
-			{
-				UNUSED(flags, stop);
-				if (match && [self _rangeMatches:match.range])
-					[matches addObject:match];
-			}];
-		
-		if (matches.count > 0)
+		if (count > 0)
 		{
-			[view.undoManager beginUndoGrouping];
-			[view.textStorage beginEditing];
-
-			NSString* template = [self _getReplaceTemplate];
-			for (NSUInteger i = matches.count - 1; i < matches.count; --i)
-				[self _replace:controller regex:regex match:matches[i] with:template showSelection:false];
-
-			[view.textStorage endEditing];
-			[view.undoManager endUndoGrouping];
-			[view.undoManager setActionName:@"Replace All"];
+			BaseTextController* controller = [BaseTextController frontmost];
 			
-			NSTextCheckingResult* match = matches[matches.count-1];
-			[self _showSelection:match.range in:controller];
-
-			if (matches.count == 1)
+			if (count == 1)
 				[controller showInfo:@"Replaced 1 match"];
 			else
-				[controller showInfo:[NSString stringWithFormat:@"Replaced %ld matches", (unsigned long)matches.count]];
+				[controller showInfo:[NSString stringWithFormat:@"Replaced %ld matches", (unsigned long)count]];
 		}
 		else
 		{
@@ -290,14 +248,6 @@ typedef void (^FindBlock)(BaseTextController* controller, NSRegularExpression* r
 {
 	[self replace:sender];
 	[self find:sender];
-}
-
-- (void)_showSelection:(NSRange)range in:(BaseTextController*)controller
-{
-	[controller.window makeKeyAndOrderFront:self];
-	[[controller getTextView] setSelectedRange:range];
-	[[controller getTextView] scrollRangeToVisible:range];
-	[[controller getTextView] showFindIndicatorForRange:range];
 }
 
 - (void)_cacheText:(BaseTextController*)controller

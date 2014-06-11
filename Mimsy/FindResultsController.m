@@ -12,6 +12,9 @@ static NSMutableArray* opened;
 	FindInFiles* _finder;			// retain a reference to keep the finder alive
 	NSMutableArray* _paths;
 	NSMutableDictionary* _data;		// path => matches
+	
+	CGFloat _pathHeight;
+	CGFloat _matchHeight;
 }
 
 - (id)initWith:(FindInFiles*)finder
@@ -79,6 +82,9 @@ static NSMutableArray* opened;
 	_paths = newPaths;
 	_data = newData;
 	
+	_pathHeight = 0.0;
+	_matchHeight = 0.0;
+
 	[self->__tableView reloadData];
 }
 
@@ -109,9 +115,16 @@ static NSMutableArray* opened;
 
 - (CGFloat)outlineView:(NSOutlineView*)table heightOfRowByItem:(id)item
 {
-	NSTableColumn* column = [[NSTableColumn alloc] initWithIdentifier:@"1"];
-	NSAttributedString* str = [self outlineView:table objectValueForTableColumn:column byItem:item];
-	return str.size.height;
+	CGFloat* height = _data[item] ? &_pathHeight : &_matchHeight;
+	
+	if (*height == 0.0)
+	{
+		NSTableColumn* column = [[NSTableColumn alloc] initWithIdentifier:@"1"];
+		NSAttributedString* str = [self outlineView:table objectValueForTableColumn:column byItem:item];
+		*height = str.size.height;
+	}
+	
+	return *height;
 }
 
 - (NSArray*)_getSelectedItems

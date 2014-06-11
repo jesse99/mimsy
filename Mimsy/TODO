@@ -2,12 +2,12 @@ FindAllIncludes: *.c *.cpp *.c++ *.h *.hpp *.m *.rs *.js
 FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
-* Make sure stuff is comitted.
-* Use the dict[key] = value syntax
+* Get replace all working:
+	- use the FindResultsController to show the replacements
+	- both replace and find need to do something with search within
+	- make sure error cases work
+* DOn't use objectForKey
 * Get find in files working
-	- get replace working
-	- make sure errors are handled (e.g. can't write to file or non-editable window)
-
 	- may want a unit test for find in files
 	- should be keys to go forward and backwards in find list
 	- needs to be able to search rtf files

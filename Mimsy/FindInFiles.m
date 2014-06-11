@@ -99,6 +99,7 @@
 			[str setAttributes:_pathAttrs range:range];
 			[str addAttribute:@"FindPath" value:path range:range];
 			
+			_matches += matches.count;
 			[_controller addPath:str matches:matches];
 		}
 	}
@@ -182,33 +183,30 @@
 			 }
 		 }];
 	
-	if (strings.count > 0)
-	{
-		dispatch_queue_t main = dispatch_get_main_queue();
-		dispatch_async(main,
-		   ^{
-			   for (NSUInteger i = 0; i < strings.count; ++i)
-			   {
-				   NSMutableAttributedString* str = strings[i];
-				   NSTextCheckingResult* match = matches[i];
-				   NSRange fullRange = NSMakeRange(0, str.string.length);
-				   
-				   PersistentRange* pr = [[PersistentRange alloc] init:path range:match.range block:
-					  ^(PersistentRange* range)
-					  {
-						  if (range.range.location == NSNotFound)
-						  {
-							  [str setAttributes:_disabledAttrs range:fullRange];
-							  [str addAttribute:@"FindRange" value:range range:fullRange];
-							  [_controller.window display];
-						  }
-					  }];
-				   [str addAttribute:@"FindRange" value:pr range:fullRange];
-			   }
+	dispatch_queue_t main = dispatch_get_main_queue();
+	dispatch_async(main,
+	   ^{
+		   for (NSUInteger i = 0; i < strings.count; ++i)
+		   {
+			   NSMutableAttributedString* str = strings[i];
+			   NSTextCheckingResult* match = matches[i];
+			   NSRange fullRange = NSMakeRange(0, str.string.length);
 			   
-			   [self _updateResults:path withMatches:strings];
-		   });
-	}
+			   PersistentRange* pr = [[PersistentRange alloc] init:path range:match.range block:
+				  ^(PersistentRange* range)
+				  {
+					  if (range.range.location == NSNotFound)
+					  {
+						  [str setAttributes:_disabledAttrs range:fullRange];
+						  [str addAttribute:@"FindRange" value:range range:fullRange];
+						  [_controller.window display];
+					  }
+				  }];
+			   [str addAttribute:@"FindRange" value:pr range:fullRange];
+		   }
+		   
+		   [self _updateResults:path withMatches:strings];
+	   });
 }
 
 // We do as much work as we can off the main thread so these functions chain

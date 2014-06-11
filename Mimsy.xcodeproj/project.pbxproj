@@ -28,6 +28,7 @@
 		373B9723194167680084CCC1 /* FindResultsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B9722194167670084CCC1 /* FindResultsView.m */; };
 		373B97281942BC110084CCC1 /* AttributedStringCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B97271942BC100084CCC1 /* AttributedStringCategory.m */; };
 		373B972C194374FA0084CCC1 /* PersistentRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B972B194374F90084CCC1 /* PersistentRange.m */; };
+		373B972F1945570F0084CCC1 /* ReplaceInFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B972E1945570D0084CCC1 /* ReplaceInFiles.m */; };
 		375140D416800FFD00C329AF /* ConfigParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D316800FFD00C329AF /* ConfigParser.m */; };
 		375140D816801A4800C329AF /* ConfigParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D716801A4800C329AF /* ConfigParserTests.m */; };
 		375140E416828EB600C329AF /* WindowsDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140E316828EB600C329AF /* WindowsDatabase.m */; };
@@ -164,6 +165,8 @@
 		373B97271942BC100084CCC1 /* AttributedStringCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttributedStringCategory.m; sourceTree = "<group>"; };
 		373B972A194374F90084CCC1 /* PersistentRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersistentRange.h; sourceTree = "<group>"; };
 		373B972B194374F90084CCC1 /* PersistentRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersistentRange.m; sourceTree = "<group>"; };
+		373B972D1945570D0084CCC1 /* ReplaceInFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplaceInFiles.h; sourceTree = "<group>"; };
+		373B972E1945570D0084CCC1 /* ReplaceInFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplaceInFiles.m; sourceTree = "<group>"; };
 		375140D216800FFD00C329AF /* ConfigParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParser.h; sourceTree = "<group>"; };
 		375140D316800FFD00C329AF /* ConfigParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigParser.m; sourceTree = "<group>"; };
 		375140D616801A4800C329AF /* ConfigParserTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParserTests.h; sourceTree = "<group>"; };
@@ -557,6 +560,8 @@
 				373B9722194167670084CCC1 /* FindResultsView.m */,
 				373B97191937F1240084CCC1 /* FindResultsWindow.xib */,
 				379A4115191FDB8B00ACEA5C /* FindWindow.xib */,
+				373B972D1945570D0084CCC1 /* ReplaceInFiles.h */,
+				373B972E1945570D0084CCC1 /* ReplaceInFiles.m */,
 			);
 			name = Find;
 			sourceTree = "<group>";
@@ -883,6 +888,7 @@
 				373B9723194167680084CCC1 /* FindResultsView.m in Sources */,
 				373B97281942BC110084CCC1 /* AttributedStringCategory.m in Sources */,
 				373B972C194374FA0084CCC1 /* PersistentRange.m in Sources */,
+				373B972F1945570F0084CCC1 /* ReplaceInFiles.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -6,6 +6,7 @@
 #import "DirectoryController.h"
 #import "FindInFiles.h"
 #import "Logger.h"
+#import "ReplaceInFiles.h"
 #import "StringCategory.h"
 
 static FindInFilesController* _findFilesController = nil;
@@ -85,8 +86,15 @@ static FindInFilesController* _findFilesController = nil;
 {
 	UNUSED(sender);
 
-	[self _updateControlsForReplace:true];
-	// TODO: works a lot like find (window should show changed lines)
+	NSString* directory = [self _getSelectedDirectory];
+	if (directory)
+	{
+		[self _updateControlsForReplace:true];
+		NSString* template = [self _getReplaceTemplate];
+		
+		ReplaceInFiles* finder = [[ReplaceInFiles alloc] init:self path:[self _getSelectedDirectory] template:template];
+		[finder replaceAll];
+	}
 }
 
 - (IBAction)addDirectory:(id)sender
