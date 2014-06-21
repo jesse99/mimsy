@@ -17,6 +17,19 @@ static NSMutableArray* opened;
 	CGFloat _matchHeight;
 }
 
++ (FindResultsController*)frontmost
+{
+	for (NSWindow* window in [NSApp orderedWindows])
+	{
+		if (window.isVisible || window.isMiniaturized)
+			if (window.windowController)
+				if ([window.windowController isKindOfClass:[FindResultsController class]])
+					return window.windowController;
+	}
+	
+	return nil;
+}
+
 - (id)initWith:(FindInFiles*)finder
 {
 	if (!opened)
@@ -44,11 +57,77 @@ static NSMutableArray* opened;
     return self;
 }
 
+- (NSUInteger)_findNextItem
+{
+	NSIndexSet* selectedRows = [self->__tableView selectedRowIndexes];
+	NSUInteger index = selectedRows.lastIndex;
+	
+	while (++index < [self->__tableView numberOfRows])
+	{
+		NSAttributedString* item = [self->__tableView itemAtRow:(NSInteger)index];
+		PersistentRange* range = [item attribute:@"FindRange" atIndex:0 effectiveRange:NULL];
+		if (range)
+			return index;
+	}
+	
+	return NSNotFound;
+}
+
+- (NSUInteger)_findPreviousItem
+{
+	NSIndexSet* selectedRows = [self->__tableView selectedRowIndexes];
+	NSUInteger index = selectedRows.firstIndex;
+	
+	while (--index < [self->__tableView numberOfRows])
+	{
+		NSAttributedString* item = [self->__tableView itemAtRow:(NSInteger)index];
+		PersistentRange* range = [item attribute:@"FindRange" atIndex:0 effectiveRange:NULL];
+		if (range)
+			return index;
+	}
+	
+	return NSNotFound;
+}
+
 - (void)releaseWindow
 {
 	// The window will go away when the last reference to its controller
 	// goes away.
 	[opened removeObject:self];
+}
+
+- (void)openNext
+{
+	NSUInteger index = [self _findNextItem];
+	if (index != NSNotFound)
+	{
+		NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:index];
+		[self->__tableView selectRowIndexes:indexes byExtendingSelection:FALSE];
+		[self doubleClicked:self];
+	}
+}
+
+- (void)openPrevious
+{
+	NSUInteger index = [self _findPreviousItem];
+	if (index != NSNotFound)
+	{
+		NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:index];
+		[self->__tableView selectRowIndexes:indexes byExtendingSelection:FALSE];
+		[self doubleClicked:self];
+	}
+}
+
+- (bool)canOpenNext
+{
+	NSUInteger index = [self _findNextItem];
+	return index != NSNotFound;
+}
+
+- (bool)canOpenPrevious
+{
+	NSUInteger index = [self _findPreviousItem];
+	return index != NSNotFound;
 }
 
 - (void)addPath:(NSAttributedString*)path matches:(NSArray*)matches

@@ -8,6 +8,7 @@
 #import "DirectoryController.h"
 #import "DirectoryWatcher.h"
 #import "FindInFilesController.h"
+#import "FindResultsController.h"
 #import "FunctionalTest.h"
 #import "Glob.h"
 #import "HelpItem.h"
@@ -149,6 +150,24 @@ typedef void (^NullaryBlock)();
 	UNUSED(sender);
 	
 	[FindInFilesController show];
+}
+
+- (void)findNextInFiles:(id)sender
+{
+	UNUSED(sender);
+	
+	FindResultsController* controller = [FindResultsController frontmost];
+	if (controller)
+		[controller openNext];
+}
+
+- (void)findPreviousInFiles:(id)sender
+{
+	UNUSED(sender);
+	
+	FindResultsController* controller = [FindResultsController frontmost];
+	if (controller)
+		[controller openPrevious];
 }
 
 - (void)searchSite:(id)sender
@@ -501,6 +520,16 @@ typedef void (^NullaryBlock)();
 		{
 			[item setTitle:@"Build"];
 		}
+	}
+	else if (sel == @selector(findNextInFiles:))
+	{
+		FindResultsController* controller = [FindResultsController frontmost];
+		enabled = controller && controller.canOpenNext;
+	}
+	else if (sel == @selector(findPreviousInFiles:))
+	{
+		FindResultsController* controller = [FindResultsController frontmost];
+		enabled = controller && controller.canOpenPrevious;
 	}
 	else if (sel == @selector(searchSite:))
 	{

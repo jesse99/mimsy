@@ -1046,17 +1046,6 @@
 									<reference key="NSMixedImage" ref="310636482"/>
 									<int key="NSTag">1</int>
 								</object>
-								<object class="NSMenuItem" id="640068961">
-									<reference key="NSMenu" ref="771971535"/>
-									<string key="NSTitle">Find in Files…</string>
-									<string key="NSKeyEquiv">f</string>
-									<int key="NSKeyEquivModMask">1572864</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="1033313550"/>
-									<reference key="NSMixedImage" ref="310636482"/>
-									<string key="NSAction">performTextFinderAction:</string>
-									<int key="NSTag">12</int>
-								</object>
 								<object class="NSMenuItem" id="198876">
 									<reference key="NSMenu" ref="771971535"/>
 									<string key="NSTitle">Find Next</string>
@@ -1097,6 +1086,47 @@
 									<reference key="NSMixedImage" ref="310636482"/>
 								</object>
 								<object class="NSMenuItem" id="771551843">
+									<reference key="NSMenu" ref="771971535"/>
+									<bool key="NSIsDisabled">YES</bool>
+									<bool key="NSIsSeparator">YES</bool>
+									<string key="NSTitle"/>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
+								<object class="NSMenuItem" id="640068961">
+									<reference key="NSMenu" ref="771971535"/>
+									<string key="NSTitle">Find in Files…</string>
+									<string key="NSKeyEquiv">f</string>
+									<int key="NSKeyEquivModMask">1572864</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+									<string key="NSAction">performTextFinderAction:</string>
+									<int key="NSTag">12</int>
+								</object>
+								<object class="NSMenuItem" id="97680467">
+									<reference key="NSMenu" ref="771971535"/>
+									<string key="NSTitle">Find Next in Files</string>
+									<string key="NSKeyEquiv">g</string>
+									<int key="NSKeyEquivModMask">1572864</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+									<int key="NSTag">2</int>
+								</object>
+								<object class="NSMenuItem" id="805113009">
+									<reference key="NSMenu" ref="771971535"/>
+									<string key="NSTitle">Find Previous in Files</string>
+									<string key="NSKeyEquiv">G</string>
+									<int key="NSKeyEquivModMask">1572864</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+									<int key="NSTag">3</int>
+								</object>
+								<object class="NSMenuItem" id="557555652">
 									<reference key="NSMenu" ref="771971535"/>
 									<bool key="NSIsDisabled">YES</bool>
 									<bool key="NSIsSeparator">YES</bool>
@@ -1859,6 +1889,22 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
+						<string key="label">findNextInFiles:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="97680467"/>
+					</object>
+					<int key="connectionID">769</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">findPreviousInFiles:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="805113009"/>
+					</object>
+					<int key="connectionID">770</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
 						<string key="label">addFontTrait:</string>
 						<reference key="source" ref="739804602"/>
 						<reference key="destination" ref="994630407"/>
@@ -2551,8 +2597,11 @@
 							<reference ref="522055024"/>
 							<reference ref="102274879"/>
 							<reference ref="41842180"/>
-							<reference ref="640068961"/>
 							<reference ref="771551843"/>
+							<reference ref="557555652"/>
+							<reference ref="97680467"/>
+							<reference ref="640068961"/>
+							<reference ref="805113009"/>
 						</array>
 						<reference key="parent" ref="685343579"/>
 					</object>
@@ -2853,6 +2902,21 @@
 						<reference key="object" ref="460114322"/>
 						<reference key="parent" ref="128611420"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">764</int>
+						<reference key="object" ref="557555652"/>
+						<reference key="parent" ref="771971535"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">765</int>
+						<reference key="object" ref="97680467"/>
+						<reference key="parent" ref="771971535"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">766</int>
+						<reference key="object" ref="805113009"/>
+						<reference key="parent" ref="771971535"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -2993,6 +3057,9 @@
 				<string key="75.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="752.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="754.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="764.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="765.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="766.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="77.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="78.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="79.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3005,7 +3072,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">763</int>
+			<int key="maxID">770</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3022,7 +3089,9 @@
 						<string key="find:">id</string>
 						<string key="findInFiles:">id</string>
 						<string key="findNext:">id</string>
+						<string key="findNextInFiles:">id</string>
 						<string key="findPrevious:">id</string>
+						<string key="findPreviousInFiles:">id</string>
 						<string key="getInfo:">id</string>
 						<string key="openBuildFlags:">id</string>
 						<string key="openDirSettings:">id</string>
@@ -3074,8 +3143,16 @@
 							<string key="name">findNext:</string>
 							<string key="candidateClassName">id</string>
 						</object>
+						<object class="IBActionInfo" key="findNextInFiles:">
+							<string key="name">findNextInFiles:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="findPrevious:">
 							<string key="name">findPrevious:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="findPreviousInFiles:">
+							<string key="name">findPreviousInFiles:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="getInfo:">
