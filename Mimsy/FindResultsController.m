@@ -172,22 +172,25 @@ static NSMutableArray* opened;
 	UNUSED(sender);
 		
 	NSArray* selectedItems = [self _getSelectedItems];
-	for (NSAttributedString* item in selectedItems)
+	if ([OpenFile shouldOpenFiles:selectedItems.count])
 	{
-		PersistentRange* range = [item attribute:@"FindRange" atIndex:0 effectiveRange:NULL];
-		if (range)
+		for (NSAttributedString* item in selectedItems)
 		{
-			// The item is a match line.
-			if (range.range.location != NSNotFound)		// happens if the user edits the match
-				[OpenFile openPath:range.path withRange:range.range];
-		}
-		else
-		{
-			// The item is the path to the file matches were found in.
-			if ([self->__tableView isItemExpanded:item])
-				[self->__tableView collapseItem:item];
+			PersistentRange* range = [item attribute:@"FindRange" atIndex:0 effectiveRange:NULL];
+			if (range)
+			{
+				// The item is a match line.
+				if (range.range.location != NSNotFound)		// happens if the user edits the match
+					[OpenFile openPath:range.path withRange:range.range];
+			}
 			else
-				[self->__tableView expandItem:item];
+			{
+				// The item is the path to the file matches were found in.
+				if ([self->__tableView isItemExpanded:item])
+					[self->__tableView collapseItem:item];
+				else
+					[self->__tableView expandItem:item];
+			}
 		}
 	}
 }
