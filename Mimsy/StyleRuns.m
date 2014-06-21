@@ -35,6 +35,18 @@
 	return _names[index];
 }
 
+- (NSUInteger)nameToIndex:(NSString*)name
+{
+	for (NSUInteger i = 0; i < _names.count; ++i)
+	{
+		NSString* candidate = _names[i];
+		if ([candidate compare:name options:NSCaseInsensitiveSearch] == NSOrderedSame)
+			return i;
+	}
+	
+	return NSNotFound;
+}
+
 - (void)mapElementsToStyles:(ElementToStyle)block
 {
 	if (!_styler)
@@ -67,6 +79,18 @@
 		NSUInteger element = _runs.data[_processed].elementIndex;
 		DEBUG_ASSERT(element < _styles.count);
 		block(element, _styles[element], _runs.data[_processed].range, &stop);
+		if (stop)
+			break;		// run the block stopped on is not considered to be processed
+	}
+}
+
+- (void)processIndexes:(ProcessStyleIndex)block
+{
+	bool stop = false;
+	for (; _processed < _runs.count; ++_processed)
+	{
+		NSUInteger element = _runs.data[_processed].elementIndex;
+		block(element, _runs.data[_processed].range, &stop);
 		if (stop)
 			break;		// run the block stopped on is not considered to be processed
 	}

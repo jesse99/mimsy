@@ -1,54 +1,30 @@
 #import "ReplaceInFiles.h"
 
-#import "AppSettings.h"
 #import "Assert.h"
-#import "Decode.h"
 #import "FindInFilesController.h"
-#import "Glob.h"
 #import "Logger.h"
-#import "StringCategory.h"
 #import "TextController.h"
 #import "TranscriptController.h"
 
 @implementation ReplaceInFiles
 {
 	FindInFilesController* _findController;
-	NSRegularExpression* _regex;
 	NSString* _template;
-	NSString* _findText;
-	
-	NSString* _root;
-	Glob* _includeGlobs;
-	Glob* _excludeGlobs;
-	Glob* _excludeAllGlobs;
-	
-	NSUInteger _openFiles;
-	NSUInteger _openMatches;
-	int32_t _unopenedFiles;
-	int32_t _unopenedMatches;
+	NSDictionary* _openFiles;	// path => TextController
+
+	int32_t _numFiles;
+	int32_t _numMatches;
 	int32_t _numThreads;
 }
 
 - (id)init:(FindInFilesController*)controller path:(NSString*)path template:(NSString*)template
 {
-	self = [super init];
+	self = [super init:controller path:path];
 	
 	if (self)
 	{
 		_findController = controller;
-		_root = path;
-		_regex = [controller _getRegex];	// note that NSRegularExpression is documented to be thread safe
 		_template = template;
-		_findText = controller.findText;
-		
-		NSArray* globs = [controller.includedGlobsComboBox.stringValue splitByString:@" "];
-		_includeGlobs = [[Glob alloc] initWithGlobs:globs];
-		
-		globs = [controller.excludedGlobsComboBox.stringValue splitByString:@" "];
-		_excludeGlobs = [[Glob alloc] initWithGlobs:globs];
-		
-		globs = [[AppSettings stringValue:@"FindAllAlwaysExclude" missing:@""] splitByString:@" "];
-		_excludeAllGlobs = [[Glob alloc] initWithGlobs:globs];
 	}
 	
 	return self;
@@ -56,234 +32,147 @@
 
 - (void)replaceAll
 {
-	[self step1];
+	ASSERT(_numMatches == 0);		// these objects should be created from scratch for every search
+	
+	[self _processRoot];
 }
 
-// We do as much work as we can off the main thread so these functions chain
-// into one another executing within different threads.
-// 1) snapshot paths for all the open windows
-- (void)step1
+- (void)_step1ProcessOpenFiles
 {
-	NSMutableDictionary* allOpenPaths = [NSMutableDictionary new];	// path => TextController
+	_numThreads = 1;
+	
+	_openFiles = [self _findMatchingOpenFiles];
+	if ([self.root compare:@"Open Windows"] != NSOrderedSame)
+	{
+		++_numThreads;
+		[self _step2FindPaths];
+	}
+	[self _processOpenfiles];
+}
+
+- (NSDictionary*)_findMatchingOpenFiles
+{
+	NSMutableDictionary* openFiles = [NSMutableDictionary new];
 	
 	[TextController enumerate:
-		 ^(TextController *controller)
-		 {
-			 if (controller.path)
-				 allOpenPaths[controller.path] = controller;
-		 }];
+		^(TextController *controller)
+		{
+			if (controller.path)
+			{
+				NSString* fileName = [controller.path lastPathComponent];
+				if ([self.includeGlobs matchName:fileName])
+					[openFiles setValue:controller forKey:controller.path];
+			}
+		}];
 	
-	dispatch_queue_t concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-	dispatch_async(concurrent,
+	return openFiles;
+}
+
+// Kind of sucks to process all the open files in the main thread but it's tricky
+// to handle by processing the files on disk, especially if the user is also
+// editing the files. And also doing it in the main thread allows us to support
+// undo within the open files.
+- (void)_processOpenfiles
+{
+	for (NSString* path in _openFiles)
+	{
+		NSUInteger numMatches = replaceAll(_findController, _openFiles[path], self.regex, _template);
+		if (numMatches > 0)
+		{
+			OSAtomicIncrement32(&_numFiles);
+			OSAtomicAdd32Barrier((int32_t) numMatches, &_numMatches);
+		}
+	}
+	
+	if (--_numThreads == 0)
+		[self _finishedReplacing];
+}
+
+- (bool)_processPath:(NSString*) path withContents:(NSMutableString*)contents	// threaded
+{
+	bool edited = false;
+	
+	if (!_openFiles[path])
+	{
+		if ([self.searchWithin compare:@"everything"] == NSOrderedSame)
+		{
+			NSRange range = NSMakeRange(0, contents.length);
+			NSUInteger numMatches = [self.regex replaceMatchesInString:contents options:0 range:range withTemplate:_template];
+
+			if (numMatches > 0)
+			{
+				OSAtomicIncrement32(&_numFiles);
+				OSAtomicAdd32Barrier((int32_t) numMatches, &_numMatches);
+				edited = true;
+			}
+		}
+		else
+		{
+			edited = [super _processPath:path withContents:contents];
+		}
+	}
+	
+	return edited;
+}
+
+- (bool)_processMatches:(NSArray*)matches forPath:(NSString*)path withContents:(NSMutableString*)contents	// threaded
+{
+	UNUSED(path);
+	bool edited = false;
+	
+	if (matches.count > 0)
+	{
+		for (NSUInteger i = matches.count - 1; i < matches.count; --i)
+		{
+			NSTextCheckingResult* match = matches[i];
+			NSString* replacement = [self.regex replacementStringForResult:match inString:contents offset:0 template:_template];
+			[contents replaceCharactersInRange:match.range withString:replacement];
+		};
+		
+		OSAtomicIncrement32(&_numFiles);
+		OSAtomicAdd32Barrier((int32_t) matches.count, &_numMatches);
+		edited = true;
+	}
+	
+	return edited;
+}
+
+- (bool)_aborted	// threaded
+{
+	return false;
+}
+
+- (void)_onFinish	// threaded
+{
+	dispatch_queue_t main = dispatch_get_main_queue();
+	dispatch_async(main,
 	   ^{
-		   if ([_root compare:@"Open Windows"] == NSOrderedSame)
-			   [self step2WithOnlyOpenPaths:allOpenPaths];
-		   else
-			   [self step2WithOpenPaths:allOpenPaths];
+		   if (--_numThreads == 0)
+			   [self _finishedReplacing];
 	   });
 }
 
-// 2) get a list of paths to the files we need to process
-// in the main thread and a worker thread
-- (void)step2WithOnlyOpenPaths:(NSDictionary*)allOpenPaths	// threaded
+- (void)_finishedReplacing
 {
-	NSMutableDictionary* openPaths = [NSMutableDictionary new];	// path => TextController
-	
-	for (NSString* path in allOpenPaths)
+	// It might be kind of nice to throw up a results window showing the replacements.
+	// But, I think, most of the time no one cares. So all that would mean is that
+	// they would have to go through the hassle of closing the results window. Not a
+	// huge deal, but those minor annoyances add up. And, of course, if someone does
+	// want to to see the results they can just kick off a search for them.
+	NSString* mesg;
+	if (_numMatches > 0)
 	{
-		NSString* fileName = [path lastPathComponent];
-		if ([_includeGlobs matchName:fileName])
-		{
-			TextController* controller = [allOpenPaths valueForKey:path];
-			if (controller)
-				openPaths[path] = controller;
-		}
-	}
-	
-	if (openPaths.count > 0)
-	{
-		dispatch_queue_t main = dispatch_get_main_queue();
-		dispatch_async(main,
-		   ^{
-			   [self _step3aWithOpenPaths:openPaths];
-		   });
-	}
-}
-
-// 2) get a list of paths to the files we need to process
-// in the main thread and a worker thread
-- (void)step2WithOpenPaths:(NSDictionary*)allOpenPaths	// threaded
-{
-	NSMutableDictionary* openPaths = [NSMutableDictionary new];	// path => TextController
-	NSMutableArray* unopenedPaths = [NSMutableArray new];		// paths
-	
-	NSFileManager* fm = [NSFileManager new];
-	NSMutableArray* dirPaths = [NSMutableArray new];
-	[dirPaths addObject:_root];
-	while (dirPaths.count > 0)
-	{
-		NSString* directory = [dirPaths lastObject];
-		[dirPaths removeLastObject];
+		NSString* matchStr = _numMatches == 1 ? @"1 match" : [NSString stringWithFormat:@"%d matches", _numMatches];
+		NSString* filesStr = _numFiles == 1 ? @"within 1 file" : [NSString stringWithFormat:@"within %d files", _numFiles];
 		
-		NSError* error = nil;
-		NSArray* items = [fm contentsOfDirectoryAtPath:directory error:&error];
-		if (items)
-		{
-			for (NSString* item in items)
-			{
-				NSString* path = [directory stringByAppendingPathComponent:item];
-				if (![_excludeGlobs matchName:item] && ![_excludeAllGlobs matchName:item])
-				{
-					BOOL isDirectory = FALSE;
-					if ([fm fileExistsAtPath:path isDirectory:&isDirectory])
-					{
-						if (isDirectory)
-						{
-							[dirPaths addObject:path];
-						}
-						else if ([_includeGlobs matchName:item])
-						{
-							TextController* controller = [allOpenPaths valueForKey:path];
-							if (controller)
-								openPaths[path] = controller;
-							else
-								[unopenedPaths addObject:path];
-						}
-					}
-				}
-			}
-		}
-		else
-		{
-			dispatch_queue_t main = dispatch_get_main_queue();
-			dispatch_async(main,
-			   ^{
-				   NSString* reason = [error localizedFailureReason];
-				   NSString* mesg = [NSString stringWithFormat:@"Error walking '%@': %@", directory, reason];
-				   [TranscriptController writeError:mesg];
-			   });
-		}
-	}
-	
-	_numThreads = 0;
-	if (unopenedPaths.count > 0)	// do this before the dispatching to avoid races
-		_numThreads += 2;
-	if (openPaths.count > 0)
-		_numThreads += 1;
-	
-	if (unopenedPaths.count > 0)
-	{
-		NSUInteger middle = unopenedPaths.count/2;
-		
-		dispatch_queue_t concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-		dispatch_async(concurrent,
-		   ^{
-			   [self _step3bWithUnopenedPaths:unopenedPaths begin:0 end:middle];
-		   });
-		dispatch_async(concurrent,
-		   ^{
-			   [self _step3bWithUnopenedPaths:unopenedPaths begin:middle end:unopenedPaths.count];
-		   });
-	}
-	
-	if (openPaths.count > 0)
-	{
-		dispatch_queue_t main = dispatch_get_main_queue();
-		dispatch_async(main,
-		   ^{
-			   [self _step3aWithOpenPaths:openPaths];
-		   });
-	}
-}
-
-// 3a) process the windows which were open
-- (void)_step3aWithOpenPaths:(NSDictionary*)paths
-{
-	for (NSString* path in paths)
-	{
-		TextController* textController = paths[path];
-		_openMatches += replaceAll(_findController, textController, _regex, _template);
-	}
-	
-	_openFiles = paths.count;
-	[self _onFinishedThread];
-}
-
-// 3b) process files on disk
-- (void)_step3bWithUnopenedPaths:(NSArray*)paths begin:(NSUInteger)begin end:(NSUInteger)end	// threaded
-{
-	for (NSUInteger i = begin; i < end; ++i)
-	{
-		NSString* path = paths[i];
-		[self _processPath:path];
-	}
-	
-	OSAtomicAdd32Barrier((int32_t) (end - begin), &_unopenedFiles);
-	[self _onFinishedThread];
-}
-
-- (void)_processPath:(NSString*)path	// threaded
-{
-	NSString* errStr = nil;
-	NSError* error = nil;
-
-	const char* op = "reading";
-	NSData* data = [NSData dataWithContentsOfFile:path options:0 error:&error];
-	if (data)
-	{
-		op = "decoding";
-		Decode* decoded = [[Decode alloc] initWithData:data];
-		if (decoded.text)
-		{
-			NSMutableString* text = decoded.text;
-			
-			NSRange range = NSMakeRange(0, text.length);
-			NSUInteger numMatches = [_regex replaceMatchesInString:text options:0 range:range withTemplate:_template];
-			
-			if (numMatches > 0)
-			{
-				OSAtomicAdd32Barrier((int32_t) numMatches, &_unopenedMatches);
-				
-				op = "writing";
-				if (![text writeToFile:path atomically:YES encoding:decoded.encoding error:&error])
-					errStr = [error localizedFailureReason];
-			}
-		}
-		else
-			errStr = decoded.error;
+		mesg = [NSString stringWithFormat:@"Replace '%@' replaced %@ %@.\n", _findController.findText, matchStr, filesStr];
 	}
 	else
 	{
-		errStr = [error localizedFailureReason];
+		mesg = [NSString stringWithFormat:@"Replace '%@' replaced nothing.\n", _findController.findText];
 	}
 	
-	if (errStr)
-	{
-		dispatch_queue_t main = dispatch_get_main_queue();
-		dispatch_async(main,
-		   ^{
-			   NSString* mesg = [NSString stringWithFormat:@"Error %s '%@': %@", op, path, errStr];
-			   [TranscriptController writeError:mesg];
-		   });
-	}
-}
-
-- (void)_onFinishedThread		// threaded
-{
-	ASSERT(_numThreads > 0);
-	OSAtomicDecrement32Barrier(&_numThreads);
-	
-	if (_numThreads == 0)
-	{
-		dispatch_queue_t main = dispatch_get_main_queue();
-		dispatch_async(main,
-		   ^{
-			   NSUInteger numFiles = _openFiles + (NSUInteger) _unopenedFiles;
-			   NSUInteger numMatches = _openMatches + (NSUInteger) _unopenedMatches;
-			   NSString* mesg = [NSString stringWithFormat:@"Replaced %lu matches within %lu files.", numMatches, numFiles];
-			   [TranscriptController writeCommand:mesg];
-		   });
-	}
+	[TranscriptController writeCommand:mesg];
 }
 
 @end

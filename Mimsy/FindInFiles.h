@@ -1,9 +1,7 @@
-#import <Foundation/Foundation.h>
-
-@class FindInFilesController;
+#import "BaseInFiles.h"
 
 // One of these is instantiated for each find in files operation.
-@interface FindInFiles : NSObject
+@interface FindInFiles : BaseInFiles
 
 - (id)init:(FindInFilesController*)controller path:(NSString*)path;
 

@@ -2,11 +2,12 @@ FindAllIncludes: *.c *.cpp *.c++ *.h *.hpp *.m *.rs *.js
 FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
-* Get replace all working:
-	- use the FindResultsController to show the replacements
-	- both replace and find need to do something with search within
-	- make sure error cases work
-* DOn't use objectForKey
+
+* Add writeInfo to TranscriptController:
+	- add a setting
+	- replace places that need to be replaced
+	- bring transcript window to the front
+* Don't use objectForKey
 * Get find in files working
 	- may want a unit test for find in files
 	- should be keys to go forward and backwards in find list
@@ -17,12 +18,38 @@ FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 * Context menu takes too long to pop down
 	- probably time machine
 	- may want to just pop up a picker dialog
-* Layout object has support for showing invisible chars.
-* Layout object has support for showing control chars.
-* Get replace all in files working
+	  or possibly two menu items, one for latest version, one to pick
 * Review the Continum find code
 * Look at the search notes
-* Analyze the code
+* Layout object has support for showing invisible chars.
+* Layout object has support for showing control chars.
+* Update OS.
+* Experiment with a different proc-file based design:
+	- extensions use json messages and replies to get notifications (including event processing), to register for notifications, and to issue commands (eg select a string from a list)
+	- state is exposed to extensions via proc files
+	- some proc files are writeable, eg selection range
+	- some proc files are links, eg main window
+	- plugins are objective-c (or swift)
+	- notifications should support some sort of granulatirity option
+	- would be really cool to have an extenion that maintains the function popup menu
+		` probably want a proc file with function menu items
+		` maybe settings that control regex to use per file type
+		` could use this to keep an index for the larger help files
+	- could have extensions to add some sort of chrome
+		` replace chars with unicode smbols
+		` load image files
+		` add links to local (relative path) files
+		` will need menu item to turn chrome off
+		` how do we handle saving? some magic attribute?
+
+	- state is exposed via files
+	- stuff like settings are exposed as individual files (array like settings may ave multiple lines)
+	- plugins directory
+	- install needs to install plugin files as well
+	- control can be done via plugin stdin and stdout
+	- maybe plugins could write lua to control mimsy
+	  replies could be json
+	- plugins with a UI could be objc
 * Might be nice if directory window styled dirty windows somehow
 	- maybe back color
 * Tabs don't work correctly

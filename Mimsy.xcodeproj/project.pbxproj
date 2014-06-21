@@ -109,6 +109,7 @@
 		37AD7570171B95460054A75F /* UpdateConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AD756F171B95460054A75F /* UpdateConfig.m */; };
 		37BF4DFA16F56CB3008FD480 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 37BF4DF916F56CB3008FD480 /* images */; };
 		37CF062616AB998A00069A20 /* LuaSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF062516AB998A00069A20 /* LuaSupport.m */; };
+		37CF13D0194FC51800F35944 /* BaseInFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF13CF194FC51800F35944 /* BaseInFiles.m */; };
 		37ECF06119291A0500061C0A /* LocalSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ECF06019291A0500061C0A /* LocalSettings.m */; };
 		37ECF06419296C7A00061C0A /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ECF06319296C7A00061C0A /* Constants.m */; };
 		37ECF067192EFCC100061C0A /* BaseTextController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ECF066192EFCC100061C0A /* BaseTextController.m */; };
@@ -318,6 +319,10 @@
 		37BF4DF916F56CB3008FD480 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
 		37CF062416AB998A00069A20 /* LuaSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaSupport.h; sourceTree = "<group>"; };
 		37CF062516AB998A00069A20 /* LuaSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LuaSupport.m; sourceTree = "<group>"; };
+		37CF13CC194E3CE500F35944 /* RangeVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RangeVector.h; sourceTree = "<group>"; };
+		37CF13CD194E3EE000F35944 /* RangeVectorUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RangeVectorUtils.h; sourceTree = "<group>"; };
+		37CF13CE194FC51800F35944 /* BaseInFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseInFiles.h; sourceTree = "<group>"; };
+		37CF13CF194FC51800F35944 /* BaseInFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseInFiles.m; sourceTree = "<group>"; };
 		37ECF05F19291A0500061C0A /* LocalSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalSettings.h; sourceTree = "<group>"; };
 		37ECF06019291A0500061C0A /* LocalSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalSettings.m; sourceTree = "<group>"; };
 		37ECF06219296C7A00061C0A /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
@@ -408,6 +413,8 @@
 				37862C731698755000DB9E66 /* Metadata.m */,
 				375140E516835CB400C329AF /* Paths.h */,
 				375140E616835CB400C329AF /* Paths.m */,
+				37CF13CC194E3CE500F35944 /* RangeVector.h */,
+				37CF13CD194E3EE000F35944 /* RangeVectorUtils.h */,
 				370552A218710C27005F1438 /* SelectName.xib */,
 				370552A418710E14005F1438 /* SelectNameController.h */,
 				370552A518710E15005F1438 /* SelectNameController.m */,
@@ -547,6 +554,8 @@
 			children = (
 				379A411A192033BF00ACEA5C /* BaseFindController.h */,
 				379A411B192033BF00ACEA5C /* BaseFindController.m */,
+				37CF13CE194FC51800F35944 /* BaseInFiles.h */,
+				37CF13CF194FC51800F35944 /* BaseInFiles.m */,
 				379A41171920031500ACEA5C /* FindController.h */,
 				379A41181920031500ACEA5C /* FindController.m */,
 				373B971E1937F3D90084CCC1 /* FindInFiles.h */,
@@ -889,6 +898,7 @@
 				373B97281942BC110084CCC1 /* AttributedStringCategory.m in Sources */,
 				373B972C194374FA0084CCC1 /* PersistentRange.m in Sources */,
 				373B972F1945570F0084CCC1 /* ReplaceInFiles.m in Sources */,
+				37CF13D0194FC51800F35944 /* BaseInFiles.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

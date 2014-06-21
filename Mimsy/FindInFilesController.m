@@ -54,6 +54,11 @@ static FindInFilesController* _findFilesController = nil;
 	return _findFilesController;	
 }
 
+- (bool)singleFile
+{
+	return false;
+}
+
 - (NSArray*)getHelpContext
 {
 	return @[@"find all", @"find"];

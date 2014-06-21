@@ -1,4 +1,5 @@
 #import <Cocoa/Cocoa.h>
+#import "RangeVectorUtils.h"
 
 @class BaseTextController;
 
@@ -16,10 +17,11 @@
 - (void)_settingsChanged:(NSNotification*)notification;
 
 - (NSRegularExpression*)_getRegex;
-- (bool)_rangeMatches:(NSRange)range;
+- (bool)_rangeMatches:(NSRange)range controller:(BaseTextController*)controller;
 - (void)_updateComboBox:(NSComboBox*)box with:(NSString*)text;
 
 - (NSString*)_getReplaceTemplate;
+- (bool)singleFile;
 
 - (void)_replace:(BaseTextController*)controller regex:(NSRegularExpression*)regex match:(NSTextCheckingResult*)match with:(NSString*)template showSelection:(bool)showSelection;
 - (void)_showSelection:(NSRange)range in:(BaseTextController*)controller;

@@ -4,10 +4,12 @@
 #import "Assert.h"
 #import "Constants.h"
 #import "Language.h"
+#import "Languages.h"
 #import "Logger.h"
 #import "RegexStyler.h"
 #import "AppSettings.h"
 #import "StringCategory.h"
+#import "StyleRuns.h"
 #import "TextController.h"
 #import "TranscriptController.h"
 
@@ -24,7 +26,7 @@ NSUInteger replaceAll(BaseFindController* findController, BaseTextController* te
 	 ^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop)
 	 {
 		 UNUSED(flags, stop);
-		 if (match && [findController _rangeMatches:match.range])
+		 if (match && [findController _rangeMatches:match.range controller:textController])
 			 [matches addObject:match];
 	 }];
 	
@@ -127,6 +129,11 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	return result;
 }
 
+- (bool)singleFile
+{
+	return true;
+}
+
 - (void)_settingsChanged:(NSNotification*)notification
 {
 	UNUSED(notification);
@@ -145,10 +152,17 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 		[_searchWithinComboBox addItemsWithObjectValues:patterns];
 		
 	}
-	else
+	else if (self.singleFile)
 	{
 		patterns = [NSArray new];
 		[_searchWithinComboBox removeAllItems];
+	}
+	else
+	{
+		// If the controller is for find/replace in files we don't want to zap
+		// the search within dropdown every time the user switches to something
+		// like the transcript window.
+		return;
 	}
 	
 	// If the new search within strings include whatever the user
@@ -235,11 +249,10 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	ASSERT(false);	// subclasses implement this
 }
 
-- (bool)_rangeMatches:(NSRange)range
+- (bool)_rangeMatches:(NSRange)range controller:(BaseTextController*)controller
 {
 	bool matches = true;
 	
-	BaseTextController* controller = [BaseTextController frontmost];
 	if (controller && controller.language && [_searchWithinComboBox.stringValue compare:@"everything"] != NSOrderedSame)
 	{
 		if ([controller respondsToSelector:@selector(getElementNameFor:)])

@@ -96,7 +96,7 @@ typedef void (^FindBlock)(BaseTextController* controller, NSRegularExpression* r
 				   ^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop)
 				   {
 					   UNUSED(flags);
-					   if (result && [self _rangeMatches:result.range])
+					   if (result && [self _rangeMatches:result.range controller:[BaseTextController frontmost]])
 					   {
 						   match = result;
 						   range = result.range;
@@ -180,7 +180,7 @@ typedef void (^FindBlock)(BaseTextController* controller, NSRegularExpression* r
 					^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop)
 				   {
 					   UNUSED(flags, stop);
-					   if (result && [self _rangeMatches:result.range])
+					   if (result && [self _rangeMatches:result.range controller:[BaseTextController frontmost]])
 						   candidate = result.range;
 				   }];
 			   

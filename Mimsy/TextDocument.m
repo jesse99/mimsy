@@ -212,6 +212,8 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 // 1) The document is auto-saved to the right place. I think this is normally what you
 // want but it can be a bit disconcerting: there's no prompt to save and no opportunity
 // to review changes.
+//
+// Note that BaseInFiles depends upon this behavior.
 + (BOOL)autosavesInPlace
 {
     return YES;	// TODO: make this an option? a setting?
