@@ -147,7 +147,7 @@
 	{
 		NSAttributedString* str = self.textView.textStorage;
 		NSDictionary* attrs = [str attributesAtIndex:range.location longestEffectiveRange:NULL inRange:range];
-		element = attrs ? [attrs objectForKey:@"element name"] : nil;
+		element = attrs ? attrs[@"element name"] : nil;
 	}
 	
 	return element;

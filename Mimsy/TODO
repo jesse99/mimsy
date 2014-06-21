@@ -3,13 +3,7 @@ FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
 
-* Add writeInfo to TranscriptController:
-	- add a setting
-	- replace places that need to be replaced
-	- bring transcript window to the front
-* Don't use objectForKey
 * Get find in files working
-	- may want a unit test for find in files
 	- should be keys to go forward and backwards in find list
 	- needs to be able to search rtf files
 		NSDictionary* options = @{NSDocumentTypeDocumentAttribute:NSRTFTextDocumentType};

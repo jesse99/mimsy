@@ -102,7 +102,7 @@ typedef void (^NullaryBlock)();
 
 - (void)_executeSelector:(NSString*)name
 {
-	NullaryBlock block = [self->_pendingBlocks objectForKey:name];
+	NullaryBlock block = self->_pendingBlocks[name];
 	@try
 	{
 		block();
@@ -119,7 +119,7 @@ typedef void (^NullaryBlock)();
 {
 	AppDelegate* delegate = [NSApp delegate];
 	
-	if (![delegate->_pendingBlocks objectForKey:name])
+	if (!delegate->_pendingBlocks[name])
 	{
 		NullaryBlock block = ^()
 			{

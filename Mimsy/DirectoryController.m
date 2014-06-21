@@ -965,7 +965,7 @@ static DirectoryController* _lastBuilt;
 				 for (NSString* pattern in patterns)
 				 {
 					 Glob* g = [[Glob alloc] initWithGlob:pattern];
-					 if (![globs objectForKey:g])
+					 if (!globs[g])
 						 globs[g] = attrs;
 					 else
 						 [TranscriptController writeError:[NSString stringWithFormat:@"%@ appears twice in GlobStyles values for %@", entry.key, path]];
