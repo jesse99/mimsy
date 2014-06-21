@@ -40,6 +40,10 @@
 	if (table)
 		self.selectedRows = table.selectedRowIndexes;
 
+	// Explicitly closing the window can prevent exceptions if our caller opens up new
+	// windows (this was happening with TimeMachine). It looked like the first responder
+	// in this window was resigning while the window was being torn down.
+	[self.window close];
 	[NSApp stopModalWithCode:NSOKButton];
 }
 
