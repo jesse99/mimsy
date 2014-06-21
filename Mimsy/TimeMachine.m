@@ -1,7 +1,10 @@
 #import "TimeMachine.h"
 
 #import "AppDelegate.h"
+#import "ArrayCategory.h"
 #import "Assert.h"
+#import "OpenFile.h"
+#import "SelectNameController.h"
 #import "StringCategory.h"
 #import "TextController.h"
 #import "TranscriptController.h"
@@ -79,11 +82,11 @@ static NSString* _getTimeStr(double timestamp)
 		_fileNum = attrs[NSFileSystemFileNumber];
 		_timeStamp = fabs([fileTime timeIntervalSinceNow]);
 		_timeStr = _getTimeStr(_timeStamp);
-		_title = [NSString stringWithFormat:@"Open From %@", _timeStr];
+		_title = [NSString stringWithFormat:@"From %@", _timeStr];
 	}
 	else
 	{
-		_title = [NSString stringWithFormat:@"Open From ? seconds ago"];
+		_title = [NSString stringWithFormat:@"From ? seconds ago"];
 	}
 	
 	return self;
@@ -124,66 +127,79 @@ static NSString* _getTimeStr(double timestamp)
 	
 	if (_timeMachineDir)
 	{
-		NSArray* oldFiles = [TimeMachine _tryFindOldFiles];
-		if (oldFiles && oldFiles.count > 0)
+		// It'd be nicer to just add a submenu with all of the old files listed. However that
+		// can be slow, especially if snapshots are on an external drive that needs to be spun
+		// up. So we'll defer all of that until we know that the user really wants those files.
+		TextController* controller = [TextController frontmost];
+		if (controller && controller.path)
 		{
-			NSMenu* tmMenu = [[NSMenu alloc] initWithTitle:@"Time Machine"];
-			NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:@"Time Machine" action:NULL keyEquivalent:@""];
-			[item setSubmenu:tmMenu];
+			NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:@"Open Latest" action:@selector(openLatestInTimeMachine:) keyEquivalent:@""];
 			[menu addItem:item];
 
-			for (OldFile* file in oldFiles)
-			{
-				[TimeMachine _appendFile:file toMenu:tmMenu];
-			}
-		}
-		else if (!oldFiles)
-		{
-			// _findOldFiles is normally very fast (under 100 ms on a 2009 mac). However
-			// snapshots are often stored on external drives. And if those drives are
-			// asleep it can take seconds for them to spin back up. That's way too long
-			// to wait while we are building a context menu so we'll punt on Time Machine
-			// if it's taking too long.
-			//
-			// The other option is to do as Continuum did and add a menu item to open the
-			// latest snapshot. And then in the snapshot's context menu we could add all
-			// the other snapshots. This avoids spinning up the Time Machine volume
-			// unnecessarily but it would also make the Time Machine functionality even
-			// less discoverable than it is now.
-			NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:@"Spinning up Time Machine" action:NULL keyEquivalent:@""];
-			[item setEnabled:FALSE];
+			item = [[NSMenuItem alloc] initWithTitle:@"Open Time Machine…" action:@selector(openTimeMachine:) keyEquivalent:@""];
 			[menu addItem:item];
 		}
 	}
 }
 
++ (void)openLatest
+{
+	NSArray* oldFiles = [TimeMachine _tryFindOldFiles];
+	if (oldFiles && oldFiles.count > 0)
+	{
+		OldFile* file = oldFiles[0];
+		NSURL* url = [NSURL fileURLWithPath:file.path isDirectory:FALSE];
+
+		AppDelegate* app = [NSApp delegate];
+		[app openWithMimsy:url];
+	}
+	else
+	{
+		NSBeep();
+	}
+}
+
++ (void)openFiles
+{
+	NSArray* oldFiles = [TimeMachine _tryFindOldFiles];
+	if (oldFiles && oldFiles.count > 0)
+	{
+		TextController* tc = [TextController frontmost];
+		NSString* title = [NSString stringWithFormat:@"%@ Files", tc.path.lastPathComponent];
+		NSArray* titles = [oldFiles map:^id(OldFile* file) {return file.title;}];
+		SelectNameController* controller = [[SelectNameController alloc] initWithTitle:title names:titles];
+		(void) [NSApp runModalForWindow:controller.window];
+		
+		if (controller.selectedRows)
+		{
+			if ([OpenFile shouldOpenFiles:controller.selectedRows.count])
+			{
+				AppDelegate* app = [NSApp delegate];
+				[controller.selectedRows enumerateIndexesUsingBlock:
+					^(NSUInteger index, BOOL* stop)
+					 {
+						 UNUSED(stop);
+						 
+						 OldFile* file = oldFiles[index];
+						 NSURL* url = [NSURL fileURLWithPath:file.path isDirectory:FALSE];					 
+						 [app openWithMimsy:url];
+					 }];
+			}
+		}
+	}
+	else
+	{
+		NSBeep();
+	}
+}
+
 +(NSArray*)_tryFindOldFiles
 {
-	__block NSCondition* condition = [NSCondition new];
-	__block NSMutableArray* oldFiles = nil;
+	NSMutableArray* oldFiles = [TimeMachine _findOldFiles];
+   [TimeMachine removeDupes:oldFiles];
+   [TimeMachine _sortOldFiles:oldFiles];
 	
-	// Grab the lock first thing so that the main thread can block in waitUntilDate
-	// before the async code acquires the lock.
-	[condition lock];
-
-	dispatch_queue_t concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-	dispatch_async(concurrent,
-	   ^{
-		   [condition lock];
-		   
-		   oldFiles = [TimeMachine _findOldFiles];
-		   [TimeMachine removeDupes:oldFiles];
-		   [TimeMachine _sortOldFiles:oldFiles];
-		   
-		   [condition signal];
-		   [condition unlock];
-	   });
-	
-	NSDate* date = [NSDate dateWithTimeIntervalSinceNow:0.25];
-	bool completed = [condition waitUntilDate:date];
-	[condition unlock];
-	
-	return completed ? oldFiles : nil;
+	return oldFiles;
 }
 
 + (void)removeDupes:(NSMutableArray*)oldFiles
@@ -217,19 +233,6 @@ static NSString* _getTimeStr(double timestamp)
 				 return NSOrderedSame;
 		 }
 	 ];
-}
-
-+ (void)_appendFile:(OldFile*)file toMenu:(NSMenu*)menu
-{
-	NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:file.title action:@selector(openTimeMachine:) keyEquivalent:@""];
-	
-	[item setRepresentedObject:file.path];
-	
-	TextController* controller = [TextController frontmost];
-	if ([controller.path compare:file.path] == 0)
-		[item setState:NSOnState];
-		 
-	[menu addItem:item];
 }
 
 + (void)_getOriginalPath:(NSString**)originalPath andVolume:(NSString**)volume fromController:(TextController*)controller

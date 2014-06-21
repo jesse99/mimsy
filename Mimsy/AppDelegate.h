@@ -12,6 +12,7 @@ void initLogLevels(void);
 - (void)openWithMimsy:(NSURL*)url;
 - (IBAction)openAsBinary:(id)sender;
 - (void)searchSite:(id)sender;
+- (void)openLatestInTimeMachine:(id)sender;
 - (void)openTimeMachine:(id)sender;
 
 + (void)appendContextMenu:(NSMenu*)menu;

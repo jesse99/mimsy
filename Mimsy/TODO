@@ -3,12 +3,14 @@ FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
 
-* Layout object has support for showing invisible chars.
-* Layout object has support for showing control chars.
 * Context menu takes too long to pop down
+	- title bar should include the file name
 	- probably time machine
 	- may want to just pop up a picker dialog
 	  or possibly two menu items, one for latest version, one to pick
+* Add a Mimsy.h include
+	- pull in appkit (or foundation)
+	- pull in assert, logger, maybe others
 * Update OS.
 * Experiment with a different proc-file based design:
 	- extensions use json messages and replies to get notifications (including event processing), to register for notifications, and to issue commands (eg select a string from a list)
@@ -89,6 +91,10 @@ FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 * Support some of the text commands:
 	- show tabs
 	- toggle comments
+* Would be nice to have some sort of show invisibles command:
+	- or maybe generic replace char with char command
+	- could use a setting to control mappings
+	- probably need an NSLayoutManager subclass, see http://stackoverflow.com/questions/300086/display-hidden-characters-in-nstextview
 * Add show leading spaces and show leading tabs commands:
 	- perist them in a pref
 	  may want to make this a project pref

@@ -23,6 +23,7 @@
 #import "StartupScripts.h"
 #import "StringCategory.h"
 #import "TextController.h"
+#import "TimeMachine.h"
 #import "TranscriptController.h"
 #import "Utils.h"
 #import "WindowsDatabase.h"
@@ -138,11 +139,16 @@ typedef void (^NullaryBlock)();
 	}
 }
 
+- (void)openLatestInTimeMachine:(id)sender
+{
+	UNUSED(sender);
+	[TimeMachine openLatest];
+}
+
 - (void)openTimeMachine:(id)sender
 {
-	NSString* path = [sender representedObject];
-	NSURL* url = [NSURL fileURLWithPath:path isDirectory:FALSE];	
-	[self openWithMimsy:url];
+	UNUSED(sender);
+	[TimeMachine openFiles];
 }
 
 - (void)findInFiles:(id)sender
