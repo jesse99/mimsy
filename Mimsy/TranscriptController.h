@@ -10,6 +10,7 @@
 
 + (bool)empty;
 
++ (void)writeInfo:(NSString*)text;		// mimsy status messages
 + (void)writeCommand:(NSString*)text;	// typically the text of a command executed via a build tool
 + (void)writeStderr:(NSString*)text;	// typically stderr from a tool run via a build
 + (void)writeStdout:(NSString*)text;	// typically stdout from a tool run via a build

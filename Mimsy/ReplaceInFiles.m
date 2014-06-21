@@ -172,7 +172,7 @@
 		mesg = [NSString stringWithFormat:@"Replace '%@' replaced nothing.\n", _findController.findText];
 	}
 	
-	[TranscriptController writeCommand:mesg];
+	[TranscriptController writeInfo:mesg];
 }
 
 @end

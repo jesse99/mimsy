@@ -273,7 +273,7 @@ void runFunctionalTests(void)
 			_numPassed = 0;
 			_numFailed = 0;
 			
-			[TranscriptController writeCommand:@"Running functional tests:\n"];			
+			[TranscriptController writeInfo:@"Running functional tests:\n"];
 			startNextTest();
 		}
 		else

@@ -10,6 +10,7 @@ static TranscriptController* controller;
 
 @implementation TranscriptController
 {
+	NSDictionary* _infoAttrs;
 	NSDictionary* _commandAttrs;
 	NSDictionary* _stdoutAttrs;
 	NSDictionary* _stderrAttrs;
@@ -91,6 +92,18 @@ static TranscriptController* controller;
 	return instance.view.textStorage.length == 0;
 }
 
++ (void)writeInfo:(NSString*)text
+{
+	TranscriptController* instance = [TranscriptController getInstance];
+	NSMutableAttributedString* str = [[NSMutableAttributedString alloc] initWithString:text];
+	[str setAttributes:instance->_infoAttrs range:NSMakeRange(0, text.length)];
+	[instance.view.textStorage appendAttributedString:str];
+	[instance _trimExtra];
+	[instance.window makeKeyAndOrderFront:self];
+	[instance _scrollLastIntoView];
+	instance->_editCount += 1;
+}
+
 + (void)writeCommand:(NSString*)text
 {
 	TranscriptController* instance = [TranscriptController getInstance];
@@ -160,9 +173,10 @@ static TranscriptController* controller;
 	NSString* dir = [Paths installedDir:@"settings"];
 	NSString* path = [dir stringByAppendingPathComponent:@"transcript.rtf"];
 	TextStyles* styles = [[TextStyles new] initWithPath:path expectBackColor:true];
+	_infoAttrs    = [styles attributesForElement:@"info"];
 	_commandAttrs = [styles attributesForElement:@"command"];
-	_stdoutAttrs = [styles attributesForElement:@"stdout"];
-	_stderrAttrs = [styles attributesForElement:@"stderr"];
+	_stdoutAttrs  = [styles attributesForElement:@"stdout"];
+	_stderrAttrs  = [styles attributesForElement:@"stderr"];
 	
 	_maxChars = [self _parseNumber:[styles valueForKey:@"MaxChars"]];
 	
@@ -178,7 +192,10 @@ static TranscriptController* controller;
 			(void) stop;
 			if (element)
 			{
-				if ([element isEqualToString:@"command"])
+				if ([element isEqualToString:@"info"])
+					[self.view.textStorage setAttributes:_infoAttrs range:range];
+				
+				else if ([element isEqualToString:@"command"])
 					[self.view.textStorage setAttributes:_commandAttrs range:range];
 				
 				else if ([element isEqualToString:@"stdout"])
