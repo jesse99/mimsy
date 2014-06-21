@@ -115,6 +115,8 @@
 	return edited;
 }
 
+// TODO: Might be better to display a window with a progress bar. Could set the title like
+// find in files does.
 - (bool)_processMatches:(NSArray*)matches forPath:(NSString*)path withContents:(NSMutableString*)contents	// threaded
 {
 	UNUSED(path);

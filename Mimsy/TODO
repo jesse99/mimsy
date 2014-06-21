@@ -3,20 +3,12 @@ FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
 
-* Get find in files working
-	- should be keys to go forward and backwards in find list
-	- needs to be able to search rtf files
-		NSDictionary* options = @{NSDocumentTypeDocumentAttribute:NSRTFTextDocumentType};
-		_text = [[NSMutableAttributedString alloc] initWithData:data options:options documentAttributes:NULL error:outError];
-	- make sure that it has a help window
+* Layout object has support for showing invisible chars.
+* Layout object has support for showing control chars.
 * Context menu takes too long to pop down
 	- probably time machine
 	- may want to just pop up a picker dialog
 	  or possibly two menu items, one for latest version, one to pick
-* Review the Continum find code
-* Look at the search notes
-* Layout object has support for showing invisible chars.
-* Layout object has support for showing control chars.
 * Update OS.
 * Experiment with a different proc-file based design:
 	- extensions use json messages and replies to get notifications (including event processing), to register for notifications, and to issue commands (eg select a string from a list)
