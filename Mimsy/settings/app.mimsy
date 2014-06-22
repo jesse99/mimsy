@@ -75,3 +75,8 @@ ContextHelp: {app}[Mimsy Web Site]https://github.com/jesse99/mimsy
 # that the later parts of the path are the most important and should be displayed
 # first. So a path like /tmp/foo/bar would be displayed as bar • foo • tmp.
 ReversePaths: true
+
+# Globs for file names to not open inside of Mimsy. By default Mimsy will open
+# all text files within Mimsy but if certain files are best opened with a different
+# application you can add their extension here.
+DontOpenWithMimsy:

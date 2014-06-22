@@ -3,11 +3,11 @@ FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
 
-* Double click should open all text files as mimsy.
-	- maybe always attempt to open
-	- handle this in OpenFile
-	- should have a blacklist of files to not open as mimsy
 * Look at style for no language documents.
+* Use a Minsy header:
+	- include assert and logger
+	- include a couple categories
+	- include foundation
 * Look at OS changes.
 * Use alertWithError where we don't just write to the transcript.
 * Experiment with a different proc-file based design:

@@ -729,15 +729,11 @@ static DirectoryController* _lastBuilt;
 	NSArray* selectedItems = [self _getSelectedItems];
 	if ([OpenFile shouldOpenFiles:selectedItems.count])
 	{
-		bool failed = false;
 		for (FileSystemItem* item  in selectedItems)
 		{
 			if ([item.path rangeOfString:@"(Autosaved)"].location == NSNotFound)
-				if (![OpenFile openPath:item.path atLine:-1 atCol:-1 withTabWidth:1])
-					failed = true;
+				[OpenFile openPath:item.path atLine:-1 atCol:-1 withTabWidth:1];
 		}
-		if (failed)
-			NSBeep();
 	}
 }
 

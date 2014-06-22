@@ -68,11 +68,11 @@ static bool _doAbsolutePath(NSString* path, int line, int col)
 		BOOL isDir = FALSE;
 		if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir] && !isDir)
 		{
-			opened = [OpenFile openPath:path atLine:line atCol:col withTabWidth:1];
+			opened = [OpenFile tryOpenPath:path atLine:line atCol:col withTabWidth:1];
 		}
 		else if ([[NSWorkspace sharedWorkspace] isFilePackageAtPath:path])
 		{
-			opened = [OpenFile openPath:path atLine:line atCol:col withTabWidth:1];
+			opened = [OpenFile tryOpenPath:path atLine:line atCol:col withTabWidth:1];
 		}
 	}
 	

@@ -1,8 +1,12 @@
 #import "OpenFile.h"
 
+#import "AppSettings.h"
 #import "Assert.h"
+#import "Decode.h"
 #import "DirectoryController.h"
+#import "Glob.h"
 #import "Languages.h"
+#import "StringCategory.h"
 #import "TextController.h"
 #import "TranscriptController.h"
 
@@ -33,11 +37,19 @@
 	return open;
 }
 
-+ (bool)openPath:(NSString*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width
++ (bool)tryOpenPath:(NSString*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width
 {
-	bool opened = false;
+	bool can = [self _mimsyCanOpen:path];
 	
-	if ([self _mimsyCanOpen:path])
+	if (can)
+		[self openPath:path atLine:line atCol:col withTabWidth:width];
+	
+	return can;
+}
+
++ (void)openPath:(NSString*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width
+{
+	if (![self _dontOpenWithMimsy:path.lastPathComponent])
 	{
 		NSURL* url = [NSURL fileURLWithPath:path];
 		NSDocumentController* dc = [NSDocumentController sharedDocumentController];
@@ -57,30 +69,31 @@
 					 }
 					 else if (error && error.code != NSUserCancelledError)
 					 {
-						 NSString* reason = [error localizedFailureReason];
-						 NSString* mesg = [NSString stringWithFormat:@"Couldn't open '%@': %@", url, reason];
-						 [TranscriptController writeError:mesg];
+						 // We'll attempt to open everything (except blacklisted globs) in
+						 // Mimsy. This is good because there are all sorts of weird text
+						 // files that people may want to edit. If we cannot open it within
+						 // Mimsy then we'll open it like the Finder does (this will normally
+						 // only happen for binary files).
+						 bool opened = [[NSWorkspace sharedWorkspace] openFile:path];
+						 if (!opened)
+						 {
+							 NSString* reason = [error localizedFailureReason];
+							 NSString* mesg = [NSString stringWithFormat:@"Couldn't open '%@': %@", url, reason];
+							 [TranscriptController writeError:mesg];
+						 }
 					 }
 				 }
 			 ];
-		
-		// openDocumentWithContentsOfURL should have been able to open it but it's an asynchronous
-		// method so we can't know for sure if it has actually succeeded until some time later.
-		opened = true;
 	}
 	else
 	{
-		opened = [[NSWorkspace sharedWorkspace] openFile:path];
+		[[NSWorkspace sharedWorkspace] openFile:path];
 	}
-	
-	return opened;
 }
 
-+ (bool)openPath:(NSString*)path withRange:(NSRange)range
++ (void)openPath:(NSString*)path withRange:(NSRange)range
 {
-	bool opened = false;
-	
-	if ([self _mimsyCanOpen:path])
+	if (![self _dontOpenWithMimsy:path.lastPathComponent])
 	{
 		NSURL* url = [NSURL fileURLWithPath:path];
 		NSDocumentController* dc = [NSDocumentController sharedDocumentController];
@@ -106,43 +119,62 @@
 				 }
 				 else if (error && error.code != NSUserCancelledError)
 				 {
-					 NSString* reason = [error localizedFailureReason];
-					 NSString* mesg = [NSString stringWithFormat:@"Couldn't open '%@': %@", url, reason];
-					 [TranscriptController writeError:mesg];
+					 bool opened = [[NSWorkspace sharedWorkspace] openFile:path];
+					 if (!opened)
+					 {
+						 NSString* reason = [error localizedFailureReason];
+						 NSString* mesg = [NSString stringWithFormat:@"Couldn't open '%@': %@", url, reason];
+						 [TranscriptController writeError:mesg];
+					 }
 				 }
 			 }];
-		
-		// openDocumentWithContentsOfURL should have been able to open it but it's an asynchronous
-		// method so we can't know for sure if it has actually succeeded until some time later.
-		opened = true;
 	}
 	else
 	{
-		opened = [[NSWorkspace sharedWorkspace] openFile:path];
+		[[NSWorkspace sharedWorkspace] openFile:path];
 	}
-	
-	return opened;
 }
 
 + (bool)_mimsyCanOpen:(NSString*)path
 {
+	// Check to see if the user has marked the file as something he doesn't
+	// want to open with Mimsy.
+	NSString* name = [path lastPathComponent];
+	if ([self _dontOpenWithMimsy:name])
+		return false;
+	
 	// If the file is part of an open directory then check the directory prefs.
 	DirectoryController* controller = [DirectoryController getController:path];
 	if (controller && [controller shouldOpen:path])
 		return true;
 
-	// See if the extension matches one of our languages. Unfortunately
-	// some languages require peeking at the file contents in order to
-	// know if it's really one of their files so we have to read the file.
-	NSString* name = [path lastPathComponent];
-	NSString* contents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
-	if (contents && [Languages findWithFileName:name contents:contents])
+	// See if the extension matches one of our languages. Contents is used to
+	// match shebangs within script files without an extension. But if it's a
+	// text file we'll wind up opening it anyway so we'll avoid the work of
+	// reading the file twice in the common case where the extension is enough
+	// to figure out whether we can open it.
+	if ([Languages findWithFileName:name contents:@""])
 		return true;
 
-	// There are files that we want to open that don't have useful extensions
-	// (notably shebanged scripts). These cases should be handled by conditional
-	// globals in the language files.
-	return true;
+	// Fallback to checking to see if the file can be read as text.
+	NSData* data = [NSData dataWithContentsOfFile:path];
+	Decode* decode = data ? [[Decode alloc] initWithData:data] : nil;
+	return decode.text != nil;
+}
+
++ (bool)_dontOpenWithMimsy:(NSString*)fileName
+{
+	NSString* setting = [AppSettings stringValue:@"DontOpenWithMimsy" missing:nil];
+	if (setting)
+	{
+		NSArray* patterns = [setting splitByString:@" "];
+		Glob* glob = [[Glob alloc] initWithGlobs:patterns];
+		return [glob matchName:fileName] == 1;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 @end

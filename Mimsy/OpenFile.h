@@ -4,7 +4,10 @@
 @interface OpenFile : NSObject
 
 + (bool)shouldOpenFiles:(NSUInteger)numFiles;
-+ (bool)openPath:(NSString*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width;
-+ (bool)openPath:(NSString*)path withRange:(NSRange)range;
++ (void)openPath:(NSString*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width;
++ (void)openPath:(NSString*)path withRange:(NSRange)range;
+
+// Note that this is relatively slow.
++ (bool)tryOpenPath:(NSString*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width;
 
 @end
