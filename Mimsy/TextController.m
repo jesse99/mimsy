@@ -1,6 +1,7 @@
 #import "TextController.h"
 
 #import "ApplyStyles.h"
+#import "AppSettings.h"
 #import "Assert.h"
 #import "Balance.h"
 #import "ConfigParser.h"
@@ -50,6 +51,7 @@
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(languagesChanged:) name:@"LanguagesChanged" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stylesChanged:) name:@"StylesChanged" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
 	}
     
 	return self;
@@ -454,11 +456,18 @@
 		
 		NSDictionary* attrs = [_styles attributesForElement:@"normal"];
 		[self.textView setTypingAttributes:attrs];
-		
-		[self.textView setAutomaticQuoteSubstitutionEnabled:_language == nil];
-		[self.textView setAutomaticDashSubstitutionEnabled:_language == nil];
-		[self.textView setAutomaticTextReplacementEnabled:_language == nil];
+		[self _resetAutomaticSubstitutions];
 	}
+}
+
+- (void)_resetAutomaticSubstitutions
+{
+	NSDocument* doc = self.document;
+	NSString* type = doc.fileType;
+	bool enable = _language == nil && ![type contains:@"Plain Text"] && [AppSettings boolValue:@"EnableSubstitutions" missing:true];
+	[self.textView setAutomaticQuoteSubstitutionEnabled:enable];
+	[self.textView setAutomaticDashSubstitutionEnabled:enable];
+	[self.textView setAutomaticTextReplacementEnabled:enable];
 }
 
 - (void)languagesChanged:(NSNotification*)notification
@@ -479,6 +488,13 @@
 		if (_applier)
 			[_applier resetStyles];
 	}
+}
+
+- (void)settingsChanged:(NSNotification*)notification
+{
+	UNUSED(notification);
+	
+	[self _resetAutomaticSubstitutions];
 }
 
 - (void)changeStyle:(NSString*)path
@@ -548,6 +564,8 @@
 		if ([doc.fileType contains:@"Plain Text"])
 			[self.textView.textStorage setAttributes:attrs range:NSMakeRange(0, self.textView.textStorage.length)];
 	}
+
+	[self _resetAutomaticSubstitutions];
 }
 
 // Should be called after anything that might change attributes.

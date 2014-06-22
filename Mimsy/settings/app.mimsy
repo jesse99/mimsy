@@ -25,7 +25,7 @@ SearchWithin: Type
 # first is a good canidate for overriding in your project's .mimsy.rtf
 # setting file. Note that there is no UI for the last one; set it in
 # a settings file and then press the Reset button in the Find All window.
-FindAllIncludes: *.c *.cpp *.c++ *.h *.hpp *.m *.rs *.js
+FindAllIncludes: *.c *.cpp *.c++ *.cs *.h *.hpp *.m *.rs *.js
 FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll *.dylib *.exe *.gif *.icns *.jpeg *.jpg *.mdb *.nib *.pdb *.X11 *.xib
 
@@ -75,6 +75,11 @@ ContextHelp: {app}[Mimsy Web Site]https://github.com/jesse99/mimsy
 # that the later parts of the path are the most important and should be displayed
 # first. So a path like /tmp/foo/bar would be displayed as bar • foo • tmp.
 ReversePaths: true
+
+# This enables quote, dash, and text replacements in documents which are not
+# plain text (e.g. rtf or word files). For example, double quotes will be
+# automatically replaced with left and right quotation marks.
+EnableSubstitutions: true
 
 # Globs for file names to not open inside of Mimsy. By default Mimsy will open
 # all text files within Mimsy but if certain files are best opened with a different
