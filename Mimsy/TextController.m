@@ -11,6 +11,7 @@
 #import "Paths.h"
 #import "RestoreView.h"
 #import "StartupScripts.h"
+#import "StringCategory.h"
 #import "TextView.h"
 #import "TextDocument.h"
 #import "TextStyles.h"
@@ -74,7 +75,9 @@
 
 	if (!_language)
 	{
-		[self.textView setBackgroundColor:_styles.backColor];
+		NSDocument* doc = self.document;
+		if ([doc.fileType contains:@"Plain Text"])
+			[self.textView setBackgroundColor:_styles.backColor];
 	}
 }
 
@@ -541,7 +544,9 @@
 	[self.textView setTypingAttributes:attrs];
 	if (!_language)
 	{
-		[self.textView.textStorage setAttributes:attrs range:NSMakeRange(0, self.textView.textStorage.length)];
+		NSDocument* doc = self.document;
+		if ([doc.fileType contains:@"Plain Text"])
+			[self.textView.textStorage setAttributes:attrs range:NSMakeRange(0, self.textView.textStorage.length)];
 	}
 }
 
