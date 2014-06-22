@@ -137,9 +137,6 @@
 	   ^{
 		   if (_resultsController.window.isVisible)
 		   {
-			   NSString* title = [self _getResultsWindowTitle];
-			   [_resultsController.window setTitle:title];
-			   
 			   if (matches.count > 0)
 			   {
 				   ++_numFiles;
@@ -148,6 +145,9 @@
 				   [self _addPersistentAttribute:matchStrs matches:matches path:path];
 				   [_resultsController addPath:pathStr matches:matchStrs];
 			   }
+
+			   NSString* title = [self _getResultsWindowTitle];
+			   [_resultsController.window setTitle:title];
 		   }
 		   else
 		   {
@@ -196,7 +196,20 @@
 
 - (void)_onFinish	// threaded
 {
-	// nothing special to do here
+	dispatch_queue_t main = dispatch_get_main_queue();
+	dispatch_async(main,
+	   ^{
+		   if (_resultsController.window.isVisible)
+		   {
+			   NSString* title = [self _getResultsWindowTitle];
+			   [_resultsController.window setTitle:title];
+		   }
+		   else
+		   {
+			   [_resultsController releaseWindow];
+			   _resultsController = nil;
+		   }
+	   });
 }
 
 - (NSAttributedString*)_getPathString:(NSString*)path	// threaded
