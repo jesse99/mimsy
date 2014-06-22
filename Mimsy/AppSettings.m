@@ -21,6 +21,7 @@ static LocalSettings* _cachedLangSettings;
 {
 	if (!_settingNames)
 	{
+		// These are initialized in main.m
 		_settingNames = [NSMutableArray new];
 
 		_cachedAppSettings  = nil;

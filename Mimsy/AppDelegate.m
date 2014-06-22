@@ -67,39 +67,42 @@ typedef void (^NullaryBlock)();
 	NSArray* _helpSettingsItems;
 }
 
+- (id)init
+{
+	self = [super init];
+	
+	if (self)
+	{
+//		ASSERT([NSThread isMultiThreaded]);
+		
+		_settings = [[LocalSettings alloc] initWithFileName:@"app.mimsy"];
+		_pendingBlocks = [NSMutableDictionary new];
+		
+		__weak AppDelegate* this = self;
+		[[NSApp helpMenu] setDelegate:this];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appSettingsChanged:) name:@"AppSettingsChanged" object:nil];
+		
+		[self _installFiles];
+		[self _loadSettings];
+		[self _loadHelpFiles];
+		[self _addTransformItems];
+		[self _watchInstalledFiles];
+		[StartupScripts setup];
+		[WindowsDatabase setup];
+		[Languages setup];
+		
+		initFunctionalTests();
+	}
+	
+	return self;
+}
+
 // Note that windows will still be open when this is called.
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
 	UNUSED(notification);
 	LOG_INFO("App", "Terminating");
-}
-
-- (void)applicationDidFinishLaunching:(NSNotification*)notification
-{
-	UNUSED(notification);
-	
-	ASSERT([NSThread isMultiThreaded]);
-	LOG_DEBUG("App", "Finished launching");
-
-	_settings = [[LocalSettings alloc] initWithFileName:@"app.mimsy"];
-	_pendingBlocks = [NSMutableDictionary new];
-
-	__weak AppDelegate* this = self;
-	[[NSApp helpMenu] setDelegate:this];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appSettingsChanged:) name:@"AppSettingsChanged" object:nil];
-	
-	[self _installFiles];
-	[self _registerAppSettings];
-	[self _loadSettings];
-	[self _loadHelpFiles];
-	[self _addTransformItems];
-	[self _watchInstalledFiles];
-	[StartupScripts setup];
-	[WindowsDatabase setup];
-	[Languages setup];
-	
-	initFunctionalTests();
 }
 
 - (void)_executeSelector:(NSString*)name
@@ -841,24 +844,6 @@ typedef void (^NullaryBlock)();
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"TransformsChanged" object:self];
 		}
 	];
-}
-
-// These need to be registered rather early so, for the sake of convenience we do them all here.
-- (void)_registerAppSettings
-{
-	[AppSettings registerSetting:@"ContextHelp"];
-	[AppSettings registerSetting:@"DefaultFindAllDirectory"];
-	[AppSettings registerSetting:@"FindAllAlwaysExclude"];
-	[AppSettings registerSetting:@"FindAllExcludes"];
-	[AppSettings registerSetting:@"FindAllIncludes"];
-	[AppSettings registerSetting:@"FindWraps"];
-	[AppSettings registerSetting:@"IgnoredPath"];
-	[AppSettings registerSetting:@"NumFindItems"];
-	[AppSettings registerSetting:@"PreferredPath"];
-	[AppSettings registerSetting:@"ReversePaths"];
-	[AppSettings registerSetting:@"SearchIn"];
-	[AppSettings registerSetting:@"SearchWithin"];
-	[AppSettings registerSetting:@"WarnWindowDelay"];
 }
 
 @end

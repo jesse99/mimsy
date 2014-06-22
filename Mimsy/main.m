@@ -1,6 +1,7 @@
 #import <Cocoa/Cocoa.h>
 
 #import "AppDelegate.h"
+#import "AppSettings.h"
 #import "Assert.h"
 #import "ConfigParser.h"
 #import "convertVIMFiles.h"
@@ -52,6 +53,25 @@ static void setupInfrastructure(void)
 	// Unfortunately this only works for the main thread.
 	NSAssertionHandler* handler = [AssertHandler new];
 	[[[NSThread currentThread] threadDictionary] setValue:handler forKey:NSAssertionHandlerKey];
+}
+
+// These need to be registered rather early so, for the sake of convenience we do them all here.
+static void registerAppSettings()
+{
+	[AppSettings registerSetting:@"ContextHelp"];
+	[AppSettings registerSetting:@"DefaultFindAllDirectory"];
+	[AppSettings registerSetting:@"DontOpenWithMimsy"];
+	[AppSettings registerSetting:@"FindAllAlwaysExclude"];
+	[AppSettings registerSetting:@"FindAllExcludes"];
+	[AppSettings registerSetting:@"FindAllIncludes"];
+	[AppSettings registerSetting:@"FindWraps"];
+	[AppSettings registerSetting:@"IgnoredPath"];
+	[AppSettings registerSetting:@"NumFindItems"];
+	[AppSettings registerSetting:@"PreferredPath"];
+	[AppSettings registerSetting:@"ReversePaths"];
+	[AppSettings registerSetting:@"SearchIn"];
+	[AppSettings registerSetting:@"SearchWithin"];
+	[AppSettings registerSetting:@"WarnWindowDelay"];
 }
 
 struct Options
@@ -132,6 +152,7 @@ int main(int argc, char* argv[])
 	int result = 0;
 	
 	setupInfrastructure();
+	registerAppSettings();
 	
 	struct Options options = parseArgs(argc, argv);
 	validateOptions(&options);
