@@ -8,11 +8,8 @@
 // Path should be a full path to a styles rtf file.
 - (id)initWithPath:(NSString*)path expectBackColor:(bool)expectBackColor;
 
-// The style used when a style from a styles file is not available.
-+ (NSDictionary*)fallbackStyle;
-
 // If name is not present in the styles file then the attributes
-// for the "Normal" style are returned.
+// for the "normal" style are returned.
 - (NSDictionary*)attributesForElement:(NSString*)name;
 
 // Like attributesForElement except that nil is returned if name

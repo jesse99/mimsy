@@ -40,6 +40,7 @@
 
 		// This will be set to nil once the view has been restored.
 		_restorer = [[RestoreView alloc] init:self];
+		_styles = [self _createDefaultTextStyles];
 		
 		_layoutBlocks = [NSMutableArray new];
 		
@@ -71,10 +72,10 @@
 	[self.textView.layoutManager setDelegate:this];
 	[self.textView.layoutManager setBackgroundLayoutEnabled:YES];
 
-	if (self.path)
-		[self.textView setTypingAttributes:TextStyles.fallbackStyle];
-	else
-		[self _setDefaultUntitledStyles];
+	if (!_language)
+	{
+		[self.textView setBackgroundColor:_styles.backColor];
+	}
 }
 
 - (void)registerBlockWhenLayoutCompletes:(LayoutCallback)block
@@ -264,20 +265,24 @@
 - (void)removeStyle:(id)sender
 {
 	UNUSED(sender);
-	
+
+	// It's a little goofy to support the font menu items for files with a
+	// language, but it can be kind of nice to support at least some of them.
+	// For example, making some text temporarily larger or what have you.
 	NSRange range = self.textView.selectedRange;
+	NSDictionary* attrs = [_styles attributesForElement:@"normal"];
 	if (range.length > 0)
 	{
 		if ([self.textView shouldChangeTextInRange:range replacementString:nil])
 		{
 			NSTextStorage* storage = self.textView.textStorage;
-			[storage setAttributes:[TextStyles fallbackStyle] range:range];
+			[storage setAttributes:attrs range:range];
 			[self.textView didChangeText];
 		}
 	}
 	else
 	{
-		[self.textView setTypingAttributes:[TextStyles fallbackStyle]];
+		[self.textView setTypingAttributes:attrs];
 	}
 }
 
@@ -430,15 +435,11 @@
 		_language = lang;
 		LOG_INFO("Text", "Set language for %s to %s", STR([self.path lastPathComponent]), STR(lang));
 		
-		if (_language && !_styles)
-		{
+		if (_language)
 			_styles = [self _createTextStyles];
-		}
-		else if (!_language && _styles)
-		{
-			_styles = nil;
-		}
-		
+		else
+			_styles = [self _createDefaultTextStyles];
+
 		if (_language && !_applier)
 			_applier = [[ApplyStyles alloc] init:self];
 		else if (!_language && _applier)
@@ -447,6 +448,9 @@
 		[self resetAttributes];
 		if (_applier)
 			[_applier addDirtyLocation:0 reason:@"set language"];
+		
+		NSDictionary* attrs = [_styles attributesForElement:@"normal"];
+		[self.textView setTypingAttributes:attrs];
 	}
 }
 
@@ -462,7 +466,7 @@
 {
 	UNUSED(notification);
 	
-	if (_styles)
+	if (_language)
 	{
 		_styles = [[TextStyles alloc] initWithPath:_styles.path expectBackColor:true];
 		if (_applier)
@@ -528,19 +532,23 @@
 			[self synchronizeWindowTitleWithDocumentName];
 		}
 	}
+
+	NSDictionary* attrs = [_styles attributesForElement:@"normal"];
+	[self.textView setTypingAttributes:attrs];
+	if (!_language)
+	{
+		[self.textView.textStorage setAttributes:attrs range:NSMakeRange(0, self.textView.textStorage.length)];
+	}
 }
 
 // Should be called after anything that might change attributes.
 - (void)resetAttributes
 {
+	// if we don't have a language we'll leave whatever the user is
+	// using alone (i.e. we only set styles for a document without
+	// a language when we first open it).
 	if (_language)
-	{
 		[self.textView setTypingAttributes:[_styles attributesForElement:@"normal"]];
-	}
-	else
-	{
-		[self.textView setTypingAttributes:TextStyles.fallbackStyle];
-	}
 }
 
 - (void)showLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width
@@ -678,17 +686,17 @@
 	}
 }
 
-- (void)_setDefaultUntitledStyles
-{
-	TextStyles* styles = [self _createTextStyles];
-	[self.textView setBackgroundColor:styles.backColor];
-	[self.textView setTypingAttributes:[styles attributesForElement:@"Normal"]];
-}
-
 - (TextStyles*)_createTextStyles
 {
 	NSString* dir = [Paths installedDir:@"styles"];
 	NSString* path = [dir stringByAppendingPathComponent:self._getDefaultStyleName];
+	return [[TextStyles alloc] initWithPath:path expectBackColor:true];
+}
+
+- (TextStyles*)_createDefaultTextStyles
+{
+	NSString* dir = [Paths installedDir:@"settings"];
+	NSString* path = [dir stringByAppendingPathComponent:@"default-text.rtf"];
 	return [[TextStyles alloc] initWithPath:path expectBackColor:true];
 }
 

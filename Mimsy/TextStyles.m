@@ -66,11 +66,6 @@ static NSDictionary* _baseAttrs;
 	return self;
 }
 
-+ (NSDictionary*)fallbackStyle
-{
-	return _baseAttrs;
-}
-
 - (NSDictionary*)attributesForElement:(NSString*)name
 {
 	NSDictionary* result = _attrMap[name];

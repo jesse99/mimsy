@@ -3,7 +3,6 @@ FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
 
-* Look at style for no language documents.
 * Use a Minsy header:
 	- include assert and logger
 	- include a couple categories
