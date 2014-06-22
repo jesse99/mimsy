@@ -228,7 +228,7 @@ static bool _selectLocatedFiles(NSArray* files, int line, int col)
 	
 	// Even if the user cancelled he still has had a chance to handle the
 	// files so we don't want to do anything further.
-	return opened;
+	return true;
 }
 
 static bool _openLocatedFiles(NSArray* files, int line, int col)
@@ -310,7 +310,7 @@ static bool _openFile(NSString* text, NSUInteger location, NSUInteger length)
 	bool found = false;
 
 	NSString* path = [text substringWithRange:NSMakeRange(location, length)];
-	if (![path contains:@"://"])		// don't attempt to open stuff like http://blah as a file (especially bad with _locateFiles)
+	if (![path contains:@"://"] && [path localizedCaseInsensitiveCompare:@"http"] != NSOrderedSame)		// don't attempt to open stuff like http://blah as a file (especially bad with _locateFiles)
 	{
 		LOG_DEBUG("Text", "trying path '%s'", path.UTF8String);
 		
