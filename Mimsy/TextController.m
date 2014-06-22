@@ -451,6 +451,10 @@
 		
 		NSDictionary* attrs = [_styles attributesForElement:@"normal"];
 		[self.textView setTypingAttributes:attrs];
+		
+		[self.textView setAutomaticQuoteSubstitutionEnabled:_language == nil];
+		[self.textView setAutomaticDashSubstitutionEnabled:_language == nil];
+		[self.textView setAutomaticTextReplacementEnabled:_language == nil];
 	}
 }
 
