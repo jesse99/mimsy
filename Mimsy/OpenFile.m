@@ -10,7 +10,7 @@
 
 + (bool)shouldOpenFiles:(NSUInteger)numFiles
 {
-	const NSUInteger MaxFiles = 20;
+	const NSUInteger MaxFiles = 5;
 	
 	bool open = true;
 	
@@ -19,8 +19,15 @@
 		NSString* title = [NSString stringWithFormat:@"%lu files are being opened", numFiles];
 		NSString* message = @"Do you really want to open all of these files?";
 		
-		NSInteger button = NSRunAlertPanel(title, message, @"No", @"Yes", nil);
-		open = button == NSAlertAlternateReturn;
+		NSAlert* alert = [NSAlert new];
+		[alert setAlertStyle:NSInformationalAlertStyle];
+		[alert setInformativeText:title];
+		[alert setMessageText:message];
+		[alert addButtonWithTitle:@"No"];
+		[alert addButtonWithTitle:@"Yes"];
+		
+		NSInteger button = [alert runModal];
+		open = button == NSAlertSecondButtonReturn;
 	}
 	
 	return open;
@@ -135,7 +142,7 @@
 	// There are files that we want to open that don't have useful extensions
 	// (notably shebanged scripts). These cases should be handled by conditional
 	// globals in the language files.
-	return false;
+	return true;
 }
 
 @end

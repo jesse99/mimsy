@@ -426,8 +426,16 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	
 	NSString* name = [[self fileURL] lastPathComponent];
 	NSString* mesg = [[NSString alloc] initWithFormat:@"This file is %@. Are you sure you want to open it?", [Utils bytesToStr:data.length]];
-	NSInteger button = NSRunAlertPanel(name, mesg, @"No", @"Yes", nil);
-	if (button != NSAlertAlternateReturn)
+
+	NSAlert* alert = [NSAlert new];
+	[alert setAlertStyle:NSInformationalAlertStyle];
+	[alert setInformativeText:name];
+	[alert setMessageText:mesg];
+	[alert addButtonWithTitle:@"No"];
+	[alert addButtonWithTitle:@"Yes"];
+	
+	NSInteger button = [alert runModal];
+	if (button == NSAlertSecondButtonReturn)
 	{
 		*outError = [NSError errorWithDomain:NSCocoaErrorDomain code:NSUserCancelledError userInfo:nil];
 	}
