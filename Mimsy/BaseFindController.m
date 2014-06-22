@@ -141,29 +141,33 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	NSString* oldSelection = [_searchWithinComboBox stringValue];
 	
 	NSArray* patterns;
-	BaseTextController* controller = [BaseTextController frontmost];
-	if (controller && controller.language)
+	if (self.singleFile)
 	{
-		NSArray* elements = controller.language.styler.names;
-		patterns = [AppSettings stringValues:@"SearchWithin"];
-		patterns = intersectElements(patterns, elements);
-		
-		[_searchWithinComboBox removeAllItems];
-		[_searchWithinComboBox addItemsWithObjectValues:patterns];
-		
-	}
-	else if (self.singleFile)
-	{
-		patterns = [NSArray new];
-		[_searchWithinComboBox removeAllItems];
+		BaseTextController* controller = [BaseTextController frontmost];
+		if (controller && controller.language)
+		{
+			// If we're searching a single file then we should restrict
+			// our search to only the language elements supported by
+			// that file.
+			NSArray* elements = controller.language.styler.names;
+			patterns = [AppSettings stringValues:@"SearchWithin"];
+			patterns = intersectElements(patterns, elements);
+		}
+		else
+		{
+			// If we're searching a single file and we don't have a
+			// language then all we can do is search everything.
+			patterns = @[@"everything"];
+		}
 	}
 	else
 	{
-		// If the controller is for find/replace in files we don't want to zap
-		// the search within dropdown every time the user switches to something
-		// like the transcript window.
-		return;
+		// If we're searching multiple files then we don't care
+		// about the frontmost document.
+		patterns = [AppSettings stringValues:@"SearchWithin"];
 	}
+	[_searchWithinComboBox removeAllItems];
+	[_searchWithinComboBox addItemsWithObjectValues:patterns];
 	
 	// If the new search within strings include whatever the user
 	// was using then keep on using that.
