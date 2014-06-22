@@ -202,7 +202,8 @@ static NSStringEncoding getEncoding(NSData* data, unsigned long* skipBytes)
 
 				// The first few bytes of most legacy documents will look like utf8 so
 				// if we couldn't decode it using utf8 we need to fall back onto Mac
-				// OS Roman.
+				// OS Roman. TODO: this is for pre-OS X docs, do we really want to do
+				// this nowadays?
 				if (str == nil && encoding == NSUTF8StringEncoding)
 				{
 					encoding = NSMacOSRomanStringEncoding;
