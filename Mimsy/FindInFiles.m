@@ -51,6 +51,7 @@
 {
 	ASSERT(_numMatches == 0);		// these objects should be created from scratch for every search
 
+	LOG_DEBUG("Find", "Find in files for '%s'", STR(_findText));
 	NSString* title = [NSString stringWithFormat:@"Find '%@' gathering paths", _findText];
 	[_resultsController.window setTitle:title];
 	
@@ -139,11 +140,16 @@
 		   {
 			   if (matches.count > 0)
 			   {
+				   LOG_DEBUG("Find", "Found %lu matches for %s", matches.count, STR(path.lastPathComponent));
 				   ++_numFiles;
 				   _numMatches += matches.count;
 				   
 				   [self _addPersistentAttribute:matchStrs matches:matches path:path];
 				   [_resultsController addPath:pathStr matches:matchStrs];
+			   }
+			   else
+			   {
+				   LOG_DEBUG("Find", "Found 0 matches for %s", STR(path.lastPathComponent));
 			   }
 
 			   NSString* title = [self _getResultsWindowTitle];
@@ -199,6 +205,7 @@
 	dispatch_queue_t main = dispatch_get_main_queue();
 	dispatch_async(main,
 	   ^{
+		   LOG_DEBUG("Find", "Finished find");
 		   if (_resultsController.window.isVisible)
 		   {
 			   NSString* title = [self _getResultsWindowTitle];

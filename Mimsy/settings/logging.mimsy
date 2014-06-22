@@ -5,6 +5,7 @@
 #
 # Logging currently goes to ~/Library/Logs/mimsy.log
 App:     INFO
+Find:    INFO
 Mimsy:   INFO
 Styler:  INFO
 Text:    INFO

@@ -44,6 +44,7 @@
 
 - (void)_processRoot
 {
+	LOG_DEBUG("Find", "regex = %s", STR(_regex));
 	[self _step1ProcessOpenFiles];
 }
 

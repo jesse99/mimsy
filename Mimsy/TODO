@@ -2,6 +2,7 @@ FindAllIncludes: *.c *.cpp *.c++ *.h *.hpp *.m *.rs *.js
 FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
+* Don't do substutions for plain text files.
 
 * Use a Mimsy header:
 	- include assert and logger
