@@ -27,13 +27,10 @@ static inline const char* STR(NSObject* object)
 
 static inline void LOG_ERROR(const char* topic, const char* format, ...)
 {
-	if (_shouldLog(topic, ERROR_LEVEL))
-	{
-		va_list args;
-		va_start(args, format);
-		_doLog(topic, "ERROR", format, args);
-		va_end(args);
-	}
+	va_list args;
+	va_start(args, format);
+	_doLog(topic, "ERROR", format, args);
+	va_end(args);
 }
 
 static inline void LOG_WARN(const char* topic, const char* format, ...)
