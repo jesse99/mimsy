@@ -185,7 +185,7 @@ bool rangeIntersects(NSRange lhs, NSRange rhs)
 		else if (error)
 		{
 			NSString* reason = [error localizedFailureReason];
-			NSString* mesg = [NSString stringWithFormat:@"Couldn't check for is directory for %s: %s", STR(url), STR(reason)];
+			NSString* mesg = [NSString stringWithFormat:@"Couldn't check for NSURLIsDirectoryKey for %s: %s", STR(url), STR(reason)];
 			[errors addObject:mesg];
 		}
 	}

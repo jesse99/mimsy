@@ -3,7 +3,7 @@ FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 
 
-* Use a Minsy header:
+* Use a Mimsy header:
 	- include assert and logger
 	- include a couple categories
 	- include foundation
