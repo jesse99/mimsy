@@ -32,10 +32,11 @@ FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll *.dylib *.exe *.gif *.
 # These directories, as well as any directories that the user opens, are
 # are added to the directory dropdown menu in the Find All window. Currently
 # there is no way to remove directories from the menu other than using the 
-# Reset button.
+# Reset button. TODO: sucks that the AppKit and Foundation paths depend on
+# the sdk version.
 DefaultFindAllDirectory: Open Windows
-DefaultFindAllDirectory: /System/Library/Frameworks/AppKit.framework/Versions/C/Headers
-DefaultFindAllDirectory: /System/Library/Frameworks/Foundation.framework/Versions/C/Headers
+DefaultFindAllDirectory: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/AppKit.framework/Versions/Current/Headers
+DefaultFindAllDirectory: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/Foundation.framework/Versions/Current/Headers
 DefaultFindAllDirectory: /System/Library/Frameworks/CoreFoundation.framework/Versions/Current/Headers
 
 #### Open Selection ####################################################
