@@ -72,11 +72,14 @@
 		dispatch_queue_t concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 		dispatch_async(concurrent, ^
 		   {
+			   LOG_DEBUG("Find", "Found %lu open paths", openPaths.count);
 			   if ([self.root compare:@"Open Windows"] == NSOrderedSame)
 			   {
 				   self.numFilesLeft = (int) openPaths.count;
 				   if (openPaths.count > 0)
 					   [self _step3QueuePaths:openPaths];
+				   else
+					   [self _onFinish];
 			   }
 			   else
 			   {
@@ -85,6 +88,7 @@
 		   });
 	};
 	
+	LOG_DEBUG("Find", "Processing open files");
 	[TextController enumerate:
 		 ^(TextController *controller)
 		 {
@@ -241,8 +245,18 @@
 	
 	NSMutableAttributedString* str = [NSMutableAttributedString new];
 	[str.mutableString appendString:line];
+
+	// Matched lines can be very long (especially with Apple headers where they expect
+	// lines to be wrapped). Displaying such long lines looks aawful so we'll trim
+	// them here.
+	if (newRange.location > 32)
+	{
+		[str.mutableString deleteCharactersInRange:NSMakeRange(0, newRange.location - 32)];
+		[str.mutableString insertString:@"…" atIndex:0];
+		newRange.location = 32;
+	}
 	
-	NSRange fullRange = NSMakeRange(0, line.length);
+	NSRange fullRange = NSMakeRange(0, str.mutableString.length);
 	[str setAttributes:_lineAttrs range:fullRange];
 	[str setAttributes:_matchAttrs range:newRange];
 	[str addAttribute:@"MatchedText" value:@"" range:newRange];

@@ -1,11 +1,29 @@
-FindAllIncludes: *.c *.cpp *.c++ *.h *.hpp *.m *.rs *.js
-FindAllExcludes:
-FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
+tail -f ~/Library/Logs/mimsy.log
 
+* Setting back color of a styles file didn't seem to change the text.
+	- maybe when copying we should strip back color?
+	- or make it an option?
+	- fix back colors in evernote
+* Maybe pasting should strip back colors too
+	- eg from terminal
+* Add a language file for R
+* Get tabs working better:
+	- may want a setting to control behavior
+	- or just do something slightly cheesy until proc files are in
+* Get option-tab working
+	- update special keys help file
+* Double clicking should not treat period as a word character.
+* Getting a warning (I think) because layout is being dirtied inside layput
+	- happens when double clicking on a find in files result
+
+* Help looks busted
+* Nothing happened when double clicking a nib file.
 * Use a Mimsy header:
 	- include assert and logger
 	- include a couple categories
 	- include foundation
+	- need to rename the log macros
+       setLevel is buggy too
 * Look at OS changes.
 * Use alertWithError where we don't just write to the transcript.
 * Experiment with a different proc-file based design:
@@ -58,6 +76,9 @@ FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll
 	- maybe characters (or regexen) not in string or comment
 * Support goto line
 * Support shift left and right
+* Meson (build system)
+	- like CMake but saner
+	- easy to integrate with an IDE (see https://github.com/jpakkane/meson/wiki/IDE%20integration)
 * Linters or other static analyzers might be cool.
 * Support remote editing
 	- might be simplest to just have a Python script running remotely
