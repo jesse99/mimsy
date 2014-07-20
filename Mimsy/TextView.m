@@ -363,7 +363,17 @@
 	{
 		NSPasteboard* pb = [NSPasteboard generalPasteboard];
 		NSString* str = [pb stringForType:NSStringPboardType];
-		[self.textStorage removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange(oldSelection.location, str.length)];
+		NSString* currentText = self.textStorage.string;
+
+		// Not sure why but it seems that str.length is sometimes longer than
+		// what is pasted.
+		NSUInteger len;
+		if (oldSelection.location + str.length <= currentText.length)
+			len = str.length;
+		else
+			len = currentText.length - oldSelection.location;
+		
+		[self.textStorage removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange(oldSelection.location, len)];
 	}
 }
 
