@@ -23,7 +23,7 @@
 - (NSString*)_getReplaceTemplate;
 - (bool)singleFile;
 
-- (void)_replace:(BaseTextController*)controller regex:(NSRegularExpression*)regex match:(NSTextCheckingResult*)match with:(NSString*)template showSelection:(bool)showSelection;
+- (NSRange)_replace:(BaseTextController*)controller regex:(NSRegularExpression*)regex match:(NSTextCheckingResult*)match with:(NSString*)template showSelection:(bool)showSelection;
 - (void)_showSelection:(NSRange)range in:(BaseTextController*)controller;
 
 @property (strong) IBOutlet NSComboBox *findComboBox;

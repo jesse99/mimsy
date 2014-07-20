@@ -35,15 +35,16 @@ NSUInteger replaceAll(BaseFindController* findController, BaseTextController* te
 		[view.undoManager beginUndoGrouping];
 		[view.textStorage beginEditing];
 		
+		NSRange firstReplacement = NSMakeRange(NSNotFound, 0);
 		for (NSUInteger i = matches.count - 1; i < matches.count; --i)
-			[findController _replace:textController regex:regex match:matches[i] with:template showSelection:false];
+			firstReplacement = [findController _replace:textController regex:regex match:matches[i] with:template showSelection:false];
 		
 		[view.textStorage endEditing];
 		[view.undoManager endUndoGrouping];
 		[view.undoManager setActionName:@"Replace All"];
 		
-		NSTextCheckingResult* match = matches[matches.count-1];
-		[findController _showSelection:match.range in:textController];
+		// Might be nicer to select the last range but that's a pita because of all the length changes.
+		[findController _showSelection:firstReplacement in:textController];
 	}
 	
 	return matches.count;
@@ -270,15 +271,16 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	return matches;
 }
 
-- (void)_replace:(BaseTextController*)controller regex:(NSRegularExpression*)regex match:(NSTextCheckingResult*)match with:(NSString*)template showSelection:(bool)showSelection
+- (NSRange)_replace:(BaseTextController*)controller regex:(NSRegularExpression*)regex match:(NSTextCheckingResult*)match with:(NSString*)template showSelection:(bool)showSelection
 {
 	NSTextView* view = [controller getTextView];
 	NSMutableString* text = view.textStorage.mutableString;
 	NSString* newText = [regex replacementStringForResult:match inString:text offset:0 template:template];
 	
+	NSRange newRange = match.range;
 	if ([view shouldChangeTextInRange:match.range replacementString:newText])
 	{
-		NSRange newRange = NSMakeRange(match.range.location, newText.length);
+		newRange = NSMakeRange(match.range.location, newText.length);
 		[text replaceCharactersInRange:match.range withString:newText];
 		[view.undoManager setActionName:@"Replace"];
 		[view didChangeText];
@@ -286,6 +288,8 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 		if (showSelection)
 			[self _showSelection:newRange in:controller];
 	}
+	
+	return newRange;
 }
 
 - (void)_showSelection:(NSRange)range in:(BaseTextController*)controller
