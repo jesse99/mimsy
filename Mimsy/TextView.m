@@ -1,6 +1,7 @@
 #import "TextView.h"
 
 #import "AppDelegate.h"
+#import "AppSettings.h"
 #import "Assert.h"
 #import "Balance.h"
 #import "Constants.h"
@@ -351,11 +352,19 @@
 
 - (void)paste:(id)sender
 {
+	NSRange oldSelection = self.selectedRange;
 	[super paste:sender];
 	
 	TextController* controller = _controller;
 	if (controller)
 		[controller resetAttributes];
+	
+	if (![AppSettings boolValue:@"PasteCopiesBackColor" missing:false])
+	{
+		NSPasteboard* pb = [NSPasteboard generalPasteboard];
+		NSString* str = [pb stringForType:NSStringPboardType];
+		[self.textStorage removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange(oldSelection.location, str.length)];
+	}
 }
 
 - (void)orderFrontColorPanel:(id)sender

@@ -86,3 +86,7 @@ EnableSubstitutions: true
 # all text files within Mimsy but if certain files are best opened with a different
 # application you can add their extension here.
 DontOpenWithMimsy:
+
+# When pasting from something like Terminal into a Mimsy RTF file it's
+# usually annoying to preserve the window back color.
+PasteCopiesBackColor: false

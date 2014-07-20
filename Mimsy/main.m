@@ -68,6 +68,7 @@ static void registerAppSettings()
 	[AppSettings registerSetting:@"FindWraps"];
 	[AppSettings registerSetting:@"IgnoredPath"];
 	[AppSettings registerSetting:@"NumFindItems"];
+	[AppSettings registerSetting:@"PasteCopiesBackColor"];
 	[AppSettings registerSetting:@"PreferredPath"];
 	[AppSettings registerSetting:@"ReversePaths"];
 	[AppSettings registerSetting:@"SearchIn"];
