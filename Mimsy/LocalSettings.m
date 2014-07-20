@@ -71,7 +71,7 @@
 	{
 		// It's normal for language and directory files to have settings which
 		// are not app settings. But everything in app.mimsy should be an app
-		// setting.
+		// setting. (If this fires edit registerAppSettings).
 		NSString* mesg = [NSString stringWithFormat:@"Ignoring unknown app.mimsy setting '%@'.", key];
 		[TranscriptController writeError:mesg];
 	}
