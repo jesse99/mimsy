@@ -1,0 +1,35 @@
+Language: go
+Globs: *.go
+LineComment: //
+ContextHelp: {c}[Go Docs]http://golang.org/doc/
+ContextHelp: {c}[Go Spec]http://golang.org/ref/spec
+ContextHelp: {c}[Go Packages]http://golang.org/pkg/
+SearchIn: [golang]http://golang.org/search?q=${TEXT}
+
+Comment: // .* $
+Comment: /\* (?: . | \r | \n)*? \*/
+Type: \b(?:  uint8 | uint16 | uint32 | uint64 | int8 | int16 | int32 | int64 | float32 | float64 | complex64 | complex128 | byte | rune | uintptr | uint | int | string | map | chan | bool | byte | error | complex| imag | real)\b
+Conditional: \b(?: case | else | if | switch)\b
+Keyword: \b(?: break | const | continue | default | defer | fallthrough | func | goto | go | import | interface | package | range | return | select | struct | type | var | iota | nil | append | cap | close | copy | delete | len | make | new | panic | print | println | recover)\b
+Repeat: \b(?: for)\b
+Identifier: \b [a-zA-Z_] [\w_]* \b
+
+Boolean: \b(?: false | true)\b
+Float: \W (\d+ \. \d* (?: [eE] [+-]? \d+)? i?) \W
+Float: \W (\d+ [eE] [+-]? \d+ i?) \W
+Float: \W (\. \d+ (?: [eE] [+-]? \d+)? i?) \W
+Number: \W (\d+ i?) \W
+Number: \W (0[xX] [0-9a-fA-f]+ i?) \W
+
+PreProc: \x23 \s* (?: define | undef) .* $
+PreProc: \x23 \s* (?: warning | error | line | pragma)
+PreCondit: \x23 \s* (?: ifdef | ifndef | if | else | elif | endif) .* $
+Include: \x23 \s* include
+
+String: ` (?: [^`\\] | \\.)* `
+String: " (?: [^"\r\n\\] | \\.)* "
+Character: ' (?: [^'\r\n\\] | \\.)* '
+
+Structure: (?<= type) \s+ ([\w]+)
+Function: (?<= \s func) \s+ ([\w_]+) \s* (?= \(|<)
+Function: (?<= \s func) \s* \( [^)]+ \) \s* ([\w_]+) \s* (?= \(|<)

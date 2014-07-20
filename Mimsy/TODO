@@ -1,22 +1,18 @@
 tail -f ~/Library/Logs/mimsy.log
 
-* Setting back color of a styles file didn't seem to change the text.
-	- maybe when copying we should strip back color?
-	- or make it an option?
-	- fix back colors in evernote
-* Maybe pasting should strip back colors too
-	- eg from terminal
-* Add a language file for R
+* Fix sample code in evernote
 * Get tabs working better:
 	- may want a setting to control behavior
 	- or just do something slightly cheesy until proc files are in
 * Get option-tab working
 	- update special keys help file
+* Case sensitive search doesn't work?
 * Double clicking should not treat period as a word character.
 * Getting a warning (I think) because layout is being dirtied inside layput
 	- happens when double clicking on a find in files result
 
 * Help looks busted
+* Transforms are added to context menu but not main menu.
 * Nothing happened when double clicking a nib file.
 * Use a Mimsy header:
 	- include assert and logger
@@ -80,6 +76,9 @@ tail -f ~/Library/Logs/mimsy.log
 	- like CMake but saner
 	- easy to integrate with an IDE (see https://github.com/jpakkane/meson/wiki/IDE%20integration)
 * Linters or other static analyzers might be cool.
+* Setting back color of a styles file didn't seem to change the text.
+	- nonone of the styles file changes are live
+	- can we watch the file?
 * Support remote editing
 	- might be simplest to just have a Python script running remotely
 	- contents could be zipped and binhexed
