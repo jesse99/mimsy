@@ -1,6 +1,5 @@
 tail -f ~/Library/Logs/mimsy.log
 
-* Fix sample code in evernote
 * Get tabs working better:
 	- may want a setting to control behavior
 	- or just do something slightly cheesy until proc files are in
@@ -21,6 +20,9 @@ tail -f ~/Library/Logs/mimsy.log
 	- need to rename the log macros
        setLevel is buggy too
 * Look at OS changes.
+* Look at identifier styling
+	- do we even want it?
+	- think continuum style looks icky when it is used
 * Use alertWithError where we don't just write to the transcript.
 * Experiment with a different proc-file based design:
 	- extensions use json messages and replies to get notifications (including event processing), to register for notifications, and to issue commands (eg select a string from a list)
