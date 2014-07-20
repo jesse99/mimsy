@@ -104,12 +104,20 @@ typedef void (^FindBlock)(BaseTextController* controller, NSRegularExpression* r
 					   }
 				   };
 			   
+			   ASSERT(searchRange.location < _text.length);
+			   ASSERT(searchRange.location + searchRange.length <= _text.length);
 			   [regex enumerateMatchesInString:_text options:options range:searchRange usingBlock:matcher];
 			   
 			   if (range.location == NSNotFound && wrap)
 			   {
-				   searchRange = NSMakeRange(0, searchFrom - 1);
-				   [regex enumerateMatchesInString:_text options:options range:searchRange usingBlock:matcher];
+				   if (searchFrom > 1)
+				   {
+					   searchRange = NSMakeRange(0, searchFrom - 1);
+
+					   ASSERT(searchRange.location < _text.length);
+					   ASSERT(searchRange.location + searchRange.length <= _text.length);
+					   [regex enumerateMatchesInString:_text options:options range:searchRange usingBlock:matcher];
+				   }
 				   wrappedAround = true;
 			   }
 			   
