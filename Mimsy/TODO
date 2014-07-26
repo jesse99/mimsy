@@ -1,7 +1,6 @@
 tail -f ~/Library/Logs/mimsy.log
 
 
-* Should we keep the layoutManager change?
 * Case sensitive search isn't working
 * Auto-indent new lines
 * Double clicking should not treat period as a word character.
@@ -15,13 +14,13 @@ tail -f ~/Library/Logs/mimsy.log
 	- happens when double clicking on a find in files result
 
 * After typing a closing brace the wrong open brace is highlighted.
-* Layout was super slow with a last file (ping-large.R)
+* Layout was super slow with a large file (ping-large.R)
 * Add tab stops 
 	- they get screwed up now for things like tabbing to add comments to long lines)
 	  e.g. replaceSelection in TextEditorView.cs
 * Get option-tab working
 	- should probably use identifier style
-	bit look at Continuum styler (and maybe some others)
+	but look at Continuum styler (and maybe some others)
 	- update special keys help file
 * Probably should sanitize pastes to strip line feeds and other bogus control characters.
 * Help looks busted

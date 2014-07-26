@@ -52,8 +52,6 @@ NSUInteger replaceAll(BaseFindController* findController, BaseTextController* te
 
 @implementation BaseFindController
 {
-	NSString* _cachedPattern;
-	NSRegularExpression* _cachedRegex;
 	NSRegularExpression* _asciiRegex;
 	NSRegularExpression* _uniRegex;
 }
@@ -305,30 +303,18 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	NSRegularExpression* regex = nil;
 	
 	NSString* pattern = [self _getFindPattern];
-	if ([pattern compare:_cachedPattern] == NSOrderedSame)
-	{
-		regex = _cachedRegex;
-	}
-	else
-	{
-		NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
-		if (_caseSensitiveCheckBox.state == NSOffState)
-			options |= NSRegularExpressionCaseInsensitive;
+	NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
+	if (_caseSensitiveCheckBox.state == NSOffState)
+		options |= NSRegularExpressionCaseInsensitive;
 
-		NSError* error = nil;
-		regex = [NSRegularExpression regularExpressionWithPattern:pattern options:options error:&error];
-		
-		if (regex)
-		{
-			_cachedRegex = regex;
-			_cachedPattern = pattern;
-		}
-		else
-		{
-			NSString* reason = [error localizedFailureReason];
-			NSString* mesg = [NSString stringWithFormat:@"Failed compiling find regex '%@': %@", pattern, reason];
-			[TranscriptController writeError:mesg];
-		}
+	NSError* error = nil;
+	regex = [NSRegularExpression regularExpressionWithPattern:pattern options:options error:&error];
+	
+	if (!regex)
+	{
+		NSString* reason = [error localizedFailureReason];
+		NSString* mesg = [NSString stringWithFormat:@"Failed compiling find regex '%@': %@", pattern, reason];
+		[TranscriptController writeError:mesg];
 	}
 	
 	return regex;
@@ -362,7 +348,7 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 			pattern = [pattern stringByAppendingString:@"\\b"];
 	}
 	
-	LOG_DEBUG("Text", "finding with '%s'", STR(pattern));
+	LOG_DEBUG("Find", "finding with pattern '%s'", STR(pattern));
 	
 	return pattern;
 }
@@ -453,7 +439,7 @@ static unichar parseHexChar(NSString* text, NSUInteger i)
 	template = [self _replaceAsciiEscapes:template];
 	template = [self _replaceUniEscapes:template];
 	
-	LOG_DEBUG("Text", "replacing with '%s'", STR(template));
+	LOG_DEBUG("Find", "replacing with template '%s'", STR(template));
 	
 	return template;
 }

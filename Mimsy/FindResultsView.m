@@ -16,7 +16,6 @@
 	}
 	else
 	{
-		LOG_DEBUG("Mimsy", "keyCode = %u, flags = %lX", event.keyCode, event.modifierFlags);
 		[super keyDown:event];
 	}
 }

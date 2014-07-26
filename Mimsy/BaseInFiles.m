@@ -228,10 +228,6 @@
 			}
 			
 			sortRangeVector(ranges);
-			for (NSUInteger i = 0; i < ranges->count; ++i)
-			{
-				LOG_INFO("Mimsy", "   range = %lu, %lu", ranges->data[i].location, ranges->data[i].length);
-			}
 		}
 	}
 	
