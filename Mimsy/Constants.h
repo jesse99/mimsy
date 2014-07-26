@@ -10,4 +10,4 @@ extern NSString* RightArrowChar;
 extern NSString* DownArrowChar;
 extern NSString* DownHookedArrowChar;
 
-
+extern const unsigned short TabKeyCode;

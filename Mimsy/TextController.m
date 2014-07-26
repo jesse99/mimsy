@@ -18,6 +18,8 @@
 #import "TextStyles.h"
 #import "TimeMachine.h"
 #import "TranscriptController.h"
+#import "UIntVectorUtils.h"
+#import "Utils.h"
 #import "WarningWindow.h"
 #import "WindowsDatabase.h"
 
@@ -31,6 +33,7 @@
 	TextStyles* _styles;
 	ApplyStyles* _applier;
 	NSMutableArray* _layoutBlocks;
+	struct UIntVector _lineStarts;	// first index is at zero, other indexes are one past new-lines
 }
 
 - (id)init
@@ -45,6 +48,7 @@
 		_styles = [self _createDefaultTextStyles];
 		
 		_layoutBlocks = [NSMutableArray new];
+		_lineStarts = newUIntVector();
 		
  		updateInstanceCount(@"TextController", +1);
 		updateInstanceCount(@"TextWindow", +1);
@@ -60,6 +64,7 @@
 - (void)dealloc
 {
 	updateInstanceCount(@"TextController", -1);
+	freeUIntVector(&_lineStarts);
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -255,7 +260,12 @@
 	BOOL enabled = NO;
 	
 	SEL sel = [item action];
-	if ([self respondsToSelector:sel])
+	if (sel == @selector(shiftLeft:) || sel == @selector(shiftRight:))
+	{
+		NSRange range = self.textView.selectedRange;
+		enabled = range.length > 0 && self.textView.isEditable;
+	}
+	else if ([self respondsToSelector:sel])
 	{
 		enabled = YES;
 	}
@@ -578,6 +588,73 @@
 		[self.textView setTypingAttributes:[_styles attributesForElement:@"normal"]];
 }
 
+- (void)shiftLeft:(id)sender
+{
+	UNUSED(sender);
+	
+	NSRange range = self.textView.selectedRange;
+	NSUInteger firstLine = [self _offsetToLine:range.location];
+	NSUInteger lastLine = [self _offsetToLine:range.location + range.length - 1];
+	
+	NSArray* args = @[@(firstLine), @(lastLine), @(-1)];
+	[self _shiftLines:args];
+}
+
+- (void)shiftRight:(id)sender
+{
+	UNUSED(sender);
+	
+	NSRange range = self.textView.selectedRange;
+	NSUInteger firstLine = [self _offsetToLine:range.location];
+	NSUInteger lastLine = [self _offsetToLine:range.location + range.length - 1];
+	
+	NSArray* args = @[@(firstLine), @(lastLine), @(+1)];
+	[self _shiftLines:args];
+}
+
+- (void)_shiftLines:(NSArray*)args
+{
+	NSUInteger firstLine = [((NSNumber*) args[0]) unsignedIntegerValue];
+	NSUInteger lastLine = [((NSNumber*) args[1]) unsignedIntegerValue];
+	int delta = [((NSNumber*) args[2]) intValue];
+	
+	NSString* tab;
+//	if (Language != null && !UsesTabs && !NSObject.IsNullOrNil(SpacesText))
+//		tab = SpacesText;
+//	else
+		tab = @"\t";
+	
+	NSTextStorage* storage = self.textView.textStorage;
+	[storage beginEditing];
+	for (NSUInteger line = lastLine; line >= firstLine && line <= lastLine; --line)
+	{
+		NSUInteger offset = [self _lineToOffset:line];
+		if (delta > 0)
+		{
+			[storage replaceCharactersInRange:NSMakeRange(offset, 0) withString:tab];
+		}
+		else
+		{
+			unichar ch = [storage.string characterAtIndex:offset];
+			if (ch == '\t' || ch == ' ')	// need to stop shifting lines left when there is no more whitespace
+			{
+				[storage deleteCharactersInRange:NSMakeRange(offset, 1)];
+			}
+		}
+	}
+	[storage endEditing];
+	
+	NSUInteger firstOffset = [self _lineToOffset:firstLine];
+	NSUInteger lastOffset = [self _lineToOffset:lastLine+1];
+	[self.textView setSelectedRange:NSMakeRange(firstOffset, lastOffset - firstOffset)];
+	
+	NSArray* oldArgs = @[args[0], args[1], @(-delta)];
+	NSWindowController* controller = self.window.windowController;
+	NSDocument* doc = controller.document;
+	[doc.undoManager registerUndoWithTarget:self selector:@selector(_shiftLines:) object:oldArgs];
+	[doc.undoManager setActionName:@"Shift Lines"];
+}
+
 - (void)showLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width
 {
 	UNUSED(line, col, width);
@@ -663,6 +740,7 @@
 	if ((mask & NSTextStorageEditedCharacters))
 	{
 		_editCount++;
+		setSizeUIntVector(&_lineStarts, 0);
 
 		NSTextStorage* storage = self.textView.textStorage;
 		NSRange range = storage.editedRange;
@@ -711,6 +789,50 @@
 //			DoPruneRanges();
 		}
 	}
+}
+
+// Note that line numbers are 1-based.
+- (NSUInteger)_offsetToLine:(NSUInteger)offset
+{
+	struct UIntVector* lineStarts = self._getLineStarts;
+	
+	NSUInteger line = searchUIntVector(lineStarts, offset);
+	if (line >= lineStarts->count)
+		line = ~line;
+	
+	if (line == lineStarts->count || lineStarts->data[line] != offset)
+		--line;
+	
+	return line + 1;
+	
+}
+
+- (NSUInteger)_lineToOffset:(NSUInteger)line
+{
+	ASSERT(line >= 1);
+	
+	struct UIntVector* lineStarts = self._getLineStarts;
+	if (line-1 < lineStarts->count)
+		return lineStarts->data[line - 1];
+	else
+		return self.text.length - 1;
+}
+
+- (struct UIntVector*)_getLineStarts
+{
+	NSString* text = _textView.textStorage.string;
+	if (_lineStarts.count == 0 && text.length > 0)
+	{
+		pushUIntVector(&_lineStarts, 0);
+		for (NSUInteger i = 1; i < text.length; ++i)
+		{
+			// TextDocument strips out line feeds so this is legit.
+			if ([text characterAtIndex:i-1] == '\n')
+				pushUIntVector(&_lineStarts, i);
+		}
+	}
+	
+	return &_lineStarts;
 }
 
 - (TextStyles*)_createTextStyles

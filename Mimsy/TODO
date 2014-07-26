@@ -1,15 +1,29 @@
 tail -f ~/Library/Logs/mimsy.log
 
-* Get tabs working better:
-	- may want a setting to control behavior
-	- or just do something slightly cheesy until proc files are in
-* Get option-tab working
-	- update special keys help file
-* Case sensitive search doesn't work?
+
+* Should we keep the layoutManager change?
+* Case sensitive search isn't working
+* Auto-indent new lines
 * Double clicking should not treat period as a word character.
+* Toggle comment would be really nice.
+* Save sometimes screwed up line endings
+	- wound up adding lots of extra new lines
+	- probably had a file with mixed line endings
+* Directory view window is collapsing open items:
+	- try running R scripts in samplers
 * Getting a warning (I think) because layout is being dirtied inside layput
 	- happens when double clicking on a find in files result
 
+* After typing a closing brace the wrong open brace is highlighted.
+* Layout was super slow with a last file (ping-large.R)
+* Add tab stops 
+	- they get screwed up now for things like tabbing to add comments to long lines)
+	  e.g. replaceSelection in TextEditorView.cs
+* Get option-tab working
+	- should probably use identifier style
+	bit look at Continuum styler (and maybe some others)
+	- update special keys help file
+* Probably should sanitize pastes to strip line feeds and other bogus control characters.
 * Help looks busted
 * Transforms are added to context menu but not main menu.
 * Nothing happened when double clicking a nib file.
@@ -73,7 +87,6 @@ tail -f ~/Library/Logs/mimsy.log
 	- braces
 	- maybe characters (or regexen) not in string or comment
 * Support goto line
-* Support shift left and right
 * Meson (build system)
 	- like CMake but saner
 	- easy to integrate with an IDE (see https://github.com/jpakkane/meson/wiki/IDE%20integration)
@@ -100,7 +113,6 @@ tail -f ~/Library/Logs/mimsy.log
 * Document fancy open recent:
 	- command-tab, then up or down arrow and release
 	- might want a help file for hidden mac features
-* Auto-indent new lines
 * Can we use map kit to navigate code?
 * Support option-tab
 	- be sure to document this
@@ -134,6 +146,9 @@ tail -f ~/Library/Logs/mimsy.log
 	- clicking on this shoould work as a goto line
 	- maybe even support 1:100 syntax to goto line and col
 	- probably want to document this
+	- don't bother with a metrics class
+	- instead schedule main thread find line number
+	  after an edit push back schedule time 1s
 * Could add some simple find definition support by relying on the styler:
 	- directory watcher and a task are used to maintain a cache
 	- project pref could have paths to dependencies, eg cocoa headers

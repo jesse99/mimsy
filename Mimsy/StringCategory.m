@@ -4,6 +4,16 @@
 
 @implementation NSString (StringCategory)
 
++ (NSString*)stringWithN:(NSUInteger)count instancesOf:(NSString*)token
+{
+	NSMutableString* str = [NSMutableString stringWithCapacity:count*token.length];
+	
+	for (NSUInteger i = 0; i < count; ++i)
+		[str appendString:token];
+	
+	return str;
+}
+
 - (bool)startsWith:(NSString*)needle
 {
 	NSRange range = [self rangeOfString:needle];

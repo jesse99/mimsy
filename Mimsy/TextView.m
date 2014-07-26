@@ -7,6 +7,7 @@
 #import "Constants.h"
 #import "Logger.h"
 #import "SearchSite.h"
+#import "StringCategory.h"
 #import "TextController.h"
 #import "TimeMachine.h"
 #import "Utils.h"
@@ -36,10 +37,157 @@
 
 - (void)keyDown:(NSEvent*)event
 {
-	[super keyDown:event];
+	do
+	{
+		if ([self _handleTabKey:event])
+			break;
+		
+		NSString* chars = event.characters;
+		[self _handleCloseBrace:chars];
+
+		[super keyDown:event];
+	}
+	while (false);
+}
+
+- (bool)_handleTabKey:(NSEvent*)event
+{
+	if (event.keyCode == TabKeyCode)
+	{
+		TextController* controller = self.window.windowController;
+		if ((event.modifierFlags & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask)) == 0)
+		{
+			if (self.selectedRange.length > 1)
+			{
+				// Tab with at least one line selected indents lines
+				if ([self _rangeCrossesLines:self.selectedRange])
+				{
+					[controller shiftRight:self];
+					return true;
+				}
+			}
+			else if (self.selectedRange.length == 0)
+			{
+				// Tab with no selection at the end of a blank line indents like the previous line.
+				if ([self _matchPriorLineTabs:self.selectedRange.location])
+					return true;
+			}
+
+			// TODO: should have am option (or plugin) for this
+//			if (controller.Language != null && !controller.UsesTabs)
+//			{
+//				if (!NSObject.IsNullOrNil(controller.SpacesText))
+//				{
+//					this.insertText(controller.SpacesText);
+//					return true;
+//				}
+//			}
+		}
+		else if (((event.modifierFlags & (NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask)) == 0) && (event.modifierFlags & NSShiftKeyMask) == NSShiftKeyMask)
+		{
+			// Shift-tab with at least one line selected unindents lines
+			if ([self _rangeCrossesLines:self.selectedRange])
+			{
+				[controller shiftLeft:self];
+				return true;
+			}
+		}
+	}
 	
-	NSString* chars = event.characters;
-	[self _handleCloseBrace:chars];
+	return false;
+}
+
+- (bool)_rangeCrossesLines:(NSRange)range
+{
+	NSUInteger first = [self getLineStart:range.location];
+	NSUInteger last = [self getLineStart:range.location + range.length];
+	
+	return first != last;
+}
+
+// Returns a new index >= 0 and <= text.length and <= than the original index.
+// Returns the same index if the previous character is a newline.
+- (NSUInteger)getLineStart:(NSUInteger)index
+{
+	NSString* text = self.textStorage.string;
+	
+	NSUInteger len = self.textStorage.string.length;
+	if (len == 0) return 0;
+	if (index > len) index = len - 1;
+	if (index > 0 && [text characterAtIndex:index-1] == '\n') return index;
+	while (index > 0 && [text characterAtIndex:index-1] != '\n') --index;
+	return index;
+}
+
+// DoMatchPriorLineTabs:
+//    If at eol and all preceding chars on current line are tabs (or empty),
+//    then match the leading tabs of the above line and return true.
+// Terms: eol = end of line, bof = beginning of file, etc.
+// Test cases:
+//    * At bol, prev line has >= 1 leading tabs. Press Tab.
+//    * At bol, prev line has 0 leading tabs. Press Tab.
+//    * At eol with one leading tab, prev line has >= 1 leading tabs. Press Tab.
+//    * At eol with one leading tab, prev line has 0 leading tabs. Press Tab.
+//    * Empty file. Press Tab.
+//	  * At bof. Press Tab.
+// To do:
+//    * Doesn't handle when there are nothing but tabs after the current cursor location.
+- (bool)_matchPriorLineTabs:(NSUInteger)location
+{
+	NSString* text = self.textStorage.string;
+
+	if (location >= text.length) return false;  // out of range
+	NSUInteger thisLineStart = [self getLineStart:location];
+	if (thisLineStart == 0) return false;  // there is no previous line to match tab chars with
+	if (location != text.length      // not at end of text
+		&& location != text.length-1 // not at end of text
+		&& [text characterAtIndex:location] != '\n')     // not at end of line
+	{ return false; }
+	// at this point, there is a previous line and the cursor is at the end of the current line
+	// now exit if non-tab chars between the bol and location
+	for (NSUInteger i = thisLineStart; i < location; i++)
+		if ([text characterAtIndex:i] != '\t') return false;
+	NSUInteger prevLineStart = [self getLineStart:thisLineStart - 2];
+	NSUInteger prevTabCount = [self _getLeadingTabCount:prevLineStart];
+	if (prevTabCount <= (location - thisLineStart)) return false;
+	// add new tabs with undo
+	NSString* newTabs = [NSString stringWithN:prevTabCount - (location - thisLineStart) instancesOf:@"\t"];
+	NSArray* args = @[[NSValue valueWithRange:NSMakeRange(location, 0)], newTabs, @""];
+	[self _replaceSelection:args];
+	[self setSelectedRange:NSMakeRange(location + newTabs.length, 0)];
+	return true;
+}
+
+- (NSUInteger)_getLeadingTabCount:(NSUInteger)i
+{
+	NSString* text = self.textStorage.string;
+	ASSERT(i == 0 || [text characterAtIndex:i-1] == '\n');
+	
+	NSUInteger j = i;
+	while (j < text.length && [text characterAtIndex:j] == '\t') j++;
+	return j - i;
+}
+
+// args[0] == text range
+// args[1] == text which will replace the range
+// args[2] == undo text
+- (void)_replaceSelection:(NSArray*)args
+{
+	NSValue* value = args[0];
+	NSRange oldRange = value.rangeValue;
+	
+	NSString* text = self.textStorage.string;
+	NSString* oldText = [text substringWithRange:oldRange];	// TODO: if we can figure out that the selection is a class or method then we should add that to our url
+	NSString* newText = args[1];
+	[self replaceCharactersInRange:oldRange withString:newText];
+	
+	NSRange newRange = NSMakeRange(oldRange.location, newText.length);
+	
+	NSArray* oldArgs = @[[NSValue valueWithRange:newRange], oldText, args[2]];
+	TextController* controller = self.window.windowController;
+	NSDocument* doc = controller.document;
+	[doc.undoManager registerUndoWithTarget:self selector:@selector(_replaceSelection:) object:oldArgs];
+	[doc.undoManager setActionName:args[2]];
 }
 
 - (void)_handleCloseBrace:(NSString*)chars

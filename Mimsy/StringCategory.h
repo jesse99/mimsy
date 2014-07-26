@@ -2,6 +2,8 @@
 
 @interface NSString (StringCategory)
 
++ (NSString*)stringWithN:(NSUInteger)count instancesOf:(NSString*)token;
+
 - (bool)startsWith:(NSString*)needle;
 - (bool)endsWith:(NSString*)needle;
 - (bool)contains:(NSString*)needle;

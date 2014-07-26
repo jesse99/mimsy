@@ -202,6 +202,7 @@
 		3759B6561676F01900D3F3B8 /* TextController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextController.m; sourceTree = "<group>"; };
 		3759B65E1678376000D3F3B8 /* Decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Decode.h; sourceTree = "<group>"; };
 		3759B65F1678376000D3F3B8 /* Decode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Decode.m; sourceTree = "<group>"; };
+		3760186D1984501800FF5814 /* UIntVectorUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIntVectorUtils.h; sourceTree = "<group>"; };
 		376407E716B8CB05000B7AE3 /* tophat.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = tophat.icns; sourceTree = "<group>"; };
 		376407E916BB60D4000B7AE3 /* DirectoryWatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryWatcher.h; sourceTree = "<group>"; };
 		376407EA16BB60D4000B7AE3 /* DirectoryWatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryWatcher.m; sourceTree = "<group>"; };
@@ -421,6 +422,7 @@
 				37AD756E171B95460054A75F /* UpdateConfig.h */,
 				37AD756F171B95460054A75F /* UpdateConfig.m */,
 				37862C6C1693ABF100DB9E66 /* UIntVector.h */,
+				3760186D1984501800FF5814 /* UIntVectorUtils.h */,
 				3782A8B31916D9DB005ED276 /* UnicharVector.h */,
 				3705C81C167BE9BD00E5D54C /* Utils.h */,
 				3705C81D167BE9BD00E5D54C /* Utils.m */,
