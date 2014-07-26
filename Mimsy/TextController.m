@@ -750,6 +750,31 @@
 			[_applier addDirtyLocation:loc reason:@"user edit"];
 		}
 		
+		// Auto-indent new lines.
+		NSString* text = storage.string;
+		NSInteger lengthChange = storage.changeInLength;
+		NSCharacterSet* ws = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+		if (range.length == 1 && [text characterAtIndex:range.location] == '\n' && lengthChange > 0)
+		{
+			NSUInteger i = range.location - 1;
+			while (i < text.length && [text characterAtIndex:i] != '\n')
+				--i;
+			
+			++i;
+			NSUInteger count = 0;
+			while (i + count < range.location && [ws characterIsMember:[text characterAtIndex:i+count]])
+				++count;
+			
+			if (count > 0)
+			{
+				NSString* padding = [text substringWithRange:NSMakeRange(i, count)];
+				
+				dispatch_queue_t main = dispatch_get_main_queue();
+				dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 50*NSEC_PER_MSEC);
+				dispatch_after(delay, main, ^{[_textView insertText:padding];});
+			}
+		}
+
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowEdited" object:self];
 	}
 }

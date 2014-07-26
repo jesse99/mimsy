@@ -1,7 +1,6 @@
 tail -f ~/Library/Logs/mimsy.log
 
 
-* Case sensitive search isn't working
 * Auto-indent new lines
 * Double clicking should not treat period as a word character.
 * Toggle comment would be really nice.
