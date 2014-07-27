@@ -1,7 +1,7 @@
 Language: c++
 Globs: *.cpp *.hpp *.cxx *.cc *.hxx algorithm bitset cassert cctype cerrno cfloat ciso646 climits clocale cmath complex csetjmp csignal cstdarg cstddef cstdio cstdlib cstring ctime cwchar cwctype cxxabi.h deque exception fstream functional iomanip ios iosfwd iostream istream iterator limits list locale map memory new numeric ostream queue set sstream stack stdexcept streambuf string typeinfo utility valarray vector
 ConditionalGlob: *.h (std::) | (public:) | (virtual) | (^ \s* \x23 \s* include \s+ < \w+ >)
-Word: [\w_~]+
+Word: [a-zA-Z_~][a-zA-Z0-9_]*
 LineComment: //
 ContextHelp: {c++}[C++ Library]http://www.cplusplus.com/reference/
 ContextHelp: {c++}[C++ Language]http://msdn.microsoft.com/en-us/library/3bstk3k5.aspx

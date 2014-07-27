@@ -5,6 +5,7 @@
 #import "Assert.h"
 #import "Balance.h"
 #import "Constants.h"
+#import "Language.h"
 #import "Logger.h"
 #import "SearchSite.h"
 #import "StringCategory.h"
@@ -33,6 +34,34 @@
 - (bool)restored
 {
 	return _restored;
+}
+
+- (NSRange)selectionRangeForProposedRange:(NSRange)proposedRange granularity:(NSSelectionGranularity)granularity
+{
+	NSRange result;
+	
+	TextController* controller = _controller;
+	if (granularity == NSSelectByWord && controller && controller.language != nil)
+	{
+		result = proposedRange;
+		
+		while (result.location > 0 && [self _matchesWord:controller.language.word at:result.location - 1 len:result.length + 1])
+		{
+			--result.location;
+			++result.length;
+		}
+		
+		while ([self _matchesWord:controller.language.word at:result.location len:result.length + 1])
+		{
+			++result.length;
+		}
+	}
+	else
+	{
+		result = [super selectionRangeForProposedRange:proposedRange granularity:granularity];
+	}
+	
+	return result;
 }
 
 - (void)keyDown:(NSEvent*)event
@@ -568,6 +597,19 @@
 			[super changeColor:sender];
 		}
 	}
+}
+
+- (bool)_matchesWord:(NSRegularExpression*)word at:(NSUInteger)loc len:(NSUInteger)len
+{
+	bool matches = false;
+	
+	if (loc + len <= self.textStorage.string.length)
+	{
+		NSTextCheckingResult* match = [word firstMatchInString:self.textStorage.string options:NSMatchingWithTransparentBounds range:NSMakeRange(loc, len)];
+		matches = match != nil && match.range.length == len;
+	}
+	
+	return matches;
 }
 
 @end

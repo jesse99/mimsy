@@ -1,8 +1,6 @@
 tail -f ~/Library/Logs/mimsy.log
 
 
-* Auto-indent new lines
-* Double clicking should not treat period as a word character.
 * Toggle comment would be really nice.
 * Save sometimes screwed up line endings
 	- wound up adding lots of extra new lines

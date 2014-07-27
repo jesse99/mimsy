@@ -31,6 +31,8 @@
 		NSMutableArray* names = [NSMutableArray new];
 		NSMutableArray* patterns = [NSMutableArray new];
 		NSMutableArray* lines = [NSMutableArray new];
+		__block NSString* word = nil;
+		__block NSUInteger wordLine = 0;
 		
 		[names addObject:@"normal"];
 		
@@ -52,12 +54,13 @@
 					
 					_lineComment = entry.value;	
 				}
-				else if ([key isEqualToString:@"word"])	// TODO: reserved
+				else if ([key isEqualToString:@"word"])
 				{
-	//				if (_lineComment)
-	//					[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
+					if (_word)
+						[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
 					
-	//				_lineComment = entry.value;
+					word = entry.value;
+					wordLine = entry.line;
 				}
 				
 				else if ([key isEqualToString:@"globs"])
@@ -108,6 +111,17 @@
 				}
 			}
 		];
+
+		if (!word)
+			word = @"[\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}_][\\w_]*";
+
+		NSError* e = nil;
+		NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace;
+		_word = [[NSRegularExpression alloc] initWithPattern:word options:options error:&e];
+		if (!_word)
+		{
+			[errors addObject:[NSString stringWithFormat:@"regex on line %ld failed to parse: %@", wordLine, e.localizedFailureReason]];
+		}
 
 		if (!_name)
 			[errors addObject:@"Language key is missing"];

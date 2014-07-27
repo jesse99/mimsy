@@ -1,7 +1,7 @@
 Language: objective-c
 Globs: *.m
 ConditionalGlob: *.h (@end) | (^ \s* \x23 \s* import \s+)
-Word: [\w_:]+
+Word: [a-zA-Z_][a-zA-Z0-9_:]*
 LineComment: //
 ContextHelp: {objective-c}[Objective-C]https://developer.apple.com/search/index.php?q=objective-c
 ContextHelp: {objective-c}[Programming with Objective-C]http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html

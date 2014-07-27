@@ -31,4 +31,7 @@
 // like commenting out selections.
 @property (readonly) NSString* lineComment;
 
+// Used to match words when double clicking.
+@property (readonly) NSRegularExpression* word;
+
 @end
