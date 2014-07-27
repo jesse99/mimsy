@@ -2,16 +2,15 @@ tail -f ~/Library/Logs/mimsy.log
 
 
 * Toggle comment would be really nice.
+* Directory view window is collapsing open items:
+	- try running R scripts in samplers
 * Save sometimes screwed up line endings
 	- wound up adding lots of extra new lines
 	- probably had a file with mixed line endings
-* Directory view window is collapsing open items:
-	- try running R scripts in samplers
 * Getting a warning (I think) because layout is being dirtied inside layput
 	- happens when double clicking on a find in files result
 
 * After typing a closing brace the wrong open brace is highlighted.
-* Layout was super slow with a large file (ping-large.R)
 * Add tab stops 
 	- they get screwed up now for things like tabbing to add comments to long lines)
 	  e.g. replaceSelection in TextEditorView.cs
@@ -22,6 +21,7 @@ tail -f ~/Library/Logs/mimsy.log
 * Probably should sanitize pastes to strip line feeds and other bogus control characters.
 * Help looks busted
 * Transforms are added to context menu but not main menu.
+* Layout was super slow with a large file (ping-large.R)
 * Nothing happened when double clicking a nib file.
 * Use a Mimsy header:
 	- include assert and logger

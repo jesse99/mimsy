@@ -265,6 +265,10 @@
 		NSRange range = self.textView.selectedRange;
 		enabled = range.length > 0 && self.textView.isEditable;
 	}
+	else if (sel == @selector(toggleComment:))
+	{
+		enabled = _language != nil && _language.lineComment != nil;
+	}
 	else if ([self respondsToSelector:sel])
 	{
 		enabled = YES;
@@ -588,6 +592,59 @@
 		[self.textView setTypingAttributes:[_styles attributesForElement:@"normal"]];
 }
 
+- (void)toggleComment:(id)sender
+{
+	UNUSED(sender);
+	
+	NSRange range = self.textView.selectedRange;
+	NSUInteger firstLine = [self _offsetToLine:range.location];
+	NSUInteger lastLine = [self _offsetToLine:range.location + range.length - 1];
+	
+	NSString* comment = _language.lineComment;
+	
+	NSUInteger offset = [self _lineToOffset:firstLine];
+	bool add = ![self _textAt:offset matches:comment];
+	
+	NSArray* args = @[@(firstLine), @(lastLine), comment, @(add)];
+	[self _toggleComment:args];
+}
+
+- (void)_toggleComment:(NSArray*)args
+{
+	NSUInteger firstLine = [((NSNumber*) args[0]) unsignedIntegerValue];
+	NSUInteger lastLine = [((NSNumber*) args[1]) unsignedIntegerValue];
+	NSString* comment = args[2];
+	bool add = [((NSNumber*) args[3]) boolValue];
+	
+	NSTextStorage* storage = _textView.textStorage;
+	[storage beginEditing];
+	for (NSUInteger line = lastLine; line >= firstLine && line <= lastLine; --line)
+	{
+		NSUInteger offset = [self _lineToOffset:line];
+		if (add)
+		{
+			if (![self _textAt:offset matches:comment])
+				[storage replaceCharactersInRange:NSMakeRange(offset, 0) withString:comment];
+		}
+		else
+		{
+			if ([self _textAt:offset matches:comment])
+				[storage deleteCharactersInRange:NSMakeRange(offset, comment.length)];
+		}
+	}
+	[storage endEditing];
+	
+	NSUInteger firstOffset = [self _lineToOffset:firstLine];
+	NSUInteger lastOffset = [self _lineToOffset:lastLine+1];
+	[self.textView setSelectedRange:NSMakeRange(firstOffset, lastOffset - firstOffset)];
+	
+	NSArray* oldArgs = @[args[0], args[1], args[2], @(!add)];
+	NSWindowController* controller = self.window.windowController;
+	NSDocument* doc = controller.document;
+	[doc.undoManager registerUndoWithTarget:self selector:@selector(_toggleComment:) object:oldArgs];
+	[doc.undoManager setActionName:@"Toggle Comment"];
+}
+
 - (void)shiftLeft:(id)sender
 {
 	UNUSED(sender);
@@ -858,6 +915,20 @@
 	}
 	
 	return &_lineStarts;
+}
+
+- (bool)_textAt:(NSUInteger)offset matches:(NSString*)str
+{
+	bool match = false;
+	
+	NSString* buffer = self.textView.textStorage.string;
+	if (offset + str.length <= buffer.length)
+	{
+		int result = [buffer compare:str options:0 range:NSMakeRange(offset, str.length)];
+		match = result == NSOrderedSame;
+	}
+	
+	return match;
 }
 
 - (TextStyles*)_createTextStyles
