@@ -78,9 +78,6 @@ typedef void (^NullaryBlock)();
 		_settings = [[LocalSettings alloc] initWithFileName:@"app.mimsy"];
 		_pendingBlocks = [NSMutableDictionary new];
 		
-		__weak AppDelegate* this = self;
-		[[NSApp helpMenu] setDelegate:this];
-		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appSettingsChanged:) name:@"AppSettingsChanged" object:nil];
 		
 		[self _installFiles];
@@ -96,6 +93,14 @@ typedef void (^NullaryBlock)();
 	}
 	
 	return self;
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)notification
+{
+	UNUSED(notification);
+	
+	__weak AppDelegate* this = self;
+	[[NSApp helpMenu] setDelegate:this];
 }
 
 // Note that windows will still be open when this is called.

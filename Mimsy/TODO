@@ -1,25 +1,23 @@
 tail -f ~/Library/Logs/mimsy.log
 
 
-* Toggle comment would be really nice.
-* Directory view window is collapsing open items:
-	- try running R scripts in samplers
-* Save sometimes screwed up line endings
-	- wound up adding lots of extra new lines
-	- probably had a file with mixed line endings
-* Getting a warning (I think) because layout is being dirtied inside layput
-	- happens when double clicking on a find in files result
-
+* Think about different logging.
 * After typing a closing brace the wrong open brace is highlighted.
-* Add tab stops 
+* Add tab stops
 	- they get screwed up now for things like tabbing to add comments to long lines)
 	  e.g. replaceSelection in TextEditorView.cs
 * Get option-tab working
 	- should probably use identifier style
 	but look at Continuum styler (and maybe some others)
 	- update special keys help file
+
+* Save sometimes screwed up line endings
+	- wound up adding lots of extra new lines
+	- probably had a file with mixed line endings
+* Getting a warning (I think) because layout is being dirtied inside layput
+	- happens when double clicking on a find in files result
+
 * Probably should sanitize pastes to strip line feeds and other bogus control characters.
-* Help looks busted
 * Transforms are added to context menu but not main menu.
 * Layout was super slow with a large file (ping-large.R)
 * Nothing happened when double clicking a nib file.
@@ -65,6 +63,9 @@ tail -f ~/Library/Logs/mimsy.log
 * Tabs don't work correctly
 	- can see this by doing a find all for TODO in gnos
 * Directory windows need to appear in bold in the window menu.
+* Directory view window is collapsing open items:
+	- try running R scripts in samplers
+	- seems to be happening with root items
 * Look into supporting code folding:
 	- maybe just fold selections
 	- click could unfold
