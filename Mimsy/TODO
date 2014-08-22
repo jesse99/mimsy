@@ -1,7 +1,6 @@
 tail -f ~/Library/Logs/mimsy.log
 
 
-* Transforms are added to context menu but not main menu.
 * After typing a closing brace the wrong open brace is highlighted.
 * Save sometimes screwed up line endings
 	- wound up adding lots of extra new lines

@@ -87,7 +87,6 @@ typedef void (^NullaryBlock)();
 		[self _installFiles];
 		[self _loadSettings];
 		[self _loadHelpFiles];
-		[self _addTransformItems];
 		[self _watchInstalledFiles];
 		[StartupScripts setup];
 		[WindowsDatabase setup];
@@ -105,6 +104,8 @@ typedef void (^NullaryBlock)();
 	
 	__weak AppDelegate* this = self;
 	[[NSApp helpMenu] setDelegate:this];
+
+	[self _addTransformItems];
 }
 
 // Note that windows will still be open when this is called.
