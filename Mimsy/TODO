@@ -1,10 +1,10 @@
 tail -f ~/Library/Logs/mimsy.log
 
 
-* After typing a closing brace the wrong open brace is highlighted.
 * Save sometimes screwed up line endings
 	- wound up adding lots of extra new lines
 	- probably had a file with mixed line endings
+* Windows file encoding isn't being inferred properly.
 * Probably should sanitize pastes to strip line feeds and other bogus control characters.
 * Getting a warning (I think) because layout is being dirtied inside layput
 	- happens when double clicking on a find in files result

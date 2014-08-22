@@ -25,7 +25,7 @@ static bool isValidUTF8(unsigned char b)
 	
 	else if (b >= 0xF5)
 		valid = false;
-	
+		
 	return valid;
 }
 
@@ -198,6 +198,16 @@ static NSStringEncoding getEncoding(NSData* data, unsigned long* skipBytes)
 					data = [data subdataWithRange:NSMakeRange(skipBytes, [data length] - skipBytes)];
 				NSMutableString* str = [[NSMutableString alloc] initWithData:data encoding:encoding];
 
+				if (str == nil && encoding == NSUTF8StringEncoding)
+				{
+					// For some awful reason NSUTF8StringEncoding won't decode Windows line
+					// endian files even though they are valid UTF-8. TODO: this will break
+					// if the file really is utf-8 though it's a coin flip as to which
+					// encoding the file is really in without a BOM.
+					encoding = NSWindowsCP1252StringEncoding;
+					str = [[NSMutableString alloc] initWithData:data encoding:encoding];
+				}
+				
 				// The first few bytes of most legacy documents will look like utf8 so
 				// if we couldn't decode it using utf8 we need to fall back onto Mac
 				// OS Roman. TODO: this is for pre-OS X docs, do we really want to do
