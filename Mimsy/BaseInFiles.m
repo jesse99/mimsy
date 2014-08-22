@@ -1,15 +1,12 @@
 #import "BaseInFiles.h"
 
 #import "AppSettings.h"
-#import "Assert.h"
 #import "Decode.h"
 #import "FindInFilesController.h"
 #import "Language.h"
 #import "Languages.h"
-#import "Logger.h"
 #import "RangeVector.h"
 #import "RegexStyler.h"
-#import "StringCategory.h"
 #import "StyleRuns.h"
 #import "TranscriptController.h"
 

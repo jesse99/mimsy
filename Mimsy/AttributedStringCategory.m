@@ -1,7 +1,5 @@
 #import "AttributedStringCategory.h"
 
-#import "Assert.h"
-
 @implementation NSMutableAttributedString (MutableAttributedStringCategory)
 
 - (void)copyAttributes:(NSArray*)names from:(NSAttributedString*)from

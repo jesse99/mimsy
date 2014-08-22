@@ -1,7 +1,5 @@
 #import "UpdateConfig.h"
 
-#import "StringCategory.h"
-
 static NSMutableAttributedString* loadPrefFile(NSString* path, NSError** outError)
 {
 	NSURL* url = [NSURL fileURLWithPath:path];

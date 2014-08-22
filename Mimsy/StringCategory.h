@@ -1,5 +1,3 @@
-#import <Foundation/Foundation.h>
-
 @interface NSString (StringCategory)
 
 + (NSString*)stringWithN:(NSUInteger)count instancesOf:(NSString*)token;

@@ -1,11 +1,8 @@
 #import "convertVIMFiles.h"
 
-#import "ArrayCategory.h"
-#import "Assert.h"
 #import "ColorCategory.h"
 #import "Glob.h"
 #import "Metadata.h"
-#import "StringCategory.h"
 #import "Utils.h"
 
 @interface Group : NSObject

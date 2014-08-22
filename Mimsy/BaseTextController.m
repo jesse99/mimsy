@@ -1,6 +1,5 @@
 #import "BaseTextController.h"
 
-#import "Assert.h"
 #import "FindController.h"
 #import "FindInFilesController.h"
 #import "OpenSelection.h"

@@ -1,7 +1,5 @@
 #import "StringCategory.h"
 
-#import "ArrayCategory.h"
-
 @implementation NSString (StringCategory)
 
 + (NSString*)stringWithN:(NSUInteger)count instancesOf:(NSString*)token

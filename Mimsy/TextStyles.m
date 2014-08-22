@@ -1,6 +1,5 @@
 #import "TextStyles.h"
 
-#import "Assert.h"
 #import "ConfigParser.h"
 #import "Metadata.h"
 #import "Paths.h"

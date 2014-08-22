@@ -1,8 +1,6 @@
 #import "AppDelegate.h"
 
 #import "AppSettings.h"
-#import "ArrayCategory.h"
-#import "Assert.h"
 #import "ConfigParser.h"
 #import "Constants.h"
 #import "DirectoryController.h"
@@ -21,7 +19,6 @@
 #import "SearchSite.h"
 #import "SelectStyleController.h"
 #import "StartupScripts.h"
-#import "StringCategory.h"
 #import "TextController.h"
 #import "TimeMachine.h"
 #import "TranscriptController.h"

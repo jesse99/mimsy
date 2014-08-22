@@ -1,13 +1,10 @@
 #import "FindInFilesController.h"
 
 #import "AppSettings.h"
-#import "Assert.h"
 #import "BaseTextController.h"
 #import "DirectoryController.h"
 #import "FindInFiles.h"
-#import "Logger.h"
 #import "ReplaceInFiles.h"
-#import "StringCategory.h"
 
 static FindInFilesController* _findFilesController = nil;
 

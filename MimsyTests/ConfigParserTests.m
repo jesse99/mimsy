@@ -1,8 +1,6 @@
 #import "ConfigParserTests.h"
 
-#import "Assert.h"
 #import "ConfigParser.h"
-#import "Logger.h"
 
 @implementation ConfigParserTests
 

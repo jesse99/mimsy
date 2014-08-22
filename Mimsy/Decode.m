@@ -1,7 +1,5 @@
 #import "Decode.h"
 
-#import "Assert.h"
-
 // Returns true if the character is a control character that should not
 // appear in source code.
 static bool isBadControl(unsigned char b)

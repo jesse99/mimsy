@@ -1,7 +1,5 @@
 #import "FileSystemItem.h"
 
-#import "Assert.h"
-
 @implementation FileSystemItem
 {
 	NSString* _standardPath;

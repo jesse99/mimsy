@@ -1,7 +1,5 @@
 #import "PersistentRange.h"
 
-#import "Assert.h"
-#import "Logger.h"
 #import "TextController.h"
 
 @implementation PersistentRange

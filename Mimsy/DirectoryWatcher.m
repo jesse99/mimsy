@@ -1,8 +1,5 @@
 #import "DirectoryWatcher.h"
 
-#import "Assert.h"
-#import "Logger.h"
-
 static void Callback(ConstFSEventStreamRef streamRef, void* clientCallBackInfo, size_t numEvents, void* eventPaths, const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[]);
 
 @implementation DirectoryWatcher

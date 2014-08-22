@@ -1,8 +1,6 @@
 #import "ReplaceInFiles.h"
 
-#import "Assert.h"
 #import "FindInFilesController.h"
-#import "Logger.h"
 #import "TextController.h"
 #import "TranscriptController.h"
 

@@ -2,8 +2,6 @@
 
 #import "AppDelegate.h"
 #import "AppSettings.h"
-#import "ArrayCategory.h"
-#import "Assert.h"
 #import "Builders.h"
 #import "BuildOptionsController.h"
 #import "ConditionalGlob.h"
@@ -16,7 +14,6 @@
 #import "Logger.h"
 #import "OpenFile.h"
 #import "Paths.h"
-#import "StringCategory.h"
 #import "TranscriptController.h"
 #import "UpdateConfig.h"
 #import "Utils.h"

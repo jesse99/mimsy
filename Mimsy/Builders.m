@@ -3,7 +3,6 @@
 #import "Glob.h"
 #import "Logger.h"
 #import "Paths.h"
-#import "StringCategory.h"
 #import "TranscriptController.h"
 #import "Utils.h"
 

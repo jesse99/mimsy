@@ -2,13 +2,10 @@
 
 #import "AppDelegate.h"
 #import "AppSettings.h"
-#import "Assert.h"
 #import "Balance.h"
 #import "Constants.h"
 #import "Language.h"
-#import "Logger.h"
 #import "SearchSite.h"
-#import "StringCategory.h"
 #import "TextController.h"
 #import "TimeMachine.h"
 #import "Utils.h"

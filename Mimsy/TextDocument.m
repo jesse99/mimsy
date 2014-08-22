@@ -1,6 +1,5 @@
 #import "TextDocument.h"
 
-#import "Assert.h"
 #import "Decode.h"
 #import "FunctionalTest.h"
 #import "InfoController.h"

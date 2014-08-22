@@ -1,7 +1,6 @@
 #import "Database.h"
 
 #import <sqlite3.h>
-#import "Assert.h"
 
 @implementation Database
 {

@@ -1,6 +1,5 @@
 #import "FindResultsController.h"
 
-#import "Assert.h"
 #import "FindInFiles.h"
 #import "OpenFile.h"
 #import "PersistentRange.h"

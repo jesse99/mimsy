@@ -2,7 +2,6 @@
 
 #import "AppDelegate.h"
 #import "AppSettings.h"
-#import "Assert.h"
 #import "ConfigParser.h"
 #import "convertVIMFiles.h"
 #import "Paths.h"

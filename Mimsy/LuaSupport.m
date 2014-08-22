@@ -2,7 +2,6 @@
 
 #import <lauxlib.h>
 
-#import "Assert.h"
 #import "ColorCategory.h"
 #import "DirectoryController.h"
 #import "FunctionalTest.h"

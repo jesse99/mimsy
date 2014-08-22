@@ -1,5 +1,3 @@
-#import <Foundation/Foundation.h>
-
 @interface NSArray (ArrayCategory)
 
 // Returns a new array containing all elements for which the block returns true.

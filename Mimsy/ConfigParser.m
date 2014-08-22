@@ -10,8 +10,6 @@
 // of which this format is very close to a subset of.
 #import "ConfigParser.h"
 
-#import "Assert.h"
-
 @implementation ConfigParserEntry
 @end
 

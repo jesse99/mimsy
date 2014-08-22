@@ -1,7 +1,5 @@
 #import "SelectNameController.h"
 
-#import "Assert.h"
-
 @implementation SelectNameController
 {
 	NSArray* _names;

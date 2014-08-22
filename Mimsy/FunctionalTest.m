@@ -7,9 +7,7 @@
 #include <mach/task_info.h>
 
 #import "AppDelegate.h"
-#import "Assert.h"
 #import "Glob.h"
-#import "Logger.h"
 #import "LuaSupport.h"
 #import "TranscriptController.h"
 #import "Utils.h"

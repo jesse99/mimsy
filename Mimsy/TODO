@@ -1,32 +1,17 @@
 tail -f ~/Library/Logs/mimsy.log
 
 
+* Transforms are added to context menu but not main menu.
 * After typing a closing brace the wrong open brace is highlighted.
-* Add tab stops
-	- they get screwed up now for things like tabbing to add comments to long lines)
-	  e.g. replaceSelection in TextEditorView.cs
-* Get option-tab working
-	- should probably use identifier style
-	but look at Continuum styler (and maybe some others)
-	- update special keys help file
-
 * Save sometimes screwed up line endings
 	- wound up adding lots of extra new lines
 	- probably had a file with mixed line endings
+* Probably should sanitize pastes to strip line feeds and other bogus control characters.
 * Getting a warning (I think) because layout is being dirtied inside layput
 	- happens when double clicking on a find in files result
 
-* Probably should sanitize pastes to strip line feeds and other bogus control characters.
-* Transforms are added to context menu but not main menu.
-* Layout was super slow with a large file (ping-large.R)
+
 * Nothing happened when double clicking a nib file.
-* Use a Mimsy header:
-	- include assert and logger
-	- include a couple categories
-	- include foundation
-	- need to rename the log macros
-       setLevel is buggy too
-* Look at OS changes.
 * Look at identifier styling
 	- do we even want it?
 	- think continuum style looks icky when it is used
@@ -60,6 +45,13 @@ tail -f ~/Library/Logs/mimsy.log
 	- maybe plugins could write lua to control mimsy
 	  replies could be json
 	- plugins with a UI could be objc
+* Add tab stops
+	- they get screwed up now for things like tabbing to add comments to long lines)
+	  e.g. replaceSelection in TextEditorView.cs
+* Get option-tab working
+	- should probably use identifier style
+	but look at Continuum styler (and maybe some others)
+	- update special keys help file
 * Would be nice to have some sort of extension manager:
 	- could evolve this into something to search and install
 * Might be nice if directory window styled dirty windows somehow
@@ -98,6 +90,7 @@ tail -f ~/Library/Logs/mimsy.log
 * Support remote editing
 	- might be simplest to just have a Python script running remotely
 	- contents could be zipped and binhexed
+* Layout was super slow with a large file (ping-large.R)
 * Might want a help window dedidated to just special keys
 	- for both text windows and the directory window
 	- maybe for the app as well (ie window navigation)

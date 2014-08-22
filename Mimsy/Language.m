@@ -1,13 +1,10 @@
 #import "Language.h"
 
 #import "AppSettings.h"
-#import "ArrayCategory.h"
-#import "Assert.h"
 #import "ConditionalGlob.h"
 #import "ConfigParser.h"
 #import "LocalSettings.h"
 #import "RegexStyler.h"
-#import "StringCategory.h"
 #import "Utils.h"
 
 @implementation Language

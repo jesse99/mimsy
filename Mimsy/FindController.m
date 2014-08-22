@@ -1,8 +1,6 @@
 #import "FindController.h"
 
-#import "Assert.h"
 #import "BaseTextController.h"
-#import "Logger.h"
 #import "AppSettings.h"
 
 static FindController* _findController = nil;

@@ -1,11 +1,8 @@
 #import "TimeMachine.h"
 
 #import "AppDelegate.h"
-#import "ArrayCategory.h"
-#import "Assert.h"
 #import "OpenFile.h"
 #import "SelectNameController.h"
-#import "StringCategory.h"
 #import "TextController.h"
 #import "TranscriptController.h"
 #import "Utils.h"

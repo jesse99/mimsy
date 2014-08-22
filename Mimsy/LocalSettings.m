@@ -1,6 +1,5 @@
 #import "LocalSettings.h"
 
-#import "Assert.h"
 #import "AppSettings.h"
 #import "TranscriptController.h"
 

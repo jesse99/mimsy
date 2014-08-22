@@ -1,7 +1,5 @@
 #import "Metadata.h"
 
-#import "Assert.h"
-#import "Logger.h"
 #import <sys/xattr.h>
 
 @implementation Metadata

@@ -1,6 +1,5 @@
 #import "WindowsDatabase.h"
 
-#import "Assert.h"
 #import "Database.h"
 #import "Paths.h"
 

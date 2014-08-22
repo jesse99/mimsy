@@ -1,15 +1,11 @@
 #import "OpenSelection.h"
 
-#import "ArrayCategory.h"
 #import "AppSettings.h"
-#import "Assert.h"
 #import "DirectoryController.h"
 #import "Glob.h"
-#import "Logger.h"
 #import "OpenFile.h"
 #import "ScannerCategory.h"
 #import "SelectNameController.h"
-#import "StringCategory.h"
 #import "TranscriptController.h"
 #import "Utils.h"
 

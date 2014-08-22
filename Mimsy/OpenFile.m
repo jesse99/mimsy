@@ -1,12 +1,10 @@
 #import "OpenFile.h"
 
 #import "AppSettings.h"
-#import "Assert.h"
 #import "Decode.h"
 #import "DirectoryController.h"
 #import "Glob.h"
 #import "Languages.h"
-#import "StringCategory.h"
 #import "TextController.h"
 #import "TranscriptController.h"
 
