@@ -67,11 +67,11 @@
 	{
 		if ([self _handleTabKey:event])
 			break;
+
+		[super keyDown:event];
 		
 		NSString* chars = event.characters;
 		[self _handleCloseBrace:chars];
-
-		[super keyDown:event];
 	}
 	while (false);
 }
