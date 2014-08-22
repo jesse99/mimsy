@@ -1,21 +1,8 @@
 tail -f ~/Library/Logs/mimsy.log
 
 
-* Save sometimes screwed up line endings
-	- wound up adding lots of extra new lines
-	- probably had a file with mixed line endings
-* Windows file encoding isn't being inferred properly.
-* Probably should sanitize pastes to strip line feeds and other bogus control characters.
-* Getting a warning (I think) because layout is being dirtied inside layput
-	- happens when double clicking on a find in files result
-
-
-* Nothing happened when double clicking a nib file.
-* Look at identifier styling
-	- do we even want it?
-	- think continuum style looks icky when it is used
-* Use alertWithError where we don't just write to the transcript.
 * Experiment with a different proc-file based design:
+	- get on a branch
 	- get extensions working (without proc files)
 	- if the file changes reload it
 	- can lua help avoid having a zillion processes?
@@ -51,12 +38,17 @@ tail -f ~/Library/Logs/mimsy.log
 	- should probably use identifier style
 	but look at Continuum styler (and maybe some others)
 	- update special keys help file
+* Look at identifier styling
+	- do we even want it?
+	- think continuum style looks icky when it is used
+* Use alertWithError where we don't just write to the transcript.
 * Would be nice to have some sort of extension manager:
 	- could evolve this into something to search and install
 * Might be nice if directory window styled dirty windows somehow
 	- maybe back color
 * Tabs don't work correctly
 	- can see this by doing a find all for TODO in gnos
+* Nothing happened when double clicking a nib file.
 * Directory windows need to appear in bold in the window menu.
 * Directory view window is collapsing open items:
 	- try running R scripts in samplers

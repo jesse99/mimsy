@@ -538,6 +538,10 @@
 		NSPasteboard* pb = [NSPasteboard generalPasteboard];
 		NSString* str = [pb stringForType:NSStringPboardType];
 		NSString* currentText = self.textStorage.string;
+		
+		// If it is a windows endian file the text will be fixed up when it is saved.
+		// If not then we don't want to mix line endings.
+		str = [str replaceCharacters:@"\r\n" with:@"\n"];
 
 		// Not sure why but it seems that str.length is sometimes longer than
 		// what is pasted.
