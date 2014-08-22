@@ -167,9 +167,9 @@
 - (void)open
 {
 	if (self.path)
-		LOG_INFO("Text", "Window for %s opened", STR([self.path lastPathComponent]));
+		LOG("Text", "Window for %s opened", STR([self.path lastPathComponent]));
 	else
-		LOG_INFO("Text", "Untitled window opened");
+		LOG("Text", "Untitled window opened");
 		
 	[self.window makeKeyAndOrderFront:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowOpened" object:self];
@@ -452,7 +452,7 @@
 	if (lang != _language)
 	{
 		_language = lang;
-		LOG_INFO("Text", "Set language for %s to %s", STR([self.path lastPathComponent]), STR(lang));
+		LOG("Text:Verbose", "Set language for %s to %s", STR([self.path lastPathComponent]), STR(lang));
 		
 		if (_language)
 			_styles = [self _createTextStyles];

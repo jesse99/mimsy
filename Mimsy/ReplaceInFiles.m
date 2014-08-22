@@ -34,7 +34,7 @@
 {
 	ASSERT(_numMatches == 0);		// these objects should be created from scratch for every search
 	
-	LOG_DEBUG("Find", "Replace in files for '%s' and '%s'", STR(_findController.findText), STR(_template));
+	LOG("Find:Verbose", "Replace in files for '%s' and '%s'", STR(_findController.findText), STR(_template));
 	[self _processRoot];
 }
 

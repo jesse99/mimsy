@@ -27,7 +27,7 @@
 		_onDiskRange = range;
 		_inMemoryRange = range;
 		_callback = callback;
-		LOG_DEBUG("PersistentRange", "ranges = %lu, %lu", _onDiskRange.location, _onDiskRange.length);
+		LOG("Text:PersistentRange:Verbose", "ranges = %lu, %lu", _onDiskRange.location, _onDiskRange.length);
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowOpened:) name:@"TextWindowOpened" object:nil];
 		
@@ -77,7 +77,7 @@
 	[self _deregisterNotifications:controller];
 	
 	_controller = nil;
-	LOG_DEBUG("PersistentRange", "closed window");
+	LOG("Text:PersistentRange", "closed window");
 }
 
 - (void)_windowSaved:(NSNotification*)notification
@@ -85,7 +85,7 @@
 	UNUSED(notification);
 	
 	_onDiskRange = _inMemoryRange;
-	LOG_DEBUG("PersistentRange", "onDisk = %lu, %lu (saved)", _onDiskRange.location, _onDiskRange.length);
+	LOG("Text:PersistentRange", "onDisk = %lu, %lu (saved)", _onDiskRange.location, _onDiskRange.length);
 }
 
 // TODO: We do not handle reverting changes properly. Not sure how to
@@ -106,17 +106,17 @@
 
 		if (affectedRange.location + affectedRange.length < self.range.location)
 		{
-			LOG_DEBUG("PersistentRange", "   editedRange = %lu, %lu", editedRange.location, editedRange.length);
-			LOG_DEBUG("PersistentRange", "   self.range = %lu, %lu", self.range.location, self.range.length);
+			LOG("Text:PersistentRange", "   editedRange = %lu, %lu", editedRange.location, editedRange.length);
+			LOG("Text:PersistentRange", "   self.range = %lu, %lu", self.range.location, self.range.length);
 
 			_inMemoryRange.location = _inMemoryRange.location + changedLength;
-			LOG_DEBUG("PersistentRange", "   inMemory = %lu, %lu", _inMemoryRange.location, _inMemoryRange.length);
+			LOG("Text:PersistentRange", "   inMemory = %lu, %lu", _inMemoryRange.location, _inMemoryRange.length);
 			_callback(self);
 		}
 		else if (NSIntersectionRange(affectedRange, self.range).length > 0)
 		{
 			_inMemoryRange.location = NSNotFound;
-			LOG_DEBUG("PersistentRange", "inMemory = %lu, %lu", _inMemoryRange.location, _inMemoryRange.length);
+			LOG("Text:PersistentRange", "inMemory = %lu, %lu", _inMemoryRange.location, _inMemoryRange.length);
 			_callback(self);
 		}
 	}

@@ -60,7 +60,7 @@ static void destroy()
  	return self;
 	
 err:
-	LOG_ERROR("Mimsy", "Couldn't create database at '%s': %s", STR(Paths.caches), STR([error localizedFailureReason]));	self->_db = nil;
+	LOG("Error", "Couldn't create database at '%s': %s", STR(Paths.caches), STR([error localizedFailureReason]));	self->_db = nil;
 	return self;
 }
 
@@ -89,7 +89,7 @@ err:
 	return result;
 	
 err:
-	LOG_ERROR("Mimsy", "Query window frame failed: %s", STR([error localizedFailureReason]));
+	LOG("Error", "Query window frame failed: %s", STR([error localizedFailureReason]));
 	return NSZeroRect;
 }
 
@@ -121,7 +121,7 @@ err:
 	return false;
 	
 err:
-	LOG_ERROR("Mimsy", "Query window info failed: %s", STR([error localizedFailureReason]));
+	LOG("Error", "Query window info failed: %s", STR([error localizedFailureReason]));
 	return false;
 }
 
@@ -146,7 +146,7 @@ err:
 	return;
 	
 err:
-	LOG_ERROR("Mimsy", "Saving window info failed: %s", STR([error localizedFailureReason]));
+	LOG("Error", "Saving window info failed: %s", STR([error localizedFailureReason]));
 }
 
 @end

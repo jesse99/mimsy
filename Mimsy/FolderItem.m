@@ -190,7 +190,7 @@
 		// With Continuum (and Mono directory enumeration) I saw errors fairly often
 		// when directories were being rebuilt as part of builds.
 		NSString* reason = [error localizedFailureReason];
-		LOG_ERROR("DirEditor", "Error enumerating %s: %s", STR(self.path), STR(reason));
+		LOG("Error", "Error enumerating %s: %s", STR(self.path), STR(reason));
 	}
 	
 	return paths;

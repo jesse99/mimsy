@@ -72,7 +72,7 @@
 				{
 					if (!NSEqualPoints(_info.origin, NSZeroPoint))
 					{
-						LOG_DEBUG("Text", "Scrolling to saved origin");
+						LOG("Text:Verbose", "Scrolling to saved origin");
 						[clip scrollToPoint:_info.origin];
 						[scrollerv reflectScrolledClipView:clip];
 						
@@ -81,7 +81,7 @@
 					}
 					else if (!NSEqualRanges(_info.selection, NSZeroRange) && _info.selection.location + _info.selection.length <= controller.text.length)
 					{
-						LOG_DEBUG("Text", "Scrolling to saved selection");
+						LOG("Text:Verbose", "Scrolling to saved selection");
 						[textv setSelectedRange:_info.selection];
 						[textv scrollRangeToVisible:_visible];
 						
@@ -89,7 +89,7 @@
 					}
 					else
 					{
-						LOG_DEBUG("Text", "Not scrolling to saved selection");
+						LOG("Text:Verbose", "Not scrolling to saved selection");
 					}
 				}
 			}

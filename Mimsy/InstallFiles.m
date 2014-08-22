@@ -52,11 +52,11 @@
 		[self _installFiles];
 
 		double elapsed = getTime() - startTime;
-		LOG_INFO("Mimsy", "Installed files in %.1f secs", elapsed);
+		LOG("Mimsy", "Installed files in %.1f secs", elapsed);
 	}
 	else
 	{
-		LOG_INFO("Mimsy", "Skipped install (version and build match)");
+		LOG("Mimsy", "Skipped install (version and build match)");
 	}
 }
 
@@ -78,7 +78,7 @@
 		
 		if ([@"ignore" isEqualToString:installedHash])
 		{
-			LOG_INFO("Mimsy", "Ignoring '%s'", STR(rpath));
+			LOG("Mimsy", "Ignoring '%s'", STR(rpath));
 			continue;
 		}
 		
@@ -121,7 +121,7 @@
 				continue;
 			}
 			
-			LOG_INFO("Mimsy", "Installed '%s'", STR(rpath));
+			LOG("Mimsy", "Installed '%s'", STR(rpath));
 		}
 	}
 }
@@ -277,7 +277,7 @@
 - (void)_writeManifest:(NSString*)contents
 {
 	NSString* path = [_dstPath stringByAppendingPathComponent:@"manifest.mimsy"];
-	LOG_INFO("Mimsy", "Writing %s", STR(path));
+	LOG("Mimsy", "Writing %s", STR(path));
 	
 	NSError* error = nil;
 	NSFileManager* fm = [NSFileManager defaultManager];

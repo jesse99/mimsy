@@ -2,7 +2,7 @@
 
 @class LocalSettings;
 
-void initLogLevels(void);
+void initLogGlobs(void);
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate, NSWindowRestoration>
 

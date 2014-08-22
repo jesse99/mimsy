@@ -87,7 +87,7 @@ static bool _openAbsolutePath(NSString* path, int line, int col)
 	
 	if (_doAbsolutePath(path, line, col))
 	{
-		LOG_DEBUG("Text", "opened using absolute path");
+		LOG("Text:Verbose", "opened using absolute path");
 		opened = true;
 	}
 	
@@ -106,7 +106,7 @@ static bool _openRelativePath(NSString* path, int line, int col)
 			 NSString* candidate = [NSString pathWithComponents:@[controller.path, path]];
 			 if (_doAbsolutePath(candidate, line, col))
 			 {
-				 LOG_DEBUG("Text", "opened using relative path");
+				 LOG("Text:Verbose", "opened using relative path");
 				 opened = true;
 			 }
 		 }
@@ -133,7 +133,7 @@ static bool _openLocalPath(NSString* path, int line, int col)
 				if (range.location != NSNotFound)
 					if (_doAbsolutePath(item, line, col))
 					{
-						LOG_DEBUG("Text", "opened using local path");
+						LOG("Text:Verbose", "opened using local path");
 						opened = true;
 					}
 			}];
@@ -187,7 +187,7 @@ static bool _openAllLocatedFiles(NSArray* files, int line, int col)
 	{
 		if (_doAbsolutePath(path, line, col))
 		{
-			LOG_DEBUG("Text", "opened using located path");
+			LOG("Text:Verbose", "opened using located path");
 			opened = true;
 		}
 	}
@@ -219,7 +219,7 @@ static bool _selectLocatedFiles(NSArray* files, int line, int col)
 			 UNUSED(stop);
 			 if (_doAbsolutePath(files[index], line, col))
 			 {
-				 LOG_DEBUG("Text", "opened %s", [files[index] UTF8String]);
+				 LOG("Text:Verbose", "opened %s", [files[index] UTF8String]);
 				 opened = true;
 			 }
 			 
@@ -312,7 +312,7 @@ static bool _openFile(NSString* text, NSUInteger location, NSUInteger length)
 	NSString* path = [text substringWithRange:NSMakeRange(location, length)];
 	if (![path contains:@"://"] && [path localizedCaseInsensitiveCompare:@"http"] != NSOrderedSame)		// don't attempt to open stuff like http://blah as a file (especially bad with _locateFiles)
 	{
-		LOG_DEBUG("Text", "trying path '%s'", path.UTF8String);
+		LOG("Text:Verbose", "trying path '%s'", path.UTF8String);
 		
 		int line = -1, col = -1;
 		_getLineAndCol(text, location, length, &line, &col);
@@ -337,7 +337,7 @@ static bool _openFile(NSString* text, NSUInteger location, NSUInteger length)
 				if (candidates.count > 0)
 					found = _openLocatedFiles(candidates, line, col);
 				else
-					LOG_DEBUG("Text", "open using locate failed (no candidates)");
+					LOG("Text:Verbose", "open using locate failed (no candidates)");
 			}
 		}
 	}
@@ -348,7 +348,7 @@ static bool _openFile(NSString* text, NSUInteger location, NSUInteger length)
 static bool _openHtml(NSString* text, NSUInteger location, NSUInteger length)
 {
 	NSString* path = [text substringWithRange:NSMakeRange(location, length)];
-	LOG_DEBUG("Text", "trying URL '%s'", path.UTF8String);
+	LOG("Text:Verbose", "trying URL '%s'", path.UTF8String);
 	
 	bool opened = false;
 	
@@ -360,7 +360,7 @@ static bool _openHtml(NSString* text, NSUInteger location, NSUInteger length)
 	}
 	else
 	{
-		LOG_DEBUG("Text", "failed to create an url");
+		LOG("Text:Verbose", "failed to create an url");
 	}
 		
 	return opened;
@@ -378,7 +378,7 @@ static bool _openHtml(NSString* text, NSUInteger location, NSUInteger length)
 bool openTextRange(NSTextStorage* storage, NSRange range)
 {
 	bool opened = false;
-	LOG_INFO("Text", "trying to open a selection");
+	LOG("Text", "trying to open a selection");
 	
 	NSString* text = [storage string];
 	if (!opened)

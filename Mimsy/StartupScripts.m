@@ -44,7 +44,7 @@ static NSArray* _valid;
 	if (error)
 	{
 		NSString* reason = [error localizedFailureReason];
-		LOG_ERROR("Mimsy", "Error processing %s: %s", STR(dir), STR(reason));
+		LOG("Error", "Error processing %s: %s", STR(dir), STR(reason));
 	}
 }
 
@@ -57,8 +57,8 @@ static NSArray* _valid;
 			// TODO: This happens very early in startup which is why we don't use the transcript
 			// window. But it probably would be OK to use the transcript (and we can land here
 			// after startup if a script is changed while we're running).
-			LOG_ERROR("Mimsy", "Invalid hook name: %s", STR(hname));
-			LOG_ERROR("Mimsy", "Valid names are: %s", STR([_valid componentsJoinedByString:@", "]));
+			LOG("Error", "Invalid hook name: %s", STR(hname));
+			LOG("Error", "Valid names are: %s", STR([_valid componentsJoinedByString:@", "]));
 		}
 	}
 	
@@ -139,7 +139,7 @@ static NSArray* _valid;
 	if (luaL_dofile(_state, path.UTF8String))
 	{
 		NSString* error = [NSString stringWithUTF8String:lua_tostring(_state, -1)];
-		LOG_ERROR("Mimsy", "Error loading %s: %s", STR(path), STR(error));
+		LOG("Error", "Error loading %s: %s", STR(path), STR(error));
 	}
 }
 

@@ -93,7 +93,7 @@ static void Callback(ConstFSEventStreamRef stream, void* refcon, size_t numEvent
 	{
 		if (flags[i] != blacklist)
 		{
-			LOG_DEBUG("Mimsy", "%s %s", STR(paths[i]), STR(getFlags(flags[i])));
+			LOG("Mimsy:Verbose", "%s %s", STR(paths[i]), STR(getFlags(flags[i])));
 			watcher.callback(paths[i], flags[i]);
 		}
 	}

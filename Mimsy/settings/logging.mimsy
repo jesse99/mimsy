@@ -1,13 +1,9 @@
-# The keys are topics. Logs with a topic not listed here will happen at INFO level.
+# Currently the only key supported is DontLog which may appear multiple times.
+# The value should be a glob and logs with a topic matching any of the globs
+# are suppressed.
 #
-# The values are log levels and can be ERROR, WARN, INFO, or DEBUG. 
-# Log levels will also log whatever is to their left (so DEBUG logs everything).
+# Topics may have sub-topics. For example the "Text" topic has "Text:Verbose",
+# "Text:PersistentRange", and "Text:Styler:Verbose" sub-topics.
 #
 # Logging currently goes to ~/Library/Logs/mimsy.log
-App:     INFO
-Find:    INFO
-Mimsy:   INFO
-Styler:  INFO
-Text:    INFO
-Transcript:    INFO
-PersistentRange:    INFO
+DontLog: *:Verbose

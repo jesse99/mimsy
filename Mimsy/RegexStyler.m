@@ -67,7 +67,7 @@
 						}
 						else
 						{
-							LOG_WARN("Styler", "'%s' matched %s and %s",
+							LOG("Warning", "'%s' matched %s and %s",
 								STR([text substringWithRange:candidate]), STR(_names[index]), STR(_names[elementIndex]));
 						}
 					}

@@ -51,7 +51,7 @@
 {
 	ASSERT(_numMatches == 0);		// these objects should be created from scratch for every search
 
-	LOG_DEBUG("Find", "Find in files for '%s'", STR(_findText));
+	LOG("Find:Verbose", "Find in files for '%s'", STR(_findText));
 	NSString* title = [NSString stringWithFormat:@"Find '%@' gathering paths", _findText];
 	[_resultsController.window setTitle:title];
 	
@@ -72,7 +72,7 @@
 		dispatch_queue_t concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 		dispatch_async(concurrent, ^
 		   {
-			   LOG_DEBUG("Find", "Found %lu open paths", openPaths.count);
+			   LOG("Find:Verbose", "Found %lu open paths", openPaths.count);
 			   if ([self.root compare:@"Open Windows"] == NSOrderedSame)
 			   {
 				   self.numFilesLeft = (int) openPaths.count;
@@ -88,7 +88,7 @@
 		   });
 	};
 	
-	LOG_DEBUG("Find", "Processing open files");
+	LOG("Find:Verbose", "Processing open files");
 	[TextController enumerate:
 		 ^(TextController *controller)
 		 {
@@ -144,7 +144,7 @@
 		   {
 			   if (matches.count > 0)
 			   {
-				   LOG_DEBUG("Find", "Found %lu matches for %s", matches.count, STR(path.lastPathComponent));
+				   LOG("Find:Verbose", "Found %lu matches for %s", matches.count, STR(path.lastPathComponent));
 				   ++_numFiles;
 				   _numMatches += matches.count;
 				   
@@ -153,7 +153,7 @@
 			   }
 			   else
 			   {
-				   LOG_DEBUG("Find", "Found 0 matches for %s", STR(path.lastPathComponent));
+				   LOG("Find:Verbose", "Found 0 matches for %s", STR(path.lastPathComponent));
 			   }
 
 			   NSString* title = [self _getResultsWindowTitle];
@@ -209,7 +209,7 @@
 	dispatch_queue_t main = dispatch_get_main_queue();
 	dispatch_async(main,
 	   ^{
-		   LOG_DEBUG("Find", "Finished find");
+		   LOG("Find:Verbose", "Finished find");
 		   if (_resultsController.window.isVisible)
 		   {
 			   NSString* title = [self _getResultsWindowTitle];

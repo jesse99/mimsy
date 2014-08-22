@@ -14,6 +14,7 @@
 
 // Returns 1 for match and 0 for no match.
 - (int)matchName:(NSString*)name;
+- (int)matchStr:(const char*)name;
 
 - (id)copyWithZone:(NSZone*)zone;
 - (NSUInteger)hash;

@@ -790,7 +790,7 @@ static DirectoryController* _lastBuilt;
 {
 	ASSERT(_builderInfo);
 	
-	LOG_INFO("Mimsy", "Building targets menu");
+	LOG("Mimsy", "Building targets menu");
 	NSPopUpButton* menu = _targetsMenu;
 	if (menu)
 	{
@@ -863,7 +863,7 @@ static DirectoryController* _lastBuilt;
 	
 	NSProcessInfo* info = [NSProcessInfo processInfo];
 	[buildVars addEntriesFromDictionary:info.environment];
-	LOG_DEBUG("Mimsy", "default build variables:\n%s", STR(buildVars));
+	LOG("Mimsy:Verbose", "default build variables:\n%s", STR(buildVars));
 	
 	NSAttributedString* text = [self _loadPrefFile:path];
 	if (text)

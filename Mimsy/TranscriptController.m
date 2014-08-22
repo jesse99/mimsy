@@ -140,7 +140,7 @@ static TranscriptController* controller;
 
 + (void)writeError:(NSString*)text
 {
-	LOG_ERROR("Transcript", "%s", STR(text));
+	LOG("Error", "%s", STR(text));
 	
 	if (!functionalTestsAreRunning())
 	{
@@ -248,7 +248,7 @@ static TranscriptController* controller;
 	{
 		// It's either actually non-positive or malformed. In either case
 		// there is a problem.
-		LOG_ERROR("Transcript", "bad MaxChars: %s", STR(text));
+		LOG("Error", "bad MaxChars: %s", STR(text));
 		result = INFINITY;
 	}
 	

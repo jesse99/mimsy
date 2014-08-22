@@ -25,6 +25,16 @@
 	return 0;
 }
 
+- (int)matchStr:(const char*)name
+{
+	for (NSString* glob in _globs)
+	{
+		if (fnmatch([glob UTF8String], name, FNM_CASEFOLD) == 0)
+			return 1;
+	}
+	return 0;
+}
+
 - (id)copyWithZone:(NSZone*)zone
 {
 	return [[Glob allocWithZone:zone] initWithGlobs:_globs];

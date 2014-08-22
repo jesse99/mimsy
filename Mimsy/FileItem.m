@@ -73,7 +73,7 @@
 				  ^(NSString* item) {bytes += [self _getBytes:item];}])
 			{
 				NSString* reason = [error localizedFailureReason];
-				LOG_WARN("DirEditor", "error getting sizes for %s: %s", STR(path), STR(reason));
+				LOG("Warning", "error getting sizes for %s: %s", STR(path), STR(reason));
 			}
 		}
 		else
@@ -89,7 +89,7 @@
 				// Warning because errors can happen as the file system changes (e.g. during
 				// a build).
 				NSString* reason = [error localizedFailureReason];
-				LOG_WARN("DirEditor", "error getting size for %s: %s", STR(path), STR(reason));
+				LOG("Warning", "error getting size for %s: %s", STR(path), STR(reason));
 			}
 		}
 	}

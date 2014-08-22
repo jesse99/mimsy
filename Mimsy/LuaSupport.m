@@ -266,7 +266,7 @@ int app_log(struct lua_State* state)
 	const char* mesg = lua_tostring(state, 2);
 	LUA_ASSERT(mesg != NULL, "mesg was NULL");
 
-	LOG_INFO("Mimsy", "%s", mesg);
+	LOG("Mimsy", "%s", mesg);
 	return 0;
 }
 

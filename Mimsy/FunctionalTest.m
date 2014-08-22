@@ -332,7 +332,7 @@ void updateInstanceCount(NSString* name, NSInteger delta)
 	NSInteger newValue = value.integerValue + delta;
 	ASSERT(newValue >= 0);
 	if (newValue > 100)
-		LOG_WARN("Mimsy", "There are %ld %s instances", newValue, STR(name));
+		LOG("Warning", "There are %ld %s instances", newValue, STR(name));
 	
 	_instanceCounts[name] = [NSNumber numberWithInteger:newValue];
 }

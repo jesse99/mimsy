@@ -75,7 +75,7 @@
 	
 	int result = setxattr(path.UTF8String, name.UTF8String, data.bytes, data.length, 0, 0);
 	if (result < 0)
-		LOG_WARN("Mimsy", "Failed writing %s to %s: %s", STR(name), STR(path), strerror(errno));
+		LOG("Warning", "Failed writing %s to %s: %s", STR(name), STR(path), strerror(errno));
 }
 
 + (id)readNonCriticalDataFrom:(NSString*)path named:(NSString*)name
@@ -92,7 +92,7 @@
 		}
 		else
 		{
-			LOG_WARN("Mimsy", "Failed reading %s from %s: %s", STR(name), STR(path), strerror(errno));
+			LOG("Warning", "Failed reading %s from %s: %s", STR(name), STR(path), strerror(errno));
 		}
 	}
 	return nil;

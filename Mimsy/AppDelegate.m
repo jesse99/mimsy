@@ -28,27 +28,34 @@
 #import "Utils.h"
 #import "WindowsDatabase.h"
 
-void initLogLevels(void)
+void initLogGlobs()
 {
 	NSString* path = [Paths installedDir:@"settings"];
 	path = [path stringByAppendingPathComponent:@"logging.mimsy"];
 	
 	NSError* error = nil;
+	NSMutableArray* patterns = [NSMutableArray new];
 	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
 	if (parser)
 	{
 		[parser enumerate:
 		 ^(ConfigParserEntry* entry)
 		 {
-			 setTopicLevel(entry.key.UTF8String, entry.value.UTF8String);
+			 if ([entry.key isEqualToString:@"DontLog"])
+				 [patterns addObject:entry.value];
+			 else
+				 LOG("Warning", "Ignoring %s in %s", STR(entry.key), STR(path));
 		 }
 		 ];
 	}
 	else
 	{
 		NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load %@:\n%@.", path, [error localizedFailureReason]];
-		LOG_ERROR("Mimsy", "%s", STR(mesg));
+		LOG("Error", "%s", STR(mesg));
 	}
+	
+	Glob* glob = [[Glob alloc] initWithGlobs:patterns];
+	setTopicGlob(glob);
 }
 
 typedef void (^NullaryBlock)();
@@ -107,7 +114,7 @@ typedef void (^NullaryBlock)();
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
 	UNUSED(notification);
-	LOG_INFO("App", "Terminating");
+	LOG("App", "Terminating");
 }
 
 - (void)_executeSelector:(NSString*)name
@@ -203,7 +210,7 @@ typedef void (^NullaryBlock)();
 			NSURL* url = [NSURL URLWithString:path];
 			if (url)
 			{
-				LOG_INFO("App", "Searching using %s", path.UTF8String);
+				LOG("App", "Searching using %s", path.UTF8String);
 				[[NSWorkspace sharedWorkspace] openURL:url];
 			}
 			else
@@ -666,7 +673,7 @@ typedef void (^NullaryBlock)();
 		 }
 		 else
 		 {
-			 LOG_INFO("Mimsy", "Skipping %s (it isn't executable)\n", name.UTF8String);
+			 LOG("Mimsy", "Skipping %s (it isn't executable)\n", name.UTF8String);
 		 }
 	 }
 	 ];
@@ -674,7 +681,7 @@ typedef void (^NullaryBlock)();
 	if (error)
 	{
 		NSString* reason = [error localizedFailureReason];
-		LOG_ERROR("Mimsy", "Error adding transforms to Text menu: %s\n", STR(reason));
+		LOG("Error", "Error adding transforms to Text menu: %s\n", STR(reason));
 	}
 }
 
@@ -774,7 +781,7 @@ typedef void (^NullaryBlock)();
 		else
 		{
 			NSString* mesg = [[NSString alloc] initWithFormat:@"Couldn't load %@:\n%@.", path, [error localizedFailureReason]];
-			LOG_ERROR("Mimsy", "%s", STR(mesg));
+			LOG("Error", "%s", STR(mesg));
 		}
 	}
 }
@@ -817,7 +824,7 @@ typedef void (^NullaryBlock)();
 		^(NSString* path, FSEventStreamEventFlags flags)
 		{
 			UNUSED(path, flags);
-			initLogLevels();
+			initLogGlobs();
 			[self _loadSettings];
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
 		}

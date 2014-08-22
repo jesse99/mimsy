@@ -35,7 +35,7 @@ static void initLogging(void)
 	setupLogging(path.UTF8String);
 	
 	// Figure out which levels the user wants to log the various topics at.
-	initLogLevels();
+	initLogGlobs();
 }
 
 static void setupInfrastructure(void)
@@ -44,7 +44,7 @@ static void setupInfrastructure(void)
 	
 	NSDateFormatter* formatter = [NSDateFormatter new];
 	[formatter setDateFormat:@"yyyy-MM-dd 'at' HH:mm"];
-	LOG("Mimsy", "Started up on %s", STR([formatter stringFromDate:[NSDate date]]));
+	LOG("Mimsy", "\n\nStarted up on %s", STR([formatter stringFromDate:[NSDate date]]));
 	
 	NSString* version = getAppVersion();
 	if (version)
@@ -144,7 +144,7 @@ static void validateOptions(struct Options* options)
 	{
 		// The Finder passes in weird options like -psn_0_354533895 so we won't
 		// bail if we get an unrecognized option.
-		LOG_INFO("App", "Unknown option: %s\n", options->unknown);
+		LOG("App", "Unknown option: %s\n", options->unknown);
 	}
 }
 

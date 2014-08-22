@@ -25,14 +25,14 @@ static bool _triedCaches;
 				BOOL created = [fm createDirectoryAtPath:_caches withIntermediateDirectories:YES attributes:nil error:&error];
 				if (!created)
 				{
-					LOG_ERROR("Mimsy", "Couldn't create '%s': %s", STR(_caches), STR([error localizedFailureReason]));
+					LOG("Error", "Couldn't create '%s': %s", STR(_caches), STR([error localizedFailureReason]));
 					_caches = nil;
 				}
 			}
 		}
 		else
 		{
-			LOG_ERROR("Mimsy", "URLsForDirectory:NSCachesDirectory failed to find any directories");
+			LOG("Error", "URLsForDirectory:NSCachesDirectory failed to find any directories");
 		}
 		_triedCaches = true;
 	}

@@ -194,7 +194,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
 	[super setFileURL:url];
 	
-	LOG_INFO("Text", "Set file URL to %s", STR(url));
+	LOG("Text:Verbose", "Set file URL to %s", STR(url));
 	if (_controller && ![url isEqual:_url])
 	{
 		_url = url;
@@ -235,7 +235,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
 	NSString* type = [self fileType];
 	NSURL* url = [self fileURL];
-	LOG_INFO("Text", "Reloading document from %s", STR(url));
+	LOG("Text", "Reloading document from %s", STR(url));
 	
 	NSError* error = nil;
 	BOOL read = [self revertToContentsOfURL:url ofType:type error:&error];
@@ -266,7 +266,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 			
 			if (fileTime != nil && [fileTime compare:docTime] == NSOrderedDescending)
 			{
-				LOG_DEBUG("Text", "Document %s changed on disk", STR(url));
+				LOG("Text:Verbose", "Document %s changed on disk", STR(url));
 				changed = true;
 			}
 		}
@@ -403,7 +403,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	_encoding = 0;
 	_binary = false;
 	*outError = nil;
-	LOG_INFO("Text", "Reading document from %s", STR(self.fileURL));
+	LOG("Text:Verbose", "Reading document from %s", STR(self.fileURL));
 	
 	const NSUInteger MaxBytes = 512*1024;		// I think this is around 16K lines of source
 	if ([data length] > MaxBytes)
@@ -533,7 +533,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	{
 		NSTextStorage* storage = [textv textStorage];
 		NSMutableString* str = [storage mutableString];
-		LOG_INFO("Text", "Saving document to %s", STR(self.fileURL));
+		LOG("Text", "Saving document to %s", STR(self.fileURL));
 		
 		if ([typeName isEqualToString:@"Plain Text, UTF8 Encoded"])
 		{
@@ -628,7 +628,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	if (color && textv)
 		[textv setBackgroundColor:color];
 	else
-		LOG_DEBUG("Text", "Couldn't read back-color for '%s': %s", STR(path), STR([error localizedFailureReason]));
+		LOG("Text:Verbose", "Couldn't read back-color for '%s': %s", STR(path), STR([error localizedFailureReason]));
 }
 
 - (void)restoreEndian:(NSMutableString*)str

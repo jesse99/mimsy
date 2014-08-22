@@ -328,7 +328,7 @@ static NSString* _getTimeStr(double timestamp)
 	if (error)
 	{
 		NSString* reason = [error localizedFailureReason];
-		LOG_ERROR("Mimsy", "error finding old time machine files: %s", STR(reason));
+		LOG("Error", "error finding old time machine files: %s", STR(reason));
 	}
 	
 	return oldFiles;
@@ -357,7 +357,7 @@ static NSString* _getTimeStr(double timestamp)
 	{
 		NSString* reason = [err localizedFailureReason];
 		NSString* mesg = [NSString stringWithFormat:@"Error running tmutil: %@\n", reason];
-		LOG_ERROR("Mimsy", "%s", STR(mesg));
+		LOG("Error", "%s", STR(mesg));
 	}
 	
 	_lookedForTimeMachineDir = true;

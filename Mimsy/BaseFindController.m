@@ -348,7 +348,7 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 			pattern = [pattern stringByAppendingString:@"\\b"];
 	}
 	
-	LOG_DEBUG("Find", "finding with pattern '%s'", STR(pattern));
+	LOG("Find:Verbose", "finding with pattern '%s'", STR(pattern));
 	
 	return pattern;
 }
@@ -439,7 +439,7 @@ static unichar parseHexChar(NSString* text, NSUInteger i)
 	template = [self _replaceAsciiEscapes:template];
 	template = [self _replaceUniEscapes:template];
 	
-	LOG_DEBUG("Find", "replacing with template '%s'", STR(template));
+	LOG("Find:Verbose", "replacing with template '%s'", STR(template));
 	
 	return template;
 }

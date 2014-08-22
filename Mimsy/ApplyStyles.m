@@ -71,7 +71,7 @@
 		// If nothing is queued then we can apply all the runs.
 		_firstDirtyLoc = NSNotFound;
 		_queued = true;
-		LOG_DEBUG("Styler", "Starting up AsyncStyler for %.1f KiB (%s)", tmp.text.length/1024.0, STR(reason));
+		LOG("Text:Styler:Verbose", "Starting up AsyncStyler for %.1f KiB (%s)", tmp.text.length/1024.0, STR(reason));
 		
 		[AsyncStyler computeStylesFor:tmp.language withText:tmp.text editCount:tmp.editCount completion:
 			^(StyleRuns* runs)
@@ -158,7 +158,7 @@
 	 ];
 	
 	double elapsed = getTime() - startTime;
-	LOG_DEBUG("Styler", "Skipped %lu runs (%.0fK runs/sec)", numApplied, (numApplied/1000.0)/elapsed);
+	LOG("Text:Styler:Verbose", "Skipped %lu runs (%.0fK runs/sec)", numApplied, (numApplied/1000.0)/elapsed);
 }
 
 - (void)_applyRuns:(StyleRuns*)runs
@@ -218,7 +218,7 @@
 			// If the user has done an edit there is a very good chance he'll do another
 			// so defer queuing up another styler task.
 			if (count > 0)
-				LOG_DEBUG("Styler", "Applied %lu dirty runs (%.0fK runs/sec)", count, (count/1000.0)/elapsed);
+				LOG("Text:Styler:Verbose", "Applied %lu dirty runs (%.0fK runs/sec)", count, (count/1000.0)/elapsed);
 			_queued = false;
 			
 			TextController* tmp = _controller;
@@ -230,13 +230,13 @@
 		}
 		else if (runs.length)
 		{
-			LOG_DEBUG("Styler", "Applied %lu runs (%.0fK runs/sec)", count, (count/1000.0)/elapsed);
+			LOG("Text:Styler:Verbose", "Applied %lu runs (%.0fK runs/sec)", count, (count/1000.0)/elapsed);
 			dispatch_queue_t main = dispatch_get_main_queue();
 			dispatch_async(main, ^{[self _applyRuns:runs];});
 		}
 		else
 		{
-			LOG_DEBUG("Styler", "Applied last %lu runs (%.0fK runs/sec)", count, (count/1000.0)/elapsed);
+			LOG("Text:Styler:Verbose", "Applied last %lu runs (%.0fK runs/sec)", count, (count/1000.0)/elapsed);
 			_queued = false;
 		}
 		if (count > 0)

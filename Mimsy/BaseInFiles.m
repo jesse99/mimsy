@@ -44,7 +44,7 @@
 
 - (void)_processRoot
 {
-	LOG_DEBUG("Find", "regex = '%s'", STR(_regex.pattern));
+	LOG("Find:Verbose", "regex = '%s'", STR(_regex.pattern));
 	[self _step1ProcessOpenFiles];
 }
 
@@ -56,7 +56,7 @@
 - (void)_step2FindPaths			// threaded
 {
 	NSMutableArray* paths = [NSMutableArray new];
-	LOG_DEBUG("Find", "Finding paths");
+	LOG("Find:Verbose", "Finding paths");
 
 	NSFileManager* fm = [NSFileManager new];
 	NSMutableArray* dirPaths = [NSMutableArray new];
@@ -111,7 +111,7 @@
 {
 	ASSERT(paths.count > 0);
 	NSUInteger middle = paths.count/2;
-	LOG_DEBUG("Find", "Queuing %lu paths", paths.count);
+	LOG("Find:Verbose", "Queuing %lu paths", paths.count);
 	
 	// We process the files using two threads so one can be reading from the hard
 	// drive while the other is processing its file.
@@ -128,7 +128,7 @@
 
 - (void)_step4ProcessPaths:(NSArray*)paths begin:(NSUInteger)begin end:(NSUInteger)end	// threaded
 {
-	LOG_DEBUG("Find", "Processing %lu paths", end - begin);
+	LOG("Find:Verbose", "Processing %lu paths", end - begin);
 	for (NSUInteger i = begin; i < end && !self._aborted; ++i)
 	{
 		NSString* path = paths[i];

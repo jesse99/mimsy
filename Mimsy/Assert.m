@@ -2,7 +2,7 @@
 
 void _assertFailed(const char* fname, const char* file, int line, const char* expr)
 {
-	LOG_ERROR("Mimsy", "ASSERT(%s) %s:%d %s", expr, file, line, fname);
+	LOG("Error", "ASSERT(%s) %s:%d %s", expr, file, line, fname);
 	abort();
 }
 
@@ -15,7 +15,7 @@ void _assertMesg(const char* fname, const char* file, int line, const char* form
 	vsnprintf(mesg, sizeof(mesg), format, args);
 	va_end(args);
 
-	LOG_ERROR("Mimsy", "ASSERT(%s) %s:%d %s", mesg, file, line, fname);
+	LOG("Error", "ASSERT(%s) %s:%d %s", mesg, file, line, fname);
 	abort();
 }
 

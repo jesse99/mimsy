@@ -37,7 +37,7 @@ static NSDictionary* _baseAttrs;
 	}
 	
 	_path = path;
-	LOG_DEBUG("Styler", "Loading styles from %s", STR(_path));
+	LOG("Text:Styler:Verbose", "Loading styles from %s", STR(_path));
 	
 	NSMutableDictionary* map = [NSMutableDictionary new];
 	NSAttributedString* text = [self _loadStyles];
@@ -71,7 +71,7 @@ static NSDictionary* _baseAttrs;
 	NSDictionary* result = _attrMap[name];
 	if (!result)
 	{
-		LOG_WARN("Styler", "Couldn't find element %s in the styles file", STR(name));
+		LOG("Warning", "Couldn't find element %s in the styles file", STR(name));
 		result = _attrMap[@"normal"];
 		_attrMap[name] = result;
 	}

@@ -1,7 +1,6 @@
 tail -f ~/Library/Logs/mimsy.log
 
 
-* Think about different logging.
 * After typing a closing brace the wrong open brace is highlighted.
 * Add tab stops
 	- they get screwed up now for things like tabbing to add comments to long lines)
@@ -33,7 +32,10 @@ tail -f ~/Library/Logs/mimsy.log
 	- think continuum style looks icky when it is used
 * Use alertWithError where we don't just write to the transcript.
 * Experiment with a different proc-file based design:
-	- extensions use json messages and replies to get notifications (including event processing), to register for notifications, and to issue commands (eg select a string from a list)
+	- get extensions working (without proc files)
+	- if the file changes reload it
+	- can lua help avoid having a zillion processes?
+	- extensions use json messages and replies to get notifications (including event processing), to register for notifications, and to issue commands (eg select a string from a list or log)
 	- state is exposed to extensions via proc files
 	- some proc files are writeable, eg selection range
 	- some proc files are links, eg main window
@@ -58,6 +60,8 @@ tail -f ~/Library/Logs/mimsy.log
 	- maybe plugins could write lua to control mimsy
 	  replies could be json
 	- plugins with a UI could be objc
+* Would be nice to have some sort of extension manager:
+	- could evolve this into something to search and install
 * Might be nice if directory window styled dirty windows somehow
 	- maybe back color
 * Tabs don't work correctly
