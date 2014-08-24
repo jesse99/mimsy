@@ -1,12 +1,41 @@
 tail -f ~/Library/Logs/mimsy.log
 
+install http://osxfuse.github.io/
+	can skip this but a lot of features will be disabled
+	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
+	
+instantiate GMUserFileSystem
+	mount it
+	its delegate is called with fs ops (GMUserFileSystemOperations)
+		these will be threaded
+		can say thread safe if files are serialized
+			could use dispatch_sync (which can deadlock)
+look at the example fs
 
-* Experiment with a different proc-file based design:
-	- get on a branch
-	- get extensions working (without proc files)
+for write can skip hard/symbolic links and ext attrs
+
+
+* Write an option-tab extension:
+	- link in proc file library
+	- intercept tab keys and make it a no-op
+	- intercept tab keys and make move the selection by one
+	- intercept tab keys and make move the selection to the next identifier
+	- may want to do something sane when there is no language
+	- need to do something with help
+	  maybe a json encoded proc file
+	  but what happens when the extension is unloaded?
+	- write to the extension proc file
+	  maybe a notification could be used instead when help is needed?
 	- if the file changes reload it
+	- need to shutdown executable extensions on exit
+* Get option-tab working
+	- should probably use identifier style
+    	but look at Continuum styler (and maybe some others)
+	- document what identifier element is for
+	- update special keys help file
+* Experiment with a different proc-file based design:
 	- can lua help avoid having a zillion processes?
-	- extensions use json messages and replies to get notifications (including event processing), to register for notifications, and to issue commands (eg select a string from a list or log)
+	- extensions use json messages and replies to get notifications (including event processing), to register for notifications, and to execute functions (eg select a string from a list or log)
 	- state is exposed to extensions via proc files
 	- some proc files are writeable, eg selection range
 	- some proc files are links, eg main window
@@ -31,15 +60,14 @@ tail -f ~/Library/Logs/mimsy.log
 	- maybe plugins could write lua to control mimsy
 	  replies could be json
 	- plugins with a UI could be objc
+	- show proc files.rtf somehow, maybe a components menu
+	- remove startup scripts
+	- FUSE for OSX is not installed disable extensions
 * Add tab stops
 	- they get screwed up now for things like tabbing to add comments to long lines)
 	  e.g. replaceSelection in TextEditorView.cs
-* Get option-tab working
-	- should probably use identifier style
-	but look at Continuum styler (and maybe some others)
-	- update special keys help file
 * Look at identifier styling
-	- do we even want it?
+	- do we even want it? yes, for stuff like option-tab
 	- think continuum style looks icky when it is used
 * Use alertWithError where we don't just write to the transcript.
 * Would be nice to have some sort of extension manager:

@@ -18,8 +18,8 @@
 	#define luaL_error2 luaL_error
 #endif
 
-// This was intended to catch programmer errors made within lua scripts. But because
-// scripts may be edited while Mimsy is running the errors it acts more like runtime
+// This is intended to catch programmer errors made within lua scripts. But because
+// scripts may be edited while Mimsy is running the errors act more like runtime
 // errors than asserts (which in theory can be disabled in release with no harm).
 // TODO: may want to rename this LUA_CHECK or something.
 #define LUA_ASSERT(e, format, ...)						\

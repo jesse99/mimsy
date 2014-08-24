@@ -5,6 +5,7 @@
 #import "Constants.h"
 #import "DirectoryController.h"
 #import "DirectoryWatcher.h"
+#import "Extensions.h"
 #import "FindInFilesController.h"
 #import "FindResultsController.h"
 #import "FunctionalTest.h"
@@ -16,6 +17,7 @@
 #import "LocalSettings.h"
 #import "Logger.h"
 #import "Paths.h"
+#import "ProcFiles.h"
 #import "SearchSite.h"
 #import "SelectStyleController.h"
 #import "StartupScripts.h"
@@ -59,10 +61,12 @@ typedef void (^NullaryBlock)();
 
 @implementation AppDelegate
 {
+	ProcFiles* _procFiles;
 	DirectoryWatcher* _languagesWatcher;
 	DirectoryWatcher* _settingsWatcher;
 	DirectoryWatcher* _stylesWatcher;
 	DirectoryWatcher* _scriptsStartupWatcher;
+	DirectoryWatcher* _extensionsWatcher;
 	DirectoryWatcher* _transformsWatcher;
 	DirectoryWatcher* _helpWatcher;
 	
@@ -89,8 +93,11 @@ typedef void (^NullaryBlock)();
 		[self _loadHelpFiles];
 		[self _watchInstalledFiles];
 		[StartupScripts setup];
+		[Extensions setup];
 		[WindowsDatabase setup];
 		[Languages setup];
+		
+		_procFiles = [ProcFiles new];
 		
 		initFunctionalTests();
 	}
@@ -113,6 +120,8 @@ typedef void (^NullaryBlock)();
 {
 	UNUSED(notification);
 	LOG("App", "Terminating");
+	
+	[_procFiles teardown];
 }
 
 - (void)_executeSelector:(NSString*)name
@@ -708,6 +717,7 @@ typedef void (^NullaryBlock)();
 		InstallFiles* installer = [InstallFiles new];
 		[installer initWithDstPath:path];
 		[installer addSourceItem:@"builders"];
+		[installer addSourceItem:@"extensions"];
 		[installer addSourceItem:@"help"];
 		[installer addSourceItem:@"languages"];
 		[installer addSourceItem:@"scripts"];
@@ -796,6 +806,16 @@ typedef void (^NullaryBlock)();
 		}
 	];
 
+	dir = [Paths installedDir:@"extensions"];
+	_extensionsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
+		  ^(NSString* path, FSEventStreamEventFlags flags)
+		  {
+			  UNUSED(path, flags);
+			  [Extensions setup];
+			  [[NSNotificationCenter defaultCenter] postNotificationName:@"ExtensionsChanged" object:self];
+		  }
+		  ];
+	
 	dir = [Paths installedDir:@"scripts/startup"];
 	_scriptsStartupWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		  ^(NSString* path, FSEventStreamEventFlags flags)

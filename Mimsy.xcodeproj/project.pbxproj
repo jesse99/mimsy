@@ -29,6 +29,8 @@
 		373B97281942BC110084CCC1 /* AttributedStringCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B97271942BC100084CCC1 /* AttributedStringCategory.m */; };
 		373B972C194374FA0084CCC1 /* PersistentRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B972B194374F90084CCC1 /* PersistentRange.m */; };
 		373B972F1945570F0084CCC1 /* ReplaceInFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B972E1945570D0084CCC1 /* ReplaceInFiles.m */; };
+		37431FCE19AA3ED500A1B30E /* OSXFUSE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431FCD19AA3ED500A1B30E /* OSXFUSE.framework */; };
+		37431FD119AA80DC00A1B30E /* ProcFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 37431FD019AA80DC00A1B30E /* ProcFiles.m */; };
 		375140D416800FFD00C329AF /* ConfigParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D316800FFD00C329AF /* ConfigParser.m */; };
 		375140D816801A4800C329AF /* ConfigParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D716801A4800C329AF /* ConfigParserTests.m */; };
 		375140E416828EB600C329AF /* WindowsDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140E316828EB600C329AF /* WindowsDatabase.m */; };
@@ -108,6 +110,8 @@
 		37ABF9B518E3C5A5006AFDB7 /* transforms in Resources */ = {isa = PBXBuildFile; fileRef = 37ABF9B418E3C5A4006AFDB7 /* transforms */; };
 		37AD7570171B95460054A75F /* UpdateConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AD756F171B95460054A75F /* UpdateConfig.m */; };
 		37BF4DFA16F56CB3008FD480 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 37BF4DF916F56CB3008FD480 /* images */; };
+		37CE3E6F19A967B8000AEA3C /* extensions in Resources */ = {isa = PBXBuildFile; fileRef = 37CE3E6E19A967B8000AEA3C /* extensions */; };
+		37CE3E7219A980A7000AEA3C /* Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CE3E7119A980A7000AEA3C /* Extensions.m */; };
 		37CF062616AB998A00069A20 /* LuaSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF062516AB998A00069A20 /* LuaSupport.m */; };
 		37CF13D0194FC51800F35944 /* BaseInFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF13CF194FC51800F35944 /* BaseInFiles.m */; };
 		37ECF06119291A0500061C0A /* LocalSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ECF06019291A0500061C0A /* LocalSettings.m */; };
@@ -168,6 +172,9 @@
 		373B972B194374F90084CCC1 /* PersistentRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersistentRange.m; sourceTree = "<group>"; };
 		373B972D1945570D0084CCC1 /* ReplaceInFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplaceInFiles.h; sourceTree = "<group>"; };
 		373B972E1945570D0084CCC1 /* ReplaceInFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplaceInFiles.m; sourceTree = "<group>"; };
+		37431FCD19AA3ED500A1B30E /* OSXFUSE.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OSXFUSE.framework; path = /Library/Frameworks/OSXFUSE.framework; sourceTree = "<absolute>"; };
+		37431FCF19AA80DC00A1B30E /* ProcFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcFiles.h; sourceTree = "<group>"; };
+		37431FD019AA80DC00A1B30E /* ProcFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProcFiles.m; sourceTree = "<group>"; };
 		375140D216800FFD00C329AF /* ConfigParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParser.h; sourceTree = "<group>"; };
 		375140D316800FFD00C329AF /* ConfigParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigParser.m; sourceTree = "<group>"; };
 		375140D616801A4800C329AF /* ConfigParserTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParserTests.h; sourceTree = "<group>"; };
@@ -318,6 +325,9 @@
 		37AD756E171B95460054A75F /* UpdateConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateConfig.h; sourceTree = "<group>"; };
 		37AD756F171B95460054A75F /* UpdateConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateConfig.m; sourceTree = "<group>"; };
 		37BF4DF916F56CB3008FD480 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
+		37CE3E6E19A967B8000AEA3C /* extensions */ = {isa = PBXFileReference; lastKnownFileType = folder; path = extensions; sourceTree = "<group>"; };
+		37CE3E7019A980A7000AEA3C /* Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Extensions.h; sourceTree = "<group>"; };
+		37CE3E7119A980A7000AEA3C /* Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Extensions.m; sourceTree = "<group>"; };
 		37CF062416AB998A00069A20 /* LuaSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaSupport.h; sourceTree = "<group>"; };
 		37CF062516AB998A00069A20 /* LuaSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LuaSupport.m; sourceTree = "<group>"; };
 		37CF13CC194E3CE500F35944 /* RangeVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RangeVector.h; sourceTree = "<group>"; };
@@ -345,6 +355,7 @@
 			files = (
 				37979FEA16A999E0009D9944 /* liblua.a in Frameworks */,
 				37A8C69716758FF400D4DB13 /* Cocoa.framework in Frameworks */,
+				37431FCE19AA3ED500A1B30E /* OSXFUSE.framework in Frameworks */,
 				3712632516B5A431007AF3BF /* libcrypto.0.9.8.dylib in Frameworks */,
 				377BDE6E16CDACD1008DADA5 /* libsqlite3.0.dylib in Frameworks */,
 			);
@@ -528,6 +539,8 @@
 				3705C820167BF72200E5D54C /* AppDelegate.m */,
 				379A411F1925B17F00ACEA5C /* AppSettings.h */,
 				379A41201925B17F00ACEA5C /* AppSettings.m */,
+				37CE3E7019A980A7000AEA3C /* Extensions.h */,
+				37CE3E7119A980A7000AEA3C /* Extensions.m */,
 				37979FEC16AAEEC1009D9944 /* FunctionalTest.h */,
 				37979FED16AAEEC1009D9944 /* FunctionalTest.m */,
 				373B97161933B1CA0084CCC1 /* HelpItem.h */,
@@ -542,6 +555,8 @@
 				37A8C6AE16758FF400D4DB13 /* MainMenu.xib */,
 				3768CCD916E0F54900D5CB57 /* OpenFile.h */,
 				3768CCDA16E0F54900D5CB57 /* OpenFile.m */,
+				37431FCF19AA80DC00A1B30E /* ProcFiles.h */,
+				37431FD019AA80DC00A1B30E /* ProcFiles.m */,
 				377BDE6416C006BD008DADA5 /* StartupScripts.h */,
 				377BDE6516C006BD008DADA5 /* StartupScripts.m */,
 				37ABF9B118C2EA9C006AFDB7 /* SearchSite.h */,
@@ -600,6 +615,7 @@
 		37A8C69516758FF400D4DB13 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				37431FCD19AA3ED500A1B30E /* OSXFUSE.framework */,
 				37A8C69616758FF400D4DB13 /* Cocoa.framework */,
 				37A8C6B716758FF400D4DB13 /* SenTestingKit.framework */,
 				37A8C69816758FF400D4DB13 /* Other Frameworks */,
@@ -653,6 +669,7 @@
 				37A8C6A416758FF400D4DB13 /* Mimsy-Prefix.pch */,
 				376407E716B8CB05000B7AE3 /* tophat.icns */,
 				3768CCDF16EB6C0A00D5CB57 /* builders */,
+				37CE3E6E19A967B8000AEA3C /* extensions */,
 				37EECF4C16A64A9E00BEB493 /* help */,
 				37BF4DF916F56CB3008FD480 /* images */,
 				375140EE168B789100C329AF /* languages */,
@@ -799,6 +816,7 @@
 				3782A8B21916BAF1005ED276 /* create-vector.py in Resources */,
 				379A4116191FDB8B00ACEA5C /* FindWindow.xib in Resources */,
 				37ECF0691930201A00061C0A /* FindInFilesWindow.xib in Resources */,
+				37CE3E6F19A967B8000AEA3C /* extensions in Resources */,
 				373B971A1937F1240084CCC1 /* FindResultsWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -864,6 +882,7 @@
 				3752CC1516A1F2B400B623F5 /* SelectStyleController.m in Sources */,
 				3752CC1816A2F7EA00B623F5 /* StringCategory.m in Sources */,
 				37979FEE16AAEEC1009D9944 /* FunctionalTest.m in Sources */,
+				37CE3E7219A980A7000AEA3C /* Extensions.m in Sources */,
 				37CF062616AB998A00069A20 /* LuaSupport.m in Sources */,
 				3712631F16B4AA53007AF3BF /* InstallFiles.m in Sources */,
 				3712632316B5A079007AF3BF /* DataCategory.m in Sources */,
@@ -882,6 +901,7 @@
 				377C2CAB17650650008E383E /* BuildOptionsController.m in Sources */,
 				3751BCFC18445CCD00DD2C8A /* OpenSelection.m in Sources */,
 				3751BCFF1846E69000DD2C8A /* ScannerCategory.m in Sources */,
+				37431FD119AA80DC00A1B30E /* ProcFiles.m in Sources */,
 				370552A618710E15005F1438 /* SelectNameController.m in Sources */,
 				37ABF9B318C2EA9C006AFDB7 /* SearchSite.m in Sources */,
 				3782A8AD190D7CDC005ED276 /* TimeMachine.m in Sources */,
@@ -1034,6 +1054,7 @@
 		37A8C6C816758FF400D4DB13 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"ADDITIONAL_SDKS[arch=*]" = "";
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
@@ -1041,6 +1062,10 @@
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPYING_PRESERVES_HFS_DATA = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Mimsy/Mimsy-Prefix.pch";
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
@@ -1077,6 +1102,10 @@
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPYING_PRESERVES_HFS_DATA = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Mimsy/Mimsy-Prefix.pch";
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
