@@ -2,6 +2,8 @@
 
 #import <OSXFUSE/OSXFUSE.h>
 
+#import "TextController.h"
+
 static GMUserFileSystem* _fs;
 
 // Simple read-only fs: https://github.com/osxfuse/filesystems/tree/master/filesystems-objc/HelloFS
@@ -58,17 +60,99 @@ static GMUserFileSystem* _fs;
 
 #pragma mark read methods
 
+// /text-window/<window-index>/text
+// /text-window/<window-index>/title
+// /text-window/<window-index>/path
+
+
 // TODO: register ReadHandler's (they should execute within the main thead)
 - (NSArray*)contentsOfDirectoryAtPath:(NSString*)path error:(NSError**)error
 {
-	UNUSED(path, error);
-	return @[@"version"];
+	UNUSED(error);
+	
+	__block NSMutableArray* contents = [NSMutableArray new];
+
+	if ([path isEqualToString:@"/"])
+	{
+		[contents addObject:@"text-window"];
+		[contents addObject:@"version"];
+	}
+	else if ([path isEqualToString:@"/text-window"])
+	{
+		dispatch_queue_t main = dispatch_get_main_queue();
+		dispatch_sync(main,
+		  ^{
+			  __block int index = 1;
+			  [TextController enumerate:^(TextController *controller) {
+				  UNUSED(controller);
+				  [contents addObject:[NSString stringWithFormat:@"%d", index]];
+				  ++index;
+			  }];
+		  });
+	}
+	else if ([path isEqualToString:@"/text-window/1"] || [path isEqualToString:@"/text-window/2"] || [path isEqualToString:@"/text-window/3"] || [path isEqualToString:@"/text-window/4"])
+	{
+		[contents addObject:@"text"];
+		[contents addObject:@"title"];
+		[contents addObject:@"path"];
+	}
+	else
+	{
+		contents = nil;
+	}
+	
+	return contents;
+}
+
+- (TextController*)_findTextController:(NSString*)path
+{
+	__block TextController* result = nil;
+	
+	dispatch_queue_t main = dispatch_get_main_queue();
+	dispatch_sync(main,
+	  ^{
+		  __block int index = 1;
+		  [TextController enumerate:^(TextController *controller) {
+			  if ([path startsWith:[NSString stringWithFormat:@"/text-window/%d", index]])
+				  result = controller;
+			  ++index;
+		  }];
+	  });
+	
+	return result;
 }
 
 - (NSData*)contentsAtPath:(NSString*)path
 {
 	if ([path isEqualToString:@"/version"])
+	{
 		return [@"0.1b148" dataUsingEncoding:NSUTF8StringEncoding];
+	}
+	else if ([path endsWith:@"/text"])
+	{
+		TextController* controller = [self _findTextController:path];
+		if (controller)
+		{
+			return [controller.text dataUsingEncoding:NSUTF8StringEncoding];
+		}
+	}
+	else if ([path endsWith:@"/title"])
+	{
+		TextController* controller = [self _findTextController:path];
+		if (controller)
+		{
+			return [controller.window.title dataUsingEncoding:NSUTF8StringEncoding];
+		}
+	}
+	else if ([path endsWith:@"/path"])
+	{
+		TextController* controller = [self _findTextController:path];
+		if (controller)
+		{
+			return [controller.path dataUsingEncoding:NSUTF8StringEncoding];
+		}
+	}
+	
 	return nil;
 }
 
@@ -77,12 +161,37 @@ static GMUserFileSystem* _fs;
 {
 	UNUSED(error, userData);
 	
-	if ([path isEqualToString:@"/"])
+	if ([path isEqualToString:@"/"] || [path isEqualToString:@"/text-window"] || [path isEqualToString:@"/text-window/1"] || [path isEqualToString:@"/text-window/2"] || [path isEqualToString:@"/text-window/3"] || [path isEqualToString:@"/text-window/4"])
 		return @{NSFileType: NSFileTypeDirectory};
 	
 	else if ([path isEqualToString:@"/version"])
 		return @{NSFileType: NSFileTypeRegular, NSFileSize: @([@"0.1b148" length])};
 	
+	else if ([path endsWith:@"/text"])
+	{
+		TextController* controller = [self _findTextController:path];
+		if (controller)
+		{
+			return @{NSFileType: NSFileTypeRegular, NSFileSize: @([controller.text length])};
+		}
+	}
+	else if ([path endsWith:@"/title"])
+	{
+		TextController* controller = [self _findTextController:path];
+		if (controller)
+		{
+			return @{NSFileType: NSFileTypeRegular, NSFileSize: @([controller.window.title length])};
+		}
+	}
+	else if ([path endsWith:@"/path"])
+	{
+		TextController* controller = [self _findTextController:path];
+		if (controller)
+		{
+			return @{NSFileType: NSFileTypeRegular, NSFileSize: @([controller.path length])};
+		}
+	}
+
 	return nil;
 }
 
