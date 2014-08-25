@@ -87,8 +87,9 @@
 	
 	LOG("Find:Verbose", "Processing open files");
 	[TextController enumerate:
-		 ^(TextController *controller)
+		 ^(TextController *controller, bool* stop)
 		 {
+			 UNUSED(stop);
 			 if (controller.path)
 			 {
 				 NSString* fileName = [controller.path lastPathComponent];

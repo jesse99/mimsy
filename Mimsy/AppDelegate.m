@@ -17,6 +17,7 @@
 #import "LocalSettings.h"
 #import "Logger.h"
 #import "Paths.h"
+#import "ProcFileSystem.h"
 #import "ProcFiles.h"
 #import "SearchSite.h"
 #import "SelectStyleController.h"
@@ -61,7 +62,8 @@ typedef void (^NullaryBlock)();
 
 @implementation AppDelegate
 {
-	ProcFiles* _procFiles;
+	ProcFileSystem* _procFileSystem;
+	ProcFileReader* _versionFile;
 	DirectoryWatcher* _languagesWatcher;
 	DirectoryWatcher* _settingsWatcher;
 	DirectoryWatcher* _stylesWatcher;
@@ -97,7 +99,16 @@ typedef void (^NullaryBlock)();
 		[WindowsDatabase setup];
 		[Languages setup];
 		
-		_procFiles = [ProcFiles new];
+		_procFileSystem = [ProcFileSystem new];
+		
+		_versionFile = [[ProcFileReader alloc]
+			initWithDir:^NSString *{return @"/";}
+			fileName:@"version"
+			contents:^NSString *{
+				NSDictionary* info = [[NSBundle mainBundle] infoDictionary];
+				return [info objectForKey:@"CFBundleShortVersionString"];
+		}];
+		[_procFileSystem add:_versionFile];
 		
 		initFunctionalTests();
 	}
@@ -121,7 +132,7 @@ typedef void (^NullaryBlock)();
 	UNUSED(notification);
 	LOG("App", "Terminating");
 	
-	[_procFiles teardown];
+	[_procFileSystem teardown];
 }
 
 - (void)_executeSelector:(NSString*)name

@@ -10,7 +10,7 @@ typedef void (^LayoutCallback)(TextController* controller);
 @interface TextController : BaseTextController
 
 + (TextController*)frontmost;
-+ (void)enumerate:(void (^)(TextController* controller))block;
++ (void)enumerate:(void (^)(TextController* controller, bool* stop))block;
 + (TextController*)find:(NSString*)path;
 
 - (void)open;

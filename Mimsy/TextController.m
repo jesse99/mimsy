@@ -1,5 +1,6 @@
 #import "TextController.h"
 
+#import "AppDelegate.h"
 #import "ApplyStyles.h"
 #import "AppSettings.h"
 #import "Balance.h"
@@ -8,6 +9,8 @@
 #import "Language.h"
 #import "Languages.h"
 #import "Paths.h"
+#import "ProcFileSystem.h"
+#import "ProcFiles.h"
 #import "RestoreView.h"
 #import "StartupScripts.h"
 #import "TextView.h"
@@ -22,6 +25,10 @@
 
 @implementation TextController
 {
+	ProcFileReader* _pathFile;
+	ProcFileReader* _selectionFile;
+	ProcFileReader* _titleFile;
+
 	RestoreView* _restorer;
 	bool _closed;
 	bool _wordWrap;
@@ -50,12 +57,50 @@
  		updateInstanceCount(@"TextController", +1);
 		updateInstanceCount(@"TextWindow", +1);
 
+		_pathFile = [[ProcFileReader alloc]
+					 initWithDir:^NSString *{return [self _getProcFilePath];}
+					 fileName:@"path"
+					 contents:^NSString *{return [self path];}];
+		_selectionFile = [[ProcFileReader alloc]	// TODO: this needs to be read/write
+					 initWithDir:^NSString *{return [self _getProcFilePath];}
+					 fileName:@"selection"
+					 contents:^NSString *{
+						 NSRange range = self.textView.selectedRange;
+						 return [NSString stringWithFormat:@"%lu:%lu", (unsigned long)range.location, (unsigned long)range.length];
+					 }];
+		_titleFile = [[ProcFileReader alloc]
+						initWithDir:^NSString *{return [self _getProcFilePath];}
+						fileName:@"title"
+						contents:^NSString *{return self.window.title;}];
+		
+		AppDelegate* app = [NSApp delegate];
+		[app.procFileSystem add:_pathFile];
+		[app.procFileSystem add:_selectionFile];
+		[app.procFileSystem add:_titleFile];
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(languagesChanged:) name:@"LanguagesChanged" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stylesChanged:) name:@"StylesChanged" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
 	}
     
 	return self;
+}
+
+- (NSString*)_getProcFilePath
+{
+	__block NSString* path = nil;
+	
+	__block int index = 1;
+	[TextController enumerate:^(TextController *controller, bool* stop) {
+		if (controller == self)
+		{
+			path = [NSString stringWithFormat:@"/text-window/%d", index];
+			*stop = true;
+		}
+		++index;
+	}];
+	
+	return path;
 }
 
 - (void)dealloc
@@ -315,14 +360,19 @@
 	return nil;
 }
 
-+ (void)enumerate:(void (^)(TextController*))block
++ (void)enumerate:(void (^)(TextController*, bool*))block
 {
+	bool stop = false;
 	for (NSWindow* window in [NSApp orderedWindows])
 	{
 		if (window.isVisible || window.isMiniaturized)
 			if (window.windowController)
 				if ([window.windowController isKindOfClass:[TextController class]])
-					block(window.windowController);
+				{
+					block(window.windowController, &stop);
+					if (stop)
+						break;
+				}
 	}
 }
 

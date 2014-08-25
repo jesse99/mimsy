@@ -80,6 +80,18 @@
 	return result;
 }
 
+- (bool)startsWith:(NSArray*)rhs
+{
+	bool matches = self.count >= rhs.count;
+	
+	for (NSUInteger i = 0; i < rhs.count && matches; ++i)
+	{
+		matches = [self[i] isEqual:rhs[i]];
+	}
+	
+	return matches;
+}
+
 @end
 
 @implementation NSMutableArray (MutableArrayCategory)

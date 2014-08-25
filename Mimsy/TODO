@@ -4,19 +4,12 @@ install http://osxfuse.github.io/
 	can skip this but a lot of features will be disabled
 	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
 	
-instantiate GMUserFileSystem
-	mount it
-	its delegate is called with fs ops (GMUserFileSystemOperations)
-		these will be threaded
-		can say thread safe if files are serialized
-			could use dispatch_sync (which can deadlock)
-look at the example fs
-
 for write can skip hard/symbolic links and ext attrs
 
 
 * Write an option-tab extension:
-	- link in proc file library
+	- handle file writes
+	- implement all the text editor files (and update help file)
 	- intercept tab keys and make it a no-op
 	- intercept tab keys and make move the selection by one
 	- intercept tab keys and make move the selection to the next identifier

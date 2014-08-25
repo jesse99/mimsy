@@ -15,6 +15,8 @@
 
 - (NSArray*)reverse;
 
+- (bool)startsWith:(NSArray*)rhs;
+
 @end
 
 @interface NSMutableArray (MutableArrayCategory)

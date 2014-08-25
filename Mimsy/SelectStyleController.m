@@ -95,8 +95,9 @@ static SelectStyleController* _controller;
 		StyleRowObject* object = _rows[(NSUInteger)temp.selectedRow];
 		_default = object.name;
 		[TextController enumerate:
-			^(TextController* controller)
+			^(TextController* controller, bool* stop)
 			{
+				UNUSED(stop);
 				if (controller && controller.language)
 				{
 					[controller changeStyle:object.path];
