@@ -4,10 +4,10 @@
 {
 	NSString* (^_directory ) ();
 	NSString* _fileName;
-	NSString* (^_contents)();
+	NSString* (^_readStr)();
 }
 
-- (id)initWithDir:(NSString* (^) ())directory fileName:(NSString*)name contents:(NSString* (^)())contents;
+- (id)initWithDir:(NSString* (^) ())directory fileName:(NSString*)name readStr:(NSString* (^)())readStr;
 {
 	self = [super init];
 	
@@ -15,7 +15,7 @@
 	{
 		_directory = directory;
 		_fileName = name;
-		_contents = contents;
+		_readStr = readStr;
 	}
 	
 	return self;
@@ -35,7 +35,7 @@
 
 - (unsigned long long)size
 {
-	NSString* contents = _contents();
+	NSString* contents = _readStr();
 	NSData* data = [contents dataUsingEncoding:NSUTF8StringEncoding];
 	return data.length;
 }
@@ -53,7 +53,7 @@
 
 - (int)read:(char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error
 {
-	NSString* contents = _contents();
+	NSString* contents = _readStr();
 	NSData* data = [contents dataUsingEncoding:NSUTF8StringEncoding];
 	
 	if (offset < 0 || offset > data.length)
@@ -89,11 +89,11 @@
 {
 	NSString* (^_directory ) ();
 	NSString* _fileName;
-	void (^_contents)(NSString*);
+	void (^_writeStr)(NSString*);
 	NSMutableData* _data;
 }
 
-- (id)initWithDir:(NSString* (^) ())directory fileName:(NSString*)name contents:(void (^)(NSString*))contents;
+- (id)initWithDir:(NSString* (^) ())directory fileName:(NSString*)name writeStr:(void (^)(NSString*))writeStr;
 {
 	self = [super init];
 	
@@ -101,7 +101,7 @@
 	{
 		_directory = directory;
 		_fileName = name;
-		_contents = contents;
+		_writeStr = writeStr;
 		_data = [NSMutableData new];
 	}
 	
@@ -146,7 +146,7 @@
 	NSString* str = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
 	if ([str endsWith:@"\n"])
 		str = [str substringToIndex:str.length-1];
-	_contents(str);
+	_writeStr(str);
 }
 
 - (int)write:(const char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error

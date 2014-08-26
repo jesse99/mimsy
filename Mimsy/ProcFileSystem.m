@@ -9,7 +9,9 @@
 @implementation ProcFileSystem
 {
 	GMUserFileSystem* _fs;
-	NSMutableArray* _files;
+	NSMutableArray* _allFiles;
+	NSMutableArray* _readers;
+	NSMutableArray* _writers;
 }
 
 - (id)init
@@ -25,7 +27,9 @@
 					   name:kGMUserFileSystemMountFailed object:nil];
 
 		_fs = [[GMUserFileSystem alloc] initWithDelegate:self isThreadSafe:true];
-		_files = [NSMutableArray new];
+		_allFiles = [NSMutableArray new];
+		_readers = [NSMutableArray new];
+		_writers = [NSMutableArray new];
 		
 		// Options are listed at: http://code.google.com/p/macfuse/wiki/OPTIONS
 		// TODO: listen for kGMUserFileSystemDidMount and kGMUserFileSystemMountFailed
@@ -46,14 +50,28 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)add:(id<ProcFile>)file
+- (void)addReader:(id<ProcFile>)file
 {
-	[_files addObject:file];
+	[_allFiles addObject:file];
+	[_readers addObject:file];
 }
 
-- (void)remove:(id<ProcFile>)file
+- (void)removeReader:(id<ProcFile>)file
 {
-	[_files removeObject:file];
+	[_allFiles removeObject:file];
+	[_readers removeObject:file];
+}
+
+- (void)addWriter:(id<ProcFile>)file
+{
+	[_allFiles addObject:file];
+	[_writers addObject:file];
+}
+
+- (void)removeWriter:(id<ProcFile>)file
+{
+	[_allFiles removeObject:file];
+	[_writers removeObject:file];
 }
 
 // TODO:
@@ -80,26 +98,48 @@
               userData:(id*)userData
                  error:(NSError**)error
 {
-	UNUSED(mode);
+	*userData = nil;
 	
 	dispatch_queue_t main = dispatch_get_main_queue();
-	dispatch_sync(main,
-	  ^{
-		  // Sucky linear search but paths are dynamic and we shouldn't have all
-		  // that many proc files.
-		  for (id<ProcFile> file in _files)
-		  {
-			  if ([path isEqualToString:file.path])
+	if (mode == O_RDONLY)
+	{
+		dispatch_sync(main,
+		  ^{
+			  // Sucky linear search but paths are dynamic and we shouldn't have all
+			  // that many proc files.
+			  for (id<ProcFile> file in _readers)
 			  {
-				  *userData = file;
-				  break;
+				  if ([path isEqualToString:file.path])
+				  {
+					  *userData = file;
+					  break;
+				  }
 			  }
-		  }
-	  });
-	
-	if (!*userData && error)
-		*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:nil];
-	
+		  });
+		if (!*userData && error)
+			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:nil];
+	}
+	else if (mode == O_WRONLY)
+	{
+		dispatch_sync(main,
+		  ^{
+			  for (id<ProcFile> file in _writers)
+			  {
+				  if ([path isEqualToString:file.path])
+				  {
+					  *userData = file;
+					  break;
+				  }
+			  }
+		  });
+		if (!*userData && error)
+			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:nil];
+	}
+	else if (error)
+	{
+		*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:EPERM userInfo:nil];
+	}
+		
 	return *userData != nil;
 }
 
@@ -128,12 +168,14 @@
 	  ^{
 		  NSArray* pathComponents = path.pathComponents;
 		  
-		  for (id<ProcFile> file in _files)
+		  for (id<ProcFile> file in _allFiles)
 		  {
 			  NSArray* fileComponents = file.path.pathComponents;
 			  if ([fileComponents startsWith:pathComponents])
 			  {
-				  [contents addObject:fileComponents[pathComponents.count]];
+				  NSString* name = fileComponents[pathComponents.count];
+				  if (![contents containsObject:name])
+					  [contents addObject:name];
 			  }
 		  }
 	  });
@@ -150,8 +192,15 @@
 {
 	UNUSED(path);
 	
-	id<ProcFile> file = (id<ProcFile>) userData;
-	int bytes = [file read:buffer size:size offset:offset error:error];
+	__block int bytes = 0;
+	
+	dispatch_queue_t main = dispatch_get_main_queue();
+	dispatch_sync(main,
+	  ^{
+		  id<ProcFile> file = (id<ProcFile>) userData;
+		  bytes = [file read:buffer size:size offset:offset error:error];
+	  });
+	
 	return bytes;
 }
 
@@ -159,51 +208,53 @@
 {
 	UNUSED(error);
 	
-	if (userData)
-	{
-		id<ProcFile> file = (id<ProcFile>) userData;
-		return @{NSFileType: NSFileTypeRegular, NSFileSize: @(file.size)};
-	}
-	else
-	{
-		id<ProcFile> file = nil;
-		if ([self _isOurs:path file:&file])
-		{
-			if (file)
-				return @{NSFileType: NSFileTypeRegular, NSFileSize: @(file.size)};
-			else
-				return @{NSFileType: NSFileTypeDirectory};
-		}
-	}
-	
-	return nil;
-}
-
-- (bool)_isOurs:(NSString*)path file:(id<ProcFile>*)file
-{
-	__block bool ours = false;
-	__block id<ProcFile> tmpFile = nil;
+	__block NSDictionary* attrs = nil;
 	
 	dispatch_queue_t main = dispatch_get_main_queue();
 	dispatch_sync(main,
 	  ^{
-		  NSArray* pathComponents = path.pathComponents;
-		  
-		  for (id<ProcFile> file in _files)
+		  if (userData)
 		  {
-			  NSArray* fileComponents = file.path.pathComponents;
-			  if ([fileComponents startsWith:pathComponents])
+			  id<ProcFile> file = (id<ProcFile>) userData;
+			  attrs = @{NSFileType: NSFileTypeRegular, NSFileSize: @(file.size)};
+		  }
+		  else
+		  {
+			  id<ProcFile> file = nil;
+			  if ([self _isOurs:path file:&file])
 			  {
-				  ours = true;
-			  }
-			  
-			  if ([file.path isEqualToString:path])
-			  {
-				  tmpFile = file;
-				  break;
+				  if (file)
+					  attrs = @{NSFileType: NSFileTypeRegular, NSFileSize: @(file.size)};
+				  else
+					  attrs = @{NSFileType: NSFileTypeDirectory};
 			  }
 		  }
 	  });
+	
+	return attrs;
+}
+
+- (bool)_isOurs:(NSString*)path file:(id<ProcFile>*)file
+{
+	bool ours = false;
+	id<ProcFile> tmpFile = nil;
+	
+	NSArray* pathComponents = path.pathComponents;
+	  
+	for (id<ProcFile> file in _allFiles)
+	{
+		NSArray* fileComponents = file.path.pathComponents;
+		if ([fileComponents startsWith:pathComponents])
+		{
+			ours = true;
+		}
+		  
+		if ([file.path isEqualToString:path])
+		{
+			 tmpFile = file;
+			break;
+		}
+	}
 	
 	*file = tmpFile;
 	
@@ -219,16 +270,20 @@
 {
 	UNUSED(path, error);
 	
-	BOOL result = NO;
-	NSNumber* size = attributes[NSFileSize];
-	if (size && userData)
-	{
-		id<ProcFile> file = (id<ProcFile>) userData;
-		result = [file setSize:size.unsignedLongLongValue];
-	}
-	
-	if (!result && error)
-		*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:EPERM userInfo:nil];
+	__block BOOL result = NO;
+	dispatch_queue_t main = dispatch_get_main_queue();
+	dispatch_sync(main,
+	  ^{
+		  NSNumber* size = attributes[NSFileSize];
+		  if (size && userData)
+		  {
+			  id<ProcFile> file = (id<ProcFile>) userData;
+			  result = [file setSize:size.unsignedLongLongValue];
+		  }
+		  
+		  if (!result && error)
+			  *error = [NSError errorWithDomain:NSPOSIXErrorDomain code:EPERM userInfo:nil];
+	  });
 	
 	return result;
 }
@@ -242,8 +297,15 @@
 {
 	UNUSED(path);
 	
-	id<ProcFile> file = (id<ProcFile>) userData;
-	int bytes = [file write:buffer size:size offset:offset error:error];
+	__block int bytes = 0;
+	
+	dispatch_queue_t main = dispatch_get_main_queue();
+	dispatch_sync(main,
+	  ^{
+		  id<ProcFile> file = (id<ProcFile>) userData;
+		  bytes = [file write:buffer size:size offset:offset error:error];
+	  });
+	
 	return bytes;
 }
 

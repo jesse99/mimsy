@@ -124,16 +124,16 @@ The proc files are:\
 \b0 \cf0 	window-index is 1 for the frontmost text window, 2 for the next frontmost, etc.\CocoaLigature0 \
 
 \b \CocoaLigature1 \
-	current-line
-\b0  (rw)\
-	1-based integer.\CocoaLigature0 \
+	language
+\b0  (r)\
+	Name of the language used to style the text, e.g. "c" or "python". Empty if the window has no language.\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
-\b \cf0 \CocoaLigature1 	language
-\b0  (r)\
-	Name of the language used to style the text, e.g. "c" or "python". Empty if the window has no language.\CocoaLigature0 \
+\b \cf0 \CocoaLigature1 	line-number
+\b0  (rw)\
+	1-based integer.\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
@@ -164,30 +164,46 @@ The proc files are:\
 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
-\b \cf0 \CocoaLigature1 	word-wrapped
+\b \cf0 \CocoaLigature1 	word-wrap
 \b0  (rw)\
 	"true" or "false".\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \
 \pard\tx626\pardeftab626\pardirnatural
 
-\b \cf0 \CocoaLigature1 /mimsy/text-window/<window-index>/<location>:<length>/\
+\b \cf0 \CocoaLigature1 \
+\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab626\pardirnatural
 \cf0 	element-name
 \b0  (r)\
-	Lower case version of the name from the language file the range is within, e.g. "string", "comment", "identifier". Empty if there is no language or the range crosses multiple elements.\CocoaLigature0 \
+	Lower case version of the name from the language file the selection is within, e.g. "string", "comment", "identifier". Empty if there is no language or the selection crosses multiple elements.\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
-\b \cf0 \CocoaLigature1 	next-range
+\b \cf0 \CocoaLigature1 	next-element-name
+\b0  (r)\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab626\pardirnatural
+\cf0 	Lower case version of the element after the selection. Empty if there is no language or the selection is at the last element.\CocoaLigature0 \
+\pard\tx626\pardeftab626\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b \cf0 \CocoaLigature1 	next-element-range
 \b0  (r)\
 	"<location>:<length>" for the range of the next element. "0:-1" if there is no next element.\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
-\b \cf0 \CocoaLigature1 	previous-range
+\b \cf0 \CocoaLigature1 	previous-element-name
+\b0  (r)\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab626\pardirnatural
+\cf0 	Lower case version of the element before the selection. Empty if there is no language or the selection is at the first element.\CocoaLigature0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b \cf0 \CocoaLigature1 \
+	previous-element-range
 \b0  (r)\
 	"<location>:<length>" for the range of the previous element. "0:-1" if there is no previous element.\CocoaLigature0 \
 }

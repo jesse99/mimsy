@@ -3,7 +3,7 @@
 // Proc file for use by read-only files that will not be very large.
 @interface ProcFileReader : NSObject <ProcFile>
 
-- (id)initWithDir:(NSString* (^) ())directory fileName:(NSString*)name contents:(NSString* (^)())contents;
+- (id)initWithDir:(NSString* (^) ())directory fileName:(NSString*)name readStr:(NSString* (^)())readStr;
 
 - (NSString*)path;
 - (unsigned long long)size;
@@ -19,7 +19,7 @@
 // Proc file for use by write-only files that will not be very large.
 @interface ProcFileWriter : NSObject <ProcFile>
 
-- (id)initWithDir:(NSString* (^) ())directory fileName:(NSString*)name contents:(void (^)(NSString*))contents;
+- (id)initWithDir:(NSString* (^) ())directory fileName:(NSString*)name writeStr:(void (^)(NSString*))writeStr;
 
 - (NSString*)path;
 - (unsigned long long)size;

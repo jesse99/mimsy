@@ -26,7 +26,8 @@
 @implementation TextController
 {
 	ProcFileReader* _pathFile;
-	ProcFileReader* _selectionFile;
+	ProcFileReader* _selectionFileR;
+	ProcFileWriter* _selectionFileW;
 	ProcFileReader* _titleFile;
 
 	RestoreView* _restorer;
@@ -60,23 +61,37 @@
 		_pathFile = [[ProcFileReader alloc]
 					 initWithDir:^NSString *{return [self _getProcFilePath];}
 					 fileName:@"path"
-					 contents:^NSString *{return [self path];}];
-		_selectionFile = [[ProcFileReader alloc]	// TODO: this needs to be read/write
+					 readStr:^NSString *{return [self path];}];
+		_selectionFileR = [[ProcFileReader alloc]
 					 initWithDir:^NSString *{return [self _getProcFilePath];}
 					 fileName:@"selection"
-					 contents:^NSString *{
+					 readStr:^NSString *{
 						 NSRange range = self.textView.selectedRange;
 						 return [NSString stringWithFormat:@"%lu:%lu", (unsigned long)range.location, (unsigned long)range.length];
 					 }];
+		_selectionFileW = [[ProcFileWriter alloc]
+					initWithDir:^NSString *{return [self _getProcFilePath];}
+					fileName:@"selection"
+					writeStr:^(NSString* text)
+					{
+						NSArray* parts = [text componentsSeparatedByString:@":"];
+						if (parts.count == 2)
+						{
+							NSInteger loc = [parts[0] integerValue];
+							NSInteger len = [parts[1] integerValue];
+							[self.textView setSelectedRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+						}
+					}];
 		_titleFile = [[ProcFileReader alloc]
 						initWithDir:^NSString *{return [self _getProcFilePath];}
 						fileName:@"title"
-						contents:^NSString *{return self.window.title;}];
+						readStr:^NSString *{return self.window.title;}];
 		
 		AppDelegate* app = [NSApp delegate];
-		[app.procFileSystem add:_pathFile];
-		[app.procFileSystem add:_selectionFile];
-		[app.procFileSystem add:_titleFile];
+		[app.procFileSystem addReader:_pathFile];
+		[app.procFileSystem addReader:_selectionFileR];
+		[app.procFileSystem addReader:_titleFile];
+		[app.procFileSystem addWriter:_selectionFileW];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(languagesChanged:) name:@"LanguagesChanged" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stylesChanged:) name:@"StylesChanged" object:nil];

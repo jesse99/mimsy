@@ -7,7 +7,10 @@
 
 - (void)teardown;
 
-- (void)add:(id<ProcFile>)file;
-- (void)remove:(id<ProcFile>)file;
+- (void)addReader:(id<ProcFile>)file;
+- (void)removeReader:(id<ProcFile>)file;
+
+- (void)addWriter:(id<ProcFile>)file;
+- (void)removeWriter:(id<ProcFile>)file;
 
 @end

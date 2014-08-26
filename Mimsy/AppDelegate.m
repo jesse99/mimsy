@@ -104,7 +104,7 @@ typedef void (^NullaryBlock)();
 		_versionFile = [[ProcFileReader alloc]
 			initWithDir:^NSString *{return @"/";}
 			fileName:@"version"
-			contents:^NSString*
+			readStr:^NSString*
 			{
 				NSDictionary* info = [[NSBundle mainBundle] infoDictionary];
 				return [info objectForKey:@"CFBundleShortVersionString"];
@@ -113,7 +113,7 @@ typedef void (^NullaryBlock)();
 		_logFile = [[ProcFileWriter alloc]
 			initWithDir:^NSString *{return @"/log";}
 			fileName:@"line"
-			contents:^(NSString* str)
+			writeStr:^(NSString* str)
 			{
 				NSArray* parts = [str componentsSeparatedByString:@":"];
 				if (parts.count == 2)
@@ -123,8 +123,8 @@ typedef void (^NullaryBlock)();
 			}];
 		
 		_procFileSystem = [ProcFileSystem new];
-		[_procFileSystem add:_versionFile];
-		[_procFileSystem add:_logFile];
+		[_procFileSystem addReader:_versionFile];
+		[_procFileSystem addWriter:_logFile];
 		
 		initFunctionalTests();
 	}
