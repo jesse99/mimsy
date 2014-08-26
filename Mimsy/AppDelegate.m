@@ -64,6 +64,8 @@ typedef void (^NullaryBlock)();
 {
 	ProcFileSystem* _procFileSystem;
 	ProcFileReader* _versionFile;
+	ProcFileWriter* _logFile;
+
 	DirectoryWatcher* _languagesWatcher;
 	DirectoryWatcher* _settingsWatcher;
 	DirectoryWatcher* _stylesWatcher;
@@ -98,17 +100,31 @@ typedef void (^NullaryBlock)();
 		[Extensions setup];
 		[WindowsDatabase setup];
 		[Languages setup];
-		
-		_procFileSystem = [ProcFileSystem new];
-		
+				
 		_versionFile = [[ProcFileReader alloc]
 			initWithDir:^NSString *{return @"/";}
 			fileName:@"version"
-			contents:^NSString *{
+			contents:^NSString*
+			{
 				NSDictionary* info = [[NSBundle mainBundle] infoDictionary];
 				return [info objectForKey:@"CFBundleShortVersionString"];
-		}];
+			}];
+		
+		_logFile = [[ProcFileWriter alloc]
+			initWithDir:^NSString *{return @"/log";}
+			fileName:@"line"
+			contents:^(NSString* str)
+			{
+				NSArray* parts = [str componentsSeparatedByString:@":"];
+				if (parts.count == 2)
+					LOG(STR(parts[0]), "%s", STR(parts[1]));
+				else
+					LOG("Error", "expected '<topic>:<line>' not: '%s'", STR(str));
+			}];
+		
+		_procFileSystem = [ProcFileSystem new];
 		[_procFileSystem add:_versionFile];
+		[_procFileSystem add:_logFile];
 		
 		initFunctionalTests();
 	}

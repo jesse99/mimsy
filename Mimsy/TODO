@@ -8,11 +8,13 @@ for write can skip hard/symbolic links and ext attrs
 
 
 * Write an option-tab extension:
-	- handle file writes
+	- handle read write files (update selection)
 	- implement all the text editor files (and update help file)
+	  text has to be special cased
 	- intercept tab keys and make it a no-op
 	- intercept tab keys and make move the selection by one
 	- intercept tab keys and make move the selection to the next identifier
+	- app needs to be the one listening for mount notifications
 	- may want to do something sane when there is no language
 	- need to do something with help
 	  maybe a json encoded proc file

@@ -75,32 +75,6 @@
 	LOG("Error", "failed to mount %s: %s", STR(path), STR(error.localizedFailureReason));
 }
 
-#pragma mark read methods
-
-- (NSArray*)contentsOfDirectoryAtPath:(NSString*)path error:(NSError**)error
-{
-	UNUSED(error);
-	
-	__block NSMutableArray* contents = [NSMutableArray new];
-
-	dispatch_queue_t main = dispatch_get_main_queue();
-	dispatch_sync(main,
-	  ^{
-		  NSArray* pathComponents = path.pathComponents;
-		  
-		  for (id<ProcFile> file in _files)
-		  {
-			  NSArray* fileComponents = file.path.pathComponents;
-			  if ([fileComponents startsWith:pathComponents])
-			  {
-				  [contents addObject:fileComponents[pathComponents.count]];
-			  }
-		  }
-	  });
-	
-	return contents;
-}
-
 - (BOOL)openFileAtPath:(NSString*)path
                   mode:(int)mode
               userData:(id*)userData
@@ -131,7 +105,40 @@
 
 - (void)releaseFileAtPath:(NSString*)path userData:(id)userData
 {
-	UNUSED(path, userData);
+	UNUSED(path);
+	
+	dispatch_queue_t main = dispatch_get_main_queue();
+	dispatch_sync(main,
+		^{
+			id<ProcFile> file = (id<ProcFile>) userData;
+			[file closed];
+		});
+}
+
+#pragma mark read methods
+
+- (NSArray*)contentsOfDirectoryAtPath:(NSString*)path error:(NSError**)error
+{
+	UNUSED(error);
+	
+	__block NSMutableArray* contents = [NSMutableArray new];
+
+	dispatch_queue_t main = dispatch_get_main_queue();
+	dispatch_sync(main,
+	  ^{
+		  NSArray* pathComponents = path.pathComponents;
+		  
+		  for (id<ProcFile> file in _files)
+		  {
+			  NSArray* fileComponents = file.path.pathComponents;
+			  if ([fileComponents startsWith:pathComponents])
+			  {
+				  [contents addObject:fileComponents[pathComponents.count]];
+			  }
+		  }
+	  });
+	
+	return contents;
 }
 
 - (int)readFileAtPath:(NSString*)path
@@ -201,6 +208,43 @@
 	*file = tmpFile;
 	
 	return ours;
+}
+
+#pragma mark write methods
+
+- (BOOL)setAttributes:(NSDictionary*)attributes
+         ofItemAtPath:(NSString*)path
+             userData:(id)userData
+                error:(NSError**)error
+{
+	UNUSED(path, error);
+	
+	BOOL result = NO;
+	NSNumber* size = attributes[NSFileSize];
+	if (size && userData)
+	{
+		id<ProcFile> file = (id<ProcFile>) userData;
+		result = [file setSize:size.unsignedLongLongValue];
+	}
+	
+	if (!result && error)
+		*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:EPERM userInfo:nil];
+	
+	return result;
+}
+
+- (int)writeFileAtPath:(NSString*)path
+              userData:(id)userData
+                buffer:(const char*)buffer
+                  size:(size_t)size
+                offset:(off_t)offset
+                 error:(NSError**)error
+{
+	UNUSED(path);
+	
+	id<ProcFile> file = (id<ProcFile>) userData;
+	int bytes = [file write:buffer size:size offset:offset error:error];
+	return bytes;
 }
 
 @end

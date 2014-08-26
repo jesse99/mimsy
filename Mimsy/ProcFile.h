@@ -6,6 +6,9 @@
 - (NSString*)path;
 
 - (unsigned long long)size;
+- (bool)setSize:(unsigned long long)size;
+
+- (void)closed;
 
 - (int)read:(char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error;
 
