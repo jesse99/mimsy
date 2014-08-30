@@ -61,64 +61,9 @@ The proc files are:\
 \b0 \CocoaLigature0  (w)\
 	Used to write a line to Mimsy's log. Formatted as one or more lines of <topic>:<text> where topic is an arbitrary colon separated list of topic and sub-topics. By convention spammy logs end with the Verbose sub-topic.\
 	\
-\
-\pard\pardeftab480\pardirnatural
-\cf0 \CocoaLigature1 And here are some proc files which haven't been implemented yet:\
-\
 \pard\tx626\pardeftab626\pardirnatural
 
-\b \cf0 /mimsy/help/text-editor/keys/\
-\pard\tx626\pardeftab626\pardirnatural
-
-\b0 \cf0 \CocoaLigature0 	
-\b \CocoaLigature1 <extension>
-\b0 \CocoaLigature0  (w)\
-	This is used to build the text for the special keys help used within the text-editor context. It's formatted as one or more lines of <key name>:<help text>. \
-\
-\pard\tx626\pardeftab626\pardirnatural
-
-\b \cf0 \CocoaLigature1 /mimsy/keydown/directory-editor/<key>/\
-/mimsy/keydown/text-editor/<key>/\
-/mimsy/keydown/transcript/<key>/\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
-
-\b0 \cf0 	Currently key may be "tab".\
-\pard\tx626\pardeftab626\pardirnatural
-
-\b \cf0 \
-\pard\tx626\pardeftab626\pardirnatural
-
-\b0 \cf0 \CocoaLigature0 	
-\b \CocoaLigature1 modifiers
-\b0 \CocoaLigature0  (r)\
-	\cf2 Document this.\cf0 \
-\
-	
-\b \CocoaLigature1 handled
-\b0 \CocoaLigature0  (w)\
-	Write "true" to suppress further handling of the key.\
-\
-\pard\tx626\pardeftab626\pardirnatural
-
-\b \cf0 \CocoaLigature1 /mimsy/string-picker/<extension>/
-\b0 \CocoaLigature0 \
-	 
-\b \CocoaLigature1 canceled
-\b0 \CocoaLigature0  (r)		\
-	This file is automatically watched. If the user canceled selecting a string Mimsy will write "1" to this file.\
-\
-	 
-\b \CocoaLigature1 names
-\b0 \CocoaLigature0  (w)\
-	This must be one or more lines of arbitrary strings. After an extension writes to this file Mimsy will pop up a dialog asking the user to select one of the strings.\
-\
-	 
-\b \CocoaLigature1 picked
-\b0 \CocoaLigature0  (r)		\
-	This file is automatically watched. If the user selected a string the extension can read it using this file.\
-\
-
-\b \CocoaLigature1 /mimsy/text-window/<window-index>/\
+\b \cf0 \CocoaLigature1 /mimsy/text-window/<window-index>/\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
 \b0 \cf0 	window-index is 1 for the frontmost text window, 2 for the next frontmost, etc.\CocoaLigature0 \
@@ -194,4 +139,60 @@ The proc files are:\
 	"true" or "false".\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \
+\
+\pard\pardeftab480\pardirnatural
+\cf0 \CocoaLigature1 And here are some proc files which haven't been implemented yet:\
+\
+\pard\tx626\pardeftab626\pardirnatural
+
+\b \cf0 /mimsy/help/text-editor/keys/\
+\pard\tx626\pardeftab626\pardirnatural
+
+\b0 \cf0 \CocoaLigature0 	
+\b \CocoaLigature1 <extension>
+\b0 \CocoaLigature0  (w)\
+	This is used to build the text for the special keys help used within the text-editor context. It's formatted as one or more lines of <key name>:<help text>. \
+\
+\pard\tx626\pardeftab626\pardirnatural
+
+\b \cf0 \CocoaLigature1 /mimsy/keydown/directory-editor/<key>/\
+/mimsy/keydown/text-editor/<key>/\
+/mimsy/keydown/transcript/<key>/\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b0 \cf0 	Currently key may be "tab".\
+\pard\tx626\pardeftab626\pardirnatural
+
+\b \cf0 \
+\pard\tx626\pardeftab626\pardirnatural
+
+\b0 \cf0 \CocoaLigature0 	
+\b \CocoaLigature1 modifiers
+\b0 \CocoaLigature0  (r)\
+	\cf2 Document this.\cf0 \
+\
+	
+\b \CocoaLigature1 handled
+\b0 \CocoaLigature0  (w)\
+	Write "true" to suppress further handling of the key.\
+\
+\pard\tx626\pardeftab626\pardirnatural
+
+\b \cf0 \CocoaLigature1 /mimsy/string-picker/<extension>/
+\b0 \CocoaLigature0 \
+	 
+\b \CocoaLigature1 canceled
+\b0 \CocoaLigature0  (r)		\
+	This file is automatically watched. If the user canceled selecting a string Mimsy will write "1" to this file.\
+\
+	 
+\b \CocoaLigature1 names
+\b0 \CocoaLigature0  (w)\
+	This must be one or more lines of arbitrary strings. After an extension writes to this file Mimsy will pop up a dialog asking the user to select one of the strings.\
+\
+	 
+\b \CocoaLigature1 picked
+\b0 \CocoaLigature0  (r)		\
+	This file is automatically watched. If the user selected a string the extension can read it using this file.\
+\
 }

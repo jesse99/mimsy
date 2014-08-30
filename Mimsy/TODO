@@ -5,16 +5,7 @@ install http://osxfuse.github.io/
 	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
 	
 	
-read-write proc file
-	if open for write need to cache
-		read and size need to operate on the cache if its valid
-		close write needs to flush
-
-
 * Write an option-tab extension:
-	- writing to selection-text doesn't work
-	  it's doing a read after setting the size
-	- instead of a text writer tell people to use selection-text
 	- help file should say all the text window files are implemented
 	- do a commit
 	- intercept tab keys and make it a no-op
