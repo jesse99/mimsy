@@ -11,6 +11,7 @@
 #import "Paths.h"
 #import "ProcFileSystem.h"
 #import "ProcFiles.h"
+#import "RangeVector.h"
 #import "RestoreView.h"
 #import "StartupScripts.h"
 #import "TextView.h"
@@ -26,9 +27,15 @@
 @implementation TextController
 {
 	ProcFileReader* _pathFile;
-	ProcFileReader* _selectionFileR;
-	ProcFileWriter* _selectionFileW;
+	ProcFileReadWrite* _colNumFile;
+	ProcFileReader* _elementNameFile;
+	ProcFileReader* _elementNamesFile;
+	ProcFileReader* _languageFile;
+	ProcFileReadWrite* _lineNumFile;
+	ProcFileReadWrite* _selectionRangeFileW;
+	ProcFileReadWrite* _selectionTextFile;
 	ProcFileReader* _titleFile;
+	ProcFileReadWrite* _wordWrapFile;
 
 	RestoreView* _restorer;
 	bool _closed;
@@ -58,20 +65,102 @@
  		updateInstanceCount(@"TextController", +1);
 		updateInstanceCount(@"TextWindow", +1);
 
+		_colNumFile = [[ProcFileReadWrite alloc]
+								initWithDir:^NSString *{return [self getProcFilePath];}
+								fileName:@"column-number"
+							    readStr:^NSString *
+							    {
+								   NSRange range = self.textView.selectedRange;
+								   NSUInteger loc = range.location;
+								   while (loc > 0 && [self.text characterAtIndex:loc-1] != '\n')
+									   --loc;
+								   return [NSString stringWithFormat:@"%lu", range.location - loc + 1];
+							    }
+								writeStr:^(NSString* text)
+								{
+									// Find the start of the line.
+									NSUInteger loc = self.textView.selectedRange.location;
+									while (loc > 0 && [self.text characterAtIndex:loc-1] != '\n')
+										--loc;
+									
+									// Jump to the column, but don't go past the end of the line.
+									NSInteger col = [text integerValue];
+									while (loc < self.text.length && [self.text characterAtIndex:loc] != '\n' && col > 1)
+									{
+										--col;
+										++loc;
+									}
+									
+									NSRange range = NSMakeRange(loc, 0);
+									[self.textView setSelectedRange:range];
+
+									range = NSMakeRange(loc, 1);
+									[self.textView scrollRangeToVisible:range];
+									[self.textView showFindIndicatorForRange:range];
+								}];
+		_elementNameFile = [[ProcFileReader alloc]
+							initWithDir:^NSString *{return [self getProcFilePath];}
+							fileName:@"element-name"
+							readStr:^NSString *{return [self getElementNameFor:self.textView.selectedRange];}];
+		_elementNamesFile = [[ProcFileReader alloc]
+							initWithDir:^NSString *{return [self getProcFilePath];}
+							fileName:@"element-names"
+							readStr:^NSString *{return [self getElementNames];}];
+		_languageFile = [[ProcFileReader alloc]
+							initWithDir:^NSString *{return [self getProcFilePath];}
+							fileName:@"language"
+						 readStr:^NSString *{return self.language ? self.language.name : @"";}];
+		_lineNumFile = [[ProcFileReadWrite alloc]
+						initWithDir:^NSString *{return [self getProcFilePath];}
+						fileName:@"line-number"
+						readStr:^NSString *
+						{
+							int line = 1;
+							NSString* text = self.text;
+							NSUInteger loc = self.textView.selectedRange.location;
+							for (NSUInteger i = 0; i < text.length && i < loc; i++)
+							{
+								if ([text characterAtIndex:i] == '\n')
+									++line;
+							}
+							return [NSString stringWithFormat:@"%d", line];
+						}
+						writeStr:^(NSString* text)
+						{
+							NSUInteger i = 0;
+							NSInteger currentLine = 1;
+							NSInteger targetLine = [text integerValue];
+							while (i < self.text.length && currentLine < targetLine)
+							{
+								if ([self.text characterAtIndex:i] == '\n')
+									++currentLine;
+								++i;
+							}
+							
+							NSUInteger j = i;
+							while (j < self.text.length && [self.text characterAtIndex:j] != '\n')
+							{
+								++j;
+							}
+							
+							NSRange range = NSMakeRange(i, 0);
+							[self.textView setSelectedRange:range];
+
+							range = NSMakeRange(i, j-i+1);
+							[self.textView scrollRangeToVisible:range];
+							[self.textView showFindIndicatorForRange:range];
+						}];
 		_pathFile = [[ProcFileReader alloc]
-					 initWithDir:^NSString *{return [self _getProcFilePath];}
+					 initWithDir:^NSString *{return [self getProcFilePath];}
 					 fileName:@"path"
 					 readStr:^NSString *{return [self path];}];
-		_selectionFileR = [[ProcFileReader alloc]
-					 initWithDir:^NSString *{return [self _getProcFilePath];}
-					 fileName:@"selection"
-					 readStr:^NSString *{
-						 NSRange range = self.textView.selectedRange;
-						 return [NSString stringWithFormat:@"%lu:%lu", (unsigned long)range.location, (unsigned long)range.length];
-					 }];
-		_selectionFileW = [[ProcFileWriter alloc]
-					initWithDir:^NSString *{return [self _getProcFilePath];}
-					fileName:@"selection"
+		_selectionRangeFileW = [[ProcFileReadWrite alloc]
+					initWithDir:^NSString *{return [self getProcFilePath];}
+					fileName:@"selection-range"
+					readStr:^NSString *{
+						NSRange range = self.textView.selectedRange;
+						return [NSString stringWithFormat:@"%lu:%lu", (unsigned long)range.location, (unsigned long)range.length];
+					}
 					writeStr:^(NSString* text)
 					{
 						NSArray* parts = [text componentsSeparatedByString:@":"];
@@ -79,19 +168,63 @@
 						{
 							NSInteger loc = [parts[0] integerValue];
 							NSInteger len = [parts[1] integerValue];
+							if (loc + len > self.text.length)
+								len = (NSInteger) self.text.length - loc;
 							[self.textView setSelectedRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
 						}
 					}];
+		_selectionTextFile = [[ProcFileReadWrite alloc]
+					initWithDir:^NSString *{return [self getProcFilePath];}
+					fileName:@"selection-text"
+					readStr:^NSString *{
+						NSRange range = self.textView.selectedRange;
+						return [self.text substringWithRange:range];
+					}
+					writeStr:^(NSString* text)
+					{
+						NSRange range = self.textView.selectedRange;
+						if ([self.textView shouldChangeTextInRange:range replacementString:text])
+						{
+							[self.textView replaceCharactersInRange:range withString:text];
+							if (text.length > 0)
+								[self.textView.undoManager setActionName:@"Replace Text"];
+							else
+								[self.textView.undoManager setActionName:@"Delete Text"];
+							[self.textView didChangeText];
+						}
+					}];
 		_titleFile = [[ProcFileReader alloc]
-						initWithDir:^NSString *{return [self _getProcFilePath];}
-						fileName:@"title"
-						readStr:^NSString *{return self.window.title;}];
+					initWithDir:^NSString *{return [self getProcFilePath];}
+					fileName:@"title"
+					readStr:^NSString *{return self.window.title;}];
+		_wordWrapFile = [[ProcFileReadWrite alloc]
+				   initWithDir:^NSString *{return [self getProcFilePath];}
+				   fileName:@"word-wrap"
+				   readStr:^NSString *{
+					   return _wordWrap ? @"true" : @"false";
+				   }
+				   writeStr:^(NSString* text)
+				   {
+					   bool wrap = [text isEqualToString:@"true"];
+					   if (wrap != _wordWrap)
+					   {
+						   _wordWrap = wrap;
+						   [self doResetWordWrap];
+					   }
+				   }];
 		
 		AppDelegate* app = [NSApp delegate];
+		[app.procFileSystem addReader:_elementNameFile];
+		[app.procFileSystem addReader:_elementNamesFile];
+		[app.procFileSystem addReader:_languageFile];
 		[app.procFileSystem addReader:_pathFile];
-		[app.procFileSystem addReader:_selectionFileR];
 		[app.procFileSystem addReader:_titleFile];
-		[app.procFileSystem addWriter:_selectionFileW];
+
+		[app.procFileSystem addWriter:_colNumFile];
+		[app.procFileSystem addWriter:_lineNumFile];
+		[app.procFileSystem addWriter:_selectionRangeFileW];
+		[app.procFileSystem addWriter:_selectionTextFile];
+		[app.procFileSystem addWriter:_wordWrapFile];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(languagesChanged:) name:@"LanguagesChanged" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stylesChanged:) name:@"StylesChanged" object:nil];
@@ -101,7 +234,7 @@
 	return self;
 }
 
-- (NSString*)_getProcFilePath
+- (NSString*)getProcFilePath
 {
 	__block NSString* path = nil;
 	
@@ -205,6 +338,39 @@
 	// If the windows are closed very very quickly and we don't do this
 	// we get a crash when Cocoa tries to call our delegate.
 	[self.textView.layoutManager setDelegate:nil];
+}
+
+- (NSString*)getElementNames
+{
+	__block NSInteger currentIndex = -1;
+	__block struct RangeVector ranges = newRangeVector();
+	__block NSMutableArray* names = [NSMutableArray new];
+	
+	if (_language)
+	{
+		NSAttributedString* str = self.textView.textStorage;
+		NSRange currentRange = self.textView.selectedRange;
+		[str enumerateAttribute:@"element name" inRange:NSMakeRange(0, str.length) options:0 usingBlock:^(NSString* value, NSRange range, BOOL *stop) {
+			UNUSED(stop);
+			[names addObject:value];
+			pushRangeVector(&ranges, range);
+			
+			if (currentIndex < 0 && currentRange.location >= range.location && currentRange.location+currentRange.length <= range.location+range.length)
+				currentIndex = (int) names.count - 1;
+		}];
+	}
+	
+	NSMutableString* text = [NSMutableString stringWithCapacity:names.count*(6+1 + 3+1 + 2+1)];
+	[text appendFormat:@"%ld\n", (long)currentIndex];
+	
+	for (NSUInteger i = 0; i < names.count; ++i)
+	{
+		[text appendFormat:@"%@:%lu:%lu\n", names[i], (unsigned long)ranges.data[i].location, (unsigned long)ranges.data[i].length];
+	}
+	
+	freeRangeVector(&ranges);
+	
+	return text;
 }
 
 - (NSString*)getElementNameFor:(NSRange)range

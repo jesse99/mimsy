@@ -124,7 +124,25 @@ The proc files are:\
 \b0 \cf0 	window-index is 1 for the frontmost text window, 2 for the next frontmost, etc.\CocoaLigature0 \
 
 \b \CocoaLigature1 \
-	language
+	column-number
+\b0  (rw)\
+	1-based integer for the start of the current selection. On writes the insertion point will move. If the value is too large the insertion point will move to the end of the line.\CocoaLigature0 \
+\pard\tx626\pardeftab626\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab626\pardirnatural
+
+\b \cf0 \CocoaLigature1 	element-name
+\b0  (r)\
+	Lower case version of a name from the language file that the selection is within, e.g. "string", "comment", "identifier", "normal". Empty if there is no language or the selection crosses multiple elements.\CocoaLigature0 \
+
+\b \CocoaLigature1 \
+	element-names
+\b0  (r)\
+	The first line is an index into the remaining lines (or -1 if the selection crosses multiple elements). The remaining lines are of the form "<element name>:<location>:<length>" sorted by location. Note that there will be an element name for everything (if the text doesn't match a regex in the language file "normal" will be used). Empty if there is no language.\CocoaLigature0 \
+
+\b \CocoaLigature1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+\cf0 	language
 \b0  (r)\
 	Name of the language used to style the text, e.g. "c" or "python". Empty if the window has no language.\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
@@ -133,7 +151,7 @@ The proc files are:\
 
 \b \cf0 \CocoaLigature1 	line-number
 \b0  (rw)\
-	1-based integer.\CocoaLigature0 \
+	1-based integer for the start of the current selection. On writes the insertion point will move to the start of the line. If the value is too large the insertion point will move to the end of the document.\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
@@ -143,9 +161,16 @@ The proc files are:\
 	If the text document is on disk then this will be the path to it. If not it will be empty.\CocoaLigature0 \
 
 \b \CocoaLigature1 \
-	selection
+	selection-range
 \b0  (rw)\
-	"<location>:<length>".\CocoaLigature0 \
+	"<location>:<length>". On writes if the length is too large it will be clamped to the maximum length.\CocoaLigature0 \
+\pard\tx626\pardeftab626\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b \cf0 \CocoaLigature1 	selection-text
+\b0  (rw)\
+	Replaces the text within the current selection. This is an undoable operation. Note that this is the general mechanism for replacing or setting text within a text document.\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
@@ -169,41 +194,4 @@ The proc files are:\
 	"true" or "false".\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \
-\pard\tx626\pardeftab626\pardirnatural
-
-\b \cf0 \CocoaLigature1 \
-\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab626\pardirnatural
-\cf0 	element-name
-\b0  (r)\
-	Lower case version of the name from the language file the selection is within, e.g. "string", "comment", "identifier". Empty if there is no language or the selection crosses multiple elements.\CocoaLigature0 \
-\pard\tx626\pardeftab626\pardirnatural
-\cf0 \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
-
-\b \cf0 \CocoaLigature1 	next-element-name
-\b0  (r)\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab626\pardirnatural
-\cf0 	Lower case version of the element after the selection. Empty if there is no language or the selection is at the last element.\CocoaLigature0 \
-\pard\tx626\pardeftab626\pardirnatural
-\cf0 \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
-
-\b \cf0 \CocoaLigature1 	next-element-range
-\b0  (r)\
-	"<location>:<length>" for the range of the next element. "0:-1" if there is no next element.\CocoaLigature0 \
-\pard\tx626\pardeftab626\pardirnatural
-\cf0 \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
-
-\b \cf0 \CocoaLigature1 	previous-element-name
-\b0  (r)\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab626\pardirnatural
-\cf0 	Lower case version of the element before the selection. Empty if there is no language or the selection is at the first element.\CocoaLigature0 \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
-
-\b \cf0 \CocoaLigature1 \
-	previous-element-range
-\b0  (r)\
-	"<location>:<length>" for the range of the previous element. "0:-1" if there is no previous element.\CocoaLigature0 \
 }

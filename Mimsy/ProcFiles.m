@@ -5,6 +5,7 @@
 	NSString* (^_directory ) ();
 	NSString* _fileName;
 	NSString* (^_readStr)();
+	NSData* _data;
 }
 
 - (id)initWithDir:(NSString* (^) ())directory fileName:(NSString*)name readStr:(NSString* (^)())readStr;
@@ -33,11 +34,24 @@
 	return path;
 }
 
+- (bool)openForRead:(bool)reading write:(bool)writing
+{
+	ASSERT(!writing);
+	ASSERT(reading);
+	// not much point in doing anything here given that size can be called before opened
+	return true;
+}
+
+- (void)close;
+{
+	_data = nil;
+}
+
 - (unsigned long long)size
 {
 	NSString* contents = _readStr();
-	NSData* data = [contents dataUsingEncoding:NSUTF8StringEncoding];
-	return data.length;
+	_data = [contents dataUsingEncoding:NSUTF8StringEncoding];
+	return _data.length;
 }
 
 - (bool)setSize:(unsigned long long)size
@@ -46,16 +60,8 @@
 	return false;
 }
 
-- (void)closed
++ (int)readInto:(char*)buffer size:(size_t)size offset:(off_t)offset from:(NSData*)data error:(NSError**)error
 {
-	// nothing to do for reads
-}
-
-- (int)read:(char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error
-{
-	NSString* contents = _readStr();
-	NSData* data = [contents dataUsingEncoding:NSUTF8StringEncoding];
-	
 	if (offset < 0 || offset > data.length)
 	{
 		if (error)
@@ -68,9 +74,22 @@
 	}
 	
 	int bytes = MIN((int) ((off_t) data.length - offset), (int) size);
-	memcpy(buffer, data.bytes, bytes);
+	memcpy(buffer, data.bytes + offset, bytes);
 	
 	return bytes;
+}
+
+- (int)read:(char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error
+{
+	if (!_data)
+	{
+		// Most of the time I think size will be called before read, but that's not a
+		// requirement.
+		NSString* contents = _readStr();
+		_data = [contents dataUsingEncoding:NSUTF8StringEncoding];
+	}
+	
+	return [ProcFileReader readInto:buffer size:size offset:offset from:_data error:error];
 }
 
 - (int)write:(const char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error
@@ -85,15 +104,31 @@
 
 @end
 
-@implementation ProcFileWriter
+// Note that the order of operations can be very weird, e.g. for
+//    echo 'x' > /Volumes/Mimsy/text-window/1/selection-text
+// I got:
+// getting size
+// opened for write
+// 	setting size to 0
+// 	getting size
+// 	getting size
+// 	opened for read
+// 	   reading 6 bytes at 0
+// 	   writing 6 bytes at 0
+// closed for write				note that the write is closed before the read
+// getting size
+// closed for read
+// getting size
+@implementation ProcFileReadWrite
 {
 	NSString* (^_directory ) ();
 	NSString* _fileName;
+	NSString* (^_readStr)();
 	void (^_writeStr)(NSString*);
-	NSMutableData* _data;
+	NSMutableData* _data;			// this is used if we're open for writing
 }
 
-- (id)initWithDir:(NSString* (^) ())directory fileName:(NSString*)name writeStr:(void (^)(NSString*))writeStr;
+- (id)initWithDir:(NSString* (^) ())directory fileName:(NSString*)name readStr:(NSString* (^)())readStr writeStr:(void (^)(NSString*))writeStr;
 {
 	self = [super init];
 	
@@ -101,8 +136,8 @@
 	{
 		_directory = directory;
 		_fileName = name;
+		_readStr = readStr;
 		_writeStr = writeStr;
-		_data = [NSMutableData new];
 	}
 	
 	return self;
@@ -120,37 +155,74 @@
 	return path;
 }
 
+- (bool)openForRead:(bool)reading write:(bool)writing
+{
+	UNUSED(reading);
+	
+	// Don't allow a process to open the file if another process has the file
+	// opened for writes.
+	bool ok = _data == nil;
+	
+	if (writing && ok)
+	{
+		NSString* contents = _readStr();
+		_data = [[contents dataUsingEncoding:NSUTF8StringEncoding] mutableCopy];
+	}
+	
+	return ok;
+}
+
+- (void)close;
+{
+	if (_data)
+	{		
+		NSString* str = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
+		if ([str endsWith:@"\n"])
+			str = [str substringToIndex:str.length-1];
+		_writeStr(str);
+		
+		_data = nil;
+	}
+}
+
 - (unsigned long long)size
 {
-	return _data.length;
+	if (_data)
+	{
+		return _data.length;
+	}
+	else
+	{
+		NSString* contents = _readStr();
+		NSData* data = [contents dataUsingEncoding:NSUTF8StringEncoding];
+		return data.length;
+	}
 }
 
 - (bool)setSize:(unsigned long long)size
 {
+	ASSERT(_data);
+
 	[_data setLength:size];
 	return true;
 }
 
 - (int)read:(char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error
 {
-	UNUSED(buffer, size, offset);
+	NSData* data = _data;
+	if (!_data)
+	{
+		NSString* contents = _readStr();
+		data = [contents dataUsingEncoding:NSUTF8StringEncoding];
+	}
 	
-    if (error)
-		*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:EPERM userInfo:nil];
-	
-	return -1;
-}
-
-- (void)closed
-{
-	NSString* str = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
-	if ([str endsWith:@"\n"])
-		str = [str substringToIndex:str.length-1];
-	_writeStr(str);
+	return [ProcFileReader readInto:buffer size:size offset:offset from:data error:error];
 }
 
 - (int)write:(const char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error
 {	
+	ASSERT(_data);
+
 	if (offset < 0 || offset > _data.length)
 	{
 		if (error)
@@ -164,7 +236,8 @@
 	else if (offset < _data.length)
 	{
 		// This will grow data if needed.
-		[_data replaceBytesInRange:NSMakeRange((NSUInteger)offset, 0) withBytes:buffer length:size];
+		NSRange range = NSMakeRange((NSUInteger)offset, MIN(size, _data.length-(NSUInteger)offset));
+		[_data replaceBytesInRange:range withBytes:buffer length:size];
 	}
 		
 	return (int)size;

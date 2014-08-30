@@ -8,10 +8,10 @@
 - (unsigned long long)size;
 - (bool)setSize:(unsigned long long)size;
 
-- (void)closed;
+- (bool)openForRead:(bool)reading write:(bool)writing;
+- (void)close;
 
 - (int)read:(char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error;
-
 - (int)write:(const char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error;
 
 @end

@@ -111,7 +111,8 @@
 			  {
 				  if ([path isEqualToString:file.path])
 				  {
-					  *userData = file;
+					  if ([file openForRead:true write:false])
+						  *userData = file;
 					  break;
 				  }
 			  }
@@ -119,7 +120,7 @@
 		if (!*userData && error)
 			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:nil];
 	}
-	else if (mode == O_WRONLY)
+	if (!*userData && (mode == O_RDONLY || mode == O_WRONLY || mode == O_RDWR))
 	{
 		dispatch_sync(main,
 		  ^{
@@ -127,7 +128,8 @@
 			  {
 				  if ([path isEqualToString:file.path])
 				  {
-					  *userData = file;
+					  if ([file openForRead:mode != O_WRONLY write:mode != O_RDONLY])
+						  *userData = file;
 					  break;
 				  }
 			  }
@@ -151,7 +153,7 @@
 	dispatch_sync(main,
 		^{
 			id<ProcFile> file = (id<ProcFile>) userData;
-			[file closed];
+			[file close];
 		});
 }
 

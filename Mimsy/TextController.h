@@ -39,6 +39,7 @@ typedef void (^LayoutCallback)(TextController* controller);
 
 - (NSTextView*)getTextView;
 - (NSUInteger)getEditCount;
+- (NSString*)getProcFilePath;
 
 @property IBOutlet TextView* textView;
 @property IBOutlet __weak NSScrollView* scrollView;

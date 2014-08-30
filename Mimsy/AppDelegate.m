@@ -64,7 +64,7 @@ typedef void (^NullaryBlock)();
 {
 	ProcFileSystem* _procFileSystem;
 	ProcFileReader* _versionFile;
-	ProcFileWriter* _logFile;
+	ProcFileReadWrite* _logFile;
 
 	DirectoryWatcher* _languagesWatcher;
 	DirectoryWatcher* _settingsWatcher;
@@ -110,9 +110,10 @@ typedef void (^NullaryBlock)();
 				return [info objectForKey:@"CFBundleShortVersionString"];
 			}];
 		
-		_logFile = [[ProcFileWriter alloc]
+		_logFile = [[ProcFileReadWrite alloc]
 			initWithDir:^NSString *{return @"/log";}
 			fileName:@"line"
+					readStr:^NSString* {return @"";}
 			writeStr:^(NSString* str)
 			{
 				NSArray* parts = [str componentsSeparatedByString:@":"];

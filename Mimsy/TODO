@@ -3,17 +3,20 @@ tail -f ~/Library/Logs/mimsy.log
 install http://osxfuse.github.io/
 	can skip this but a lot of features will be disabled
 	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
+	
+	
+read-write proc file
+	if open for write need to cache
+		read and size need to operate on the cache if its valid
+		close write needs to flush
 
 
 * Write an option-tab extension:
-	- rename selection selection-range
-	- add selection-text (rw)
-	- implement line-number (NSString has methods which may help)
-	- implement language
-	- implement word-wrapped
-	- implement text, may not be a better way than using the helpers
+	- writing to selection-text doesn't work
+	  it's doing a read after setting the size
+	- instead of a text writer tell people to use selection-text
 	- help file should say all the text window files are implemented
-	  text has to be special cased
+	- do a commit
 	- intercept tab keys and make it a no-op
 	- intercept tab keys and make move the selection by one
 	- intercept tab keys and make move the selection to the next identifier
@@ -91,6 +94,7 @@ install http://osxfuse.github.io/
 	  http://www.cocoabuilder.com/archive/cocoa/22415-how-to-get-glyph-from-character.html
 	  http://partners.adobe.com/public/developer/en/opentype/glyphlist.txt
 	- maybe a command to unfold all
+* Should have some proc files for rich text documents.
 * Could use NSGlyphInfoAttributeName to re-render special chars?
 	- python colons
 	- rust arrows, matches
