@@ -82,7 +82,7 @@
 {
 	NSDictionary* userInfo = [notification userInfo];
 	NSString* path = [userInfo objectForKey:kGMUserFileSystemMountPathKey];
-	LOG("Mimsy", "mounted %s", STR(path));
+	LOG("ProcFS", "mounted %s", STR(path));
 }
 
 - (void)_mountFailed:(NSNotification*)notification
@@ -100,6 +100,13 @@
 {
 	*userData = nil;
 	
+	if (mode == O_RDONLY)
+		LOG("ProcFS", "opening %s read-only", STR(path));
+	else if (mode == O_WRONLY)
+		LOG("ProcFS", "opening %s write-only", STR(path));
+	else if (mode == O_RDWR)
+		LOG("ProcFS", "opening %s read-write", STR(path));
+
 	dispatch_queue_t main = dispatch_get_main_queue();
 	if (mode == O_RDONLY)
 	{
@@ -147,7 +154,7 @@
 
 - (void)releaseFileAtPath:(NSString*)path userData:(id)userData
 {
-	UNUSED(path);
+	LOG("ProcFS", "releasing %s", STR(path));
 	
 	dispatch_queue_t main = dispatch_get_main_queue();
 	dispatch_sync(main,
@@ -192,7 +199,7 @@
                offset:(off_t)offset
                 error:(NSError**)error
 {
-	UNUSED(path);
+	LOG("ProcFS", "reading %zu bytes at %lld from %s", size, offset, STR(path));
 	
 	__block int bytes = 0;
 	
@@ -209,6 +216,7 @@
 - (NSDictionary*)attributesOfItemAtPath:(NSString*)path userData:(id)userData error:(NSError**)error
 {
 	UNUSED(error);
+	LOG("ProcFS", "getting attributes for %s", STR(path));
 	
 	__block NSDictionary* attrs = nil;
 	
@@ -270,7 +278,8 @@
              userData:(id)userData
                 error:(NSError**)error
 {
-	UNUSED(path, error);
+	UNUSED(error);
+	LOG("ProcFS", "setting %s attributes for %s", STR(attributes), STR(path));
 	
 	__block BOOL result = NO;
 	dispatch_queue_t main = dispatch_get_main_queue();
@@ -297,7 +306,7 @@
                 offset:(off_t)offset
                  error:(NSError**)error
 {
-	UNUSED(path);
+	LOG("ProcFS", "writing %zu bytes at %lld for %s", size, offset, STR(path));
 	
 	__block int bytes = 0;
 	
