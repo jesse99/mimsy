@@ -80,13 +80,145 @@
 	while (false);
 }
 
+static NSString* keyToFileName(NSEvent* event, NSString* key)
+{
+	NSMutableArray* labels = [NSMutableArray new];
+	
+	if (event.modifierFlags & NSCommandKeyMask)
+		[labels addObject:@"command"];
+	
+	if (event.modifierFlags & NSControlKeyMask)
+		[labels addObject:@"control"];
+	
+	if (event.modifierFlags & NSAlternateKeyMask)
+		[labels addObject:@"option"];
+	
+	if (event.modifierFlags & NSShiftKeyMask)
+		[labels addObject:@"shift"];
+	
+	[labels addObject:key];
+	
+	return [labels componentsJoinedByString:@"-"];
+}
+
+static NSString* getKey(NSEvent* event)
+{
+	switch (event.keyCode)
+	{
+		case ANSI_KeypadClearKeyCode:
+			return @"clear";
+			
+		case DeleteKeyCode:
+			return @"delete";
+			
+		case DownArrowKeyCode:
+			return @"down-arrow";
+			
+		case EndKeyCode:
+			return @"end";
+			
+		case ANSI_KeypadEnterKeyCode:
+			return @"enter";
+			
+		case EscapeKeyCode:
+			return @"escape";
+			
+		case ForwardDeleteKeyCode:
+			return @"forward-delete";
+			
+		case HelpKeyCode:
+			return @"help";
+			
+		case HomeKeyCode:
+			return @"home";
+			
+		case LeftArrowKeyCode:
+			return @"left-arrow";
+			
+		case PageUpKeyCode:
+			return @"page-up";
+			
+		case RightArrowKeyCode:
+			return @"right-arrow";
+			
+		case TabKeyCode:
+			return @"tab";
+			
+		case UpArrowKeyCode:
+			return @"up-arrow";
+			
+		
+		case F1KeyCode:
+			return @"f1";
+			
+		case F2KeyCode:
+			return @"f2";
+			
+		case F3KeyCode:
+			return @"f3";
+			
+		case F4KeyCode:
+			return @"f4";
+			
+		case F5KeyCode:
+			return @"f5";
+			
+		case F6KeyCode:
+			return @"f6";
+			
+		case F7KeyCode:
+			return @"f7";
+			
+		case F8KeyCode:
+			return @"f8";
+			
+		case F9KeyCode:
+			return @"f9";
+			
+			
+		case F10KeyCode:
+			return @"f10";
+			
+		case F11KeyCode:
+			return @"f11";
+			
+		case F12KeyCode:
+			return @"f12";
+			
+		case F13KeyCode:
+			return @"f13";
+			
+		case F14KeyCode:
+			return @"f14";
+			
+		case F15KeyCode:
+			return @"f15";
+			
+		case F16KeyCode:
+			return @"f16";
+			
+		case F17KeyCode:
+			return @"f17";
+			
+		case F18KeyCode:
+			return @"f18";
+			
+		case F19KeyCode:
+			return @"f19";
+	}
+	
+	return nil;
+}
+
 - (bool)_invokeExtensions:(NSEvent*)event
 {
 	bool handled = false;
 	
-	if (event.keyCode == TabKeyCode)
+	NSString* key = getKey(event);
+	if (key)
 	{
-		NSString* path = @"/mimsy/keydown/text-editor/tab/pressed";
+		NSString* fn = keyToFileName(event, key);
+		NSString* path = [NSString stringWithFormat:@"/mimsy/keydown/text-editor/%@/pressed", fn];
 		handled = [Extensions invoke:path];
 	}
 	

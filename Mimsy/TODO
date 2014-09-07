@@ -5,18 +5,18 @@ install http://osxfuse.github.io/
 	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
 
 
+
 * Work on file watching:
-	- get the modifier keys working
-	- shift tab needs to invoke
-	- invoke should call into lua
-	- watched paths should probably start with /Volumes/Mimsy
-	- get the other keys working
-	- get the extension working
+	- may want to preflight extensions using lua
+	- get lua extensions reloading better
 	- may want to do something sane when there is no language
+	- copy over the lua script
+	- watched paths should probably start with /Volumes/Mimsy
 	- need to do something with help
 	  maybe a json encoded proc file
 	- make sure get a decent error with syntax problems
 	  but what happens when the extension is unloaded?
+* Should be able to double click in find in time machine.
 * Write an option-tab extension:
 	- app needs to be the one listening for mount notifications
 	- write to the extension proc file

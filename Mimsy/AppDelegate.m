@@ -64,6 +64,7 @@ typedef void (^NullaryBlock)();
 {
 	ProcFileSystem* _procFileSystem;
 	ProcFileReader* _versionFile;
+	ProcFileReadWrite* _beepFile;
 	ProcFileReadWrite* _logFile;
 
 	DirectoryWatcher* _languagesWatcher;
@@ -110,21 +111,32 @@ typedef void (^NullaryBlock)();
 				return [info objectForKey:@"CFBundleShortVersionString"];
 			}];
 		
+		_beepFile = [[ProcFileReadWrite alloc]
+					initWithDir:^NSString *{return @"/";}
+					fileName:@"beep"
+					readStr:^NSString* {return @"";}
+					writeStr:^(NSString* str)
+					{
+						UNUSED(str);
+						NSBeep();
+					}];
+
 		_logFile = [[ProcFileReadWrite alloc]
 			initWithDir:^NSString *{return @"/log";}
 			fileName:@"line"
 					readStr:^NSString* {return @"";}
 			writeStr:^(NSString* str)
 			{
-				NSArray* parts = [str componentsSeparatedByString:@":"];
-				if (parts.count == 2)
-					LOG(STR(parts[0]), "%s", STR(parts[1]));
+				NSRange range = [str rangeOfString:@":"];
+				if (range.location != NSNotFound)
+					LOG(STR([str substringToIndex:range.location]), "%s", STR([str substringFromIndex:range.location+1]));
 				else
 					LOG("Error", "expected '<topic>:<line>' not: '%s'", STR(str));
 			}];
 		
 		_procFileSystem = [ProcFileSystem new];
 		[_procFileSystem addReader:_versionFile];
+		[_procFileSystem addWriter:_beepFile];
 		[_procFileSystem addWriter:_logFile];
 		
 		initFunctionalTests();

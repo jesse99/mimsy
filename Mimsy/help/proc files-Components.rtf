@@ -44,6 +44,15 @@ The proc files are:\
 \pard\tx626\pardeftab626\pardirnatural
 
 \b0\fs36 \cf0 \CocoaLigature0 	
+\b \CocoaLigature1 beep
+\b0 \CocoaLigature0  (w)\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b \cf0 \CocoaLigature1 	
+\b0 Does an NSBeep when written to.\
+\pard\tx626\pardeftab626\pardirnatural
+\cf0 \CocoaLigature0 \
+	
 \b \CocoaLigature1 version
 \b0 \CocoaLigature0  (r)\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
@@ -57,7 +66,7 @@ The proc files are:\
 \fs48 \cf0 /mimsy/keydown/text-editor/<key>/\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
-\b0\fs36 \cf0 	Currently the key may be: "clear", "down-arrow", "end", "enter", "f<number>", "home", "left-arrow", "right-arrow", "tab", "up-arrow". The key may be preceded by one or more of the following modifiers: "command", "control", "option", "shift". If multiple modifiers are used they should be listed in alphabetical order, e.g. "option-shift-tab".\
+\b0\fs36 \cf0 	Currently the key may be: "clear", "delete", "down-arrow", "end", "enter", "escape", "f<number>", "forward-delete" "help", "home", "left-arrow", "page-down", "page-up", "right-arrow", "tab", "up-arrow". The key may be preceded by one or more of the following modifiers: "command", "control", "option", "shift". If multiple modifiers are used they should be listed in alphabetical order, e.g. "option-shift-tab".\
 \pard\tx626\pardeftab626\pardirnatural
 
 \b \cf0 \
@@ -65,7 +74,7 @@ The proc files are:\
 \b0 \CocoaLigature0 	
 \b \CocoaLigature1 pressed
 \b0 \CocoaLigature0  (r)\
-	This is intended to be watched; reads will error out.\
+	This is intended to be watched: reads will error out.\
 
 \b \CocoaLigature1 \
 \pard\tx626\pardeftab626\pardirnatural
@@ -100,7 +109,7 @@ The proc files are:\
 \b \CocoaLigature1 \
 	element-names
 \b0  (r)\
-	The first line is an index into the remaining lines (or -1 if the selection crosses multiple elements). The remaining lines are of the form "<element name>:<location>:<length>" sorted by location. Note that there will be an element name for everything (if the text doesn't match a regex in the language file "normal" will be used). Empty if there is no language.\CocoaLigature0 \
+	Contains the language element names for the document. The lines are of the form "<element name>:<location>:<length>" sorted by location. Note that there will be an element name for everything (if the text doesn't match a regex in the language file "normal" will be used). The first line is special; it is the index into the lines for the current selection (or -1 if the selection crosses multiple elements). So if the selection is in the very first name the first line will be "1". The file is empty if there is no language.\CocoaLigature0 \
 
 \b \CocoaLigature1 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
