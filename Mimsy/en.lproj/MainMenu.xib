@@ -111,8 +111,7 @@
                             <menuItem isSeparatorItem="YES" id="79">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Get Info" id="602">
-                                <modifierMask key="keyEquivalentModifierMask"/>
+                            <menuItem title="Get Info" keyEquivalent="I" id="602">
                                 <connections>
                                     <action selector="getInfo:" target="-1" id="604"/>
                                 </connections>
