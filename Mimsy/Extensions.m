@@ -65,21 +65,32 @@
 - (void)callInit
 {
 	lua_getglobal(self.state, "init");
-	lua_call(self.state, 0, 0);						// 0 args, no result
+	if (lua_pcall(self.state, 0, 0, 0) != 0)				// 0 args, no result
+	{
+		NSString* reason = [NSString stringWithUTF8String:lua_tostring(_state, -1)];
+		LOG("Error", "%s init failed: %s", STR(self.name), STR(reason));
+	}
 }
 
 - (bool)invoke:(NSString*)path
 {
 	NSString* fname = self.watched[path];
 	ASSERT(fname);
-	
+
+	bool handled = false;
 	inMainThread = true;
-	
-   lua_getglobal(self.state, fname.UTF8String);
-   lua_call(self.state, 0, 1);						// 0 args, bool result
-   bool handled = lua_toboolean(self.state, 1);
-   lua_pop(self.state, 1);
-	
+
+	lua_getglobal(self.state, fname.UTF8String);
+	if (lua_pcall(self.state, 0, 1, 0) == 0)				// 0 args, bool result
+	{
+		handled = lua_toboolean(self.state, 1);
+		lua_pop(self.state, 1);
+	}
+	else
+	{
+		NSString* reason = [NSString stringWithUTF8String:lua_tostring(_state, -1)];
+		LOG("Error", "%s invoke failed: %s", STR(self.name), STR(reason));
+	}
 	inMainThread = false;
 
 	return handled;

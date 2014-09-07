@@ -5,11 +5,6 @@ install http://osxfuse.github.io/
 	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
 
 
-* Do a commit
-* Handle lua errors better
-	- file wont load
-	- call to non-existent function
-	- bad path
 * Work on file watching:
 	- get the modifier keys working
 	- shift tab needs to invoke
