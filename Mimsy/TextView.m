@@ -4,6 +4,7 @@
 #import "AppSettings.h"
 #import "Balance.h"
 #import "Constants.h"
+#import "Extensions.h"
 #import "Language.h"
 #import "SearchSite.h"
 #import "TextController.h"
@@ -65,6 +66,9 @@
 {
 	do
 	{
+		if ([self _invokeExtensions:event])
+			break;
+		
 		if ([self _handleTabKey:event])
 			break;
 
@@ -74,6 +78,19 @@
 		[self _handleCloseBrace:chars];
 	}
 	while (false);
+}
+
+- (bool)_invokeExtensions:(NSEvent*)event
+{
+	bool handled = false;
+	
+	if (event.keyCode == TabKeyCode)
+	{
+		NSString* path = @"/mimsy/keydown/text-editor/tab/pressed";
+		handled = [Extensions invoke:path];
+	}
+	
+	return handled;
 }
 
 - (bool)_handleTabKey:(NSEvent*)event

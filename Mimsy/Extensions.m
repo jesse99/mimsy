@@ -5,6 +5,7 @@
 
 #import "Glob.h"
 #import "Paths.h"
+#import "ProcFileSystem.h"
 #import "TranscriptController.h"
 #import "Utils.h"
 
@@ -19,15 +20,15 @@
 // errors than asserts (which in theory can be disabled in release with no harm).
 // TODO: may want to rename this LUA_CHECK or something.
 #define LUA_ASSERT(e, format, ...)						\
-do													\
-{													\
-if (__builtin_expect(!(e), 0))					\
-{												\
-__PRAGMA_PUSH_NO_EXTRA_ARG_WARNINGS			\
-luaL_error2(state, format, ##__VA_ARGS__);	\
-__PRAGMA_POP_NO_EXTRA_ARG_WARNINGS			\
-}												\
-} while(0)
+	do													\
+	{													\
+		if (__builtin_expect(!(e), 0))					\
+		{												\
+			__PRAGMA_PUSH_NO_EXTRA_ARG_WARNINGS			\
+			luaL_error2(state, format, ##__VA_ARGS__);	\
+			__PRAGMA_POP_NO_EXTRA_ARG_WARNINGS			\
+		}												\
+	} while(0)
 
 @interface Extension : NSObject
 
@@ -61,9 +62,33 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS			\
     return self;
 }
 
+- (void)callInit
+{
+	lua_getglobal(self.state, "init");
+	lua_call(self.state, 0, 0);						// 0 args, no result
+}
+
+- (bool)invoke:(NSString*)path
+{
+	NSString* fname = self.watched[path];
+	ASSERT(fname);
+	
+	inMainThread = true;
+	
+   lua_getglobal(self.state, fname.UTF8String);
+   lua_call(self.state, 0, 1);						// 0 args, bool result
+   bool handled = lua_toboolean(self.state, 1);
+   lua_pop(self.state, 1);
+	
+	inMainThread = false;
+
+	return handled;
+}
+
 @end
 
 static NSMutableDictionary* _extensions;	// script path => Extension
+static NSMutableDictionary* _watching;		// path => [Extension]
 
 // function set_extension_name(extension, name)
 static int set_extension_name(struct lua_State* state)
@@ -126,6 +151,8 @@ static int watch_file(struct lua_State* state)
 	NSString* key = [NSString stringWithUTF8String:path];
 	[extension.priorities setObject:@(priority) forKey:key];
 	[extension.watched setObject:[NSString stringWithUTF8String:fname] forKey:key];
+	
+	[Extensions watch:key extension:extension];
 		
 	return 0;
 }
@@ -155,6 +182,7 @@ static void initMimsyMethods(struct lua_State* state, Extension* extension)
 	if (_extensions)
 		[Extensions cleanup];
 	_extensions = [NSMutableDictionary new];
+	_watching = [NSMutableDictionary new];
 	
 	NSString* dir = [Paths installedDir:@"extensions"];
 	Glob* glob = [[Glob alloc] initWithGlob:@"*.lua"];
@@ -181,6 +209,38 @@ static void initMimsyMethods(struct lua_State* state, Extension* extension)
 	}
 }
 
++ (void)watch:(NSString*)path extension:(Extension*)extension
+{
+	NSMutableArray* extensions = _watching[path];
+	if (!extensions)
+		extensions = [NSMutableArray new];
+	
+	[extensions addObject:extension];
+	
+	[extensions sortUsingComparator:^NSComparisonResult(Extension* lhs, Extension* rhs) {
+		NSNumber* lhsN = lhs.priorities[path];
+		NSNumber* rhsN = rhs.priorities[path];
+		return [rhsN compare:lhsN];
+	}];
+	
+	_watching[path] = extensions;
+}
+
++ (bool)invoke:(NSString*)path
+{
+	bool handled = false;
+	
+	NSArray* extensions = _watching[path];
+	for (Extension* extension in extensions)
+	{
+		handled = [extension invoke:path];
+		if (handled)
+			break;
+	}
+	
+	return handled;
+}
+
 + (void)startScript:(NSString*)path
 {
 	lua_State* state = luaL_newstate();
@@ -189,14 +249,32 @@ static void initMimsyMethods(struct lua_State* state, Extension* extension)
 	Extension* extension = [[Extension alloc] init:state];
 	initMimsyMethods(state, extension);
 
-	if (luaL_dofile(state, path.UTF8String) == 0)
+	int err = luaL_loadfile(state, path.UTF8String);
+	if (err == 0)
 	{
-		[_extensions setObject:extension forKey:path];
+		if (lua_pcall(state, 0, 0, 0))                  /* PRIMING RUN. FORGET THIS AND YOU'RE TOAST */
+			LOG("Error", "lua_pcall() failed");          /* Error out if Lua file has an error */
+		else
+		{
+			[extension callInit];
+			[_extensions setObject:extension forKey:path];
+		}
+	}
+	else if (err == LUA_ERRFILE)
+	{
+		LOG("Error", "Error loading %s: failed to open the file", STR(path));
+	}
+	else if (err == LUA_ERRSYNTAX)
+	{
+		LOG("Error", "Error loading %s: syntax error", STR(path));
+	}
+	else if (err == LUA_ERRMEM)
+	{
+		LOG("Error", "Error loading %s: out of memory", STR(path));
 	}
 	else
 	{
-		NSString* error = [NSString stringWithUTF8String:lua_tostring(state, -1)];
-		LOG("Error", "Error loading %s: %s", STR(path), STR(error));
+		LOG("Error", "Error loading %s: unknown error", STR(path));
 	}
 }
 

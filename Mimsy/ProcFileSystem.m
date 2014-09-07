@@ -5,6 +5,24 @@
 #import "ProcFile.h"
 #import "TextController.h"
 
+bool inMainThread;
+
+static void dispatchMain(void (^block)())
+{
+	// This is rather evil but when we invoke a lua extension we do it via the main thread,
+	// but when we land here the current dispatch queue is not the main queue. If we try
+	// to use dispatch_sync or a dispatch semaphore we wind up deadlocking.
+	if (inMainThread)
+	{
+		block();
+	}
+	else
+	{
+		dispatch_queue_t main = dispatch_get_main_queue();
+		dispatch_sync(main, block);
+	}
+}
+
 // Simple read-only fs: https://github.com/osxfuse/filesystems/tree/master/filesystems-objc/HelloFS
 @implementation ProcFileSystem
 {
@@ -101,16 +119,15 @@
 	*userData = nil;
 	
 	if (mode == O_RDONLY)
-		LOG("ProcFS", "opening %s read-only", STR(path));
+		LOG("ProcFS:Verbose", "opening %s read-only", STR(path));
 	else if (mode == O_WRONLY)
-		LOG("ProcFS", "opening %s write-only", STR(path));
+		LOG("ProcFS:Verbose", "opening %s write-only", STR(path));
 	else if (mode == O_RDWR)
-		LOG("ProcFS", "opening %s read-write", STR(path));
+		LOG("ProcFS:Verbose", "opening %s read-write", STR(path));
 
-	dispatch_queue_t main = dispatch_get_main_queue();
 	if (mode == O_RDONLY)
 	{
-		dispatch_sync(main,
+		dispatchMain(
 		  ^{
 			  // Sucky linear search but paths are dynamic and we shouldn't have all
 			  // that many proc files.
@@ -129,7 +146,7 @@
 	}
 	if (!*userData && (mode == O_RDONLY || mode == O_WRONLY || mode == O_RDWR))
 	{
-		dispatch_sync(main,
+		dispatchMain(
 		  ^{
 			  for (id<ProcFile> file in _writers)
 			  {
@@ -154,10 +171,9 @@
 
 - (void)releaseFileAtPath:(NSString*)path userData:(id)userData
 {
-	LOG("ProcFS", "releasing %s", STR(path));
+	LOG("ProcFS:Verbose", "releasing %s", STR(path));
 	
-	dispatch_queue_t main = dispatch_get_main_queue();
-	dispatch_sync(main,
+	dispatchMain(
 		^{
 			id<ProcFile> file = (id<ProcFile>) userData;
 			[file close];
@@ -172,8 +188,7 @@
 	
 	__block NSMutableArray* contents = [NSMutableArray new];
 
-	dispatch_queue_t main = dispatch_get_main_queue();
-	dispatch_sync(main,
+	dispatchMain(
 	  ^{
 		  NSArray* pathComponents = path.pathComponents;
 		  
@@ -199,12 +214,11 @@
                offset:(off_t)offset
                 error:(NSError**)error
 {
-	LOG("ProcFS", "reading %zu bytes at %lld from %s", size, offset, STR(path));
+	LOG("ProcFS:Verbose", "reading %zu bytes at %lld from %s", size, offset, STR(path));
 	
 	__block int bytes = 0;
 	
-	dispatch_queue_t main = dispatch_get_main_queue();
-	dispatch_sync(main,
+	dispatchMain(
 	  ^{
 		  id<ProcFile> file = (id<ProcFile>) userData;
 		  bytes = [file read:buffer size:size offset:offset error:error];
@@ -216,12 +230,11 @@
 - (NSDictionary*)attributesOfItemAtPath:(NSString*)path userData:(id)userData error:(NSError**)error
 {
 	UNUSED(error);
-	LOG("ProcFS", "getting attributes for %s", STR(path));
+	LOG("ProcFS:Verbose", "getting attributes for %s", STR(path));
 	
 	__block NSDictionary* attrs = nil;
 	
-	dispatch_queue_t main = dispatch_get_main_queue();
-	dispatch_sync(main,
+	dispatchMain(
 	  ^{
 		  if (userData)
 		  {
@@ -279,11 +292,10 @@
                 error:(NSError**)error
 {
 	UNUSED(error);
-	LOG("ProcFS", "setting %s attributes for %s", STR(attributes), STR(path));
+	LOG("ProcFS:Verbose", "setting %s attributes for %s", STR(attributes), STR(path));
 	
 	__block BOOL result = NO;
-	dispatch_queue_t main = dispatch_get_main_queue();
-	dispatch_sync(main,
+	dispatchMain(
 	  ^{
 		  NSNumber* size = attributes[NSFileSize];
 		  if (size && userData)
@@ -306,12 +318,11 @@
                 offset:(off_t)offset
                  error:(NSError**)error
 {
-	LOG("ProcFS", "writing %zu bytes at %lld for %s", size, offset, STR(path));
+	LOG("ProcFS:Verbose", "writing %zu bytes at %lld for %s", size, offset, STR(path));
 	
 	__block int bytes = 0;
 	
-	dispatch_queue_t main = dispatch_get_main_queue();
-	dispatch_sync(main,
+	dispatchMain(
 	  ^{
 		  id<ProcFile> file = (id<ProcFile>) userData;
 		  bytes = [file write:buffer size:size offset:offset error:error];

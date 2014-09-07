@@ -3,19 +3,27 @@ tail -f ~/Library/Logs/mimsy.log
 install http://osxfuse.github.io/
 	can skip this but a lot of features will be disabled
 	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
-	
-	
-* Write an option-tab extension:
-	- help file should say all the text window files are implemented
-	- do a commit
-	- intercept tab keys and make it a no-op
-	- intercept tab keys and make move the selection by one
-	- intercept tab keys and make move the selection to the next identifier
-	- app needs to be the one listening for mount notifications
+
+
+* Do a commit
+* Handle lua errors better
+	- file wont load
+	- call to non-existent function
+	- bad path
+* Work on file watching:
+	- get the modifier keys working
+	- shift tab needs to invoke
+	- invoke should call into lua
+	- watched paths should probably start with /Volumes/Mimsy
+	- get the other keys working
+	- get the extension working
 	- may want to do something sane when there is no language
 	- need to do something with help
 	  maybe a json encoded proc file
+	- make sure get a decent error with syntax problems
 	  but what happens when the extension is unloaded?
+* Write an option-tab extension:
+	- app needs to be the one listening for mount notifications
 	- write to the extension proc file
 	  maybe a notification could be used instead when help is needed?
 	- if the file changes reload it
