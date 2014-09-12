@@ -7,11 +7,11 @@ install http://osxfuse.github.io/
 
 
 * Work on file watching:
-	- may want to preflight extensions using lua
 	- get lua extensions reloading better
 	- may want to do something sane when there is no language
 	- copy over the lua script
 	- watched paths should probably start with /Volumes/Mimsy
+	- remove the old option tab code, or is there any?
 	- need to do something with help
 	  maybe a json encoded proc file
 	- make sure get a decent error with syntax problems
@@ -28,6 +28,16 @@ install http://osxfuse.github.io/
     	but look at Continuum styler (and maybe some others)
 	- document what identifier element is for
 	- update special keys help file
+* Add a go extension for search on sites:
+	- will need language proc files
+	- will need an open-url proc file
+* Add go to search for a file:
+	- color code and location column
+	- locations are current project, open windows, open projects, global
+	- support fuzzy searches
+	- weight column for how close the match is
+	- for menus could have a jsonfile describing menus
+	for edits have an op field that could be "add" or "remove"
 * Experiment with a different proc-file based design:
 	- can lua help avoid having a zillion processes?
 	- extensions use json messages and replies to get notifications (including event processing), to register for notifications, and to execute functions (eg select a string from a list or log)

@@ -68,7 +68,9 @@
 	if (lua_pcall(self.state, 0, 0, 0) != 0)				// 0 args, no result
 	{
 		NSString* reason = [NSString stringWithUTF8String:lua_tostring(_state, -1)];
-		LOG("Error", "%s init failed: %s", STR(self.name), STR(reason));
+		NSString* mesg = [NSString stringWithFormat:@"%@ init failed: %@", self.name, reason];
+		LOG("Error", "%s", STR(mesg));
+		[TranscriptController writeError:mesg];
 	}
 }
 
@@ -89,7 +91,9 @@
 	else
 	{
 		NSString* reason = [NSString stringWithUTF8String:lua_tostring(_state, -1)];
-		LOG("Error", "%s invoke failed: %s", STR(self.name), STR(reason));
+		NSString* mesg = [NSString stringWithFormat:@"%@ invoke failed: %@", self.name, reason];
+		LOG("Error", "%s", STR(mesg));
+		[TranscriptController writeError:mesg];
 	}
 	inMainThread = false;
 
@@ -207,7 +211,9 @@ static void initMimsyMethods(struct lua_State* state, Extension* extension)
 	if (error)
 	{
 		NSString* reason = [error localizedFailureReason];
-		LOG("Error", "Error processing %s: %s", STR(dir), STR(reason));
+		NSString* mesg = [NSString stringWithFormat:@"Error processing %@: %@", dir, reason];
+		LOG("Error", "%s", STR(mesg));
+		[TranscriptController writeError:mesg];
 	}
 }
 
@@ -260,55 +266,42 @@ static void initMimsyMethods(struct lua_State* state, Extension* extension)
 	Extension* extension = [[Extension alloc] init:state];
 	initMimsyMethods(state, extension);
 
+	NSString* mesg = nil;
 	int err = luaL_loadfile(state, path.UTF8String);
 	if (err == 0)
 	{
-		if (lua_pcall(state, 0, 0, 0))                  /* PRIMING RUN. FORGET THIS AND YOU'RE TOAST */
-			LOG("Error", "lua_pcall() failed");          /* Error out if Lua file has an error */
-		else
+		if (lua_pcall(state, 0, 0, 0) == 0)
 		{
 			[extension callInit];
 			[_extensions setObject:extension forKey:path];
 		}
+		else
+		{
+			mesg = @"lua extension priming failed";
+		}
 	}
 	else if (err == LUA_ERRFILE)
 	{
-		LOG("Error", "Error loading %s: failed to open the file", STR(path));
+		mesg = [NSString stringWithFormat:@"Error loading %@: failed to open the file", path];
 	}
 	else if (err == LUA_ERRSYNTAX)
 	{
-		LOG("Error", "Error loading %s: syntax error", STR(path));
+		mesg = [NSString stringWithUTF8String:lua_tostring(state, -1)];
 	}
 	else if (err == LUA_ERRMEM)
 	{
-		LOG("Error", "Error loading %s: out of memory", STR(path));
+		mesg = [NSString stringWithFormat:@"Error loading %@: out of memory", path];
 	}
 	else
 	{
-		LOG("Error", "Error loading %s: unknown error", STR(path));
+		mesg = [NSString stringWithFormat:@"Error loading %@: unknown error", path];
 	}
-}
 
-#if 0
-+ (void)invokeApplyStyles:(NSDocument*)doc location:(NSUInteger)loc length:(NSUInteger)len
-{
-	NSMutableArray* names = _hooks[@"apply styles"];
-	if (names)
+	if (mesg)
 	{
-		for (NSString* fname in names)
-		{
-			lua_getglobal(_state, fname.UTF8String);
-			pushTextDoc(_state, doc);
-			lua_pushinteger(_state, (lua_Integer) (loc+1));
-			lua_pushinteger(_state, (lua_Integer) len);
-			int err = lua_pcall(_state, 3, 0, 0);		// 3 args, no result
-			if (err)
-			{
-				[TranscriptController writeStderr:[NSString stringWithUTF8String:lua_tostring(_state, -1)]];
-			}
-		}
+		LOG("Error", "%s", STR(mesg));
+		[TranscriptController writeError:mesg];
 	}
 }
-#endif
 
 @end
