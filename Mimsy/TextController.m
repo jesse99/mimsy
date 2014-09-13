@@ -172,9 +172,15 @@
 								len = (NSInteger) self.text.length - loc;
 							
 							NSRange range = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
-							[self.textView setSelectedRange:range];
-							[self.textView scrollRangeToVisible:range];
-							[self.textView showFindIndicatorForRange:range];
+							dispatch_queue_t main = dispatch_get_main_queue();
+							dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_MSEC);
+							dispatch_after(delay, main, ^{
+								// We need to defer this in order for scrollRangeToVisible to work
+								// reliably (e.g. for option-tab).
+								[self.textView setSelectedRange:range];
+								[self.textView scrollRangeToVisible:range];
+								[self.textView showFindIndicatorForRange:range];
+							});
 						}
 					}];
 		_selectionTextFile = [[ProcFileReadWrite alloc]
