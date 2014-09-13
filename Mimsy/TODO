@@ -5,12 +5,7 @@ install http://osxfuse.github.io/
 	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
 
 
-* scroll into view isn't working.
-* Enabling verbose logging sucks.
 * Work on file watching:
-	- watched paths should probably start with /Volumes/Mimsy
-	- what happens when watching a bogus path?
-	- remove the old option tab code, or is there any?
 	- need to do something with help
 	  maybe a json encoded proc file
 	- make sure get a decent error with syntax problems

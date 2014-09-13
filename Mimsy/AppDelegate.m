@@ -34,7 +34,8 @@ void initLogGlobs()
 	path = [path stringByAppendingPathComponent:@"logging.mimsy"];
 	
 	NSError* error = nil;
-	NSMutableArray* patterns = [NSMutableArray new];
+	NSMutableArray* doPatterns = [NSMutableArray new];
+	NSMutableArray* dontPatterns = [NSMutableArray new];
 	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
 	if (parser)
 	{
@@ -42,7 +43,9 @@ void initLogGlobs()
 		 ^(ConfigParserEntry* entry)
 		 {
 			 if ([entry.key isEqualToString:@"DontLog"])
-				 [patterns addObject:entry.value];
+				 [dontPatterns addObject:entry.value];
+			 else if ([entry.key isEqualToString:@"ForceLog"])
+				 [doPatterns addObject:entry.value];
 			 else
 				 LOG("Warning", "Ignoring %s in %s", STR(entry.key), STR(path));
 		 }
@@ -54,8 +57,11 @@ void initLogGlobs()
 		LOG("Error", "%s", STR(mesg));
 	}
 	
-	Glob* glob = [[Glob alloc] initWithGlobs:patterns];
-	setTopicGlob(glob);
+	Glob* glob = [[Glob alloc] initWithGlobs:dontPatterns];
+	setDontLogGlob(glob);
+	
+	glob = [[Glob alloc] initWithGlobs:doPatterns];
+	setForceLogGlob(glob);
 }
 
 typedef void (^NullaryBlock)();

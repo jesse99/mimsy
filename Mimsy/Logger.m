@@ -9,14 +9,20 @@ const int MAX_TOPICS = 100;
 
 static FILE* _file;
 static double _time;
-static Glob* _glob;
+static Glob* _dontLogGlob;
+static Glob* _forceLogGlob;
 
 static size_t _topicWidth = 6;
 static NSLock* _lock;
 
-void setTopicGlob(Glob* glob)
+void setDontLogGlob(Glob* glob)
 {
-	_glob = glob;
+	_dontLogGlob = glob;
+}
+
+void setForceLogGlob(Glob* glob)
+{
+	_forceLogGlob = glob;
 }
 
 // This is kind of handy for timing stuff so we export it.
@@ -42,11 +48,12 @@ void setupLogging(const char* path)
 	}
 }
 
-// We go with a blacklist of globs because we don't want a zillion logs
-// to appear just because the user added a new extension.
 bool _shouldLog(const char* topic)
 {
-	return _glob == nil || [_glob matchStr:topic] == 0;
+	if (_forceLogGlob != nil && [_forceLogGlob matchStr:topic] == 1)
+		return true;
+
+	return _dontLogGlob == nil || [_dontLogGlob matchStr:topic] == 0;
 }
 
 void _doLog(const char* topic, const char* format, va_list args)

@@ -1,9 +1,13 @@
-# Currently the only key supported is DontLog which may appear multiple times.
-# The value should be a glob and logs with a topic matching any of the globs
-# are suppressed.
+# Logging is enabled and disabled using colon separated topics, e.g.
+# "Text:Styler:Verbose". Logging currently goes to ~/Library/Logs/mimsy.log.
 #
-# Topics may have sub-topics. For example the "Text" topic has "Text:Verbose",
-# "Text:PersistentRange", and "Text:Styler:Verbose" sub-topics.
+# The following keys are supported:
+#    DontLog - This may appear multiple times and the value is a glob.
+# Topics that match the glob default to not being logged.
 #
-# Logging currently goes to ~/Library/Logs/mimsy.log
+#    ForceLog - This may appear multiple times and the value is a glob.
+# Topics that match the glob are always logged (even if a DontLog entry
+# also matches the topic).
+
 DontLog: *:Verbose
+#ForceLog: Extensions:Verbose

@@ -4,7 +4,8 @@
 @class Glob;
 
 void setupLogging(const char* path);
-void setTopicGlob(Glob* glob);
+void setDontLogGlob(Glob* glob);
+void setForceLogGlob(Glob* glob);
 double getTime(void);
 bool _shouldLog(const char* topic);
 void _doLog(const char* topic, const char* format, va_list args);
