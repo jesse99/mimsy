@@ -66,38 +66,38 @@
 		updateInstanceCount(@"TextWindow", +1);
 
 		_colNumFile = [[ProcFileReadWrite alloc]
-								initWithDir:^NSString *{return [self getProcFilePath];}
-								fileName:@"column-number"
-							    readStr:^NSString *
-							    {
-								   NSRange range = self.textView.selectedRange;
-								   NSUInteger loc = range.location;
-								   while (loc > 0 && [self.text characterAtIndex:loc-1] != '\n')
-									   --loc;
-								   return [NSString stringWithFormat:@"%lu", range.location - loc + 1];
-							    }
-								writeStr:^(NSString* text)
+							initWithDir:^NSString *{return [self getProcFilePath];}
+							fileName:@"column-number"
+							readStr:^NSString *
+							{
+							   NSRange range = self.textView.selectedRange;
+							   NSUInteger loc = range.location;
+							   while (loc > 0 && [self.text characterAtIndex:loc-1] != '\n')
+								   --loc;
+							   return [NSString stringWithFormat:@"%lu", range.location - loc + 1];
+							}
+							writeStr:^(NSString* text)
+							{
+								// Find the start of the line.
+								NSUInteger loc = self.textView.selectedRange.location;
+								while (loc > 0 && [self.text characterAtIndex:loc-1] != '\n')
+									--loc;
+								
+								// Jump to the column, but don't go past the end of the line.
+								NSInteger col = [text integerValue];
+								while (loc < self.text.length && [self.text characterAtIndex:loc] != '\n' && col > 1)
 								{
-									// Find the start of the line.
-									NSUInteger loc = self.textView.selectedRange.location;
-									while (loc > 0 && [self.text characterAtIndex:loc-1] != '\n')
-										--loc;
-									
-									// Jump to the column, but don't go past the end of the line.
-									NSInteger col = [text integerValue];
-									while (loc < self.text.length && [self.text characterAtIndex:loc] != '\n' && col > 1)
-									{
-										--col;
-										++loc;
-									}
-									
-									NSRange range = NSMakeRange(loc, 0);
-									[self.textView setSelectedRange:range];
+									--col;
+									++loc;
+								}
+								
+								NSRange range = NSMakeRange(loc, 0);
+								[self.textView setSelectedRange:range];
 
-									range = NSMakeRange(loc, 1);
-									[self.textView scrollRangeToVisible:range];
-									[self.textView showFindIndicatorForRange:range];
-								}];
+								range = NSMakeRange(loc, 1);
+								[self.textView scrollRangeToVisible:range];
+								[self.textView showFindIndicatorForRange:range];
+							}];
 		_elementNameFile = [[ProcFileReader alloc]
 							initWithDir:^NSString *{return [self getProcFilePath];}
 							fileName:@"element-name"
@@ -170,7 +170,11 @@
 							NSInteger len = [parts[1] integerValue];
 							if (loc + len > self.text.length)
 								len = (NSInteger) self.text.length - loc;
-							[self.textView setSelectedRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+							
+							NSRange range = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
+							[self.textView setSelectedRange:range];
+							[self.textView scrollRangeToVisible:range];
+							[self.textView showFindIndicatorForRange:range];
 						}
 					}];
 		_selectionTextFile = [[ProcFileReadWrite alloc]
