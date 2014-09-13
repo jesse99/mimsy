@@ -36,11 +36,13 @@ mimsy:set_extension_version(str)
 \b mimsy:watch_file(priority, path, name) 
 \b0 name should be the name of a lua function with no arguments and a bool result that is called when the proc file changes. Return true to suppress further handling of the event.\
 \
+Note that, in general, the proc files should only be accessed when mimsy calls into an extension. Doing so elsewhere (e.g. from within a terminal window) may not produce sensible results due to threading issues.\
+\
 The proc files are:\
 \
 \pard\tx626\pardeftab626\pardirnatural
 
-\b\fs48 \cf0 /mimsy/\
+\b\fs48 \cf0 /Volumes/Mimsy/\
 \pard\tx626\pardeftab626\pardirnatural
 
 \b0\fs36 \cf0 \CocoaLigature0 	
@@ -63,7 +65,7 @@ The proc files are:\
 \b \
 \pard\tx626\pardeftab626\pardirnatural
 
-\fs48 \cf0 /mimsy/keydown/text-editor/<key>/\
+\fs48 \cf0 /Volumes/Mimsy/keydown/text-editor/<key>/\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
 \b0\fs36 \cf0 	Currently the key may be: "clear", "delete", "down-arrow", "end", "enter", "escape", "f<number>", "forward-delete" "help", "home", "left-arrow", "page-down", "page-up", "right-arrow", "tab", "up-arrow". The key may be preceded by one or more of the following modifiers: "command", "control", "option", "shift". If multiple modifiers are used they should be listed in alphabetical order, e.g. "option-shift-tab".\
@@ -79,7 +81,7 @@ The proc files are:\
 \b \CocoaLigature1 \
 \pard\tx626\pardeftab626\pardirnatural
 
-\fs48 \cf0 /mimsy/log/\
+\fs48 \cf0 /Volumes/Mimsy/log/\
 \pard\tx626\pardeftab626\pardirnatural
 
 \b0\fs36 \cf0 \CocoaLigature0 	
@@ -89,7 +91,7 @@ The proc files are:\
 	\
 \pard\tx626\pardeftab626\pardirnatural
 
-\b\fs48 \cf0 \CocoaLigature1 /mimsy/text-window/<window-index>/\
+\b\fs48 \cf0 \CocoaLigature1 /Volumes/Mimsy/text-window/<window-index>/\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
 \b0\fs36 \cf0 	window-index is 1 for the frontmost text window, 2 for the next frontmost, etc.\CocoaLigature0 \
@@ -171,7 +173,7 @@ The proc files are:\
 \
 \pard\tx626\pardeftab626\pardirnatural
 
-\b\fs48 \cf0 /mimsy/help/text-editor/keys/\
+\b\fs48 \cf0 /Volumes/Mimsy/help/text-editor/keys/\
 \pard\tx626\pardeftab626\pardirnatural
 
 \b0\fs36 \cf0 \CocoaLigature0 	
@@ -181,8 +183,8 @@ The proc files are:\
 \
 \pard\tx626\pardeftab626\pardirnatural
 
-\b\fs48 \cf0 \CocoaLigature1 /mimsy/keydown/directory-editor/<key>/\
-/mimsy/keydown/transcript/<key>/\
+\b\fs48 \cf0 \CocoaLigature1 /Volumes/Mimsy/keydown/directory-editor/<key>/\
+/Volumes/Mimsy/keydown/transcript/<key>/\
 \pard\tx626\pardeftab626\pardirnatural
 
 \fs36 \cf0 	
@@ -192,7 +194,7 @@ The proc files are:\
 \b0 \CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 
-\b\fs48 \cf0 \CocoaLigature1 /mimsy/string-picker/<extension>/\
+\b\fs48 \cf0 \CocoaLigature1 /Volumes/Mimsy/string-picker/<extension>/\
 \pard\tx626\pardeftab626\pardirnatural
 
 \b0\fs36 \cf0 \CocoaLigature0 	 

@@ -1,7 +1,5 @@
 @protocol ProcFile;
 
-extern bool inMainThread;
-
 // Used to respond to read/write requests from extensions (and the Finder).
 @interface ProcFileSystem : NSObject
 

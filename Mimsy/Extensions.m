@@ -80,13 +80,14 @@
 	ASSERT(fname);
 
 	bool handled = false;
-	inMainThread = true;
 
+	LOG("Extensions:Verbose", "invoking %s for %s", STR(fname), STR(self.name));
 	lua_getglobal(self.state, fname.UTF8String);
 	if (lua_pcall(self.state, 0, 1, 0) == 0)				// 0 args, bool result
 	{
 		handled = lua_toboolean(self.state, 1);
 		lua_pop(self.state, 1);
+		LOG("Extensions:Verbose", "   done invoking %s", STR(self.name));
 	}
 	else
 	{
@@ -95,7 +96,6 @@
 		LOG("Error", "%s", STR(mesg));
 		[TranscriptController writeError:mesg];
 	}
-	inMainThread = false;
 
 	return handled;
 }

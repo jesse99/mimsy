@@ -5,25 +5,20 @@
 #import "ProcFile.h"
 #import "TextController.h"
 
-bool inMainThread;
-
-static void dispatchMain(void (^block)())
-{
-	// This is rather evil but when we invoke a lua extension we do it via the main thread,
-	// but when we land here the current dispatch queue is not the main queue. If we try
-	// to use dispatch_sync or a dispatch semaphore we wind up deadlocking.
-	if (inMainThread)
-	{
-		block();
-	}
-	else
-	{
-		dispatch_queue_t main = dispatch_get_main_queue();
-		dispatch_sync(main, block);
-	}
-}
-
-// Simple read-only fs: https://github.com/osxfuse/filesystems/tree/master/filesystems-objc/HelloFS
+// In general the delegate methods here can be called from within any thread. We can set
+// isThreadSafe to false but all that does is force OSXFUSE to call us from a single
+// thread.
+//
+// This is a problem because we need to access state like NSTextViews which are difficult
+// to serialize access to and we need to support blocking invocations into extensions for
+// things like key processing. I don't think there is a good solution for this: either we
+// somehow make Mimsy state thread safe or we somehow make event processing asynchronous.
+// Neither of those seem at all attractive so, for now, we require that our file system
+// only be accessed in response to a Mimsy invocation.
+//
+// TODO: This does mean that fancy extensions can't spin up a thread and defer writes.
+// Not sure of the best way to handle this. Perhaps the extension can write to a special
+// extension specific file and Mimsy can call it back on the main thread.
 @implementation ProcFileSystem
 {
 	GMUserFileSystem* _fs;
@@ -127,37 +122,31 @@ static void dispatchMain(void (^block)())
 
 	if (mode == O_RDONLY)
 	{
-		dispatchMain(
-		  ^{
-			  // Sucky linear search but paths are dynamic and we shouldn't have all
-			  // that many proc files.
-			  for (id<ProcFile> file in _readers)
+		  // Sucky linear search but paths are dynamic and we shouldn't have all
+		  // that many proc files.
+		  for (id<ProcFile> file in _readers)
+		  {
+			  if ([path isEqualToString:file.path])
 			  {
-				  if ([path isEqualToString:file.path])
-				  {
-					  if ([file openForRead:true write:false])
-						  *userData = file;
-					  break;
-				  }
+				  if ([file openForRead:true write:false])
+					  *userData = file;
+				  break;
 			  }
-		  });
+		  }
 		if (!*userData && error)
 			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:nil];
 	}
 	if (!*userData && (mode == O_RDONLY || mode == O_WRONLY || mode == O_RDWR))
 	{
-		dispatchMain(
-		  ^{
-			  for (id<ProcFile> file in _writers)
+		  for (id<ProcFile> file in _writers)
+		  {
+			  if ([path isEqualToString:file.path])
 			  {
-				  if ([path isEqualToString:file.path])
-				  {
-					  if ([file openForRead:mode != O_WRONLY write:mode != O_RDONLY])
-						  *userData = file;
-					  break;
-				  }
+				  if ([file openForRead:mode != O_WRONLY write:mode != O_RDONLY])
+					  *userData = file;
+				  break;
 			  }
-		  });
+		  }
 		if (!*userData && error)
 			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:ENOENT userInfo:nil];
 	}
@@ -165,6 +154,10 @@ static void dispatchMain(void (^block)())
 	{
 		*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:EPERM userInfo:nil];
 	}
+	if (*userData != nil)
+		LOG("ProcFS:Verbose", "finished opening");
+	else
+		LOG("ProcFS:Verbose", "error opening: %s", STR([*error localizedFailureReason]));
 		
 	return *userData != nil;
 }
@@ -173,11 +166,9 @@ static void dispatchMain(void (^block)())
 {
 	LOG("ProcFS:Verbose", "releasing %s", STR(path));
 	
-	dispatchMain(
-		^{
-			id<ProcFile> file = (id<ProcFile>) userData;
-			[file close];
-		});
+	id<ProcFile> file = (id<ProcFile>) userData;
+	[file close];
+	LOG("ProcFS:Verbose", "released");
 }
 
 #pragma mark read methods
@@ -186,23 +177,20 @@ static void dispatchMain(void (^block)())
 {
 	UNUSED(error);
 	
-	__block NSMutableArray* contents = [NSMutableArray new];
+	NSMutableArray* contents = [NSMutableArray new];
 
-	dispatchMain(
-	  ^{
-		  NSArray* pathComponents = path.pathComponents;
-		  
-		  for (id<ProcFile> file in _allFiles)
+	  NSArray* pathComponents = path.pathComponents;
+	  
+	  for (id<ProcFile> file in _allFiles)
+	  {
+		  NSArray* fileComponents = file.path.pathComponents;
+		  if ([fileComponents startsWith:pathComponents])
 		  {
-			  NSArray* fileComponents = file.path.pathComponents;
-			  if ([fileComponents startsWith:pathComponents])
-			  {
-				  NSString* name = fileComponents[pathComponents.count];
-				  if (![contents containsObject:name])
-					  [contents addObject:name];
-			  }
+			  NSString* name = fileComponents[pathComponents.count];
+			  if (![contents containsObject:name])
+				  [contents addObject:name];
 		  }
-	  });
+	  }
 	
 	return contents;
 }
@@ -216,13 +204,10 @@ static void dispatchMain(void (^block)())
 {
 	LOG("ProcFS:Verbose", "reading %zu bytes at %lld from %s", size, offset, STR(path));
 	
-	__block int bytes = 0;
+	int bytes = 0;
 	
-	dispatchMain(
-	  ^{
-		  id<ProcFile> file = (id<ProcFile>) userData;
-		  bytes = [file read:buffer size:size offset:offset error:error];
-	  });
+	  id<ProcFile> file = (id<ProcFile>) userData;
+	  bytes = [file read:buffer size:size offset:offset error:error];
 	
 	return bytes;
 }
@@ -232,27 +217,24 @@ static void dispatchMain(void (^block)())
 	UNUSED(error);
 	LOG("ProcFS:Verbose", "getting attributes for %s", STR(path));
 	
-	__block NSDictionary* attrs = nil;
+	NSDictionary* attrs = nil;
 	
-	dispatchMain(
-	  ^{
-		  if (userData)
+	  if (userData)
+	  {
+		  id<ProcFile> file = (id<ProcFile>) userData;
+		  attrs = @{NSFileType: NSFileTypeRegular, NSFileSize: @(file.size)};
+	  }
+	  else
+	  {
+		  id<ProcFile> file = nil;
+		  if ([self _isOurs:path file:&file])
 		  {
-			  id<ProcFile> file = (id<ProcFile>) userData;
-			  attrs = @{NSFileType: NSFileTypeRegular, NSFileSize: @(file.size)};
+			  if (file)
+				  attrs = @{NSFileType: NSFileTypeRegular, NSFileSize: @(file.size)};
+			  else
+				  attrs = @{NSFileType: NSFileTypeDirectory};
 		  }
-		  else
-		  {
-			  id<ProcFile> file = nil;
-			  if ([self _isOurs:path file:&file])
-			  {
-				  if (file)
-					  attrs = @{NSFileType: NSFileTypeRegular, NSFileSize: @(file.size)};
-				  else
-					  attrs = @{NSFileType: NSFileTypeDirectory};
-			  }
-		  }
-	  });
+	  }
 	
 	return attrs;
 }
@@ -294,19 +276,17 @@ static void dispatchMain(void (^block)())
 	UNUSED(error);
 	LOG("ProcFS:Verbose", "setting %s attributes for %s", STR(attributes), STR(path));
 	
-	__block BOOL result = NO;
-	dispatchMain(
-	  ^{
-		  NSNumber* size = attributes[NSFileSize];
-		  if (size && userData)
-		  {
-			  id<ProcFile> file = (id<ProcFile>) userData;
-			  result = [file setSize:size.unsignedLongLongValue];
-		  }
-		  
-		  if (!result && error)
-			  *error = [NSError errorWithDomain:NSPOSIXErrorDomain code:EPERM userInfo:nil];
-	  });
+	BOOL result = NO;
+	  NSNumber* size = attributes[NSFileSize];
+	  if (size && userData)
+	  {
+		  id<ProcFile> file = (id<ProcFile>) userData;
+		  result = [file setSize:size.unsignedLongLongValue];
+	  }
+	  
+	  if (!result && error)
+		  *error = [NSError errorWithDomain:NSPOSIXErrorDomain code:EPERM userInfo:nil];
+	LOG("ProcFS:Verbose", "finished setting attributes");
 	
 	return result;
 }
@@ -320,13 +300,11 @@ static void dispatchMain(void (^block)())
 {
 	LOG("ProcFS:Verbose", "writing %zu bytes at %lld for %s", size, offset, STR(path));
 	
-	__block int bytes = 0;
+	int bytes = 0;
 	
-	dispatchMain(
-	  ^{
-		  id<ProcFile> file = (id<ProcFile>) userData;
-		  bytes = [file write:buffer size:size offset:offset error:error];
-	  });
+	  id<ProcFile> file = (id<ProcFile>) userData;
+	  bytes = [file write:buffer size:size offset:offset error:error];
+	LOG("ProcFS:Verbose", "wrote %d bytes", bytes);
 	
 	return bytes;
 }
