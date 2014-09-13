@@ -3,8 +3,12 @@
 function init()
 	mimsy:set_extension_name("option-tab")
 	mimsy:set_extension_version("1.0")
-	mimsy:watch_file(1.0, "/mimsy/keydown/text-editor/option-tab/pressed", "onOptionTab")
-	mimsy:watch_file(1.0, "/mimsy/keydown/text-editor/option-shift-tab/pressed", "onOptionShiftTab")
+	mimsy:watch_file(1.0, "/Volumes/Mimsy/keydown/text-editor/option-tab/pressed", "onOptionTab")
+	mimsy:watch_file(1.0, "/Volumes/Mimsy/keydown/text-editor/option-shift-tab/pressed", "onOptionShiftTab")
+end
+
+function log(text)
+	write_file("log/line", "OptionTab:" .. text)
 end
 
 function split(str, pattern)
@@ -35,10 +39,6 @@ function write_file(path, text)
 	io.close(file)
 end
 
-function log(text)
-	write_file("log/line", "OptionTab:" .. text)
-end
-
 function tab(delta)
 	local handled = false
 
@@ -46,7 +46,6 @@ function tab(delta)
 	if elements ~= "" then
 		local lines = split(elements, "\n")
 		local selection_index = lines[1] + 2	-- +2 because lua arrays are 1-based and we skip the first line
-		local selection_name = lines[selection_index]
 
 		-- lines are formatted as "<element name>:<location>:<length>"
 		local line = selection_index + delta
@@ -58,11 +57,11 @@ function tab(delta)
 			end
 			line = line + delta
 		end
-		
+
 		if line > #lines then
 			write_file("beep", "")
 		end
-		
+
 		handled = true
 	end
 
