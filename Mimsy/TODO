@@ -7,8 +7,11 @@ install http://osxfuse.github.io/
 
 
 
-* Write an option-tab extension:
-	- app needs to be the one listening for mount notifications
+
+
+
+
+
 * Get option-tab working
 	- should probably use identifier style
     	but look at Continuum styler (and maybe some others)

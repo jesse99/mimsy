@@ -1,5 +1,7 @@
 #import "AppDelegate.h"
 
+#import <OSXFUSE/OSXFUSE.h>
+
 #import "AppSettings.h"
 #import "ConfigParser.h"
 #import "Constants.h"
@@ -107,51 +109,74 @@ typedef void (^NullaryBlock)();
 		[StartupScripts setup];
 		[WindowsDatabase setup];
 		[Languages setup];
-
+		
+		NSNotificationCenter* center = [NSNotificationCenter defaultCenter];
+		[center addObserver:self selector:@selector(_didMount:)
+					   name:kGMUserFileSystemDidMount object:nil];
+		[center addObserver:self selector:@selector(_mountFailed:)
+					   name:kGMUserFileSystemMountFailed object:nil];
 		_procFileSystem = [ProcFileSystem new];
-		[SpecialKeys setup:_procFileSystem];
-		[Extensions setup];
-				
-		_versionFile = [[ProcFileReader alloc]
-			initWithDir:^NSString *{return @"/";}
-			fileName:@"version"
-			readStr:^NSString*
-			{
-				NSDictionary* info = [[NSBundle mainBundle] infoDictionary];
-				return [info objectForKey:@"CFBundleShortVersionString"];
-			}];
-		
-		_beepFile = [[ProcFileReadWrite alloc]
-					initWithDir:^NSString *{return @"/";}
-					fileName:@"beep"
-					readStr:^NSString* {return @"";}
-					writeStr:^(NSString* str)
-					{
-						UNUSED(str);
-						NSBeep();
-					}];
 
-		_logFile = [[ProcFileReadWrite alloc]
-			initWithDir:^NSString *{return @"/log";}
-			fileName:@"line"
-					readStr:^NSString* {return @"";}
-			writeStr:^(NSString* str)
-			{
-				NSRange range = [str rangeOfString:@":"];
-				if (range.location != NSNotFound)
-					LOG(STR([str substringToIndex:range.location]), "%s", STR([str substringFromIndex:range.location+1]));
-				else
-					LOG("Error", "expected '<topic>:<line>' not: '%s'", STR(str));
-			}];
-		
-		[_procFileSystem addReader:_versionFile];
-		[_procFileSystem addWriter:_beepFile];
-		[_procFileSystem addWriter:_logFile];
-		
 		initFunctionalTests();
 	}
 	
 	return self;
+}
+
+- (void)_didMount:(NSNotification*)notification
+{
+	NSDictionary* userInfo = [notification userInfo];
+	NSString* path = [userInfo objectForKey:kGMUserFileSystemMountPathKey];
+	LOG("ProcFS", "mounted %s", STR(path));
+	
+	_versionFile = [[ProcFileReader alloc]
+					initWithDir:^NSString *{return @"/";}
+					fileName:@"version"
+					readStr:^NSString*
+					{
+						NSDictionary* info = [[NSBundle mainBundle] infoDictionary];
+						return [info objectForKey:@"CFBundleShortVersionString"];
+					}];
+	
+	_beepFile = [[ProcFileReadWrite alloc]
+				 initWithDir:^NSString *{return @"/";}
+				 fileName:@"beep"
+				 readStr:^NSString* {return @"";}
+				 writeStr:^(NSString* str)
+				 {
+					 UNUSED(str);
+					 NSBeep();
+				 }];
+	
+	_logFile = [[ProcFileReadWrite alloc]
+				initWithDir:^NSString *{return @"/log";}
+				fileName:@"line"
+				readStr:^NSString* {return @"";}
+				writeStr:^(NSString* str)
+				{
+					NSRange range = [str rangeOfString:@":"];
+					if (range.location != NSNotFound)
+						LOG(STR([str substringToIndex:range.location]), "%s", STR([str substringFromIndex:range.location+1]));
+					else
+						LOG("Error", "expected '<topic>:<line>' not: '%s'", STR(str));
+				}];
+	
+	[_procFileSystem addReader:_versionFile];
+	[_procFileSystem addWriter:_beepFile];
+	[_procFileSystem addWriter:_logFile];
+	
+	[SpecialKeys setup];
+	[Extensions setup];
+}
+
+- (void)_mountFailed:(NSNotification*)notification
+{
+	[SpecialKeys setup];	// needs the proc file system so we do it here
+	
+	NSDictionary* userInfo = [notification userInfo];
+	NSString* path = [userInfo objectForKey:kGMUserFileSystemMountPathKey];
+	NSError* error = [userInfo objectForKey:kGMUserFileSystemErrorKey];
+	LOG("Error", "failed to mount %s: %s", STR(path), STR(error.localizedFailureReason));
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification

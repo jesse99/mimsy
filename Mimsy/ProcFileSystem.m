@@ -33,12 +33,6 @@
 	
 	if (self)
 	{
-		NSNotificationCenter* center = [NSNotificationCenter defaultCenter];
-		[center addObserver:self selector:@selector(_didMount:)
-					   name:kGMUserFileSystemDidMount object:nil];
-		[center addObserver:self selector:@selector(_mountFailed:)
-					   name:kGMUserFileSystemMountFailed object:nil];
-
 		_fs = [[GMUserFileSystem alloc] initWithDelegate:self isThreadSafe:true];
 		_allFiles = [NSMutableArray new];
 		_readers = [NSMutableArray new];
@@ -85,25 +79,6 @@
 {
 	[_allFiles removeObject:file];
 	[_writers removeObject:file];
-}
-
-// TODO:
-// Notification should be handled by the app delegate
-// On success load extensions
-// On failure write to the transcript (do the moutning fairly late)
-- (void)_didMount:(NSNotification*)notification
-{
-	NSDictionary* userInfo = [notification userInfo];
-	NSString* path = [userInfo objectForKey:kGMUserFileSystemMountPathKey];
-	LOG("ProcFS", "mounted %s", STR(path));
-}
-
-- (void)_mountFailed:(NSNotification*)notification
-{
-	NSDictionary* userInfo = [notification userInfo];
-	NSString* path = [userInfo objectForKey:kGMUserFileSystemMountPathKey];
-	NSError* error = [userInfo objectForKey:kGMUserFileSystemErrorKey];
-	LOG("Error", "failed to mount %s: %s", STR(path), STR(error.localizedFailureReason));
 }
 
 - (BOOL)openFileAtPath:(NSString*)path

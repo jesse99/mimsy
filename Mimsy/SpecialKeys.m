@@ -14,7 +14,7 @@ static NSDictionary* _json;
 
 @implementation SpecialKeys
 
-+ (void)setup:(ProcFileSystem*)fs
++ (void)setup
 {
 	[SpecialKeys _loadDefaults];
 	if (!_json)
@@ -30,7 +30,11 @@ static NSDictionary* _json;
 		  fileName:@"special-keys"
 		  readStr:^NSString* {return @"";}
 		  writeStr:^(NSString* str) {[SpecialKeys _addExtensionData:str];}];
-	[fs addWriter:_extensionKeys];
+	
+	AppDelegate* app = [NSApp delegate];
+	ProcFileSystem* fs = app.procFileSystem;
+	if (fs)
+		[fs addWriter:_extensionKeys];
 }
 
 + (void)_loadingExtensions:(NSNotification*)notification
