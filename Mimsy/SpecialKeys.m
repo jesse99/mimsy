@@ -20,7 +20,7 @@ static NSDictionary* _json;
 	if (!_json)
 		return;
 			
-	[SpecialKeys _writeFiles:_json[@"contexts"]];
+	[SpecialKeys _writeFiles:_json[@"contexts"] footers:_json[@"footers"]];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_loadingExtensions:) name:@"LoadingExtensions" object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_loadedExtensions:) name:@"LoadedExtensions" object:nil];
@@ -81,7 +81,7 @@ static NSDictionary* _json;
 + (void)_loadedExtensions:(NSNotification*)notification
 {
 	UNUSED(notification);
-	[SpecialKeys _writeFiles:_json[@"contexts"]];
+	[SpecialKeys _writeFiles:_json[@"contexts"] footers:_json[@"footers"]];
 }
 
 + (void)_loadDefaults
@@ -94,7 +94,7 @@ static NSDictionary* _json;
 	_keyTextAttrs = [SpecialKeys _createAttributes:_json name:@"key-text"];
 }
 
-+ (void)_writeFiles:(NSDictionary*)contexts
++ (void)_writeFiles:(NSDictionary*)contexts footers:(NSDictionary*)footers
 {
 	NSString* dir = [Paths installedDir:@"help"];
 
@@ -102,7 +102,7 @@ static NSDictionary* _json;
 	{
 		NSDictionary* keys = contexts[context];
 		
-		NSAttributedString* text = [SpecialKeys _createText:keys];
+		NSAttributedString* text = [SpecialKeys _createText:keys footer:footers[context]];
 		if (!text)
 			return;
 		
@@ -146,7 +146,7 @@ static NSDictionary* _json;
 	return attrs;
 }
 
-+ (NSAttributedString*)_createText:(NSDictionary*)keys
++ (NSAttributedString*)_createText:(NSDictionary*)keys footer:(NSString*)footer
 {
 	NSMutableAttributedString* text = [NSMutableAttributedString new];
 	
@@ -156,6 +156,12 @@ static NSDictionary* _json;
 		[SpecialKeys _appendText:text attrs:_keyNameAttrs contents:@"\t\t"];
 		[SpecialKeys _appendText:text attrs:_keyTextAttrs contents:keys[name]];
 		[SpecialKeys _appendText:text attrs:_keyTextAttrs contents:@"\n"];
+	}
+	
+	if (footer && footer.length > 0)
+	{
+		[SpecialKeys _appendText:text attrs:_keyTextAttrs contents:@"\n"];
+		[SpecialKeys _appendText:text attrs:_keyTextAttrs contents:footer];
 	}
 	
 	return text;

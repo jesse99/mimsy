@@ -32,5 +32,9 @@
 			"Control-V": "Move down",
 			"Control-O": "Insert a new line after the cursor"
 		}
+	},
+	"footers":
+	{
+		"app": "In menus the modifier keys appear using the glyphs below:\n\t\u2318\tthe Command key\n\t\u2325\tthe Option key\n\t\u21E7\tthe Shift key\n\t\u2303\tthe Control key\n\t\u238B\tthe Escape key\n"
 	}
 }

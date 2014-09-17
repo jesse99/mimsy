@@ -7,9 +7,6 @@ install http://osxfuse.github.io/
 
 
 
-* Work on special keys help:
-	- document modifier key glyphs (maybe in the app keys)
-	  http://www.osxkeyboardshortcuts.com/keyboard-symbols.html
 * Are there special keys for the directory editor?
 * Write an option-tab extension:
 	- app needs to be the one listening for mount notifications
