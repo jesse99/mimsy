@@ -16,8 +16,10 @@
 
 - (bool)matchesContext:(NSString*)context;
 
+// The text to use for the help menu item.
 - (NSString*)title;
 
+// The URL to open when the user selects the menu item.
 - (NSURL*)url;
 
 @end

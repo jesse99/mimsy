@@ -198,6 +198,7 @@ static void initMimsyMethods(struct lua_State* state, Extension* extension)
 		[Extensions cleanup];
 	_extensions = [NSMutableDictionary new];
 	_watching = [NSMutableDictionary new];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"LoadingExtensions" object:self];
 	
 	NSString* dir = [Paths installedDir:@"extensions"];
 	Glob* glob = [[Glob alloc] initWithGlob:@"*.lua"];
@@ -215,6 +216,8 @@ static void initMimsyMethods(struct lua_State* state, Extension* extension)
 		LOG("Error", "%s", STR(mesg));
 		[TranscriptController writeError:mesg];
 	}
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"LoadedExtensions" object:self];
 }
 
 + (void)cleanup

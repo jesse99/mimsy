@@ -1,0 +1,36 @@
+# These are the special keys built directly into Mimsy. Most of them are provided
+# by Cocoa and the list below is a subset of that in <http://support.apple.com/kb/ht1343>.
+# You may edit this list to suit your taste.
+#
+# Extensions will register their own keys with Mimsy. This file and the extension
+# data are used to generate context specific help files.
+{
+	
+	"fonts":
+	{
+		"key-name": ["Times Bold", 18],
+		"key-text": ["Times", 18]
+	},
+	"contexts":
+	{
+		"app":
+		{
+			"Command-~": "Cycles between open windows",
+			"Command-`": "Activate the next open window in the frontmost application",
+			"Command-Shift-`": "Activate the previous open window in the frontmost application"
+		},
+		"text editor":
+		{
+			"Option-Delete": "Delete the word that is left of the cursor, as well as any spaces or punctuation after the word",
+			"Control-A": "Move to beginning of line or paragraph",
+			"Control-E": "Move to the end of a line or paragraph",
+			"Control-D": "Delete the character in front of the cursor",
+			"Control-H": "Delete the character behind the cursor",
+			"Control-K": "Delete from the character in front of the cursor to the end of the line or paragraph",
+			"Control-N": "Move down one line",
+			"Control-P": "Move up one line",
+			"Control-V": "Move down",
+			"Control-O": "Insert a new line after the cursor"
+		}
+	}
+}

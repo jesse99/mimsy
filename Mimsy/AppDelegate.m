@@ -21,6 +21,7 @@
 #import "ProcFiles.h"
 #import "SearchSite.h"
 #import "SelectStyleController.h"
+#import "SpecialKeys.h"
 #import "StartupScripts.h"
 #import "TextController.h"
 #import "TimeMachine.h"
@@ -104,9 +105,12 @@ typedef void (^NullaryBlock)();
 		[self _loadHelpFiles];
 		[self _watchInstalledFiles];
 		[StartupScripts setup];
-		[Extensions setup];
 		[WindowsDatabase setup];
 		[Languages setup];
+
+		_procFileSystem = [ProcFileSystem new];
+		[SpecialKeys setup:_procFileSystem];
+		[Extensions setup];
 				
 		_versionFile = [[ProcFileReader alloc]
 			initWithDir:^NSString *{return @"/";}
@@ -140,7 +144,6 @@ typedef void (^NullaryBlock)();
 					LOG("Error", "expected '<topic>:<line>' not: '%s'", STR(str));
 			}];
 		
-		_procFileSystem = [ProcFileSystem new];
 		[_procFileSystem addReader:_versionFile];
 		[_procFileSystem addWriter:_beepFile];
 		[_procFileSystem addWriter:_logFile];

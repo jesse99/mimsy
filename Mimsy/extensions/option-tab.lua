@@ -1,14 +1,28 @@
 -- Intercept option-tab (and shift-option-tab) and select the next (or previous) identifier.
 
+keys = [==[
+{
+	"extension": "option-tab",
+	"context": "text editor",
+	"keys":
+	{
+		"Command-Option-Tab": "Select the next identifier",
+		"Command-Shift-Option-Tab": "Select the previous identifier"
+	}
+}
+]==]
+
 function init()
 	mimsy:set_extension_name("option-tab")
 	mimsy:set_extension_version("1.0")
 	mimsy:watch_file(1.0, "/Volumes/Mimsy/keydown/text-editor/option-tab/pressed", "onOptionTab")
 	mimsy:watch_file(1.0, "/Volumes/Mimsy/keydown/text-editor/option-shift-tab/pressed", "onOptionShiftTab")
+
+	write_file("special-keys", keys)
 end
 
 function log(text)
-	write_file("log/line", "OptionTab:" .. text)
+	write_file("special-keys", keys)
 end
 
 function split(str, pattern)

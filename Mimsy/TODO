@@ -3,28 +3,28 @@ tail -f ~/Library/Logs/mimsy.log
 install http://osxfuse.github.io/
 	can skip this but a lot of features will be disabled
 	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
+	
 
 
-* Work on file watching:
-	- need to do something with help
-	  maybe a json encoded proc file
-	- make sure get a decent error with syntax problems
-	  but what happens when the extension is unloaded?
-* Should be able to double click in find in time machine.
+
+* Work on special keys help:
+	- document modifier key glyphs (maybe in the app keys)
+	  http://www.osxkeyboardshortcuts.com/keyboard-symbols.html
+* Are there special keys for the directory editor?
 * Write an option-tab extension:
 	- app needs to be the one listening for mount notifications
-	- write to the extension proc file
-	  maybe a notification could be used instead when help is needed?
-	- if the file changes reload it
-	- need to shutdown executable extensions on exit
 * Get option-tab working
 	- should probably use identifier style
     	but look at Continuum styler (and maybe some others)
 	- document what identifier element is for
 	- update special keys help file
+* Write a go extension to format go code on save.
+* Merge into master
+* Should be able to double click in find in time machine.
 * Add a go extension for search on sites:
 	- will need language proc files
 	- will need an open-url proc file
+	- need to shutdown executable extensions on exit
 * Add go to search for a file:
 	- color code and location column
 	- locations are current project, open windows, open projects, global
@@ -33,7 +33,6 @@ install http://osxfuse.github.io/
 	- for menus could have a jsonfile describing menus
 	for edits have an op field that could be "add" or "remove"
 * Experiment with a different proc-file based design:
-	- can lua help avoid having a zillion processes?
 	- extensions use json messages and replies to get notifications (including event processing), to register for notifications, and to execute functions (eg select a string from a list or log)
 	- state is exposed to extensions via proc files
 	- some proc files are writeable, eg selection range
