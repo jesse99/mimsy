@@ -19,6 +19,11 @@
 			"Command-`": "Activate the next open window in the frontmost application",
 			"Command-Shift-`": "Activate the previous open window in the frontmost application"
 		},
+		"directory editor":
+		{
+			"Command-Delete": "Delete the selected items",
+			"Return": "Opens the selected items"
+		},
 		"text editor":
 		{
 			"Option-Delete": "Delete the word that is left of the cursor, as well as any spaces or punctuation after the word",
@@ -35,6 +40,6 @@
 	},
 	"footers":
 	{
-		"app": "In menus the modifier keys appear using the glyphs below:\n\t\u2318\tthe Command key\n\t\u2325\tthe Option key\n\t\u21E7\tthe Shift key\n\t\u2303\tthe Control key\n\t\u238B\tthe Escape key\n"
+		"app": "In menus the modifier keys appear using the glyphs below:\n\t\u2318\tthe Command key\n\t\u2325\tthe Option key\n\t\u21E7\tthe Shift key\n\t\u2303\tthe Control key\n\t\u232B\tthe Backspace key\n\t\u2326\tthe Delete key\n\t\u238B\tthe Escape key\n\t\u23CE\tthe Return key\n"
 	}
 }

@@ -7,7 +7,6 @@ install http://osxfuse.github.io/
 
 
 
-* Are there special keys for the directory editor?
 * Write an option-tab extension:
 	- app needs to be the one listening for mount notifications
 * Get option-tab working
