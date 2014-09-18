@@ -7,16 +7,6 @@ install http://osxfuse.github.io/
 
 
 
-
-
-
-
-
-* Get option-tab working
-	- should probably use identifier style
-    	but look at Continuum styler (and maybe some others)
-	- document what identifier element is for
-	- update special keys help file
 * Write a go extension to format go code on save.
 * Merge into master
 * Should be able to double click in find in time machine.
