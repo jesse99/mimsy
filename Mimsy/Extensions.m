@@ -190,6 +190,8 @@ static void initMimsyMethods(struct lua_State* state, Extension* extension)
 	lua_setglobal(state, "mimsy");
 }
 
+static Extension* _executing;
+
 @implementation Extensions
 
 + (void)setup
@@ -246,6 +248,13 @@ static void initMimsyMethods(struct lua_State* state, Extension* extension)
 	_watching[path] = extensions;
 }
 
++ (bool)watching:(NSString*)path
+{
+	// Note that we don't notify extensions about changes they have made.
+	NSArray* extensions = _watching[path];
+	return extensions && (extensions.count > 1 || (extensions.count == 1 && extensions[0] != _executing));
+}
+
 + (bool)invoke:(NSString*)path
 {
 	bool handled = false;
@@ -253,9 +262,16 @@ static void initMimsyMethods(struct lua_State* state, Extension* extension)
 	NSArray* extensions = _watching[path];
 	for (Extension* extension in extensions)
 	{
-		handled = [extension invoke:path];
-		if (handled)
-			break;
+		// To keep things sane we also don't support re-entrant notifications.
+		if (extension != _executing)
+		{
+			_executing = extension;
+			handled = [extension invoke:path];
+			_executing = nil;
+			
+			if (handled)
+				break;
+		}
 	}
 	
 	return handled;

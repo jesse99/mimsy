@@ -1,6 +1,7 @@
 #import "TextDocument.h"
 
 #import "Decode.h"
+#import "Extensions.h"
 #import "FunctionalTest.h"
 #import "InfoController.h"
 #import "Metadata.h"

@@ -32,4 +32,6 @@
 - (int)read:(char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error;
 - (int)write:(const char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error;
 
+- (void)notifyIfChanged;
+
 @end

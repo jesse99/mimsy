@@ -11,6 +11,9 @@
 // skipped. Path should be something like "/Volumes/Mimsy/keydown/text-editor/left-arrow/pressed".
 + (bool)invoke:(NSString*)path;
 
+// Returns true if an extension is watching path.
++ (bool)watching:(NSString*)path;
+
 + (void)watch:(NSString*)path extension:(Extension*)extension;
 
 @end

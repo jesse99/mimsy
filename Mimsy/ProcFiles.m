@@ -1,5 +1,7 @@
 #import "ProcFiles.h"
 
+#import "Extensions.h"
+
 @implementation ProcFileReader
 {
 	NSString* (^_directory ) ();
@@ -121,6 +123,7 @@
 // getting size
 @implementation ProcFileReadWrite
 {
+	NSString* _value;
 	NSString* (^_directory ) ();
 	NSString* _fileName;
 	NSString* (^_readStr)();
@@ -138,6 +141,8 @@
 		_fileName = name;
 		_readStr = readStr;
 		_writeStr = writeStr;
+		
+		_value = _readStr();
 	}
 	
 	return self;
@@ -241,6 +246,19 @@
 	}
 		
 	return (int)size;
+}
+
+- (void)notifyIfChanged;
+{
+	if ([Extensions watching:self.path])
+	{
+		NSString* newValue = _readStr();
+		if ([newValue compare:_value] != NSOrderedSame)
+		{
+			[Extensions invoke:self.path];
+			_value = newValue;
+		}
+	}
 }
 
 @end

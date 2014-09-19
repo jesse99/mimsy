@@ -970,6 +970,8 @@
 {
 	_wordWrap = !_wordWrap;
 	[self doResetWordWrap];
+	
+	[_wordWrapFile notifyIfChanged];
 }
 
 - (void)doResetWordWrap
@@ -1016,6 +1018,11 @@
 	{
 		[_applier toggleBraceHighlightFrom:0 to:0 on:false];
 	}
+	
+	[_colNumFile notifyIfChanged];
+	[_lineNumFile notifyIfChanged];
+	[_selectionRangeFileW notifyIfChanged];
+	[_selectionTextFile notifyIfChanged];
 
 	[StartupScripts invokeTextSelectionChanged:self.document slocation:range.location slength:range.length];
 }
@@ -1074,6 +1081,7 @@
 			}
 		}
 
+		[_selectionTextFile notifyIfChanged];
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowEdited" object:self];
 	}
 }
