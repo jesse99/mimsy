@@ -1,4 +1,4 @@
-@class Extension;
+@class BaseExtension;
 
 // Used to manage lua scripts and executables that interact with Mimsy via
 // proc files.
@@ -14,6 +14,6 @@
 // Returns true if an extension is watching path.
 + (bool)watching:(NSString*)path;
 
-+ (void)watch:(NSString*)path extension:(Extension*)extension;
++ (void)watch:(NSString*)path extension:(BaseExtension*)extension;
 
 @end

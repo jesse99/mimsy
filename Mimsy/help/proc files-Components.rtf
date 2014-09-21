@@ -20,7 +20,7 @@ When an executable extension starts up it must write lines formatted as "<key>:<
 \b0 An url for the extension's web site.\
 
 \b watch		
-\b0 "<floating point priority>:<proc file path>". When the contents of one of those proc files changes its path along with a new line is written by Mimsy to the extension's stdin with the extensions using higher priorities notified first. Normal priority is 1.0.\
+\b0 "<floating point priority>:<proc file path>". When the contents of one of those proc files changes its path along with a new line is written by Mimsy to the extension's stdin with the extensions using higher priorities notified first. Normal priority is 1.0. When the extension finishes processing the notification it should write "true\\n" or "false\\n" to stdout. True is used to suppress further processing of things like key events.\
 \
 After writing the above the extension must write a blank line.\
 \
@@ -58,7 +58,7 @@ The proc files are:\
 \b \CocoaLigature1 special-keys
 \b0 \CocoaLigature0  (w)\
 	This is used to build the help files for context specific special keys (see Help Files for a list of contexts). This file is encoded as json and should look similar to this:	\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 \cf0 \{\
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 	"extension": "option-tab",\
@@ -68,7 +68,7 @@ The proc files are:\
 		"Command-Option-Tab": "Select the next identifier",\
 		"Command-Shift-Option-Tab": "Select the previous identifier"\
 	\}\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 \cf0 \}\
 If the extension supports multiple contexts then it should do multiple writes.\
 \pard\tx626\pardeftab626\pardirnatural
@@ -106,7 +106,7 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \b0\fs36 \cf0 \CocoaLigature0 	
 \b \CocoaLigature1 line
 \b0 \CocoaLigature0  (w)\
-	Used to write a line to Mimsy's log. Formatted as one or more lines of <topic>:<text> where topic is an arbitrary colon separated list of topic and sub-topics. By convention spammy logs end with the Verbose sub-topic.\
+	Used to write a line to Mimsy's log. Formatted as one or more lines of <topic>:<text> where topic is an arbitrary colon separated list of topic and sub-topics. By convention spammy logs end with the Verbose sub-topic. A trailing new line is added automatically.\
 	\
 \pard\tx626\pardeftab626\pardirnatural
 
@@ -149,7 +149,7 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
 \b \cf0 \CocoaLigature1 	opened
-\b0  (r)\
+\b0  (w)\
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \CocoaLigature0 	This is intended to be watched: reads will error out. Watchers will be invoked just before the document is loaded disk.\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
@@ -161,7 +161,7 @@ If the extension supports multiple contexts then it should do multiple writes.\
 
 \b \CocoaLigature1 \
 	saving
-\b0  (r)\
+\b0  (w)\
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \CocoaLigature0 	This is intended to be watched: reads will error out. Watchers will be invoked just before the document is written to disk.\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural

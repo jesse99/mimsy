@@ -522,6 +522,10 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		_text = nil;
 	}
 	
+	// We don't have a dual for the saving proc file because we don't have a controller when
+	// opening a brand new document. Probably what we should do is have a file to watch for
+	// newly opened windows (could do this in the controllers).
+	
 	return *outError == NULL;
 }
 
@@ -531,6 +535,9 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	NSTextView* textv = _controller.textView;
 	if (textv)
 	{
+		NSString* path = [NSString stringWithFormat:@"%@/saving", [_controller getProcFilePath]];
+		(void) [Extensions invoke:path];
+
 		NSTextStorage* storage = [textv textStorage];
 		NSMutableString* str = [storage mutableString];
 		LOG("Text", "Saving document to %s", STR(self.fileURL));

@@ -34,6 +34,7 @@
 	ProcFileReadWrite* _lineNumFile;
 	ProcFileReadWrite* _selectionRangeFileW;
 	ProcFileReadWrite* _selectionTextFile;
+	ProcFileReadWrite* _textFile;
 	ProcFileReader* _titleFile;
 	ProcFileReadWrite* _wordWrapFile;
 
@@ -188,15 +189,34 @@
 					}
 				}];
 			_selectionTextFile = [[ProcFileReadWrite alloc]
+								  initWithDir:^NSString *{return [self getProcFilePath];}
+								  fileName:@"selection-text"
+								  readStr:^NSString *{
+									  NSRange range = self.textView.selectedRange;
+									  return [self.text substringWithRange:range];
+								  }
+								  writeStr:^(NSString* text)
+								  {
+									  NSRange range = self.textView.selectedRange;
+									  if ([self.textView shouldChangeTextInRange:range replacementString:text])
+									  {
+										  [self.textView replaceCharactersInRange:range withString:text];
+										  if (text.length > 0)
+											  [self.textView.undoManager setActionName:@"Replace Text"];
+										  else
+											  [self.textView.undoManager setActionName:@"Delete Text"];
+										  [self.textView didChangeText];
+									  }
+								  }];
+			_textFile = [[ProcFileReadWrite alloc]
 				initWithDir:^NSString *{return [self getProcFilePath];}
-				fileName:@"selection-text"
+				fileName:@"text"
 				readStr:^NSString *{
-					NSRange range = self.textView.selectedRange;
-					return [self.text substringWithRange:range];
+					return self.text;
 				}
 				writeStr:^(NSString* text)
 				{
-					NSRange range = self.textView.selectedRange;
+					NSRange range = NSMakeRange(0, self.text.length);
 					if ([self.textView shouldChangeTextInRange:range replacementString:text])
 					{
 						[self.textView replaceCharactersInRange:range withString:text];
@@ -237,6 +257,7 @@
 			[fs addWriter:_lineNumFile];
 			[fs addWriter:_selectionRangeFileW];
 			[fs addWriter:_selectionTextFile];
+			[fs addWriter:_textFile];
 			[fs addWriter:_wordWrapFile];
 		}
 		
@@ -1082,6 +1103,7 @@
 		}
 
 		[_selectionTextFile notifyIfChanged];
+		[_textFile notifyIfChanged];			// TODO: watching this can be expensive for large files, could maybe use a custom proc file class
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowEdited" object:self];
 	}
 }

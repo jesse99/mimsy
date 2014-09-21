@@ -218,7 +218,7 @@ static NSString* getKey(NSEvent* event)
 	if (key)
 	{
 		NSString* fn = keyToFileName(event, key);
-		NSString* path = [NSString stringWithFormat:@"/Volumes/Mimsy/keydown/text-editor/%@/pressed", fn];
+		NSString* path = [NSString stringWithFormat:@"keydown/text-editor/%@/pressed", fn];
 		handled = [Extensions invoke:path];
 	}
 	

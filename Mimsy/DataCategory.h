@@ -6,4 +6,6 @@
 
 - (NSString*)base64EncodedString;
 
+- (NSRange)rangeOfData:(NSData*)needle;
+
 @end

@@ -4,34 +4,18 @@ install http://osxfuse.github.io/
 	can skip this but a lot of features will be disabled
 	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
 	
-mimsy: gofmt --tabwidth=4 /tmp/foo.go 
-/tmp/foo.go:11:1: expected declaration, found '{'
-/tmp/foo.go:14:2: expected declaration, found 'IDENT' messages
-/tmp/foo.go:19:2: expected declaration, found 'go'
-/tmp/foo.go:20:2: expected '(', found '{'
-/tmp/foo.go:25:6: expected ';', found ':='
-/tmp/foo.go:26:2: expected declaration, found 'IDENT' fmt
-/tmp/foo.go:27:1: expected declaration, found '}'
-
-
-
-
-* Should pressed notification use a real file?
-	- that way extensions could write to it
-	- or can executable extensions write to stdout?
 * Write a go extension to format go code on save:
-	- add files for saving and opened
-	- add a text file
-	- figure out how gofmt should be invoked
-	  or is formatting built into a standard package?
-	- get the go extension working
-		note that it can spit out errors
-		also the result is sent to stdout
-		also can use stdin to pass in the file
-	- probably want to support prefs, e.g. for tab widths
+	- need timeouts when reading from exe extensions
+	- may want to support prefs, e.g. for tab widths
+	- add a PATH setting?
+	- stderr could go to the transcript
+	- need to write false\n on errors?
+	- do we need timeouts with lua?
 * Merge into master
 * Add a way to build the go code from xcode
+* Extending a double-click selection doesn't work right
 * May want to add a command line helper
+* Can't search for: #	modified:   
 * Should be able to double click in find in time machine.
 * Add a go extension for search on sites:
 	- will need language proc files

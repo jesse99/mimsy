@@ -3,6 +3,7 @@
 #import <lualib.h>
 #import <lauxlib.h>
 
+#import "FileHandleCategory.h"
 #import "Glob.h"
 #import "Paths.h"
 #import "ProcFileSystem.h"
@@ -30,24 +31,25 @@
 		}												\
 	} while(0)
 
-@interface Extension : NSObject
+static NSMutableDictionary* _extensions;	// script path => BaseExtension
+static NSMutableDictionary* _watching;		// path => [BaseExtension]
 
-- (id)init:(struct lua_State*)state;
+static BaseExtension* _executing;			// the extension currently being executed (or nil)
+
+// ---- class BaseExtension --------------------------------------------------------------
+@interface BaseExtension : NSObject
 
 @property NSString* name;
 @property NSString* version;
 @property NSString* url;
 
 @property NSMutableDictionary* priorities;	// wached file path => priority
-@property NSMutableDictionary* watched;		// wached file path => lua function name
-
-@property (readonly) struct lua_State* state;
 
 @end
 
-@implementation Extension
+@implementation BaseExtension
 
-- (id)init:(struct lua_State*)state
+- (id)init
 {
 	self = [super init];
 	if (self)
@@ -55,6 +57,41 @@
 		_version = @"?";
 		_url = @"";
 		_priorities = [NSMutableDictionary new];
+	}
+    
+    return self;
+}
+
+- (void)teardown
+{
+	ASSERT(false);	// derived classes need to override this
+}
+
+- (bool)invoke:(NSString*)path
+{
+	UNUSED(path);
+	ASSERT(false);	// derived classes need to override this
+}
+
+@end
+
+// ---- class LuaExtension --------------------------------------------------------------
+@interface LuaExtension : BaseExtension
+
+- (id)init:(struct lua_State*)state;
+
+@property NSMutableDictionary* watched;		// wached file path => lua function name
+@property (readonly) struct lua_State* state;
+
+@end
+
+@implementation LuaExtension
+
+- (id)init:(struct lua_State*)state
+{
+	self = [super init];
+	if (self)
+	{
 		_watched = [NSMutableDictionary new];
 		_state = state;
 	}
@@ -74,13 +111,18 @@
 	}
 }
 
+- (void)teardown
+{
+	lua_close(_state);
+}
+
 - (bool)invoke:(NSString*)path
 {
 	NSString* fname = self.watched[path];
 	ASSERT(fname);
-
+	
 	bool handled = false;
-
+	
 	LOG("Extensions:Verbose", "invoking %s for %s", STR(fname), STR(self.name));
 	lua_getglobal(self.state, fname.UTF8String);
 	if (lua_pcall(self.state, 0, 1, 0) == 0)				// 0 args, bool result
@@ -96,20 +138,148 @@
 		LOG("Error", "%s", STR(mesg));
 		[TranscriptController writeError:mesg];
 	}
-
+	
 	return handled;
 }
 
 @end
 
-static NSMutableDictionary* _extensions;	// script path => Extension
-static NSMutableDictionary* _watching;		// path => [Extension]
+// ---- class ExeExtension --------------------------------------------------------------
+@interface ExeExtension : BaseExtension
+
+- (id)init:(NSString*)path;
+
+@end
+
+@implementation ExeExtension
+{
+	NSString* _path;
+	NSTask* _task;
+}
+
+- (id)init:(NSString*)path
+{
+	self = [super init];
+	
+	@try
+	{
+		_path = path;
+		
+		_task = [NSTask new];
+		[_task setLaunchPath:path];
+		[_task setArguments:@[]];
+		[_task setStandardError:[NSPipe pipe]];
+		[_task setStandardInput:[NSPipe pipe]];
+		[_task setStandardOutput:[NSPipe pipe]];
+		[_task launch];
+		
+		[self _initialize];
+	}
+	@catch (NSException *exception)
+	{
+		NSString* mesg = [NSString stringWithFormat:@"Starting '%@' failed: %@", path, exception.reason];
+		LOG("Error", "%s", STR(mesg));
+		[TranscriptController writeError:mesg];
+	}
+    
+    return self;
+}
+
+- (void)teardown
+{
+	[_task terminate];
+	_task = nil;
+}
+
+- (bool)invoke:(NSString*)path
+{
+	NSPipe* pipe = [_task standardInput];
+	NSFileHandle* stdin = [pipe fileHandleForWriting];
+	
+	path = [path stringByAppendingString:@"\n"];
+	NSData* data = [path dataUsingEncoding:NSUTF8StringEncoding];
+	[stdin writeData:data];
+
+	NSString* line = [self _readLine];
+	return [line compare:@"true"] == NSOrderedSame;
+}
+
+- (void)_initialize
+{
+	NSString* error = nil;
+	NSString* line = nil;
+	
+	while (!error)
+	{
+		line = [self _readLine];
+		if (line.length == 0)
+			break;
+		
+		if ([line startsWith:@"name:"])
+			self.name = [line substringFromIndex:@"name:".length];
+		
+		else if ([line startsWith:@"version:"])
+			self.version = [line substringFromIndex:@"version:".length];
+		
+		else if ([line startsWith:@"url:"])
+			self.url = [line substringFromIndex:@"url:".length];
+		
+		else if ([line startsWith:@"watch:"])
+		{
+			line = [line substringFromIndex:@"watch:".length];
+
+			NSRange range = [line rangeOfString:@":"];
+			if (range.location == NSNotFound)
+			{
+				error = @"Missing colon";
+				break;
+			}
+			
+			NSString* key = [line substringToIndex:range.location];
+			NSString* path = [line substringFromIndex:range.location+1];
+			
+			double priority = [key doubleValue];
+			if (priority == 0.0)
+			{
+				error = @"Unexpected watch line";
+			}
+			else
+			{
+				[self.priorities setObject:@(priority) forKey:path];
+				[Extensions watch:path extension:self];
+			}
+		}
+		
+		else
+		{
+			error = @"Unknown key";
+		}
+	}
+	
+	if (error)
+	{
+		NSString* mesg = [NSString stringWithFormat:@"%@ '%@': %@", error, _path, line];
+		LOG("Error", "%s", STR(mesg));
+		[TranscriptController writeError:mesg];
+	}
+}
+
+- (NSString*)_readLine
+{
+	NSPipe* pipe = [_task standardOutput];
+	NSFileHandle* stdout = [pipe fileHandleForReading];
+	return [stdout readLine];
+}
+
+@end
+
+// ---- Helpers --------------------------------------------------------------
 
 // function set_extension_name(extension, name)
 static int set_extension_name(struct lua_State* state)
 {
 	lua_getfield(state, 1, "target");
-	Extension* extension = (__bridge Extension*) lua_touserdata(state, -1);
+	LuaExtension* extension = (__bridge LuaExtension*) lua_touserdata(state, -1);
 	const char* name = lua_tostring(state, 2);
 	
 	LUA_ASSERT(extension != NULL, "extension was NULL");
@@ -124,7 +294,7 @@ static int set_extension_name(struct lua_State* state)
 static int set_extension_version(struct lua_State* state)
 {
 	lua_getfield(state, 1, "target");
-	Extension* extension = (__bridge Extension*) lua_touserdata(state, -1);
+	LuaExtension* extension = (__bridge LuaExtension*) lua_touserdata(state, -1);
 	const char* version = lua_tostring(state, 2);
 	
 	LUA_ASSERT(extension != NULL, "extension was NULL");
@@ -139,7 +309,7 @@ static int set_extension_version(struct lua_State* state)
 static int set_extension_url(struct lua_State* state)
 {
 	lua_getfield(state, 1, "target");
-	Extension* extension = (__bridge Extension*) lua_touserdata(state, -1);
+	LuaExtension* extension = (__bridge LuaExtension*) lua_touserdata(state, -1);
 	const char* url = lua_tostring(state, 2);
 	
 	LUA_ASSERT(extension != NULL, "extension was NULL");
@@ -154,7 +324,7 @@ static int set_extension_url(struct lua_State* state)
 static int watch_file(struct lua_State* state)
 {
 	lua_getfield(state, 1, "target");
-	Extension* extension = (__bridge Extension*) lua_touserdata(state, -1);
+	LuaExtension* extension = (__bridge LuaExtension*) lua_touserdata(state, -1);
 	double priority = lua_tonumber(state, 2);
 	const char* path = lua_tostring(state, 3);
 	const char* fname = lua_tostring(state, 4);
@@ -172,7 +342,7 @@ static int watch_file(struct lua_State* state)
 	return 0;
 }
 
-static void initMimsyMethods(struct lua_State* state, Extension* extension)
+static void initMimsyMethods(struct lua_State* state, LuaExtension* extension)
 {
 	luaL_Reg methods[] =
 	{
@@ -190,8 +360,7 @@ static void initMimsyMethods(struct lua_State* state, Extension* extension)
 	lua_setglobal(state, "mimsy");
 }
 
-static Extension* _executing;
-
+// ---- class Extensions --------------------------------------------------------------
 @implementation Extensions
 
 + (void)setup
@@ -202,14 +371,16 @@ static Extension* _executing;
 	_watching = [NSMutableDictionary new];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"LoadingExtensions" object:self];
 	
-	NSString* dir = [Paths installedDir:@"extensions"];
-	Glob* glob = [[Glob alloc] initWithGlob:@"*.lua"];
-	
 	NSError* error = nil;
-	[Utils enumerateDir:dir glob:glob error:&error block:
+	NSString* dir = [Paths installedDir:@"extensions"];
+	[Utils enumerateDir:dir glob:nil error:&error block:
 		 ^(NSString* path)
 		 {
-			 [self startScript:path];
+			 if ([path endsWith:@".lua"])
+				 [self _startScript:path];
+
+			 else if ([[NSFileManager defaultManager] isExecutableFileAtPath:path])
+				 [self _startExe:path];
 		 }];
 	if (error)
 	{
@@ -226,12 +397,12 @@ static Extension* _executing;
 {
 	for (NSString* path in _extensions)
 	{
-		Extension* extension = _extensions[path];
-		lua_close(extension.state);
+		BaseExtension* extension = _extensions[path];
+		[extension teardown];
 	}
 }
 
-+ (void)watch:(NSString*)path extension:(Extension*)extension
++ (void)watch:(NSString*)path extension:(BaseExtension*)extension
 {
 	NSMutableArray* extensions = _watching[path];
 	if (!extensions)
@@ -239,7 +410,7 @@ static Extension* _executing;
 	
 	[extensions addObject:extension];
 	
-	[extensions sortUsingComparator:^NSComparisonResult(Extension* lhs, Extension* rhs) {
+	[extensions sortUsingComparator:^NSComparisonResult(BaseExtension* lhs, BaseExtension* rhs) {
 		NSNumber* lhsN = lhs.priorities[path];
 		NSNumber* rhsN = rhs.priorities[path];
 		return [rhsN compare:lhsN];
@@ -259,8 +430,10 @@ static Extension* _executing;
 {
 	bool handled = false;
 	
+	path = [@"/Volumes/Mimsy" stringByAppendingPathComponent:path];
+	
 	NSArray* extensions = _watching[path];
-	for (Extension* extension in extensions)
+	for (BaseExtension* extension in extensions)
 	{
 		// To keep things sane we also don't support re-entrant notifications.
 		if (extension != _executing)
@@ -277,14 +450,14 @@ static Extension* _executing;
 	return handled;
 }
 
-+ (void)startScript:(NSString*)path
++ (void)_startScript:(NSString*)path
 {
 	lua_State* state = luaL_newstate();
 	luaL_openlibs(state);
 	
-	Extension* extension = [[Extension alloc] init:state];
+	LuaExtension* extension = [[LuaExtension alloc] init:state];
 	initMimsyMethods(state, extension);
-
+	
 	NSString* mesg = nil;
 	int err = luaL_loadfile(state, path.UTF8String);
 	if (err == 0)
@@ -315,12 +488,20 @@ static Extension* _executing;
 	{
 		mesg = [NSString stringWithFormat:@"Error loading %@: unknown error", path];
 	}
-
+	
 	if (mesg)
 	{
 		LOG("Error", "%s", STR(mesg));
 		[TranscriptController writeError:mesg];
 	}
+}
+
++ (void)_startExe:(NSString*)path
+{
+	UNUSED(path);
+	
+	ExeExtension* extension = [[ExeExtension alloc] init:path];
+	[_extensions setObject:extension forKey:path];
 }
 
 @end

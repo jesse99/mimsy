@@ -20,6 +20,8 @@
 		3712632316B5A079007AF3BF /* DataCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3712632216B5A079007AF3BF /* DataCategory.m */; };
 		3712632516B5A431007AF3BF /* libcrypto.0.9.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */; };
 		372293D319C6733A0024426C /* SpecialKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 372293D219C6733A0024426C /* SpecialKeys.m */; };
+		372293D519CD30880024426C /* GoExtensions in Resources */ = {isa = PBXBuildFile; fileRef = 372293D419CD30880024426C /* GoExtensions */; };
+		372293D819CE80EC0024426C /* FileHandleCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 372293D719CE80EC0024426C /* FileHandleCategory.m */; };
 		372D8FA916F5719E00CBBC96 /* Build.png in Resources */ = {isa = PBXBuildFile; fileRef = 372D8FA816F5719E00CBBC96 /* Build.png */; };
 		372D8FAB16F571A500CBBC96 /* Cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = 372D8FAA16F571A500CBBC96 /* Cancel.png */; };
 		373B97181933B1CB0084CCC1 /* HelpItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B97171933B1CA0084CCC1 /* HelpItem.m */; };
@@ -159,6 +161,9 @@
 		3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.0.9.8.dylib; path = ../../../usr/lib/libcrypto.0.9.8.dylib; sourceTree = "<group>"; };
 		372293D119C6733A0024426C /* SpecialKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpecialKeys.h; sourceTree = "<group>"; };
 		372293D219C6733A0024426C /* SpecialKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpecialKeys.m; sourceTree = "<group>"; };
+		372293D419CD30880024426C /* GoExtensions */ = {isa = PBXFileReference; lastKnownFileType = folder; path = GoExtensions; sourceTree = "<group>"; };
+		372293D619CE80EC0024426C /* FileHandleCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileHandleCategory.h; sourceTree = "<group>"; };
+		372293D719CE80EC0024426C /* FileHandleCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileHandleCategory.m; sourceTree = "<group>"; };
 		372D8FA816F5719E00CBBC96 /* Build.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Build.png; path = images/Build.png; sourceTree = "<group>"; };
 		372D8FAA16F571A500CBBC96 /* Cancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Cancel.png; path = images/Cancel.png; sourceTree = "<group>"; };
 		373B97161933B1CA0084CCC1 /* HelpItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpItem.h; sourceTree = "<group>"; };
@@ -401,6 +406,8 @@
 				376407ED16BEB856000B7AE3 /* ColorCategory.m */,
 				3712632116B5A079007AF3BF /* DataCategory.h */,
 				3712632216B5A079007AF3BF /* DataCategory.m */,
+				372293D619CE80EC0024426C /* FileHandleCategory.h */,
+				372293D719CE80EC0024426C /* FileHandleCategory.m */,
 				3751BCFD1846E69000DD2C8A /* ScannerCategory.h */,
 				3751BCFE1846E69000DD2C8A /* ScannerCategory.m */,
 				3752CC1616A2F7EA00B623F5 /* StringCategory.h */,
@@ -611,6 +618,7 @@
 				37A8C69C16758FF400D4DB13 /* Mimsy */,
 				37A8C6BC16758FF400D4DB13 /* MimsyTests */,
 				37A8C69516758FF400D4DB13 /* Frameworks */,
+				372293D419CD30880024426C /* GoExtensions */,
 				37A8C69316758FF400D4DB13 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -830,6 +838,7 @@
 				37ECF0691930201A00061C0A /* FindInFilesWindow.xib in Resources */,
 				37CE3E6F19A967B8000AEA3C /* extensions in Resources */,
 				373B971A1937F1240084CCC1 /* FindResultsWindow.xib in Resources */,
+				372293D519CD30880024426C /* GoExtensions in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -875,6 +884,7 @@
 				375140D416800FFD00C329AF /* ConfigParser.m in Sources */,
 				375140E416828EB600C329AF /* WindowsDatabase.m in Sources */,
 				375140E716835CB400C329AF /* Paths.m in Sources */,
+				372293D819CE80EC0024426C /* FileHandleCategory.m in Sources */,
 				375140EA1684B21B00C329AF /* RestoreView.m in Sources */,
 				375140F2168BD64000C329AF /* AsyncStyler.m in Sources */,
 				375140FE168BFA7800C329AF /* StyleRuns.m in Sources */,
