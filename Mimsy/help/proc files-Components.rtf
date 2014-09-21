@@ -22,7 +22,7 @@ When an executable extension starts up it must write lines formatted as "<key>:<
 \b watch		
 \b0 "<floating point priority>:<proc file path>". When the contents of one of those proc files changes its path along with a new line is written by Mimsy to the extension's stdin with the extensions using higher priorities notified first. Normal priority is 1.0. When the extension finishes processing the notification it should write "true\\n" or "false\\n" to stdout. True is used to suppress further processing of things like key events.\
 \
-After writing the above the extension must write a blank line.\
+After writing the above the extension must write a blank line. If an executable extension writes to stderr it will appear within Mimsy's transcript window.\
 \
 Lua extensions use mimsy methods instead of stdin and stdout:\
 

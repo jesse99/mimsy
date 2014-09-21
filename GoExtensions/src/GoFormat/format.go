@@ -15,6 +15,7 @@ func logErr(format string, args ...interface{}) {
 	var text = fmt.Sprintf(format, args...)
 	var line = fmt.Sprintf("GoFormat:%s", text)
 	ioutil.WriteFile("/Volumes/Mimsy/log/line", []byte(line), 0644)
+	//fmt.Fprintln(os.Stderr, line)
 
 	ioutil.WriteFile("/Volumes/Mimsy/beep", []byte{}, 0644)
 }

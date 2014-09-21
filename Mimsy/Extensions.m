@@ -290,6 +290,15 @@ static bool block_timed_out(void (^block)())
 		[TranscriptController writeError:mesg];
 	}
 	
+	NSPipe* pipe = [_task standardError];
+	NSFileHandle* stderr = [pipe fileHandleForReading];
+	NSData* data = [stderr availableDataNonBlocking];
+	if (data && data.length > 0)
+	{
+		NSString* text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+		[TranscriptController writeStderr:text];
+	}
+	
 	return [line compare:@"true"] == NSOrderedSame;
 }
 

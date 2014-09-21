@@ -6,8 +6,10 @@ install http://osxfuse.github.io/
 	
 cd GoExtensions && go install GoFormat && cp bin/GoFormat /Users/jessejones/Library/Application\ Support/Mimsy/extensions && cd -
 	
+
 * Write a go extension to format go code on save:
-	- stderr could go to the transcript
+	- can we distinguish between auto and non-auto saves?
+	   see if we can hook into saveDocument:
 	- need to write false\n on errors?
 * Merge into master
 * Add a way to build the go code from xcode
