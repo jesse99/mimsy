@@ -395,6 +395,14 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	}
 }
 
+- (void)saveDocument:(id)sender
+{
+	NSString* path = [NSString stringWithFormat:@"%@/user-saving", [_controller getProcFilePath]];
+	(void) [Extensions invoke:path];
+
+	[super saveDocument:sender];
+}
+
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
 {
 	ASSERT(self.text == nil);

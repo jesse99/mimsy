@@ -21,10 +21,6 @@ function init()
 	write_file("special-keys", keys)
 end
 
-function log(text)
-	write_file("special-keys", keys)
-end
-
 function split(str, pattern)
 	results = {}
 	local start = 1

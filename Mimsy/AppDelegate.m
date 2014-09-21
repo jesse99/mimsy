@@ -154,7 +154,7 @@ typedef void (^NullaryBlock)();
 				readStr:^NSString* {return @"";}
 				writeStr:^(NSString* str)
 				{
-					NSRange range = [str rangeOfString:@":"];
+					NSRange range = [str rangeOfString:@"!"];
 					if (range.location != NSNotFound)
 						LOG(STR([str substringToIndex:range.location]), "%s", STR([str substringFromIndex:range.location+1]));
 					else

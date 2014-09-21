@@ -106,7 +106,7 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \b0\fs36 \cf0 \CocoaLigature0 	
 \b \CocoaLigature1 line
 \b0 \CocoaLigature0  (w)\
-	Used to write a line to Mimsy's log. Formatted as one or more lines of <topic>:<text> where topic is an arbitrary colon separated list of topic and sub-topics. By convention spammy logs end with the Verbose sub-topic. A trailing new line is added automatically.\
+	Used to write a line to Mimsy's log. Formatted as one or more lines of <topic>!<text> where topic is an arbitrary colon separated list of topic and sub-topics. By convention spammy logs end with the Verbose sub-topic. A trailing new line is added automatically.\
 	\
 \pard\tx626\pardeftab626\pardirnatural
 
@@ -163,7 +163,7 @@ If the extension supports multiple contexts then it should do multiple writes.\
 	saving
 \b0  (w)\
 \pard\tx626\pardeftab626\pardirnatural
-\cf0 \CocoaLigature0 	This is intended to be watched: reads will error out. Watchers will be invoked just before the document is written to disk.\
+\cf0 \CocoaLigature0 	This is intended to be watched: reads will error out. Watchers will be invoked just before the document is written to disk. Note that this happens both when the user saves and when the document is auto-saved (also see user-saving).\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
 \b \cf0 \CocoaLigature1 \
@@ -195,7 +195,14 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
-\b \cf0 \CocoaLigature1 	word-wrap
+\b \cf0 \CocoaLigature1 	user-saving
+\b0  (w)\
+\pard\tx626\pardeftab626\pardirnatural
+\cf0 \CocoaLigature0 	This is intended to be watched: reads will error out. Watchers will be invoked just before the document is written to disk. Note that this happens only when the user saves (the saving file will also notify on auto-saves).\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b \cf0 \CocoaLigature1 \
+	word-wrap
 \b0  (rw)\
 	"true" or "false".\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural

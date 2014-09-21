@@ -119,4 +119,15 @@
 	return result;
 }
 
+- (NSUInteger)indexOfLastChar:(unichar)needle;
+{
+	for (NSUInteger i = self.length - 1; i < self.length; --i)
+	{
+		if ([self characterAtIndex:i] == needle)
+			return i;
+	}
+	
+	return NSNotFound;
+}
+
 @end

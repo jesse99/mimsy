@@ -7,6 +7,7 @@
 - (bool)contains:(NSString*)needle;
 
 - (bool)containsChar:(unichar)ch;
+- (NSUInteger)indexOfLastChar:(unichar)needle;
 
 // Like componentsSeparatedByString: except that empty strings are not returned.
 - (NSArray*)splitByString:(NSString*)separator;

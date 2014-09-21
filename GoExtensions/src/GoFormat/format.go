@@ -11,20 +11,22 @@ import (
 	"os/exec"
 )
 
-func logErr(format string, args ...interface{}) {
-	var text = fmt.Sprintf(format, args...)
-	var line = fmt.Sprintf("GoFormat:%s", text)
-	ioutil.WriteFile("/Volumes/Mimsy/log/line", []byte(line), 0644)
-	//fmt.Fprintln(os.Stderr, line)
+func logVerbose(verbose bool, format string, args ...interface{}) {
+	var topic = "GoFormat"
+	if verbose {
+		topic += ":Verbose"
+	}
 
-	ioutil.WriteFile("/Volumes/Mimsy/beep", []byte{}, 0644)
+	var text = fmt.Sprintf(format, args...)
+	var line = fmt.Sprintf("%s!%s", topic, text)
+	ioutil.WriteFile("/Volumes/Mimsy/log/line", []byte(line), 0644)
 }
 
 func rewriteFile(path string) {
 	// Read the document.
 	var oldBytes, err = ioutil.ReadFile(path)
 	if err != nil {
-		logErr("read file error: %s", err)
+		logVerbose(false, "read file error: %s", err)
 		return
 	}
 
@@ -37,7 +39,9 @@ func rewriteFile(path string) {
 	command.Stderr = &stderr
 	err = command.Run()
 	if err != nil {
-		logErr("gofmt error: %s", err)
+		logVerbose(true, "%s", err)
+		logVerbose(true, "%s", string(stderr.Bytes()))
+		ioutil.WriteFile("/Volumes/Mimsy/beep", []byte{}, 0644)
 		return
 	}
 
@@ -48,20 +52,21 @@ func rewriteFile(path string) {
 func main() {
 	fmt.Println("name:GoFormat")
 	fmt.Println("version:1.0")
-	fmt.Println("watch:1.0:/Volumes/Mimsy/text-window/1/saving")
+	fmt.Println("watch:1.0:/Volumes/Mimsy/text-window/1/user-saving")
 	fmt.Println("")
 
 	var reader = bufio.NewReader(os.Stdin)
 	for true {
 		// We only watch one file so we don't care about the path that changed.
 		var _, err = reader.ReadString('\n')
-
-		if err == nil {
-			var language, _ = ioutil.ReadFile("/Volumes/Mimsy/text-window/1/language")
-			if string(language) == "go" {
-				rewriteFile("/Volumes/Mimsy/text-window/1/text")
-			}
-			fmt.Println("false")
+		if err != nil {
+			break
 		}
+
+		var language, _ = ioutil.ReadFile("/Volumes/Mimsy/text-window/1/language")
+		if string(language) == "go" {
+			rewriteFile("/Volumes/Mimsy/text-window/1/text")
+		}
+		fmt.Println("false")
 	}
 }
