@@ -3,6 +3,7 @@
 #import <lualib.h>
 #import <lauxlib.h>
 
+#import "AppSettings.h"
 #import "FileHandleCategory.h"
 #import "Glob.h"
 #import "Paths.h"
@@ -125,7 +126,11 @@ static bool block_timed_out(void (^block)())
 	
 	bool timedout = block_timed_out(^{
 		lua_getglobal(self.state, "init");
-		if (lua_pcall(self.state, 0, 0, 0) != 0)				// 0 args, no result
+		if (lua_pcall(self.state, 0, 0, 0) == 0)				// 0 args, no result
+		{
+			LOG("Extensions", "loaded %s %s", STR(self.name), STR(self.version));
+		}
+		else
 		{
 			NSString* reason = [NSString stringWithUTF8String:lua_tostring(_state, -1)];
 			mesg = [NSString stringWithFormat:@"%@ extension's init failed: %@", self.name, reason];
@@ -211,6 +216,7 @@ static bool block_timed_out(void (^block)())
 		_task = [NSTask new];
 		[_task setLaunchPath:path];
 		[_task setArguments:@[]];
+		[_task setEnvironment:[self _environment]];
 		[_task setStandardError:[NSPipe pipe]];
 		[_task setStandardInput:[NSPipe pipe]];
 		[_task setStandardOutput:[NSPipe pipe]];
@@ -219,6 +225,8 @@ static bool block_timed_out(void (^block)())
 		// launch can throw so we'll go ahead and throw too.
 		if (block_timed_out(^{[self _initialize];}))
 			[NSException raise:@"ExeExtension failed" format:@"took more than %ds to load", BLOCK_TIMEOUT];
+
+		LOG("Extensions", "loaded %s %s", STR(self.name), STR(self.version));
 	}
 	@catch (NSException *exception)
 	{
@@ -230,6 +238,28 @@ static bool block_timed_out(void (^block)())
 	}
     
     return self;
+}
+
+- (NSDictionary*)_environment
+{
+	NSMutableDictionary* env = [NSMutableDictionary new];
+	[env addEntriesFromDictionary:[[NSProcessInfo processInfo] environment]];
+	
+	NSArray* newPaths = [AppSettings stringValues:@"AppendPath"];
+	if (newPaths && newPaths.count > 0)
+	{
+		NSString* suffix = [newPaths componentsJoinedByString:@":"];
+		
+		NSString* paths = env[@"PATH"];
+		if (paths && paths.length > 0)
+			paths = [NSString stringWithFormat:@"%@:%@", paths, suffix];
+		else
+			paths = suffix;
+		
+		env[@"PATH"] = paths;
+	}
+	
+	return env;
 }
 
 - (void)teardown

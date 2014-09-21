@@ -7,11 +7,11 @@ install http://osxfuse.github.io/
 cd GoExtensions && go install GoFormat && cp bin/GoFormat /Users/jessejones/Library/Application\ Support/Mimsy/extensions && cd -
 	
 * Write a go extension to format go code on save:
-	- add a PATH setting?
 	- stderr could go to the transcript
 	- need to write false\n on errors?
 * Merge into master
 * Add a way to build the go code from xcode
+	- also make sure that executables are copied into installed files
 * Extending a double-click selection doesn't work right
 * May want to add a command line helper
 * Can't search for: #	modified:

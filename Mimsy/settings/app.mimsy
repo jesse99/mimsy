@@ -52,6 +52,14 @@ IgnoredPath: */Backups.backupdb/*
 IgnoredPath: */Xcode.app/*
 
 #### Misc Settings ####################################################
+# This is added to the PATH enviroment variable used by executable extensions
+# (this is useful because extensions inherit Mimsy's environment variables and
+# GUI applications don't have the same variables as shell tools).
+#
+# This setting may appear multiple times. /opt/local/bin is where Go installs
+# its tools.
+AppendPath: /opt/local/bin
+
 # Number of milliseconds before changing the alpha for the translucent
 # warning and info windows displayed above text windows, e.g. the unmatched 
 # brace warning window or the info window displayed saying how many replacements

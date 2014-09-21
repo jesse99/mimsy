@@ -28,7 +28,7 @@ func rewriteFile(path string) {
 	}
 
 	// Re-format it.
-	var command = exec.Command("/opt/local/bin/gofmt", "--tabwidth=4")
+	var command = exec.Command("gofmt", "--tabwidth=4")
 	command.Stdin = bytes.NewReader(oldBytes)
 
 	var stdout, stderr bytes.Buffer
