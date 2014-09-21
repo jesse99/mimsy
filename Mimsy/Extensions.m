@@ -36,6 +36,26 @@ static NSMutableDictionary* _watching;		// path => [BaseExtension]
 
 static BaseExtension* _executing;			// the extension currently being executed (or nil)
 
+#define BLOCK_TIMEOUT 5
+
+// We don't want to lock up the UI if an extension malfunctions but extensions also need
+// to be able to safely access UI state. So we spin up a new thread for extensions but
+// block the main thread until the extension either finishes or times out.
+static bool block_timed_out(void (^block)())
+{
+	dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+	
+	dispatch_queue_t concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+	dispatch_async(concurrent,
+	   ^{
+		   block();
+		   dispatch_semaphore_signal(sem);
+	   });
+
+	dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, BLOCK_TIMEOUT*NSEC_PER_SEC);
+	return dispatch_semaphore_wait(sem, timeout) != 0;
+}
+
 // ---- class BaseExtension --------------------------------------------------------------
 @interface BaseExtension : NSObject
 
@@ -99,16 +119,29 @@ static BaseExtension* _executing;			// the extension currently being executed (o
     return self;
 }
 
-- (void)callInit
+- (bool)callInit
 {
-	lua_getglobal(self.state, "init");
-	if (lua_pcall(self.state, 0, 0, 0) != 0)				// 0 args, no result
+	__block NSString* mesg = nil;
+	
+	bool timedout = block_timed_out(^{
+		lua_getglobal(self.state, "init");
+		if (lua_pcall(self.state, 0, 0, 0) != 0)				// 0 args, no result
+		{
+			NSString* reason = [NSString stringWithUTF8String:lua_tostring(_state, -1)];
+			mesg = [NSString stringWithFormat:@"%@ extension's init failed: %@", self.name, reason];
+		}
+	});
+	
+	if (timedout)
+		mesg = [NSString stringWithFormat:@"%@ extension's init took longer than %ds to run", self.name, BLOCK_TIMEOUT];
+	
+	if (mesg)
 	{
-		NSString* reason = [NSString stringWithUTF8String:lua_tostring(_state, -1)];
-		NSString* mesg = [NSString stringWithFormat:@"%@ init failed: %@", self.name, reason];
 		LOG("Error", "%s", STR(mesg));
 		[TranscriptController writeError:mesg];
 	}
+		
+	return mesg == nil;
 }
 
 - (void)teardown
@@ -121,24 +154,34 @@ static BaseExtension* _executing;			// the extension currently being executed (o
 	NSString* fname = self.watched[path];
 	ASSERT(fname);
 	
-	bool handled = false;
+	__block bool handled = false;
+	__block NSString* mesg = nil;
 	
-	LOG("Extensions:Verbose", "invoking %s for %s", STR(fname), STR(self.name));
-	lua_getglobal(self.state, fname.UTF8String);
-	if (lua_pcall(self.state, 0, 1, 0) == 0)				// 0 args, bool result
+	bool timedout = block_timed_out(^{
+		LOG("Extensions:Verbose", "invoking %s for %s", STR(fname), STR(self.name));
+		lua_getglobal(self.state, fname.UTF8String);
+		if (lua_pcall(self.state, 0, 1, 0) == 0)				// 0 args, bool result
+		{
+			handled = lua_toboolean(self.state, 1);
+			lua_pop(self.state, 1);
+			LOG("Extensions:Verbose", "   done invoking %s", STR(self.name));
+		}
+		else
+		{
+			NSString* reason = [NSString stringWithUTF8String:lua_tostring(_state, -1)];
+			mesg = [NSString stringWithFormat:@"%@ invoke failed: %@", self.name, reason];
+		}
+	});
+	
+	if (timedout)
+		mesg = [NSString stringWithFormat:@"%@ extension's invoke for '%@' took longer than %ds to run", self.name, path, BLOCK_TIMEOUT];
+	
+	if (mesg)
 	{
-		handled = lua_toboolean(self.state, 1);
-		lua_pop(self.state, 1);
-		LOG("Extensions:Verbose", "   done invoking %s", STR(self.name));
-	}
-	else
-	{
-		NSString* reason = [NSString stringWithUTF8String:lua_tostring(_state, -1)];
-		NSString* mesg = [NSString stringWithFormat:@"%@ invoke failed: %@", self.name, reason];
 		LOG("Error", "%s", STR(mesg));
 		[TranscriptController writeError:mesg];
 	}
-	
+		
 	return handled;
 }
 
@@ -173,13 +216,17 @@ static BaseExtension* _executing;			// the extension currently being executed (o
 		[_task setStandardOutput:[NSPipe pipe]];
 		[_task launch];
 		
-		[self _initialize];
+		// launch can throw so we'll go ahead and throw too.
+		if (block_timed_out(^{[self _initialize];}))
+			[NSException raise:@"ExeExtension failed" format:@"took more than %ds to load", BLOCK_TIMEOUT];
 	}
 	@catch (NSException *exception)
 	{
 		NSString* mesg = [NSString stringWithFormat:@"Starting '%@' failed: %@", path, exception.reason];
 		LOG("Error", "%s", STR(mesg));
 		[TranscriptController writeError:mesg];
+		
+		self = nil;
 	}
     
     return self;
@@ -193,14 +240,26 @@ static BaseExtension* _executing;			// the extension currently being executed (o
 
 - (bool)invoke:(NSString*)path
 {
-	NSPipe* pipe = [_task standardInput];
-	NSFileHandle* stdin = [pipe fileHandleForWriting];
+	__block NSString* line = @"false";
 	
-	path = [path stringByAppendingString:@"\n"];
-	NSData* data = [path dataUsingEncoding:NSUTF8StringEncoding];
-	[stdin writeData:data];
-
-	NSString* line = [self _readLine];
+	bool timed_out = block_timed_out(^{
+		NSPipe* pipe = [_task standardInput];
+		NSFileHandle* stdin = [pipe fileHandleForWriting];
+		
+		NSString* path2 = [path stringByAppendingString:@"\n"];
+		NSData* data = [path2 dataUsingEncoding:NSUTF8StringEncoding];
+		[stdin writeData:data];
+		
+		line = [self _readLine];
+	});
+	
+	if (timed_out)
+	{
+		NSString* mesg = [NSString stringWithFormat:@"%@ extension took longer than %ds to handle write to %@", self.name, BLOCK_TIMEOUT, path];
+		LOG("Error", "%s", STR(mesg));
+		[TranscriptController writeError:mesg];
+	}
+	
 	return [line compare:@"true"] == NSOrderedSame;
 }
 
@@ -464,8 +523,8 @@ static void initMimsyMethods(struct lua_State* state, LuaExtension* extension)
 	{
 		if (lua_pcall(state, 0, 0, 0) == 0)
 		{
-			[extension callInit];
-			[_extensions setObject:extension forKey:path];
+			if ([extension callInit])
+				[_extensions setObject:extension forKey:path];
 		}
 		else
 		{
@@ -501,7 +560,8 @@ static void initMimsyMethods(struct lua_State* state, LuaExtension* extension)
 	UNUSED(path);
 	
 	ExeExtension* extension = [[ExeExtension alloc] init:path];
-	[_extensions setObject:extension forKey:path];
+	if (extension)
+		[_extensions setObject:extension forKey:path];
 }
 
 @end

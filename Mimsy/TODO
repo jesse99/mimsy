@@ -4,18 +4,17 @@ install http://osxfuse.github.io/
 	can skip this but a lot of features will be disabled
 	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
 	
+cd GoExtensions && go install GoFormat && cp bin/GoFormat /Users/jessejones/Library/Application\ Support/Mimsy/extensions && cd -
+	
 * Write a go extension to format go code on save:
-	- need timeouts when reading from exe extensions
-	- may want to support prefs, e.g. for tab widths
 	- add a PATH setting?
 	- stderr could go to the transcript
 	- need to write false\n on errors?
-	- do we need timeouts with lua?
 * Merge into master
 * Add a way to build the go code from xcode
 * Extending a double-click selection doesn't work right
 * May want to add a command line helper
-* Can't search for: #	modified:   
+* Can't search for: #	modified:
 * Should be able to double click in find in time machine.
 * Add a go extension for search on sites:
 	- will need language proc files
