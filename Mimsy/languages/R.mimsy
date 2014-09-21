@@ -23,9 +23,9 @@ Keyword: [^\w_.](?: abbreviate | abs | acos | acosh | addNA | addTaskCallback | 
 Repeat: \b(?: for | repeat | while)\b
 Identifier: \b [a-zA-Z_] [\w_]* \b
 
-Number: (?<= \W) [\d_]+ \. \d+ (?: [eE] [\+-]? \d+)? (?= \W)
-Number: (?<= \W) [\d_]+ (?: [eE] [\+-]? \d+)? L? (?= \W)
 String: " (?: [^"\r\n\\] | \\.)* "
 String: ' (?: [^'\r\n\\] | \\.)* '
+Number: (?<= \W) [\d_]+ \. \d+ (?: [eE] [\+-]? \d+)? (?= \W)
+Number: (?<= \W) [\d_]+ (?: [eE] [\+-]? \d+)? L? (?= \W)
 
 Function: ^ \s* ([\w_]+) \s* (?= (?: <-)|= \s* function)

@@ -21,9 +21,10 @@ Repeat: \b(?: for | while)\b
 StorageClass: \b(?: const | extern | mut | priv | pub | pure | ref | static | unsafe)\b
 Type: \b(?: Const | Copy | Durable | Send | Owned | binary32 | binary64 | bool | char | f32 | f64 | float | i16 | i32 | i64 | i8 | int | self | str | u16 | u32 | u64 | u8 | uint) (?! \w | \( )
 Macro: \b(?: fmt\! | error! | warn\! | info\! | debug\! | env\! | stringify\! | proto\! | include\! | include_str\! | include_bin\! | log_syntax\! | trace_macros\! | ident_to_str\! | concat_idents\!)
-Identifier: \b [a-zA-Z_] [\w_]* \b
 
 Boolean: \b(?: false | true)\b
+Identifier: \b [a-zA-Z_] [\w_]* \b
+
 String: " (?: [^"\\] | \\. | \\\n | \\\r)* "
 Character: ' (?: [^'\r\n\\] | \\.)* '
 Float: \W (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)? (?: f \d+)?) \W

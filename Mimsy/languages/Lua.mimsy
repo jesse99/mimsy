@@ -17,15 +17,16 @@ StorageClass: \b(?: local)\b
 Identifier: \b(?: assert | collectgarbage | dofile | error | getfenv | getmetatable | ipairs | load | loadfile | loadstring | next | pairs | pcall | print | rawequal | rawget | rawset | select | setfenv | setmetatable | tonumber | tostring | type | unpack | xpcall)\b
 Comment: -- .* $
 Macro: \b(?: _G |  | _VERSION)\b
-Identifier: \b [a-zA-Z_] [\w_]* \b
 
 Boolean: \b(?: false | true)\b
-Float: \W (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)?) \W
-Float: \W (\. [\d_]+ (?: [eE] [+-]? [\d_]+)?) \W
-Number: \W (\d+) \W
-Number: \W (0x [0-9a-fA-f]+) \W
+Identifier: \b [a-zA-Z_] [\w_]* \b
 
 String: " (?: [^"\r\n\\] | \\.)* "
 String: ' (?: [^'\r\n\\] | \\.)* '
 String: \[=*\[ (?: . | \r | \n)*? \]=*\]
+
+Float: \W (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)?) \W
+Float: \W (\. [\d_]+ (?: [eE] [+-]? [\d_]+)?) \W
+Number: \W (\d+) \W
+Number: \W (0x [0-9a-fA-f]+) \W
 

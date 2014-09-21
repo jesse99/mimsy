@@ -16,9 +16,14 @@ Keyword: \b(?: by | on | ascending | descending | from | get | group | into | jo
 Operator: \b(?: sizeof | typeof)\b
 Repeat: \b(?: do | foreach | for | while)\b
 StorageClass: \b(?: const | explicit | extern | out | readonly | unsafe  | implicit | internal | ref | virtual | sealed | volatile | static)\b
-Identifier: \b [a-zA-Z_] [\w_]* \b
 
 Boolean: \b(?: false | true)\b
+Identifier: \b [a-zA-Z_] [\w_]* \b
+
+String: " (?: [^"\r\n\\] | \\.)* "
+String: @" (?: [^"\\] | \\. | (?: " "))* "
+Character: ' (?: [^'\r\n\\] | \\.)* '
+
 Float: (?<= \W) \d+ \. \d+ (?: [eE] [\+-]? \d+)? [FfDdMm]? (?= \W)
 Float: (?<= \W) \. \d+ (?: [eE] [\+-]? \d+)? [FfDdMm]? (?= \W)
 Float: (?<= \W) \d+ [eE] [\+-]? \d+ [FfDdMm]? (?= \W)
@@ -33,6 +38,3 @@ PreCondit: \x23 \s* (?: if | elif | region) .* $
 PreCondit: \x23 \s* (?: endregion)
 Include: \x23 \s* include
 
-String: " (?: [^"\r\n\\] | \\.)* "
-String: @" (?: [^"\\] | \\. | (?: " "))* "
-Character: ' (?: [^'\r\n\\] | \\.)* '
