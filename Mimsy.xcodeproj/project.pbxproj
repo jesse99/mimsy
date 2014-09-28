@@ -749,6 +749,7 @@
 				37A8C68E16758FF400D4DB13 /* Sources */,
 				37A8C68F16758FF400D4DB13 /* Frameworks */,
 				37A8C69016758FF400D4DB13 /* Resources */,
+				376E62C819CFB40E006A9C2D /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -853,6 +854,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		376E62C819CFB40E006A9C2D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export GOPATH=\"$PROJECT_DIR/GoExtensions\" && cd \"$PROJECT_DIR/GoExtensions/src\" && /usr/local/go/bin/go install * && cp -R \"../bin/\" \"$TARGET_BUILD_DIR/$CONTENTS_FOLDER_PATH/Resources/extensions\"";
+		};
 		37A8C6B416758FF400D4DB13 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
