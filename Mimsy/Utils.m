@@ -247,22 +247,28 @@ static NSString* getTaskOutput(id handle)
 	NSError* result = nil;
 	@try
 	{
+		LOG("Builders", "running %s %s", STR(task.launchPath), STR([task.arguments componentsJoinedByString:@" "]));
 		[task launch];
 		
 		if (timeout == NoTimeOut)
 		{
-			[task waitUntilExit];
-			if (task.terminationStatus != 0)
-			{
-				NSDictionary* dict = @{
-					NSLocalizedFailureReasonErrorKey:[NSString stringWithFormat:@"%@ failed with return code %d", task.launchPath, task.terminationStatus],
-					 @"return code":[NSNumber numberWithInt:task.terminationStatus],
-					 @"stderr":getTaskOutput([task standardError]),
-					 @"stdout":getTaskOutput([task standardOutput])};
-				result = [NSError errorWithDomain:@"process failed" code:task.terminationStatus userInfo:dict];
-			}
+			timeout = 60*60;
+			
+			// TODO: get rid of this code? It seemed to cause hangs and it's simpler to use one
+			// code path anyway.
+//			[task waitUntilExit];
+//			LOG("Builders", "finished with result code %d", task.terminationStatus);
+//			if (task.terminationStatus != 0)
+//			{
+//				NSDictionary* dict = @{
+//					NSLocalizedFailureReasonErrorKey:[NSString stringWithFormat:@"%@ failed with return code %d", task.launchPath, task.terminationStatus],
+//					 @"return code":[NSNumber numberWithInt:task.terminationStatus],
+//					 @"stderr":getTaskOutput([task standardError]),
+//					 @"stdout":getTaskOutput([task standardOutput])};
+//				result = [NSError errorWithDomain:@"process failed" code:task.terminationStatus userInfo:dict];
+//			}
 		}
-		else
+//		else
 		{
 			time_t startTime = time(NULL);
 			time_t elapsed = time(NULL) - startTime;
@@ -273,9 +279,14 @@ static NSString* getTaskOutput(id handle)
 				elapsed = time(NULL) - startTime;
 			}
 			
-			if (task.isRunning)
+			if (!task.isRunning)
+			{
+				LOG("Builders", "%s finished running", STR(task.launchPath));
+			}
+			else
 			{
 				[task terminate];
+				LOG("Builders", "%s timed out", STR(task.launchPath));
 				
 				NSDictionary* dict = @{
 					NSLocalizedFailureReasonErrorKey:[NSString stringWithFormat:@"%@ took longer than %lds to run", task.launchPath, timeout],
