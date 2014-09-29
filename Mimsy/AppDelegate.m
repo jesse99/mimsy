@@ -472,6 +472,20 @@ typedef void (^NullaryBlock)();
 	runFunctionalTests();
 }
 
+// This isn't terribly useful with auto-saving on, but it will help make old-school
+// uses more comfortable. There's also a save all method on NSDocumentController but
+// I think it just auto-saves because it doesn't clear the "edited" text within the
+// window titles.
+- (void)saveAllDocuments:(id)sender
+{
+	for (NSDocument* doc in [[NSDocumentController sharedDocumentController] documents])
+	{
+		if (doc.isDocumentEdited)
+			if (doc.fileURL && doc.fileType)
+				[doc saveDocument:sender];
+	}
+}
+
 - (void)runFTest:(id)sender
 {
 	runFunctionalTest([sender representedObject]);

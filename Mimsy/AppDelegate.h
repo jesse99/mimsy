@@ -8,6 +8,8 @@ void initLogGlobs(void);
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
 + (void)restoreWindowWithIdentifier:(NSString*)identifier state:(NSCoder*)state completionHandler:(void (^)(NSWindow*, NSError*))handler;
 
+- (void)saveAllDocuments:(id)sender;
+
 - (void)openWithMimsy:(NSURL*)url;
 - (IBAction)openAsBinary:(id)sender;
 - (void)searchSite:(id)sender;

@@ -129,6 +129,12 @@
                                     <action selector="saveDocument:" target="-1" id="362"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Save All" alternate="YES" keyEquivalent="s" id="gzw-45-3j7">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="saveAllDocuments:" target="-1" id="Tgx-hg-4Db"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Save As…" id="539">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES"/>
                                 <connections>

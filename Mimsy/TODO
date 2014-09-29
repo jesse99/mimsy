@@ -5,12 +5,17 @@ install http://osxfuse.github.io/
 	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
 	
 
-
-* Build doesn't save
+* Do a commit
+* Got a hang doing:
+	running /Users/jessejones/Library/Application Support/Mimsy/builders/make.py (null)
 * Highlight current line.
+* Make sure goFormat is dieng
+	- when the app exits normally
+	- when stopped via xcode
 * Extending a double-click selection doesn't work right
 * Building doesn't do a save
 * Add support for parsing build errors and selecting next and previous build errors
+	- maybe extensions can write tool+regex somewhere
 * Add goto line support
 * May want to add a command line helper
 * Can't search for: #	modified:
