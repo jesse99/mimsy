@@ -5,9 +5,6 @@ install http://osxfuse.github.io/
 	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
 	
 
-* Do a commit
-* Got a hang doing:
-	running /Users/jessejones/Library/Application Support/Mimsy/builders/make.py (null)
 * Highlight current line.
 * Make sure goFormat is dieng
 	- when the app exits normally

@@ -255,7 +255,8 @@ static NSString* getTaskOutput(id handle)
 			timeout = 60*60;
 			
 			// TODO: get rid of this code? It seemed to cause hangs and it's simpler to use one
-			// code path anyway.
+			// code path anyway. Looks like hangs happen with both sets of code. Seems to be
+			// correlated with high CPU usage.
 //			[task waitUntilExit];
 //			LOG("Builders", "finished with result code %d", task.terminationStatus);
 //			if (task.terminationStatus != 0)
