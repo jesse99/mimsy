@@ -154,11 +154,11 @@ typedef void (^NullaryBlock)();
 				readStr:^NSString* {return @"";}
 				writeStr:^(NSString* str)
 				{
-					NSRange range = [str rangeOfString:@"!"];
+					NSRange range = [str rangeOfString:@"\f"];
 					if (range.location != NSNotFound)
 						LOG(STR([str substringToIndex:range.location]), "%s", STR([str substringFromIndex:range.location+1]));
 					else
-						LOG("Error", "expected '<topic>:<line>' not: '%s'", STR(str));
+						LOG("Error", "expected '<topic>\f<line>' not: '%s'", STR(str));
 				}];
 	
 	[_procFileSystem addReader:_versionFile];

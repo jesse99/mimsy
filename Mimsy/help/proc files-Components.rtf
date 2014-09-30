@@ -1,5 +1,5 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf210
-{\fonttbl\f0\froman\fcharset0 Times-Roman;}
+{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\fnil\fcharset0 Menlo-Regular;}
 {\colortbl;\red255\green255\blue255;}
 \viewkind0
 \deftab480
@@ -7,7 +7,7 @@
 
 \f0\fs36 \cf0 The proc files are used by extensions to customize the behavior of Mimsy. Extensions are either Lua scripts or executables. \
 \
-When an executable extension starts up it must write lines formatted as "<key>:<value>" to stdout where the keys may be:\
+When an executable extension starts up it must write lines formatted as "<key>\\f<value>" to stdout where the keys may be:\
 \pard\pardeftab480\pardirnatural
 
 \b \cf0 name		
@@ -20,7 +20,7 @@ When an executable extension starts up it must write lines formatted as "<key>:<
 \b0 An url for the extension's web site.\
 
 \b watch		
-\b0 "<floating point priority>:<proc file path>". When the contents of one of those proc files changes its path along with a new line is written by Mimsy to the extension's stdin with the extensions using higher priorities notified first. Normal priority is 1.0. When the extension finishes processing the notification it should write "true\\n" or "false\\n" to stdout. True is used to suppress further processing of things like key events.\
+\b0 "<floating point priority>\\f<proc file path>". When the contents of one of those proc files changes its path along with a new line is written by Mimsy to the extension's stdin with the extensions using higher priorities notified first. Normal priority is 1.0. When the extension finishes processing the notification it should write "true\\n" or "false\\n" to stdout. True is used to suppress further processing of things like key events.\
 \
 After writing the above the extension must write a blank line. If an executable extension writes to stderr it will appear within Mimsy's transcript window.\
 \
@@ -37,6 +37,8 @@ mimsy:set_extension_version(str)
 \b0 name should be the name of a lua function with no arguments and a bool result that is called when the proc file changes. Return true to suppress further handling of the event.\
 \
 Note that, in general, the proc files should only be accessed when mimsy calls into an extension. Doing so elsewhere (e.g. from within a terminal window) may not produce sensible results due to threading issues.\
+\
+For colors CSS3 color names ("Dark Green"), VIM 7.3 names ("gray50"), hex RGB or RGBA values ("#FF0000" or "#FF0000FF"), or decimal RGB or RGBA values ("(255, 0, 0)" or "(255, 0, 0, 255)") may be used. Text document proc files also accept "back color", "selection back color", and colors from the active style file ("keyword color"). Spaces and case differences are ignored.\
 \
 The proc files are:\
 \
@@ -106,7 +108,9 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \b0\fs36 \cf0 \CocoaLigature0 	
 \b \CocoaLigature1 line
 \b0 \CocoaLigature0  (w)\
-	Used to write a line to Mimsy's log. Formatted as one or more lines of <topic>!<text> where topic is an arbitrary colon separated list of topic and sub-topics. By convention spammy logs end with the Verbose sub-topic. A trailing new line is added automatically.\
+	Used to write a line to Mimsy's log. Formatted as one or more lines of <topic>
+\f1\fs26 \\f
+\f0\fs36 <text> where topic is an arbitrary colon separated list of topic and sub-topics. By convention spammy logs end with the Verbose sub-topic. A trailing new line is added automatically.\
 	\
 \pard\tx626\pardeftab626\pardirnatural
 
@@ -130,7 +134,11 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \b \CocoaLigature1 \
 	element-names
 \b0  (r)\
-	Contains the language element names for the document. The lines are of the form "<element name>:<location>:<length>" sorted by location. Note that there will be an element name for everything (if the text doesn't match a regex in the language file "normal" will be used). The first line is special; it is the index into the lines for the current selection (or -1 if the selection crosses multiple elements). So if the selection is in the very first name the first line will be "1". The file is empty if there is no language.\CocoaLigature0 \
+	Contains the language element names for the document. The lines are of the form "<element name>
+\f1\fs26 \CocoaLigature0 \\f
+\f0\fs36 \CocoaLigature1 <location>
+\f1\fs26 \CocoaLigature0 \\f
+\f0\fs36 \CocoaLigature1 <length>" sorted by location. Note that there will be an element name for everything (if the text doesn't match a regex in the language file "normal" will be used). The first line is special; it is the index into the lines for the current selection (or -1 if the selection crosses multiple elements). So if the selection is in the very first name the first line will be "1". The file is empty if there is no language.\CocoaLigature0 \
 
 \b \CocoaLigature1 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
@@ -169,14 +177,16 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \b \cf0 \CocoaLigature1 \
 	selection-range
 \b0  (rw)\
-	"<location>:<length>". On writes if the length is too large it will be clamped to the maximum length.\CocoaLigature0 \
+	"<location>
+\f1\fs26 \CocoaLigature0 \\f
+\f0\fs36 \CocoaLigature1 <length>". On writes if the length is too large it will be clamped to the maximum length.\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
-\b \cf0 \CocoaLigature1 	selection-text
-\b0  (rw)\
-	Replaces the text within the current selection. This is an undoable operation. Note that this is the general mechanism for replacing or setting text within a text document.\CocoaLigature0 \
+\b \cf0 \CocoaLigature1 	set-temp-back-color
+\b0  (w)\
+	Formatted as "<offset>\\f<length>\\f<color>". Uses a temporary NSAttribute which are not affected by syntax highlighting and not persisted when the document is saved.\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural

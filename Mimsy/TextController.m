@@ -164,11 +164,11 @@
 				fileName:@"selection-range"
 				readStr:^NSString *{
 					NSRange range = self.textView.selectedRange;
-					return [NSString stringWithFormat:@"%lu:%lu", (unsigned long)range.location, (unsigned long)range.length];
+					return [NSString stringWithFormat:@"%lu\f%lu", (unsigned long)range.location, (unsigned long)range.length];
 				}
 				writeStr:^(NSString* text)
 				{
-					NSArray* parts = [text componentsSeparatedByString:@":"];
+					NSArray* parts = [text componentsSeparatedByString:@"\f"];
 					if (parts.count == 2)
 					{
 						NSInteger loc = [parts[0] integerValue];
@@ -400,7 +400,7 @@
 	
 	for (NSUInteger i = 0; i < names.count; ++i)
 	{
-		[text appendFormat:@"%@:%lu:%lu\n", names[i], (unsigned long)ranges.data[i].location, (unsigned long)ranges.data[i].length];
+		[text appendFormat:@"%@\f%lu\f%lu\n", names[i], (unsigned long)ranges.data[i].location, (unsigned long)ranges.data[i].length];
 	}
 	
 	freeRangeVector(&ranges);

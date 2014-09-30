@@ -18,7 +18,7 @@ func logVerbose(verbose bool, format string, args ...interface{}) {
 	}
 
 	var text = fmt.Sprintf(format, args...)
-	var line = fmt.Sprintf("%s!%s", topic, text)
+	var line = fmt.Sprintf("%s\f%s", topic, text)
 	ioutil.WriteFile("/Volumes/Mimsy/log/line", []byte(line), 0644)
 }
 
@@ -50,9 +50,9 @@ func rewriteFile(path string) {
 }
 
 func main() {
-	fmt.Println("name:GoFormat")
-	fmt.Println("version:1.0")
-	fmt.Println("watch:1.0:/Volumes/Mimsy/text-window/1/user-saving")
+	fmt.Println("name\fGoFormat")
+	fmt.Println("version\f1.0")
+	fmt.Println("watch\f1.0\f/Volumes/Mimsy/text-window/1/user-saving")
 	fmt.Println("")
 
 	var reader = bufio.NewReader(os.Stdin)

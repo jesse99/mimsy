@@ -57,12 +57,12 @@ function tab(delta)
 		local lines = split(elements, "\n")
 		local selection_index = lines[1] + 2	-- +2 because lua arrays are 1-based and we skip the first line
 
-		-- lines are formatted as "<element name>:<location>:<length>"
+		-- lines are formatted as "<element name>\f<location>\f<length>"
 		local line = selection_index + delta
 		while line >= 1 and line <= #lines do
-			local parts = split(lines[line], ":")
+			local parts = split(lines[line], "\f")
 			if parts[1] == "identifier" then
-				write_file("text-window/1/selection-range", string.format("%d:%d", parts[2], parts[3]))
+				write_file("text-window/1/selection-range", string.format("%d\f%d", parts[2], parts[3]))
 				break
 			end
 			line = line + delta

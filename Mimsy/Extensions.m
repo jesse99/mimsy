@@ -313,23 +313,23 @@ static bool block_timed_out(void (^block)())
 		if (line.length == 0)
 			break;
 		
-		if ([line startsWith:@"name:"])
-			self.name = [line substringFromIndex:@"name:".length];
+		if ([line startsWith:@"name\f"])
+			self.name = [line substringFromIndex:@"name\f".length];
 		
-		else if ([line startsWith:@"version:"])
-			self.version = [line substringFromIndex:@"version:".length];
+		else if ([line startsWith:@"version\f"])
+			self.version = [line substringFromIndex:@"version\f".length];
 		
-		else if ([line startsWith:@"url:"])
-			self.url = [line substringFromIndex:@"url:".length];
+		else if ([line startsWith:@"url\f"])
+			self.url = [line substringFromIndex:@"url\f".length];
 		
-		else if ([line startsWith:@"watch:"])
+		else if ([line startsWith:@"watch\f"])
 		{
-			line = [line substringFromIndex:@"watch:".length];
+			line = [line substringFromIndex:@"watch\f".length];
 
-			NSRange range = [line rangeOfString:@":"];
+			NSRange range = [line rangeOfString:@"\f"];
 			if (range.location == NSNotFound)
 			{
-				error = @"Missing colon";
+				error = @"Missing form feed";
 				break;
 			}
 			
