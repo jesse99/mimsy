@@ -36,8 +36,58 @@
 	return path;
 }
 
-- (bool)openForRead:(bool)reading write:(bool)writing
+static bool matchesAnyDirectory(NSString* path, NSString* directory)
 {
+	while (directory.length > 0 && ![directory isEqualToString:@"/"])
+	{
+		if ([directory isEqualToString:path])
+			return true;
+		
+		directory = [directory stringByDeletingLastPathComponent];
+	}
+	
+	return false;
+}
+
+- (bool)matchesAnyDirectory:(NSString*)path
+{
+	return matchesAnyDirectory(path, _directory());
+}
+
+- (bool)matchesFile:(NSString*)path
+{
+	return [self.path isEqualToString:path];
+}
+
+static NSArray* directChildren(NSString* path, NSString* directory, NSString* fileName)
+{
+	if ([directory isEqualToString:path])
+	{
+		return @[fileName];
+	}
+	else
+	{
+		while (directory.length > 0 && ![directory isEqualToString:@"/"])
+		{
+			NSString* child = directory.lastPathComponent;
+			directory = [directory stringByDeletingLastPathComponent];
+			
+			if ([directory isEqualToString:path])
+				return @[child];
+		}
+	}
+	
+	return @[];
+}
+
+- (NSArray*)directChildren:(NSString*)path
+{
+	return directChildren(path, _directory(), _fileName);
+}
+
+- (bool)openPath:(NSString*)path read:(bool)reading write:(bool)writing
+{
+	UNUSED(path);
 	ASSERT(!writing);
 	ASSERT(reading);
 	// not much point in doing anything here given that size can be called before opened
@@ -160,9 +210,24 @@
 	return path;
 }
 
-- (bool)openForRead:(bool)reading write:(bool)writing
+- (bool)matchesAnyDirectory:(NSString*)path
 {
-	UNUSED(reading);
+	return matchesAnyDirectory(path, _directory());
+}
+
+- (bool)matchesFile:(NSString*)path
+{
+	return [self.path isEqualToString:path];
+}
+
+- (NSArray*)directChildren:(NSString*)path
+{
+	return directChildren(path, _directory(), _fileName);
+}
+
+- (bool)openPath:(NSString*) path read:(bool)reading write:(bool)writing
+{
+	UNUSED(path, reading);
 	
 	// Don't allow a process to open the file if another process has the file
 	// opened for writes.

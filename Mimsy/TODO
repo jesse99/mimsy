@@ -4,14 +4,15 @@ install http://osxfuse.github.io/
 	can skip this but a lot of features will be disabled
 	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
 	
+	
 	key-values/<name> (rw)
-	Arbitrary string values associated with a text document. This is the preferred way for extensions to persist document specific state. Reading a value that has not been set returns an empty file.
-
-	selection-text (rw)
-	Replaces the text within the current selection. This is an undoable operation. Note that this is the general mechanism for replacing or setting text within a text document.
+	set-temp-back-color (w)
 
 
-* Add some new proc files:
+* Implement key-values proc files:
+	- need a custom proc file for storing key/values
+* Implement set-temp-back-color
+	- ApplyStyles needs some code to add a temporary attribute
 * Highlight current line:
 	- line proc file needs to handle multi-line selections properly
 	- extension needs to keep track of state, per window...

@@ -142,7 +142,14 @@ If the extension supports multiple contexts then it should do multiple writes.\
 
 \b \CocoaLigature1 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
-\cf0 	language
+\cf0 	key-values/<name>
+\b0  (rw)\
+	Arbitrary string values associated with a text document. This is the preferred way for extensions to persist document specific state. Reading a value that has not been set returns an empty file.\CocoaLigature0 \
+\pard\tx626\pardeftab626\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b \cf0 \CocoaLigature1 	language
 \b0  (r)\
 	Name of the language used to style the text, e.g. "c" or "python". Empty if the window has no language.\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
@@ -180,6 +187,13 @@ If the extension supports multiple contexts then it should do multiple writes.\
 	"<location>
 \f1\fs26 \CocoaLigature0 \\f
 \f0\fs36 \CocoaLigature1 <length>". On writes if the length is too large it will be clamped to the maximum length.\CocoaLigature0 \
+\pard\tx626\pardeftab626\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b \cf0 \CocoaLigature1 	selection-text
+\b0  (rw)\
+	Replaces the text within the current selection. This is an undoable operation. Note that this is the general mechanism for replacing or setting text within a text document.\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural

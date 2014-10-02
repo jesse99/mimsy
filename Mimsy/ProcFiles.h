@@ -5,11 +5,14 @@
 
 - (id)initWithDir:(NSString* (^) ())directory fileName:(NSString*)name readStr:(NSString* (^)())readStr;
 
-- (NSString*)path;
+- (bool)matchesAnyDirectory:(NSString*)path;
+- (bool)matchesFile:(NSString*)path;
+- (NSArray*)directChildren:(NSString*)path;	// returns names, not paths
+
 - (unsigned long long)size;
 
 - (bool)setSize:(unsigned long long)size;
-- (bool)openForRead:(bool)reading write:(bool)writing;
+- (bool)openPath:(NSString*) path read:(bool)reading write:(bool)writing;
 - (void)close;
 
 - (int)read:(char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error;
@@ -22,11 +25,14 @@
 
 - (id)initWithDir:(NSString* (^) ())directory fileName:(NSString*)name readStr:(NSString* (^)())readStr writeStr:(void (^)(NSString*))writeStr;
 
-- (NSString*)path;
+- (bool)matchesAnyDirectory:(NSString*)path;
+- (bool)matchesFile:(NSString*)path;
+- (NSArray*)directChildren:(NSString*)path;	// returns names, not paths
+
 - (unsigned long long)size;
 - (bool)setSize:(unsigned long long)size;
 
-- (bool)openForRead:(bool)reading write:(bool)writing;
+- (bool)openPath:(NSString*) path read:(bool)reading write:(bool)writing;
 - (void)close;
 
 - (int)read:(char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error;

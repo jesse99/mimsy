@@ -101,9 +101,9 @@
 		  // that many proc files.
 		  for (id<ProcFile> file in _readers)
 		  {
-			  if ([path isEqualToString:file.path])
+			  if ([file matchesFile:path])
 			  {
-				  if ([file openForRead:true write:false])
+				  if ([file openPath:path read:true write:false])
 					  *userData = file;
 				  break;
 			  }
@@ -115,9 +115,9 @@
 	{
 		  for (id<ProcFile> file in _writers)
 		  {
-			  if ([path isEqualToString:file.path])
+			  if ([file matchesFile:path])
 			  {
-				  if ([file openForRead:mode != O_WRONLY write:mode != O_RDONLY])
+				  if ([file openPath:path read:mode != O_WRONLY write:mode != O_RDONLY])
 					  *userData = file;
 				  break;
 			  }
@@ -151,22 +151,19 @@
 - (NSArray*)contentsOfDirectoryAtPath:(NSString*)path error:(NSError**)error
 {
 	UNUSED(error);
-	
+
 	NSMutableArray* contents = [NSMutableArray new];
 
-	  NSArray* pathComponents = path.pathComponents;
-	  
-	  for (id<ProcFile> file in _allFiles)
-	  {
-		  NSArray* fileComponents = file.path.pathComponents;
-		  if ([fileComponents startsWith:pathComponents])
-		  {
-			  NSString* name = fileComponents[pathComponents.count];
-			  if (![contents containsObject:name])
-				  [contents addObject:name];
-		  }
-	  }
-	
+	for (id<ProcFile> file in _allFiles)
+	{
+		NSArray* children = [file directChildren:path];
+		for (NSString* child in children)
+		{
+			if (![contents containsObject:child])
+				[contents addObject:child];
+		}
+	}
+
 	return contents;
 }
 
@@ -218,20 +215,19 @@
 {
 	bool ours = false;
 	id<ProcFile> tmpFile = nil;
-	
-	NSArray* pathComponents = path.pathComponents;
-	  
+		  
 	for (id<ProcFile> file in _allFiles)
 	{
-		NSArray* fileComponents = file.path.pathComponents;
-		if ([fileComponents startsWith:pathComponents])
+		if ([file matchesFile:path])
+		{
+			tmpFile = file;
+			ours = true;
+			break;
+		}
+
+		if ([file matchesAnyDirectory:path])
 		{
 			ours = true;
-		}
-		  
-		if ([file.path isEqualToString:path])
-		{
-			 tmpFile = file;
 			break;
 		}
 	}
