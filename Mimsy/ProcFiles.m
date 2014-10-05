@@ -99,8 +99,10 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 	_data = nil;
 }
 
-- (unsigned long long)size
+- (unsigned long long)sizeFor:(NSString*)path
 {
+	UNUSED(path);
+	
 	NSString* contents = _readStr();
 	_data = [contents dataUsingEncoding:NSUTF8StringEncoding];
 	return _data.length;
@@ -230,7 +232,8 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 	UNUSED(path, reading);
 	
 	// Don't allow a process to open the file if another process has the file
-	// opened for writes.
+	// opened for writes. This should be OK because extensions should execute
+	// when triggered by Mimsy which will serialize their execution.
 	bool ok = _data == nil;
 	
 	if (writing && ok)
@@ -245,7 +248,7 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 - (void)close;
 {
 	if (_data)
-	{		
+	{
 		NSString* str = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
 		if ([str endsWith:@"\n"])
 			str = [str substringToIndex:str.length-1];
@@ -255,8 +258,10 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 	}
 }
 
-- (unsigned long long)size
+- (unsigned long long)sizeFor:(NSString*)path
 {
+	UNUSED(path);
+	
 	if (_data)
 	{
 		return _data.length;
@@ -272,7 +277,7 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 - (bool)setSize:(unsigned long long)size
 {
 	ASSERT(_data);
-
+	
 	[_data setLength:size];
 	return true;
 }
@@ -290,9 +295,9 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 }
 
 - (int)write:(const char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error
-{	
+{
 	ASSERT(_data);
-
+	
 	if (offset < 0 || offset > _data.length)
 	{
 		if (error)
@@ -309,7 +314,7 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 		NSRange range = NSMakeRange((NSUInteger)offset, MIN(size, _data.length-(NSUInteger)offset));
 		[_data replaceBytesInRange:range withBytes:buffer length:size];
 	}
-		
+	
 	return (int)size;
 }
 
@@ -328,4 +333,157 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 
 @end
 
+@implementation ProcFileKeyStore
+{
+	NSMutableDictionary* _store;
+	NSString* (^_directory ) ();
+	NSMutableData* _data;			// this is used if we're open for writing
+	NSString* _openedKey;
+	bool _dirty;
+}
 
+- (id)initWithDir:(NSString* (^) ())directory;
+{
+	self = [super init];
+	
+	if (self)
+	{
+		_store = [NSMutableDictionary new];
+		_directory = directory;
+	}
+	
+	return self;
+}
+
+- (NSString*)description
+{
+	return _directory();
+}
+
+- (bool)matchesAnyDirectory:(NSString*)path
+{
+	return matchesAnyDirectory(path, _directory());
+}
+
+- (bool)matchesFile:(NSString*)path
+{
+	NSString* directory = _directory();
+	NSString* root = [path stringByDeletingLastPathComponent];
+	
+	return [directory isEqualToString:root];
+}
+
+- (NSArray*)directChildren:(NSString*)path
+{
+	NSString* directory = _directory();
+	LOG("App", "directory = %s, path = %s", STR(directory), STR(path));
+	if ([directory isEqualToString:path])
+	{
+		return _store.allKeys;
+	}
+	else
+	{
+		return directChildren(path, directory, @"not a valid file name");
+	}
+}
+
+- (bool)openPath:(NSString*) path read:(bool)reading write:(bool)writing
+{
+	UNUSED(path, reading, writing);
+	
+	// Don't allow a process to open the file if another process has the file
+	// opened. This should be OK because extensions should execute
+	// when triggered by Mimsy which will serialize their execution.
+	bool ok = _data == nil;
+	
+	if (ok)
+	{
+		_openedKey = path.lastPathComponent;
+		_data = _store[_openedKey];
+		
+		if (!_data)
+		{
+			_data = [NSMutableData new];
+			_store[_openedKey] = _data;
+		}
+		
+		_dirty = false;
+	}
+	
+	return ok;
+}
+
+- (void)close;
+{
+	NSString* key = _openedKey;
+	
+	_data = nil;
+	_openedKey = nil;
+	
+	if (key && _dirty)
+		[self _notifyChanged:key];
+}
+
+- (unsigned long long)sizeFor:(NSString*)path
+{
+	NSString* key = path.lastPathComponent;
+	NSData* data = _store[key];
+	return data ? data.length : 0;
+}
+
+- (bool)setSize:(unsigned long long)size
+{
+	ASSERT(_data);
+	
+	if (size != _data.length)
+	{
+		[_data setLength:size];
+		_dirty = true;
+	}
+	
+	return true;
+}
+
+- (int)read:(char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error
+{
+	ASSERT(_data);
+
+	return [ProcFileReader readInto:buffer size:size offset:offset from:_data error:error];
+}
+
+- (int)write:(const char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error
+{	
+	ASSERT(_data);
+
+	if (offset < 0 || offset > _data.length)
+	{
+		if (error)
+			*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:EINVAL userInfo:nil];
+		return -1;
+	}
+	else if (offset == _data.length)
+	{
+		[_data appendBytes:buffer length:size];
+		_dirty = true;
+	}
+	else if (offset < _data.length)
+	{
+		// This will grow data if needed.
+		NSRange range = NSMakeRange((NSUInteger)offset, MIN(size, _data.length-(NSUInteger)offset));
+		[_data replaceBytesInRange:range withBytes:buffer length:size];
+		_dirty = true;
+	}
+		
+	return (int)size;
+}
+
+- (void)_notifyChanged:(NSString*)key;
+{
+	NSString* directory = _directory();
+	NSString* path = [directory stringByAppendingPathComponent:key];
+
+	if ([Extensions watching:path])
+		[Extensions invoke:path];
+}
+
+@end

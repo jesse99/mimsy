@@ -37,6 +37,7 @@
 	ProcFileReadWrite* _textFile;
 	ProcFileReader* _titleFile;
 	ProcFileReadWrite* _wordWrapFile;
+	ProcFileKeyStore* _keyStoreFile;
 
 	RestoreView* _restorer;
 	bool _closed;
@@ -246,6 +247,10 @@
 					   [self doResetWordWrap];
 				   }
 			   }];
+			_keyStoreFile = [[ProcFileKeyStore alloc] initWithDir:^NSString*
+				{
+					return [[self getProcFilePath] stringByAppendingPathComponent:@"key-values"];
+				}];
 			
 			[fs addReader:_elementNameFile];
 			[fs addReader:_elementNamesFile];
@@ -259,6 +264,7 @@
 			[fs addWriter:_selectionTextFile];
 			[fs addWriter:_textFile];
 			[fs addWriter:_wordWrapFile];
+			[fs addWriter:_keyStoreFile];
 		}
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(languagesChanged:) name:@"LanguagesChanged" object:nil];

@@ -4,13 +4,10 @@ install http://osxfuse.github.io/
 	can skip this but a lot of features will be disabled
 	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
 	
-	
-	key-values/<name> (rw)
+
 	set-temp-back-color (w)
 
 
-* Implement key-values proc files:
-	- need a custom proc file for storing key/values
 * Implement set-temp-back-color
 	- ApplyStyles needs some code to add a temporary attribute
 * Highlight current line:
@@ -20,6 +17,7 @@ install http://osxfuse.github.io/
 * Make sure goFormat is dieng
 	- when the app exits normally
 	- when stopped via xcode
+	- when re-launched because it changed
 * Extending a double-click selection doesn't work right
 * Building doesn't do a save
 * Add support for parsing build errors and selecting next and previous build errors

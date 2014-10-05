@@ -7,9 +7,9 @@
 
 - (bool)matchesAnyDirectory:(NSString*)path;
 - (bool)matchesFile:(NSString*)path;
-- (NSArray*)directChildren:(NSString*)path;	// returns names, not paths
+- (NSArray*)directChildren:(NSString*)path;
 
-- (unsigned long long)size;
+- (unsigned long long)sizeFor:(NSString*)path;
 
 - (bool)setSize:(unsigned long long)size;
 - (bool)openPath:(NSString*) path read:(bool)reading write:(bool)writing;
@@ -27,9 +27,9 @@
 
 - (bool)matchesAnyDirectory:(NSString*)path;
 - (bool)matchesFile:(NSString*)path;
-- (NSArray*)directChildren:(NSString*)path;	// returns names, not paths
+- (NSArray*)directChildren:(NSString*)path;	
 
-- (unsigned long long)size;
+- (unsigned long long)sizeFor:(NSString*)path;
 - (bool)setSize:(unsigned long long)size;
 
 - (bool)openPath:(NSString*) path read:(bool)reading write:(bool)writing;
@@ -39,5 +39,25 @@
 - (int)write:(const char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error;
 
 - (void)notifyIfChanged;
+
+@end
+
+// Proc file used to store arbitrary extension state.
+@interface ProcFileKeyStore : NSObject <ProcFile>
+
+- (id)initWithDir:(NSString* (^) ())directory;
+
+- (bool)matchesAnyDirectory:(NSString*)path;
+- (bool)matchesFile:(NSString*)path;
+- (NSArray*)directChildren:(NSString*)path;
+
+- (unsigned long long)sizeFor:(NSString*)path;
+- (bool)setSize:(unsigned long long)size;
+
+- (bool)openPath:(NSString*) path read:(bool)reading write:(bool)writing;
+- (void)close;
+
+- (int)read:(char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error;
+- (int)write:(const char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error;
 
 @end

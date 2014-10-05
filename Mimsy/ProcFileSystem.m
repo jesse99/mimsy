@@ -194,7 +194,7 @@
 	  if (userData)
 	  {
 		  id<ProcFile> file = (id<ProcFile>) userData;
-		  attrs = @{NSFileType: NSFileTypeRegular, NSFileSize: @(file.size)};
+		  attrs = @{NSFileType: NSFileTypeRegular, NSFileSize: @([file sizeFor:path])};
 	  }
 	  else
 	  {
@@ -202,7 +202,7 @@
 		  if ([self _isOurs:path file:&file])
 		  {
 			  if (file)
-				  attrs = @{NSFileType: NSFileTypeRegular, NSFileSize: @(file.size)};
+				  attrs = @{NSFileType: NSFileTypeRegular, NSFileSize: @([file sizeFor:path])};
 			  else
 				  attrs = @{NSFileType: NSFileTypeDirectory};
 		  }

@@ -144,7 +144,7 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 \cf0 	key-values/<name>
 \b0  (rw)\
-	Arbitrary string values associated with a text document. This is the preferred way for extensions to persist document specific state. Reading a value that has not been set returns an empty file.\CocoaLigature0 \
+	Arbitrary string values associated with a text document. This is the preferred way for extensions to persist document specific state. Reading a value that has not been set returns an empty file. To avoid collisions key names should include the name of the extension.\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural

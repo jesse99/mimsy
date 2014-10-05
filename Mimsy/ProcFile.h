@@ -7,7 +7,7 @@
 - (bool)matchesFile:(NSString*)path;
 - (NSArray*)directChildren:(NSString*)path;	// returns names, not paths
 
-- (unsigned long long)size;
+- (unsigned long long)sizeFor:(NSString*)path;
 - (bool)setSize:(unsigned long long)size;
 
 - (bool)openPath:(NSString*) path read:(bool)reading write:(bool)writing;
