@@ -120,7 +120,31 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \b0\fs36 \cf0 	window-index is 1 for the frontmost text window, 2 for the next frontmost, etc.\CocoaLigature0 \
 
 \b \CocoaLigature1 \
-	column-number
+	add-temp-back-color
+\b0  (w)\
+	Formatted as "<offset>\\f<length>\\f<color>". Uses a temporary NSAttribute which are not affected by syntax highlighting and not persisted when the document is saved.\CocoaLigature0 \
+\pard\tx626\pardeftab626\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b \cf0 \CocoaLigature1 	add-temp-fore-color
+\b0  (w)\
+	Formatted as "<offset>\\f<length>\\f<color>". Uses a temporary NSAttribute which are not affected by syntax highlighting and not persisted when the document is saved. Note that this will override colors applied by syntax highlighting.\CocoaLigature0 \
+\pard\tx626\pardeftab626\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b \cf0 \CocoaLigature1 	add-temp-strike-through
+\b0  (w)\
+
+\b 	add-temp-underline
+\b0  (w)\
+	Formatted as "<offset>\\f<length>\\f<mask>\\f<color>". Mask is typically an underline pattern or style, e.g. 1 for a single line, or 2 for a thick line. Uses a temporary NSAttribute which are not affected by syntax highlighting and not persisted when the document is saved.\CocoaLigature0 \
+\pard\tx626\pardeftab626\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b \cf0 \CocoaLigature1 	column-number
 \b0  (rw)\
 	1-based integer for the start of the current selection. On writes the insertion point will move. If the value is too large the insertion point will move to the end of the line.\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
@@ -175,7 +199,23 @@ If the extension supports multiple contexts then it should do multiple writes.\
 	If the text document is on disk then this will be the path to it. If not it will be empty.\CocoaLigature0 \
 
 \b \CocoaLigature1 \
-	saving
+	remove-temp-back-color
+\b0  (w)\
+
+\b 	remove-temp-fore-color
+\b0  (w)\
+
+\b 	remove-temp-strike-through
+\b0  (w)\
+
+\b 	remove-temp-underline
+\b0  (w)\
+	Formatted as "<offset>\\f<length>".\CocoaLigature0 \
+\pard\tx626\pardeftab626\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b \cf0 \CocoaLigature1 	saving
 \b0  (w)\
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \CocoaLigature0 	This is intended to be watched: reads will error out. Watchers will be invoked just before the document is written to disk. Note that this happens both when the user saves and when the document is auto-saved (also see user-saving).\
@@ -194,13 +234,6 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \b \cf0 \CocoaLigature1 	selection-text
 \b0  (rw)\
 	Replaces the text within the current selection. This is an undoable operation. Note that this is the general mechanism for replacing or setting text within a text document.\CocoaLigature0 \
-\pard\tx626\pardeftab626\pardirnatural
-\cf0 \
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
-
-\b \cf0 \CocoaLigature1 	set-temp-back-color
-\b0  (w)\
-	Formatted as "<offset>\\f<length>\\f<color>". Uses a temporary NSAttribute which are not affected by syntax highlighting and not persisted when the document is saved.\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural

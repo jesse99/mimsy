@@ -4,6 +4,7 @@
 #import "ApplyStyles.h"
 #import "AppSettings.h"
 #import "Balance.h"
+#import "ColorCategory.h"
 #import "ConfigParser.h"
 #import "FunctionalTest.h"
 #import "Language.h"
@@ -38,6 +39,15 @@
 	ProcFileReader* _titleFile;
 	ProcFileReadWrite* _wordWrapFile;
 	ProcFileKeyStore* _keyStoreFile;
+
+	ProcFileReadWrite* _addTempBackColorFile;
+	ProcFileReadWrite* _removeTempBackColorFile;
+	ProcFileReadWrite* _addTempForeColorFile;
+	ProcFileReadWrite* _removeTempForeColorFile;
+	ProcFileReadWrite* _addTempUnderlineFile;
+	ProcFileReadWrite* _removeTempUnderlineFile;
+	ProcFileReadWrite* _addTempStrikeThroughFile;
+	ProcFileReadWrite* _removeTempStrikeThroughFile;
 
 	RestoreView* _restorer;
 	bool _closed;
@@ -252,6 +262,189 @@
 					return [[self getProcFilePath] stringByAppendingPathComponent:@"key-values"];
 				}];
 			
+			_addTempBackColorFile = [[ProcFileReadWrite alloc]
+									 initWithDir:^NSString *{return [self getProcFilePath];}
+									 fileName:@"add-temp-back-color"
+									 readStr:^NSString *{
+										 return @"";
+									 }
+									 writeStr:^(NSString* text)
+									 {
+										 NSArray* parts = [text componentsSeparatedByString:@"\f"];
+										 if (parts.count == 3)
+										 {
+											 NSInteger loc = [parts[0] integerValue];
+											 NSInteger len = [parts[1] integerValue];
+											 NSString* name = parts[2];
+											 NSColor* color = [NSColor colorWithMimsyName:name];
+											 if (loc + len > self.text.length)
+												 len = (NSInteger) self.text.length - loc;
+											 
+											 NSArray* managers = self.textView.textStorage.layoutManagers;
+											 NSLayoutManager* layout = managers[0];
+											 [layout addTemporaryAttribute:NSBackgroundColorAttributeName value:color forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+										 }
+									 }];
+			_addTempForeColorFile = [[ProcFileReadWrite alloc]
+									 initWithDir:^NSString *{return [self getProcFilePath];}
+									 fileName:@"add-temp-fore-color"
+									 readStr:^NSString *{
+										 return @"";
+									 }
+									 writeStr:^(NSString* text)
+									 {
+										 NSArray* parts = [text componentsSeparatedByString:@"\f"];
+										 if (parts.count == 3)
+										 {
+											 NSInteger loc = [parts[0] integerValue];
+											 NSInteger len = [parts[1] integerValue];
+											 NSString* name = parts[2];
+											 NSColor* color = [NSColor colorWithMimsyName:name];
+											 if (loc + len > self.text.length)
+												 len = (NSInteger) self.text.length - loc;
+											 
+											 NSArray* managers = self.textView.textStorage.layoutManagers;
+											 NSLayoutManager* layout = managers[0];
+											 [layout addTemporaryAttribute:NSForegroundColorAttributeName value:color forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+										 }
+									 }];
+			_addTempUnderlineFile = [[ProcFileReadWrite alloc]
+									 initWithDir:^NSString *{return [self getProcFilePath];}
+									 fileName:@"add-temp-underline"
+									 readStr:^NSString *{
+										 return @"";
+									 }
+									 writeStr:^(NSString* text)
+									 {
+										 NSArray* parts = [text componentsSeparatedByString:@"\f"];
+										 if (parts.count == 4)
+										 {
+											 NSInteger loc = [parts[0] integerValue];
+											 NSInteger len = [parts[1] integerValue];
+											 NSInteger mask = [parts[2] integerValue];
+											 NSString* name = parts[3];
+											 NSColor* color = [NSColor colorWithMimsyName:name];
+											 if (loc + len > self.text.length)
+												 len = (NSInteger) self.text.length - loc;
+											 
+											 NSArray* managers = self.textView.textStorage.layoutManagers;
+											 NSLayoutManager* layout = managers[0];
+											 [layout addTemporaryAttribute:NSUnderlineStyleAttributeName value:@(mask) forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+											 [layout addTemporaryAttribute:NSUnderlineColorAttributeName value:color forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+										 }
+									 }];
+			_addTempStrikeThroughFile = [[ProcFileReadWrite alloc]
+				 initWithDir:^NSString *{return [self getProcFilePath];}
+				 fileName:@"add-temp-strike-through"
+				 readStr:^NSString *{
+					 return @"";
+				 }
+				 writeStr:^(NSString* text)
+				 {
+					 NSArray* parts = [text componentsSeparatedByString:@"\f"];
+					 if (parts.count == 4)
+					 {
+						 NSInteger loc = [parts[0] integerValue];
+						 NSInteger len = [parts[1] integerValue];
+						 NSInteger mask = [parts[2] integerValue];
+						 NSString* name = parts[3];
+						 NSColor* color = [NSColor colorWithMimsyName:name];
+						 if (loc + len > self.text.length)
+							 len = (NSInteger) self.text.length - loc;
+						 
+						 NSArray* managers = self.textView.textStorage.layoutManagers;
+						 NSLayoutManager* layout = managers[0];
+						 [layout addTemporaryAttribute:NSStrikethroughStyleAttributeName value:@(mask) forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+						 [layout addTemporaryAttribute:NSStrikethroughColorAttributeName value:color forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+					 }
+				 }];
+			_removeTempBackColorFile = [[ProcFileReadWrite alloc]
+										initWithDir:^NSString *{return [self getProcFilePath];}
+										fileName:@"remove-temp-back-color"
+										readStr:^NSString *{
+											return @"";
+										}
+										writeStr:^(NSString* text)
+										{
+											NSArray* parts = [text componentsSeparatedByString:@"\f"];
+											if (parts.count == 2)
+											{
+												NSInteger loc = [parts[0] integerValue];
+												NSInteger len = [parts[1] integerValue];
+												if (loc + len > self.text.length)
+													len = (NSInteger) self.text.length - loc;
+												
+												NSArray* managers = self.textView.textStorage.layoutManagers;
+												NSLayoutManager* layout = managers[0];
+												[layout removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+											}
+										}];
+			_removeTempForeColorFile = [[ProcFileReadWrite alloc]
+										initWithDir:^NSString *{return [self getProcFilePath];}
+										fileName:@"remove-temp-fore-color"
+										readStr:^NSString *{
+											return @"";
+										}
+										writeStr:^(NSString* text)
+										{
+											NSArray* parts = [text componentsSeparatedByString:@"\f"];
+											if (parts.count == 2)
+											{
+												NSInteger loc = [parts[0] integerValue];
+												NSInteger len = [parts[1] integerValue];
+												if (loc + len > self.text.length)
+													len = (NSInteger) self.text.length - loc;
+												
+												NSArray* managers = self.textView.textStorage.layoutManagers;
+												NSLayoutManager* layout = managers[0];
+												[layout removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+											}
+										}];
+			_removeTempUnderlineFile = [[ProcFileReadWrite alloc]
+										initWithDir:^NSString *{return [self getProcFilePath];}
+										fileName:@"remove-temp-underline"
+										readStr:^NSString *{
+											return @"";
+										}
+										writeStr:^(NSString* text)
+										{
+											NSArray* parts = [text componentsSeparatedByString:@"\f"];
+											if (parts.count == 2)
+											{
+												NSInteger loc = [parts[0] integerValue];
+												NSInteger len = [parts[1] integerValue];
+												if (loc + len > self.text.length)
+													len = (NSInteger) self.text.length - loc;
+												
+												NSArray* managers = self.textView.textStorage.layoutManagers;
+												NSLayoutManager* layout = managers[0];
+												[layout removeTemporaryAttribute:NSUnderlineStyleAttributeName forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+												[layout removeTemporaryAttribute:NSUnderlineColorAttributeName forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+											}
+										}];
+			_removeTempStrikeThroughFile = [[ProcFileReadWrite alloc]
+				initWithDir:^NSString *{return [self getProcFilePath];}
+				fileName:@"remove-temp-strike-through"
+				readStr:^NSString *{
+					return @"";
+				}
+				writeStr:^(NSString* text)
+				{
+					NSArray* parts = [text componentsSeparatedByString:@"\f"];
+					if (parts.count == 2)
+					{
+						NSInteger loc = [parts[0] integerValue];
+						NSInteger len = [parts[1] integerValue];
+						if (loc + len > self.text.length)
+							len = (NSInteger) self.text.length - loc;
+										  
+						NSArray* managers = self.textView.textStorage.layoutManagers;
+						NSLayoutManager* layout = managers[0];
+						[layout removeTemporaryAttribute:NSStrikethroughStyleAttributeName forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+						[layout removeTemporaryAttribute:NSStrikethroughColorAttributeName forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+					}
+				}];
+			
 			[fs addReader:_elementNameFile];
 			[fs addReader:_elementNamesFile];
 			[fs addReader:_languageFile];
@@ -265,6 +458,15 @@
 			[fs addWriter:_textFile];
 			[fs addWriter:_wordWrapFile];
 			[fs addWriter:_keyStoreFile];
+
+			[fs addWriter:_addTempBackColorFile];
+			[fs addWriter:_removeTempBackColorFile];
+			[fs addWriter:_addTempForeColorFile];
+			[fs addWriter:_removeTempForeColorFile];
+			[fs addWriter:_addTempUnderlineFile];
+			[fs addWriter:_removeTempUnderlineFile];
+			[fs addWriter:_addTempStrikeThroughFile];
+			[fs addWriter:_removeTempStrikeThroughFile];
 		}
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(languagesChanged:) name:@"LanguagesChanged" object:nil];
