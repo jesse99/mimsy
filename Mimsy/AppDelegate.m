@@ -156,7 +156,11 @@ typedef void (^NullaryBlock)();
 				{
 					NSRange range = [str rangeOfString:@"\f"];
 					if (range.location != NSNotFound)
-						LOG(STR([str substringToIndex:range.location]), "%s", STR([str substringFromIndex:range.location+1]));
+					{
+						NSString* text = [str substringFromIndex:range.location+1];
+						text = [text replaceCharacters:@"\f" with:@"\\f"];
+						LOG(STR([str substringToIndex:range.location]), "%s", STR(text));
+					}
 					else
 						LOG("Error", "expected '<topic>\f<line>' not: '%s'", STR(str));
 				}];
