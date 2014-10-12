@@ -32,6 +32,7 @@
 	ProcFileReader* _elementNameFile;
 	ProcFileReader* _elementNamesFile;
 	ProcFileReader* _languageFile;
+	ProcFileReader* _lineSelectionFile;
 	ProcFileReadWrite* _lineNumFile;
 	ProcFileReadWrite* _selectionRangeFileW;
 	ProcFileReadWrite* _selectionTextFile;
@@ -123,23 +124,41 @@
 								fileName:@"element-names"
 								readStr:^NSString *{return [self getElementNames];}];
 			_languageFile = [[ProcFileReader alloc]
-								initWithDir:^NSString *{return [self getProcFilePath];}
-								fileName:@"language"
+							 initWithDir:^NSString *{return [self getProcFilePath];}
+							 fileName:@"language"
 							 readStr:^NSString *{return self.language ? self.language.name : @"";}];
+			_lineSelectionFile = [[ProcFileReader alloc]
+								initWithDir:^NSString *{return [self getProcFilePath];}
+								fileName:@"line-selection"
+							 readStr:^NSString *
+				{
+					NSUInteger start, end;
+					[self.text getLineStart:&start end:&end contentsEnd:NULL forRange:self.textView.selectedRange];
+					return [NSString stringWithFormat:@"%lu\f%lu", (unsigned long)start, (unsigned long)(end-start)];
+				}];
 			_lineNumFile = [[ProcFileReadWrite alloc]
 				initWithDir:^NSString *{return [self getProcFilePath];}
 				fileName:@"line-number"
 				readStr:^NSString *
 				{
-					int line = 1;
+					int startLine = 1;
+					NSUInteger i;
 					NSString* text = self.text;
 					NSUInteger loc = self.textView.selectedRange.location;
-					for (NSUInteger i = 0; i < text.length && i < loc; i++)
+					for (i = 0; i < text.length && i < loc; i++)
 					{
 						if ([text characterAtIndex:i] == '\n')
-							++line;
+							++startLine;
 					}
-					return [NSString stringWithFormat:@"%d", line];
+
+					int endLine = startLine;
+					loc = self.textView.selectedRange.location + self.textView.selectedRange.length;
+					for (; i < text.length && i < loc; i++)
+					{
+						if ([text characterAtIndex:i] == '\n')
+							++endLine;
+					}
+					return startLine == endLine ? [NSString stringWithFormat:@"%d", startLine] : @"-1";
 				}
 				writeStr:^(NSString* text)
 				{
@@ -373,10 +392,17 @@
 												NSInteger len = [parts[1] integerValue];
 												if (loc + len > self.text.length)
 													len = (NSInteger) self.text.length - loc;
+												NSRange range = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
 												
 												NSArray* managers = self.textView.textStorage.layoutManagers;
 												NSLayoutManager* layout = managers[0];
-												[layout removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+												[layout removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:range];
+
+												dispatch_queue_t main = dispatch_get_main_queue();
+												dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 5*NSEC_PER_MSEC);
+												dispatch_after(delay, main, ^{
+													[layout invalidateDisplayForCharacterRange:range];
+												});
 											}
 										}];
 			_removeTempForeColorFile = [[ProcFileReadWrite alloc]
@@ -394,10 +420,17 @@
 												NSInteger len = [parts[1] integerValue];
 												if (loc + len > self.text.length)
 													len = (NSInteger) self.text.length - loc;
+												NSRange range = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
 												
 												NSArray* managers = self.textView.textStorage.layoutManagers;
 												NSLayoutManager* layout = managers[0];
-												[layout removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+												[layout removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:range];
+												
+												dispatch_queue_t main = dispatch_get_main_queue();
+												dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 5*NSEC_PER_MSEC);
+												dispatch_after(delay, main, ^{
+													[layout invalidateDisplayForCharacterRange:range];
+												});
 											}
 										}];
 			_removeTempUnderlineFile = [[ProcFileReadWrite alloc]
@@ -415,11 +448,18 @@
 												NSInteger len = [parts[1] integerValue];
 												if (loc + len > self.text.length)
 													len = (NSInteger) self.text.length - loc;
+												NSRange range = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
 												
 												NSArray* managers = self.textView.textStorage.layoutManagers;
 												NSLayoutManager* layout = managers[0];
-												[layout removeTemporaryAttribute:NSUnderlineStyleAttributeName forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
-												[layout removeTemporaryAttribute:NSUnderlineColorAttributeName forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+												[layout removeTemporaryAttribute:NSUnderlineStyleAttributeName forCharacterRange:range];
+												[layout removeTemporaryAttribute:NSUnderlineColorAttributeName forCharacterRange:range];
+												
+												dispatch_queue_t main = dispatch_get_main_queue();
+												dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 5*NSEC_PER_MSEC);
+												dispatch_after(delay, main, ^{
+													[layout invalidateDisplayForCharacterRange:range];
+												});
 											}
 										}];
 			_removeTempStrikeThroughFile = [[ProcFileReadWrite alloc]
@@ -437,11 +477,18 @@
 						NSInteger len = [parts[1] integerValue];
 						if (loc + len > self.text.length)
 							len = (NSInteger) self.text.length - loc;
+						NSRange range = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
 										  
 						NSArray* managers = self.textView.textStorage.layoutManagers;
 						NSLayoutManager* layout = managers[0];
-						[layout removeTemporaryAttribute:NSStrikethroughStyleAttributeName forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
-						[layout removeTemporaryAttribute:NSStrikethroughColorAttributeName forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
+						[layout removeTemporaryAttribute:NSStrikethroughStyleAttributeName forCharacterRange:range];
+						[layout removeTemporaryAttribute:NSStrikethroughColorAttributeName forCharacterRange:range];
+						
+						dispatch_queue_t main = dispatch_get_main_queue();
+						dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 5*NSEC_PER_MSEC);
+						dispatch_after(delay, main, ^{
+							[layout invalidateDisplayForCharacterRange:range];
+						});
 					}
 				}];
 			
@@ -450,6 +497,7 @@
 			[fs addReader:_languageFile];
 			[fs addReader:_pathFile];
 			[fs addReader:_titleFile];
+			[fs addReader:_lineSelectionFile];
 
 			[fs addWriter:_colNumFile];
 			[fs addWriter:_lineNumFile];
@@ -1249,7 +1297,8 @@
 	}
 	
 	[_colNumFile notifyIfChanged];
-	[_lineNumFile notifyIfChanged];
+	[_lineNumFile notifyIfChanged];				// TODO: this seems awfully slow
+	[_lineSelectionFile notifyIfChanged];
 	[_selectionRangeFileW notifyIfChanged];
 	[_selectionTextFile notifyIfChanged];
 

@@ -14,11 +14,10 @@ Keyword: \b(?: break | do | end | function | in | nil | return | then)\b
 Operator:  \x23 | \.\. | \b(?: and | not | or)\b
 Repeat: \b(?: for | repeat | until | while)\b
 StorageClass: \b(?: local)\b
-Identifier: \b(?: assert | collectgarbage | dofile | error | getfenv | getmetatable | ipairs | load | loadfile | loadstring | next | pairs | pcall | print | rawequal | rawget | rawset | select | setfenv | setmetatable | tonumber | tostring | type | unpack | xpcall)\b
 Comment: -- .* $
 Macro: \b(?: _G |  | _VERSION)\b
 
-Boolean: \b(?: false | true)\b
+Boolean: \b(?: false | true | FALSE | TRUE)\b
 Identifier: \b [a-zA-Z_] [\w_]* \b
 
 String: " (?: [^"\r\n\\] | \\.)* "

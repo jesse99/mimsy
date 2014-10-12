@@ -182,7 +182,14 @@ If the extension supports multiple contexts then it should do multiple writes.\
 
 \b \cf0 \CocoaLigature1 	line-number
 \b0  (rw)\
-	1-based integer for the start of the current selection. On writes the insertion point will move to the start of the line. If the value is too large the insertion point will move to the end of the document.\CocoaLigature0 \
+	1-based integer for the line the selection is within, -1 if the selection crosses multiple lines. On writes the insertion point will move to the start of the line. If the value is too large the insertion point will move to the end of the document.\CocoaLigature0 \
+\pard\tx626\pardeftab626\pardirnatural
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b \cf0 \CocoaLigature1 	line-selection
+\b0  (r)\
+	Returns text formatted as "<offset>\\f<length>" where offset is at the start of the line the current selection is within and offset+length is at the end of the last line the current selection is within. Unlike line-number this does work when the selection crosses multiple lines.\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural

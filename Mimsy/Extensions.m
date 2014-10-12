@@ -341,8 +341,14 @@ static bool block_timed_out(void (^block)())
 			{
 				error = @"Unexpected watch line";
 			}
+			else if (![path startsWith:@"/Volumes/Mimsy/"])
+			{
+				error = [NSString stringWithFormat:@"'%@' doesn't start with /Volumes/Mimsy/", path];
+			}
 			else
 			{
+				path = [path substringFromIndex:[@"/Volumes/Mimsy" length]];
+
 				[self.priorities setObject:@(priority) forKey:path];
 				[Extensions watch:path extension:self];
 			}
@@ -431,12 +437,17 @@ static int watch_file(struct lua_State* state)
 	LUA_ASSERT(path != NULL && strlen(path) > 0, "path was NULL or empty");
 	LUA_ASSERT(fname != NULL && strlen(fname) > 0, "function name was NULL or empty");
 	
+	// The file system strips off the "/Volumes/Mimsy from paths so to keep things
+	// consistent internally we always do the same.
 	NSString* key = [NSString stringWithUTF8String:path];
+	LUA_ASSERT([key startsWith:@"/Volumes/Mimsy/"], "path doesn't start with '/Volumes/Mimsy/'");
+	key = [key substringFromIndex:[@"/Volumes/Mimsy" length]];
+	
 	[extension.priorities setObject:@(priority) forKey:key];
 	[extension.watched setObject:[NSString stringWithUTF8String:fname] forKey:key];
 	
 	[Extensions watch:key extension:extension];
-		
+	
 	return 0;
 }
 
@@ -527,9 +538,7 @@ static void initMimsyMethods(struct lua_State* state, LuaExtension* extension)
 + (bool)invoke:(NSString*)path
 {
 	bool handled = false;
-	
-	path = [@"/Volumes/Mimsy" stringByAppendingPathComponent:path];
-	
+		
 	NSArray* extensions = _watching[path];
 	for (BaseExtension* extension in extensions)
 	{

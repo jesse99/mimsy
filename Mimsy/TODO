@@ -5,11 +5,22 @@ install http://osxfuse.github.io/
 	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
 	
 
+* Do a commit
+* Use file names instead of window position indexes:
+	- watched paths will need to support globs
+* Profile again
 * Highlight current line:
-	- line proc file needs to handle multi-line selections properly
-	- extension needs to keep track of state, per window...
-	need a way to store state per window?
-* Make sure goFormat is dieng
+	- seem to be problems after editing, may need to map old line number to a range
+* Extensions need support for settings:
+	- expose via proc files
+	- would be nice if defaults could be written (with comments)
+	- could dump these all in a extensions-settings file
+* Calling getElementNames is problematic from extensions:
+	- layout may not have finished
+* Need an app key-store:
+	- probably need to expose app settings
+	- may need to expose text/directory settings too
+* Make sure goFormat is dieing
 	- when the app exits normally
 	- when stopped via xcode
 	- when re-launched because it changed

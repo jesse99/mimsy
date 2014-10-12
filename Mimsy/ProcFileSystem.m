@@ -81,6 +81,8 @@
 	[_writers removeObject:file];
 }
 
+// Extensions will open a file like "/Volumes/Mimsy/foo" but by the time we are called
+// the path will be turned into "/foo".
 - (BOOL)openFileAtPath:(NSString*)path
                   mode:(int)mode
               userData:(id*)userData

@@ -4,6 +4,7 @@
 
 @implementation ProcFileReader
 {
+	NSString* _value;
 	NSString* (^_directory ) ();
 	NSString* _fileName;
 	NSString* (^_readStr)();
@@ -154,6 +155,20 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 		*error = [NSError errorWithDomain:NSPOSIXErrorDomain code:EPERM userInfo:nil];
 	
 	return -1;
+}
+
+- (void)notifyIfChanged;
+{
+	if ([Extensions watching:self.path])
+	{
+		NSString* newValue = _readStr();
+		if ([newValue compare:_value] != NSOrderedSame)
+		{
+			if (_value)
+				[Extensions invoke:self.path];
+			_value = newValue;
+		}
+	}
 }
 
 @end
@@ -376,7 +391,6 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 - (NSArray*)directChildren:(NSString*)path
 {
 	NSString* directory = _directory();
-	LOG("App", "directory = %s, path = %s", STR(directory), STR(path));
 	if ([directory isEqualToString:path])
 	{
 		return _store.allKeys;
