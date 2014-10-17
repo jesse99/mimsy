@@ -60,9 +60,9 @@ static LocalSettings* _cachedLangSettings;
 	return nil;		// we need to return nil to keep ARC (and our asserts) happy
 }
 
-+ (void)windowOrderChanged:(NSWindow*)window
++ (void)windowOrderChanged:(NSNotification*)notification
 {
-	UNUSED(window);
+	UNUSED(notification);
 	
 	// This is called when we get a new main window or resign the current one.
 	// Because these events are often paired we'll defer doing the work for a

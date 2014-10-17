@@ -52,7 +52,7 @@ func rewriteFile(path string) {
 func main() {
 	fmt.Println("name\fGoFormat")
 	fmt.Println("version\f1.0")
-	fmt.Println("watch\f1.0\f/Volumes/Mimsy/text-window/1/user-saving")
+	fmt.Println("watch\f1.0\f/Volumes/Mimsy/text-document/user-saving")
 	fmt.Println("")
 
 	var reader = bufio.NewReader(os.Stdin)
@@ -63,9 +63,9 @@ func main() {
 			break
 		}
 
-		var language, _ = ioutil.ReadFile("/Volumes/Mimsy/text-window/1/language")
+		var language, _ = ioutil.ReadFile("/Volumes/Mimsy/text-document/language")
 		if string(language) == "go" {
-			rewriteFile("/Volumes/Mimsy/text-window/1/text")
+			rewriteFile("/Volumes/Mimsy/text-document/text")
 		}
 		fmt.Println("false")
 	}

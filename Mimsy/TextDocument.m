@@ -397,9 +397,9 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 
 - (void)saveDocument:(id)sender
 {
-	NSString* path = [NSString stringWithFormat:@"%@/user-saving", [_controller getProcFilePath]];
-	(void) [Extensions invoke:path];
-
+	if (_controller == [TextController frontmost])
+		(void) [Extensions invoke:@"/text-document/user-saving"];
+	
 	[super saveDocument:sender];
 }
 
@@ -543,9 +543,9 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	NSTextView* textv = _controller.textView;
 	if (textv)
 	{
-		NSString* path = [NSString stringWithFormat:@"%@/saving", [_controller getProcFilePath]];
-		(void) [Extensions invoke:path];
-
+		if (_controller == [TextController frontmost])
+			(void) [Extensions invoke:@"/text-document/saving"];
+		
 		NSTextStorage* storage = [textv textStorage];
 		NSMutableString* str = [storage mutableString];
 		LOG("Text", "Saving document to %s", STR(self.fileURL));

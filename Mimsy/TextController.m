@@ -4,19 +4,20 @@
 #import "ApplyStyles.h"
 #import "AppSettings.h"
 #import "Balance.h"
-#import "ColorCategory.h"
+//#import "ColorCategory.h"
 #import "ConfigParser.h"
 #import "FunctionalTest.h"
 #import "Language.h"
 #import "Languages.h"
 #import "Paths.h"
-#import "ProcFileSystem.h"
-#import "ProcFiles.h"
+//#import "ProcFileSystem.h"
+//#import "ProcFiles.h"
 #import "RangeVector.h"
 #import "RestoreView.h"
 #import "StartupScripts.h"
 #import "TextView.h"
 #import "TextDocument.h"
+#import "TextDocumentFiles.h"
 #import "TextStyles.h"
 #import "TimeMachine.h"
 #import "TranscriptController.h"
@@ -25,31 +26,10 @@
 #import "WarningWindow.h"
 #import "WindowsDatabase.h"
 
+static TextDocumentFiles* _files;
+
 @implementation TextController
 {
-	ProcFileReader* _pathFile;
-	ProcFileReadWrite* _colNumFile;
-	ProcFileReader* _elementNameFile;
-	ProcFileReader* _elementNamesFile;
-	ProcFileReader* _languageFile;
-	ProcFileReader* _lineSelectionFile;
-	ProcFileReadWrite* _lineNumFile;
-	ProcFileReadWrite* _selectionRangeFileW;
-	ProcFileReadWrite* _selectionTextFile;
-	ProcFileReadWrite* _textFile;
-	ProcFileReader* _titleFile;
-	ProcFileReadWrite* _wordWrapFile;
-	ProcFileKeyStore* _keyStoreFile;
-
-	ProcFileReadWrite* _addTempBackColorFile;
-	ProcFileReadWrite* _removeTempBackColorFile;
-	ProcFileReadWrite* _addTempForeColorFile;
-	ProcFileReadWrite* _removeTempForeColorFile;
-	ProcFileReadWrite* _addTempUnderlineFile;
-	ProcFileReadWrite* _removeTempUnderlineFile;
-	ProcFileReadWrite* _addTempStrikeThroughFile;
-	ProcFileReadWrite* _removeTempStrikeThroughFile;
-
 	RestoreView* _restorer;
 	bool _closed;
 	bool _wordWrap;
@@ -66,6 +46,9 @@
     self = [super initWithWindowNibName:@"TextDocument"];
     if (self)
 	{
+		if (!_files)
+			_files = [TextDocumentFiles new];
+		
 		[self setShouldCascadeWindows:NO];
 
 		// This will be set to nil once the view has been restored.
@@ -77,445 +60,6 @@
 		
  		updateInstanceCount(@"TextController", +1);
 		updateInstanceCount(@"TextWindow", +1);
-
-		AppDelegate* app = [NSApp delegate];
-		ProcFileSystem* fs = app.procFileSystem;
-		if (fs)
-		{
-			_colNumFile = [[ProcFileReadWrite alloc]
-				initWithDir:^NSString *{return [self getProcFilePath];}
-				fileName:@"column-number"
-				readStr:^NSString *
-				{
-				   NSRange range = self.textView.selectedRange;
-				   NSUInteger loc = range.location;
-				   while (loc > 0 && [self.text characterAtIndex:loc-1] != '\n')
-					   --loc;
-				   return [NSString stringWithFormat:@"%lu", range.location - loc + 1];
-				}
-				writeStr:^(NSString* text)
-				{
-					// Find the start of the line.
-					NSUInteger loc = self.textView.selectedRange.location;
-					while (loc > 0 && [self.text characterAtIndex:loc-1] != '\n')
-						--loc;
-					
-					// Jump to the column, but don't go past the end of the line.
-					NSInteger col = [text integerValue];
-					while (loc < self.text.length && [self.text characterAtIndex:loc] != '\n' && col > 1)
-					{
-						--col;
-						++loc;
-					}
-					
-					NSRange range = NSMakeRange(loc, 0);
-					[self.textView setSelectedRange:range];
-
-					range = NSMakeRange(loc, 1);
-					[self.textView scrollRangeToVisible:range];
-					[self.textView showFindIndicatorForRange:range];
-				}];
-			_elementNameFile = [[ProcFileReader alloc]
-								initWithDir:^NSString *{return [self getProcFilePath];}
-								fileName:@"element-name"
-								readStr:^NSString *{return [self getElementNameFor:self.textView.selectedRange];}];
-			_elementNamesFile = [[ProcFileReader alloc]
-								initWithDir:^NSString *{return [self getProcFilePath];}
-								fileName:@"element-names"
-								readStr:^NSString *{return [self getElementNames];}];
-			_languageFile = [[ProcFileReader alloc]
-							 initWithDir:^NSString *{return [self getProcFilePath];}
-							 fileName:@"language"
-							 readStr:^NSString *{return self.language ? self.language.name : @"";}];
-			_lineSelectionFile = [[ProcFileReader alloc]
-								initWithDir:^NSString *{return [self getProcFilePath];}
-								fileName:@"line-selection"
-							 readStr:^NSString *
-				{
-					NSUInteger start, end;
-					[self.text getLineStart:&start end:&end contentsEnd:NULL forRange:self.textView.selectedRange];
-					return [NSString stringWithFormat:@"%lu\f%lu", (unsigned long)start, (unsigned long)(end-start)];
-				}];
-			_lineNumFile = [[ProcFileReadWrite alloc]
-				initWithDir:^NSString *{return [self getProcFilePath];}
-				fileName:@"line-number"
-				readStr:^NSString *
-				{
-					int startLine = 1;
-					NSUInteger i;
-					NSString* text = self.text;
-					NSUInteger loc = self.textView.selectedRange.location;
-					for (i = 0; i < text.length && i < loc; i++)
-					{
-						if ([text characterAtIndex:i] == '\n')
-							++startLine;
-					}
-
-					int endLine = startLine;
-					loc = self.textView.selectedRange.location + self.textView.selectedRange.length;
-					for (; i < text.length && i < loc; i++)
-					{
-						if ([text characterAtIndex:i] == '\n')
-							++endLine;
-					}
-					return startLine == endLine ? [NSString stringWithFormat:@"%d", startLine] : @"-1";
-				}
-				writeStr:^(NSString* text)
-				{
-					NSUInteger i = 0;
-					NSInteger currentLine = 1;
-					NSInteger targetLine = [text integerValue];
-					while (i < self.text.length && currentLine < targetLine)
-					{
-						if ([self.text characterAtIndex:i] == '\n')
-							++currentLine;
-						++i;
-					}
-					
-					NSUInteger j = i;
-					while (j < self.text.length && [self.text characterAtIndex:j] != '\n')
-					{
-						++j;
-					}
-					
-					NSRange range = NSMakeRange(i, 0);
-					[self.textView setSelectedRange:range];
-
-					range = NSMakeRange(i, j-i+1);
-					[self.textView scrollRangeToVisible:range];
-					[self.textView showFindIndicatorForRange:range];
-				}];
-			_pathFile = [[ProcFileReader alloc]
-						 initWithDir:^NSString *{return [self getProcFilePath];}
-						 fileName:@"path"
-						 readStr:^NSString *{return [self path];}];
-			_selectionRangeFileW = [[ProcFileReadWrite alloc]
-				initWithDir:^NSString *{return [self getProcFilePath];}
-				fileName:@"selection-range"
-				readStr:^NSString *{
-					NSRange range = self.textView.selectedRange;
-					return [NSString stringWithFormat:@"%lu\f%lu", (unsigned long)range.location, (unsigned long)range.length];
-				}
-				writeStr:^(NSString* text)
-				{
-					NSArray* parts = [text componentsSeparatedByString:@"\f"];
-					if (parts.count == 2)
-					{
-						NSInteger loc = [parts[0] integerValue];
-						NSInteger len = [parts[1] integerValue];
-						if (loc + len > self.text.length)
-							len = (NSInteger) self.text.length - loc;
-						
-						NSRange range = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
-						dispatch_queue_t main = dispatch_get_main_queue();
-						dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_MSEC);
-						dispatch_after(delay, main, ^{
-							// We need to defer this in order for scrollRangeToVisible to work
-							// reliably (e.g. for option-tab).
-							[self.textView setSelectedRange:range];
-							[self.textView scrollRangeToVisible:range];
-							[self.textView showFindIndicatorForRange:range];
-						});
-					}
-				}];
-			_selectionTextFile = [[ProcFileReadWrite alloc]
-								  initWithDir:^NSString *{return [self getProcFilePath];}
-								  fileName:@"selection-text"
-								  readStr:^NSString *{
-									  NSRange range = self.textView.selectedRange;
-									  return [self.text substringWithRange:range];
-								  }
-								  writeStr:^(NSString* text)
-								  {
-									  NSRange range = self.textView.selectedRange;
-									  if ([self.textView shouldChangeTextInRange:range replacementString:text])
-									  {
-										  [self.textView replaceCharactersInRange:range withString:text];
-										  if (text.length > 0)
-											  [self.textView.undoManager setActionName:@"Replace Text"];
-										  else
-											  [self.textView.undoManager setActionName:@"Delete Text"];
-										  [self.textView didChangeText];
-									  }
-								  }];
-			_textFile = [[ProcFileReadWrite alloc]
-				initWithDir:^NSString *{return [self getProcFilePath];}
-				fileName:@"text"
-				readStr:^NSString *{
-					return self.text;
-				}
-				writeStr:^(NSString* text)
-				{
-					NSRange range = NSMakeRange(0, self.text.length);
-					if ([self.textView shouldChangeTextInRange:range replacementString:text])
-					{
-						[self.textView replaceCharactersInRange:range withString:text];
-						if (text.length > 0)
-							[self.textView.undoManager setActionName:@"Replace Text"];
-						else
-							[self.textView.undoManager setActionName:@"Delete Text"];
-						[self.textView didChangeText];
-					}
-				}];
-			_titleFile = [[ProcFileReader alloc]
-						initWithDir:^NSString *{return [self getProcFilePath];}
-						fileName:@"title"
-						readStr:^NSString *{return self.window.title;}];
-			_wordWrapFile = [[ProcFileReadWrite alloc]
-			   initWithDir:^NSString *{return [self getProcFilePath];}
-			   fileName:@"word-wrap"
-			   readStr:^NSString *{
-				   return _wordWrap ? @"true" : @"false";
-			   }
-			   writeStr:^(NSString* text)
-			   {
-				   bool wrap = [text isEqualToString:@"true"];
-				   if (wrap != _wordWrap)
-				   {
-					   _wordWrap = wrap;
-					   [self doResetWordWrap];
-				   }
-			   }];
-			_keyStoreFile = [[ProcFileKeyStore alloc] initWithDir:^NSString*
-				{
-					return [[self getProcFilePath] stringByAppendingPathComponent:@"key-values"];
-				}];
-			
-			_addTempBackColorFile = [[ProcFileReadWrite alloc]
-									 initWithDir:^NSString *{return [self getProcFilePath];}
-									 fileName:@"add-temp-back-color"
-									 readStr:^NSString *{
-										 return @"";
-									 }
-									 writeStr:^(NSString* text)
-									 {
-										 NSArray* parts = [text componentsSeparatedByString:@"\f"];
-										 if (parts.count == 3)
-										 {
-											 NSInteger loc = [parts[0] integerValue];
-											 NSInteger len = [parts[1] integerValue];
-											 NSString* name = parts[2];
-											 NSColor* color = [NSColor colorWithMimsyName:name];
-											 if (loc + len > self.text.length)
-												 len = (NSInteger) self.text.length - loc;
-											 
-											 NSArray* managers = self.textView.textStorage.layoutManagers;
-											 NSLayoutManager* layout = managers[0];
-											 [layout addTemporaryAttribute:NSBackgroundColorAttributeName value:color forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
-										 }
-									 }];
-			_addTempForeColorFile = [[ProcFileReadWrite alloc]
-									 initWithDir:^NSString *{return [self getProcFilePath];}
-									 fileName:@"add-temp-fore-color"
-									 readStr:^NSString *{
-										 return @"";
-									 }
-									 writeStr:^(NSString* text)
-									 {
-										 NSArray* parts = [text componentsSeparatedByString:@"\f"];
-										 if (parts.count == 3)
-										 {
-											 NSInteger loc = [parts[0] integerValue];
-											 NSInteger len = [parts[1] integerValue];
-											 NSString* name = parts[2];
-											 NSColor* color = [NSColor colorWithMimsyName:name];
-											 if (loc + len > self.text.length)
-												 len = (NSInteger) self.text.length - loc;
-											 
-											 NSArray* managers = self.textView.textStorage.layoutManagers;
-											 NSLayoutManager* layout = managers[0];
-											 [layout addTemporaryAttribute:NSForegroundColorAttributeName value:color forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
-										 }
-									 }];
-			_addTempUnderlineFile = [[ProcFileReadWrite alloc]
-									 initWithDir:^NSString *{return [self getProcFilePath];}
-									 fileName:@"add-temp-underline"
-									 readStr:^NSString *{
-										 return @"";
-									 }
-									 writeStr:^(NSString* text)
-									 {
-										 NSArray* parts = [text componentsSeparatedByString:@"\f"];
-										 if (parts.count == 4)
-										 {
-											 NSInteger loc = [parts[0] integerValue];
-											 NSInteger len = [parts[1] integerValue];
-											 NSInteger mask = [parts[2] integerValue];
-											 NSString* name = parts[3];
-											 NSColor* color = [NSColor colorWithMimsyName:name];
-											 if (loc + len > self.text.length)
-												 len = (NSInteger) self.text.length - loc;
-											 
-											 NSArray* managers = self.textView.textStorage.layoutManagers;
-											 NSLayoutManager* layout = managers[0];
-											 [layout addTemporaryAttribute:NSUnderlineStyleAttributeName value:@(mask) forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
-											 [layout addTemporaryAttribute:NSUnderlineColorAttributeName value:color forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
-										 }
-									 }];
-			_addTempStrikeThroughFile = [[ProcFileReadWrite alloc]
-				 initWithDir:^NSString *{return [self getProcFilePath];}
-				 fileName:@"add-temp-strike-through"
-				 readStr:^NSString *{
-					 return @"";
-				 }
-				 writeStr:^(NSString* text)
-				 {
-					 NSArray* parts = [text componentsSeparatedByString:@"\f"];
-					 if (parts.count == 4)
-					 {
-						 NSInteger loc = [parts[0] integerValue];
-						 NSInteger len = [parts[1] integerValue];
-						 NSInteger mask = [parts[2] integerValue];
-						 NSString* name = parts[3];
-						 NSColor* color = [NSColor colorWithMimsyName:name];
-						 if (loc + len > self.text.length)
-							 len = (NSInteger) self.text.length - loc;
-						 
-						 NSArray* managers = self.textView.textStorage.layoutManagers;
-						 NSLayoutManager* layout = managers[0];
-						 [layout addTemporaryAttribute:NSStrikethroughStyleAttributeName value:@(mask) forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
-						 [layout addTemporaryAttribute:NSStrikethroughColorAttributeName value:color forCharacterRange:NSMakeRange((NSUInteger)loc, (NSUInteger)len)];
-					 }
-				 }];
-			_removeTempBackColorFile = [[ProcFileReadWrite alloc]
-										initWithDir:^NSString *{return [self getProcFilePath];}
-										fileName:@"remove-temp-back-color"
-										readStr:^NSString *{
-											return @"";
-										}
-										writeStr:^(NSString* text)
-										{
-											NSArray* parts = [text componentsSeparatedByString:@"\f"];
-											if (parts.count == 2)
-											{
-												NSInteger loc = [parts[0] integerValue];
-												NSInteger len = [parts[1] integerValue];
-												if (loc + len > self.text.length)
-													len = (NSInteger) self.text.length - loc;
-												NSRange range = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
-												
-												NSArray* managers = self.textView.textStorage.layoutManagers;
-												NSLayoutManager* layout = managers[0];
-												[layout removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:range];
-
-												dispatch_queue_t main = dispatch_get_main_queue();
-												dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 5*NSEC_PER_MSEC);
-												dispatch_after(delay, main, ^{
-													[layout invalidateDisplayForCharacterRange:range];
-												});
-											}
-										}];
-			_removeTempForeColorFile = [[ProcFileReadWrite alloc]
-										initWithDir:^NSString *{return [self getProcFilePath];}
-										fileName:@"remove-temp-fore-color"
-										readStr:^NSString *{
-											return @"";
-										}
-										writeStr:^(NSString* text)
-										{
-											NSArray* parts = [text componentsSeparatedByString:@"\f"];
-											if (parts.count == 2)
-											{
-												NSInteger loc = [parts[0] integerValue];
-												NSInteger len = [parts[1] integerValue];
-												if (loc + len > self.text.length)
-													len = (NSInteger) self.text.length - loc;
-												NSRange range = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
-												
-												NSArray* managers = self.textView.textStorage.layoutManagers;
-												NSLayoutManager* layout = managers[0];
-												[layout removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:range];
-												
-												dispatch_queue_t main = dispatch_get_main_queue();
-												dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 5*NSEC_PER_MSEC);
-												dispatch_after(delay, main, ^{
-													[layout invalidateDisplayForCharacterRange:range];
-												});
-											}
-										}];
-			_removeTempUnderlineFile = [[ProcFileReadWrite alloc]
-										initWithDir:^NSString *{return [self getProcFilePath];}
-										fileName:@"remove-temp-underline"
-										readStr:^NSString *{
-											return @"";
-										}
-										writeStr:^(NSString* text)
-										{
-											NSArray* parts = [text componentsSeparatedByString:@"\f"];
-											if (parts.count == 2)
-											{
-												NSInteger loc = [parts[0] integerValue];
-												NSInteger len = [parts[1] integerValue];
-												if (loc + len > self.text.length)
-													len = (NSInteger) self.text.length - loc;
-												NSRange range = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
-												
-												NSArray* managers = self.textView.textStorage.layoutManagers;
-												NSLayoutManager* layout = managers[0];
-												[layout removeTemporaryAttribute:NSUnderlineStyleAttributeName forCharacterRange:range];
-												[layout removeTemporaryAttribute:NSUnderlineColorAttributeName forCharacterRange:range];
-												
-												dispatch_queue_t main = dispatch_get_main_queue();
-												dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 5*NSEC_PER_MSEC);
-												dispatch_after(delay, main, ^{
-													[layout invalidateDisplayForCharacterRange:range];
-												});
-											}
-										}];
-			_removeTempStrikeThroughFile = [[ProcFileReadWrite alloc]
-				initWithDir:^NSString *{return [self getProcFilePath];}
-				fileName:@"remove-temp-strike-through"
-				readStr:^NSString *{
-					return @"";
-				}
-				writeStr:^(NSString* text)
-				{
-					NSArray* parts = [text componentsSeparatedByString:@"\f"];
-					if (parts.count == 2)
-					{
-						NSInteger loc = [parts[0] integerValue];
-						NSInteger len = [parts[1] integerValue];
-						if (loc + len > self.text.length)
-							len = (NSInteger) self.text.length - loc;
-						NSRange range = NSMakeRange((NSUInteger)loc, (NSUInteger)len);
-										  
-						NSArray* managers = self.textView.textStorage.layoutManagers;
-						NSLayoutManager* layout = managers[0];
-						[layout removeTemporaryAttribute:NSStrikethroughStyleAttributeName forCharacterRange:range];
-						[layout removeTemporaryAttribute:NSStrikethroughColorAttributeName forCharacterRange:range];
-						
-						dispatch_queue_t main = dispatch_get_main_queue();
-						dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 5*NSEC_PER_MSEC);
-						dispatch_after(delay, main, ^{
-							[layout invalidateDisplayForCharacterRange:range];
-						});
-					}
-				}];
-			
-			[fs addReader:_elementNameFile];
-			[fs addReader:_elementNamesFile];
-			[fs addReader:_languageFile];
-			[fs addReader:_pathFile];
-			[fs addReader:_titleFile];
-			[fs addReader:_lineSelectionFile];
-
-			[fs addWriter:_colNumFile];
-			[fs addWriter:_lineNumFile];
-			[fs addWriter:_selectionRangeFileW];
-			[fs addWriter:_selectionTextFile];
-			[fs addWriter:_textFile];
-			[fs addWriter:_wordWrapFile];
-			[fs addWriter:_keyStoreFile];
-
-			[fs addWriter:_addTempBackColorFile];
-			[fs addWriter:_removeTempBackColorFile];
-			[fs addWriter:_addTempForeColorFile];
-			[fs addWriter:_removeTempForeColorFile];
-			[fs addWriter:_addTempUnderlineFile];
-			[fs addWriter:_removeTempUnderlineFile];
-			[fs addWriter:_addTempStrikeThroughFile];
-			[fs addWriter:_removeTempStrikeThroughFile];
-		}
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(languagesChanged:) name:@"LanguagesChanged" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stylesChanged:) name:@"StylesChanged" object:nil];
@@ -523,23 +67,6 @@
 	}
     
 	return self;
-}
-
-- (NSString*)getProcFilePath
-{
-	__block NSString* path = nil;
-	
-	__block int index = 1;
-	[TextController enumerate:^(TextController *controller, bool* stop) {
-		if (controller == self)
-		{
-			path = [NSString stringWithFormat:@"/text-window/%d", index];
-			*stop = true;
-		}
-		++index;
-	}];
-	
-	return path;
 }
 
 - (void)dealloc
@@ -821,15 +348,7 @@
 
 + (TextController*)frontmost
 {
-	for (NSWindow* window in [NSApp orderedWindows])
-	{
-		if (window.isVisible || window.isMiniaturized)
-			if (window.windowController)
-				if ([window.windowController isKindOfClass:[TextController class]])
-					return window.windowController;
-	}
-	
-	return nil;
+	return [_files frontmost];
 }
 
 + (void)enumerate:(void (^)(TextController*, bool*))block
@@ -1248,7 +767,7 @@
 	_wordWrap = !_wordWrap;
 	[self doResetWordWrap];
 	
-	[_wordWrapFile notifyIfChanged];
+	[_files onWordWrapChanged:self];
 }
 
 - (void)doResetWordWrap
@@ -1296,11 +815,7 @@
 		[_applier toggleBraceHighlightFrom:0 to:0 on:false];
 	}
 	
-	[_colNumFile notifyIfChanged];
-	[_lineNumFile notifyIfChanged];				// TODO: this seems awfully slow
-	[_lineSelectionFile notifyIfChanged];
-	[_selectionRangeFileW notifyIfChanged];
-	[_selectionTextFile notifyIfChanged];
+	[_files onSelectionChanged:self];
 
 	[StartupScripts invokeTextSelectionChanged:self.document slocation:range.location slength:range.length];
 }
@@ -1359,8 +874,7 @@
 			}
 		}
 
-		[_selectionTextFile notifyIfChanged];
-		[_textFile notifyIfChanged];			// TODO: watching this can be expensive for large files, could maybe use a custom proc file class
+		[_files onTextChanged:self];
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowEdited" object:self];
 	}
 }

@@ -3,7 +3,7 @@
 function init()
 	mimsy:set_extension_name("highlight-line")
 	mimsy:set_extension_version("1.0")
-	mimsy:watch_file(1.0, "/Volumes/Mimsy/text-window/1/line-number", "onLineChanged")
+	mimsy:watch_file(1.0, "/Volumes/Mimsy/text-document/line-number", "onLineChanged")
 end
 
 function split(str, pattern)
@@ -40,29 +40,29 @@ function log(format, ...)
 end
 
 function onLineChanged()
-	local line = read_file("text-window/1/line-number")
+	local line = read_file("text-document/line-number")
 	--log("line = %s", line)
 	if line ~= "-1" then
-		local new_text = read_file("text-window/1/line-selection")
-		local old_text = read_file("text-window/1/key-values/highlight-line-selection")
+		local new_text = read_file("text-document/line-selection")
+		local old_text = read_file("text-document/key-values/highlight-line-selection")
 		--log("new_text = %s, old_text = %s", new_text, old_text)
 		if new_text ~= old_text then
 			if old_text ~= "" then
 				local old_selection = split(old_text, "\f")
-				write_file("text-window/1/remove-temp-back-color", string.format("%d\f%d", old_selection[1], old_selection[2]))
+				write_file("text-document/remove-temp-back-color", string.format("%d\f%d", old_selection[1], old_selection[2]))
 			end
 
 			local new_selection = split(new_text, "\f")
-			write_file("text-window/1/add-temp-back-color", string.format("%d\f%d\fSkyBlue", new_selection[1], new_selection[2]))
-			write_file("text-window/1/key-values/highlight-line-selection", new_text)
+			write_file("text-document/add-temp-back-color", string.format("%d\f%d\fSkyBlue", new_selection[1], new_selection[2]))
+			write_file("text-document/key-values/highlight-line-selection", new_text)
 		end
 	else
-		local old_text = read_file("text-window/1/key-values/highlight-line-selection")
+		local old_text = read_file("text-document/key-values/highlight-line-selection")
 		--log("old_text = %s", old_text)
 		if old_text ~= "" then
 			local old_selection = split(old_text, "\f")
-			write_file("text-window/1/remove-temp-back-color", string.format("%d\f%d", old_selection[1], old_selection[2]))
-			write_file("text-window/1/key-values/highlight-line-selection", "")
+			write_file("text-document/remove-temp-back-color", string.format("%d\f%d", old_selection[1], old_selection[2]))
+			write_file("text-document/key-values/highlight-line-selection", "")
 		end
 	end
 

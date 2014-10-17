@@ -49,10 +49,17 @@ function write_file(path, text)
 	io.close(file)
 end
 
+function log(format, ...)
+	local text = string.format(format, unpack(arg))
+	write_file("/log/line", string.format("highlight-line\f%s", text))
+end
+
 function tab(delta)
 	local handled = false
+	log("option tabbing")
 
-	local elements = read_file("text-window/1/element-names")
+	local elements = read_file("text-document/element-names")
+	log("elements = %s", elements)
 	if elements ~= "" then
 		local lines = split(elements, "\n")
 		local selection_index = lines[1] + 2	-- +2 because lua arrays are 1-based and we skip the first line
@@ -62,7 +69,7 @@ function tab(delta)
 		while line >= 1 and line <= #lines do
 			local parts = split(lines[line], "\f")
 			if parts[1] == "identifier" then
-				write_file("text-window/1/selection-range", string.format("%d\f%d", parts[2], parts[3]))
+				write_file("text-document/selection-range", string.format("%d\f%d", parts[2], parts[3]))
 				break
 			end
 			line = line + delta

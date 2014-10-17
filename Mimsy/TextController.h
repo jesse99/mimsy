@@ -31,6 +31,8 @@ typedef void (^LayoutCallback)(TextController* controller);
 // this returns a lower case version of the element name.
 - (NSString*)getElementNameFor:(NSRange)range;
 
+- (NSString*)getElementNames;
+
 - (bool)isBrace:(unichar)ch;
 - (bool)isOpenBrace:(NSUInteger)index;
 - (bool)isCloseBrace:(NSUInteger)index;
@@ -39,7 +41,6 @@ typedef void (^LayoutCallback)(TextController* controller);
 
 - (NSTextView*)getTextView;
 - (NSUInteger)getEditCount;
-- (NSString*)getProcFilePath;
 
 @property IBOutlet TextView* textView;
 @property IBOutlet __weak NSScrollView* scrollView;
