@@ -168,7 +168,9 @@ typedef void (^NullaryBlock)();
 	[_procFileSystem addReader:_versionFile];
 	[_procFileSystem addWriter:_beepFile];
 	[_procFileSystem addWriter:_logFile];
-	
+
+    [TextController startup];
+
 	[SpecialKeys setup];
 	[Extensions setup];
 }

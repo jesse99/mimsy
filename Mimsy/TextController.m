@@ -4,14 +4,11 @@
 #import "ApplyStyles.h"
 #import "AppSettings.h"
 #import "Balance.h"
-//#import "ColorCategory.h"
 #import "ConfigParser.h"
 #import "FunctionalTest.h"
 #import "Language.h"
 #import "Languages.h"
 #import "Paths.h"
-//#import "ProcFileSystem.h"
-//#import "ProcFiles.h"
 #import "RangeVector.h"
 #import "RestoreView.h"
 #import "StartupScripts.h"
@@ -41,14 +38,17 @@ static TextDocumentFiles* _files;
 	struct UIntVector _lineStarts;	// first index is at zero, other indexes are one past new-lines
 }
 
++ (void)startup
+{
+    if (!_files)
+        _files = [TextDocumentFiles new];    
+}
+
 - (id)init
 {
     self = [super initWithWindowNibName:@"TextDocument"];
     if (self)
 	{
-		if (!_files)
-			_files = [TextDocumentFiles new];
-		
 		[self setShouldCascadeWindows:NO];
 
 		// This will be set to nil once the view has been restored.
