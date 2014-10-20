@@ -3,11 +3,9 @@ tail -f ~/Library/Logs/mimsy.log
 install http://osxfuse.github.io/
 	can skip this but a lot of features will be disabled
 	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
-	
 
-* Seems like notifications should happen when an extension changes state.
-* Highlight current line:
-	- seem to be problems after editing, may need to map old line number to a range
+
+
 * Extensions need support for settings:
 	- expose via proc files
 	- would be nice if defaults could be written (with comments)

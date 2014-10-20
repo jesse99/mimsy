@@ -3,7 +3,14 @@
 function init()
 	mimsy:set_extension_name("highlight-line")
 	mimsy:set_extension_version("1.0")
-	mimsy:watch_file(1.0, "/Volumes/Mimsy/text-document/line-number", "onLineChanged")
+
+    -- Temporary attributes are a bit annoying because they don't affect the typing attributes
+    -- so edits don't look right. It'd be possible to use normal attributes but then we'd have
+    -- somehow remove them before saving and copying. So, for now, we just re-apply the line
+    -- highlighting after normal styles are applied to fix the line up.
+    mimsy:watch_file(1.0, "/Volumes/Mimsy/text-document/line-number", "onLineChanged")
+    mimsy:watch_file(1.0, "/Volumes/Mimsy/text-document/applied-styles", "onLineChanged")
+	mimsy:watch_file(1.0, "/Volumes/Mimsy/text-document/main-changed", "onMainChanged")
 end
 
 function split(str, pattern)
@@ -67,4 +74,10 @@ function onLineChanged()
 	end
 
 	return false
+end
+
+function onMainChanged()
+    write_file("text-document/remove-temp-back-color", "0\f100000")
+    write_file("text-document/key-values/highlight-line-selection", "")
+    onLineChanged()
 end

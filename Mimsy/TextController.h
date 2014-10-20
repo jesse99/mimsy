@@ -44,6 +44,8 @@ typedef void (^LayoutCallback)(TextController* controller);
 - (NSTextView*)getTextView;
 - (NSUInteger)getEditCount;
 
+- (void)onAppliedStyles;
+
 @property IBOutlet TextView* textView;
 @property IBOutlet __weak NSScrollView* scrollView;
 @property NSAttributedString* attributedText;

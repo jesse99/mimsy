@@ -2,6 +2,7 @@
 
 #import "AppDelegate.h"
 #import "ColorCategory.h"
+#import "Extensions.h"
 #import "Language.h"
 #import "ProcFiles.h"
 #import "ProcFileSystem.h"
@@ -15,7 +16,7 @@
 	ProcFileReadWrite* _addTempBackColorFile;
 	ProcFileReadWrite* _addTempForeColorFile;
 	ProcFileReadWrite* _addTempStrikeThroughFile;
-	ProcFileReadWrite* _addTempUnderlineFile;
+    ProcFileReadWrite* _addTempUnderlineFile;
 	ProcFileReadWrite* _colNumFile;
 	ProcFileReader* _elementNameFile;
 	ProcFileReader* _elementNamesFile;
@@ -485,6 +486,14 @@
 	}
 }
 
+- (void)onAppliedStyles:(TextController*)controller
+{
+    if (controller == _frontmost)
+    {
+        (void) [Extensions invoke:@"/text-document/applied-styles"];
+    }
+}
+
 - (ProcFileReader*)_createReader:(NSString*)name readBlock:(NSString* (^)(TextController*))readBlock
 {
 	ProcFileReader* file = nil;
@@ -559,10 +568,15 @@
 	// 1) We don't use NSApp orderedWindows because it was a major bottleneck.
 	// 2) We don't reset _frontmost because we want the frontmost text document,
 	// not the main window.
-	NSWindow* window = notification.object;
+    TextController* oldFront = _frontmost;
+    
+    NSWindow* window = notification.object;
 	if (window.windowController)
 		if ([window.windowController isKindOfClass:[TextController class]])
 			_frontmost = window.windowController;
+    
+    if (_frontmost && _frontmost != oldFront)
+        (void) [Extensions invoke:@"/text-document/main-changed"];
 }
 
 @end

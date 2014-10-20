@@ -782,7 +782,7 @@
 			name = MimsyTests;
 			productName = MimsyTests;
 			productReference = 37A8C6B616758FF400D4DB13 /* MimsyTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productType = "com.apple.product-type.bundle.ocunit-test";
 		};
 /* End PBXNativeTarget section */
 

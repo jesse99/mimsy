@@ -10,5 +10,6 @@
 - (void)onSelectionChanged:(TextController*)controller;
 - (void)onTextChanged:(TextController*)controller;
 - (void)onWordWrapChanged:(TextController*)controller;
+- (void)onAppliedStyles:(TextController*)controller;
 
 @end

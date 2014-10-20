@@ -237,6 +237,7 @@
 		else
 		{
 			LOG("Text:Styler:Verbose", "Applied last %lu runs (%.0fK runs/sec)", count, (count/1000.0)/elapsed);
+            [tmp onAppliedStyles];
 			_queued = false;
 		}
 		if (count > 0)

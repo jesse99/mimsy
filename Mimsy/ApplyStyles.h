@@ -15,6 +15,7 @@
 
 - (void)toggleBraceHighlightFrom:(NSUInteger)from to:(NSUInteger)to on:(bool)on;
 
+// True if some styles were applied.
 @property (readonly) bool applied;
 
 @end

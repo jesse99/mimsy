@@ -770,6 +770,11 @@ static TextDocumentFiles* _files;
 	[_files onWordWrapChanged:self];
 }
 
+- (void)onAppliedStyles
+{
+    [_files onAppliedStyles:self];
+}
+
 - (void)doResetWordWrap
 {
 	// This code is a bit weird and rather delicate:
