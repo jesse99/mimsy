@@ -162,7 +162,7 @@ bool rangeIntersects(NSRange lhs, NSRange rhs)
 			^BOOL(NSURL* url, NSError* error)
 			{
 				NSString* reason = [error localizedFailureReason];
-				NSString* mesg = [NSString stringWithFormat:@"Couldn't process %s: %s", STR(url), STR(reason)];
+				NSString* mesg = [NSString stringWithFormat:@"Couldn't process %s within %s: %s", STR(url), STR(path), STR(reason)];
 				[errors addObject:mesg];
 
 				return YES;
