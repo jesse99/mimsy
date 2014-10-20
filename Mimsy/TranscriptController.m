@@ -23,7 +23,6 @@ static TranscriptController* controller;
 	{
 		_maxChars = INFINITY;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
-		[self showWindow:self];
 	}
     
     return self;
@@ -92,48 +91,68 @@ static TranscriptController* controller;
 
 + (void)writeInfo:(NSString*)text
 {
-	TranscriptController* instance = [TranscriptController getInstance];
-	NSMutableAttributedString* str = [[NSMutableAttributedString alloc] initWithString:text];
-	[str setAttributes:instance->_infoAttrs range:NSMakeRange(0, text.length)];
-	[instance.view.textStorage appendAttributedString:str];
-	[instance _trimExtra];
-	[instance.window makeKeyAndOrderFront:self];
-	[instance _scrollLastIntoView];
-	instance->_editCount += 1;
+    TranscriptController* instance = [TranscriptController getInstance];    // do this to ensure the window is created 
+    if (text.length > 0)
+    {
+        [instance showWindow:self];
+
+        NSMutableAttributedString* str = [[NSMutableAttributedString alloc] initWithString:text];
+        [str setAttributes:instance->_infoAttrs range:NSMakeRange(0, text.length)];
+        [instance.view.textStorage appendAttributedString:str];
+        [instance _trimExtra];
+        [instance.window makeKeyAndOrderFront:self];
+        [instance _scrollLastIntoView];
+        instance->_editCount += 1;
+    }
 }
 
 + (void)writeCommand:(NSString*)text
 {
-	TranscriptController* instance = [TranscriptController getInstance];
-	NSMutableAttributedString* str = [[NSMutableAttributedString alloc] initWithString:text];
-	[str setAttributes:instance->_commandAttrs range:NSMakeRange(0, text.length)];
-	[instance.view.textStorage appendAttributedString:str];
-	[instance _trimExtra];
-	[instance _scrollLastIntoView];
-	instance->_editCount += 1;
+    if (text.length > 0)
+    {
+        TranscriptController* instance = [TranscriptController getInstance];
+        [instance showWindow:nil];
+        
+        NSMutableAttributedString* str = [[NSMutableAttributedString alloc] initWithString:text];
+        [str setAttributes:instance->_commandAttrs range:NSMakeRange(0, text.length)];
+        [instance.view.textStorage appendAttributedString:str];
+        [instance _trimExtra];
+        [instance _scrollLastIntoView];
+        instance->_editCount += 1;
+    }
 }
 
 + (void)writeStderr:(NSString*)text
 {
-	TranscriptController* instance = [TranscriptController getInstance];
-	NSMutableAttributedString* str = [[NSMutableAttributedString alloc] initWithString:text];
-	[str setAttributes:instance->_stderrAttrs range:NSMakeRange(0, text.length)];
-	[instance.view.textStorage appendAttributedString:str];
-	[instance _trimExtra];
-	[instance.window makeKeyAndOrderFront:self];
-	[instance _scrollLastIntoView];
-	instance->_editCount += 1;
+    if (text.length > 0)
+    {
+        TranscriptController* instance = [TranscriptController getInstance];
+        [instance showWindow:nil];
+        
+        NSMutableAttributedString* str = [[NSMutableAttributedString alloc] initWithString:text];
+        [str setAttributes:instance->_stderrAttrs range:NSMakeRange(0, text.length)];
+        [instance.view.textStorage appendAttributedString:str];
+        [instance _trimExtra];
+        [instance.window makeKeyAndOrderFront:self];
+        [instance _scrollLastIntoView];
+        instance->_editCount += 1;
+    }
 }
 
 + (void)writeStdout:(NSString*)text
 {
-	TranscriptController* instance = [TranscriptController getInstance];
-	NSMutableAttributedString* str = [[NSMutableAttributedString alloc] initWithString:text];
-	[str setAttributes:instance->_stdoutAttrs range:NSMakeRange(0, text.length)];
-	[instance.view.textStorage appendAttributedString:str];
-	[instance _trimExtra];
-	[instance _scrollLastIntoView];
-	instance->_editCount += 1;
+    if (text.length > 0)
+    {
+        TranscriptController* instance = [TranscriptController getInstance];
+        [instance showWindow:nil];
+        
+        NSMutableAttributedString* str = [[NSMutableAttributedString alloc] initWithString:text];
+        [str setAttributes:instance->_stdoutAttrs range:NSMakeRange(0, text.length)];
+        [instance.view.textStorage appendAttributedString:str];
+        [instance _trimExtra];
+        [instance _scrollLastIntoView];
+        instance->_editCount += 1;
+    }
 }
 
 + (void)writeError:(NSString*)text

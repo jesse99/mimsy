@@ -106,6 +106,7 @@ typedef void (^NullaryBlock)();
 		[self _loadSettings];
 		[self _loadHelpFiles];
 		[self _watchInstalledFiles];
+        [TranscriptController writeInfo:@""];   // make sure we create this within the main thread
 		[StartupScripts setup];
 		[WindowsDatabase setup];
 		[Languages setup];
