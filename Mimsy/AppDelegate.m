@@ -71,13 +71,15 @@ typedef void (^NullaryBlock)();
 
 @implementation AppDelegate
 {
+    ProcFileReadWrite* _beepFile;
+    ProcFileReader* _extensionSettings;
+    ProcFileReadWrite* _logFile;
 	ProcFileSystem* _procFileSystem;
 	ProcFileReader* _versionFile;
-	ProcFileReadWrite* _beepFile;
-	ProcFileReadWrite* _logFile;
 
 	DirectoryWatcher* _languagesWatcher;
-	DirectoryWatcher* _settingsWatcher;
+    DirectoryWatcher* _settingsWatcher;
+	DirectoryWatcher* _extensionSettingsWatcher;
 	DirectoryWatcher* _stylesWatcher;
 	DirectoryWatcher* _scriptsStartupWatcher;
 	DirectoryWatcher* _extensionsWatcher;
@@ -130,15 +132,23 @@ typedef void (^NullaryBlock)();
 	NSString* path = [userInfo objectForKey:kGMUserFileSystemMountPathKey];
 	LOG("ProcFS", "mounted %s", STR(path));
 	
-	_versionFile = [[ProcFileReader alloc]
-					initWithDir:^NSString *{return @"/";}
-					fileName:@"version"
-					readStr:^NSString*
-					{
-						NSDictionary* info = [[NSBundle mainBundle] infoDictionary];
-						return [info objectForKey:@"CFBundleShortVersionString"];
-					}];
-	
+    NSString* esPath = [Paths installedDir:@"settings"];
+    esPath = [esPath stringByAppendingPathComponent:@"extensions"];
+   _extensionSettingsWatcher = [[DirectoryWatcher alloc] initWithPath:esPath latency:1.0 block:
+         ^(NSString* path, FSEventStreamEventFlags flags)
+         {
+             UNUSED(path, flags);
+             
+             static bool invoking = false;
+             if (!invoking)
+             {
+                 invoking = true;
+                 [Extensions invoke:@"/extension-settings-changed"];
+                 invoking = false;
+             }
+         }
+        ];
+    
 	_beepFile = [[ProcFileReadWrite alloc]
 				 initWithDir:^NSString *{return @"/";}
 				 fileName:@"beep"
@@ -148,6 +158,23 @@ typedef void (^NullaryBlock)();
 					 UNUSED(str);
 					 NSBeep();
 				 }];
+    
+    _extensionSettings = [[ProcFileReader alloc]
+                    initWithDir:^NSString *{return @"/";}
+                    fileName:@"extension-settings"
+                    readStr:^NSString*
+                    {
+                        if (![[NSFileManager defaultManager] fileExistsAtPath:esPath isDirectory:NULL])
+                        {
+                            NSError* error = nil;
+                            if (![[NSFileManager defaultManager] createDirectoryAtPath:esPath withIntermediateDirectories:TRUE attributes:nil error:&error])
+                            {
+                                LOG("Error", "failed to create '%s': %s", STR(esPath), STR(error.localizedFailureReason));
+                            }
+                        }
+                        
+                        return esPath;
+                    }];
 	
 	_logFile = [[ProcFileReadWrite alloc]
 				initWithDir:^NSString *{return @"/log";}
@@ -165,10 +192,20 @@ typedef void (^NullaryBlock)();
 					else
 						LOG("Error", "expected '<topic>\f<line>' not: '%s'", STR(str));
 				}];
+    
+    _versionFile = [[ProcFileReader alloc]
+                    initWithDir:^NSString *{return @"/";}
+                    fileName:@"version"
+                    readStr:^NSString*
+                    {
+                        NSDictionary* info = [[NSBundle mainBundle] infoDictionary];
+                        return [info objectForKey:@"CFBundleShortVersionString"];
+                    }];
 	
+    [_procFileSystem addWriter:_beepFile];
+    [_procFileSystem addReader:_extensionSettings];
+    [_procFileSystem addWriter:_logFile];
 	[_procFileSystem addReader:_versionFile];
-	[_procFileSystem addWriter:_beepFile];
-	[_procFileSystem addWriter:_logFile];
 
     [TextController startup];
 

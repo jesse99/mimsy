@@ -1,16 +1,51 @@
 -- Set the back color of the current line.
 
+color = "PeachPuff"
+
 function init()
 	mimsy:set_extension_name("highlight-line")
 	mimsy:set_extension_version("1.0")
-
-    -- Temporary attributes are a bit annoying because they don't affect the typing attributes
-    -- so edits don't look right. It'd be possible to use normal attributes but then we'd have
-    -- somehow remove them before saving and copying. So, for now, we just re-apply the line
-    -- highlighting after normal styles are applied to fix the line up.
-    mimsy:watch_file(1.0, "/Volumes/Mimsy/text-document/line-number", "onLineChanged")
-    mimsy:watch_file(1.0, "/Volumes/Mimsy/text-document/applied-styles", "onLineChanged")
+	
+	-- Temporary attributes are a bit annoying because they don't affect the typing attributes
+	-- so edits don't look right. It'd be possible to use normal attributes but then we'd have
+	-- somehow remove them before saving and copying. So, for now, we just re-apply the line
+	-- highlighting after normal styles are applied to fix the line up.
+	mimsy:watch_file(1.0, "/Volumes/Mimsy/extension-settings-changed", "load_prefs")
+	mimsy:watch_file(1.0, "/Volumes/Mimsy/text-document/line-number", "onLineChanged")
+	mimsy:watch_file(1.0, "/Volumes/Mimsy/text-document/applied-styles", "onLineChanged")
 	mimsy:watch_file(1.0, "/Volumes/Mimsy/text-document/main-changed", "onMainChanged")
+
+	load_prefs()
+end
+
+function load_prefs()
+	function save_default_prefs(path)
+		local file, err = io.open(path, "w")
+		file:write(string.format([==[
+prefs = {
+	-- This is the background line color. Standard Mimsy
+	-- color names may be used.
+	color = "%s"
+}
+]==], color))
+		io.close(file)
+	end
+	
+	local settings = read_file("extension-settings")
+	if settings then
+		local path = settings .. "/highlight-line.lua"
+		local file, _ = io.open(path, "r")
+		if not file then
+			save_default_prefs(path)
+			file, _ = io.open(path, "r")
+		end
+		
+		if file then
+			io.close(file)
+			dofile(path)
+			color = prefs.color
+		end
+	end
 end
 
 function split(str, pattern)
@@ -60,7 +95,7 @@ function onLineChanged()
 			end
 
 			local new_selection = split(new_text, "\f")
-			write_file("text-document/add-temp-back-color", string.format("%d\f%d\fSkyBlue", new_selection[1], new_selection[2]))
+			write_file("text-document/add-temp-back-color", string.format("%d\f%d\f%s", new_selection[1], new_selection[2], color))
 			write_file("text-document/key-values/highlight-line-selection", new_text)
 		end
 	else
