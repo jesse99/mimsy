@@ -120,13 +120,14 @@ static bool block_timed_out(void (^block)())
     return self;
 }
 
-- (bool)callInit
+- (bool)callInit:(NSString*)path
 {
 	__block NSString* mesg = nil;
 	
 	bool timedout = block_timed_out(^{
 		lua_getglobal(self.state, "init");
-		if (lua_pcall(self.state, 0, 0, 0) == 0)				// 0 args, no result
+        lua_pushstring(self.state, path.stringByDeletingLastPathComponent.UTF8String);
+		if (lua_pcall(self.state, 1, 0, 0) == 0)				// 1 arg, no result
 		{
 			LOG("Extensions", "loaded %s %s", STR(self.name), STR(self.version));
 		}
@@ -486,8 +487,10 @@ static void initMimsyMethods(struct lua_State* state, LuaExtension* extension)
 		 ^(NSString* path)
 		 {
 			 if ([path endsWith:@".lua"])
-				 [self _startScript:path];
-
+             {
+                 if (![path endsWith:@".inc.lua"])
+                     [self _startScript:path];
+             }
 			 else if ([[NSFileManager defaultManager] isExecutableFileAtPath:path])
 				 [self _startExe:path];
 		 }];
@@ -571,7 +574,7 @@ static void initMimsyMethods(struct lua_State* state, LuaExtension* extension)
 	{
 		if (lua_pcall(state, 0, 0, 0) == 0)
 		{
-			if ([extension callInit])
+            if ([extension callInit:path])
 				[_extensions setObject:extension forKey:path];
 		}
 		else

@@ -6,23 +6,8 @@ install http://osxfuse.github.io/
 
 
 
-* Maybe extensions should use language specific prefs:
-    - do a commit
-    - may want to dofile a lua helpers file
-    - go could use json
-    - proc file could have a path to use when storing data
-* Extensions need support for settings:
-    - implement a volatile store
-    - on reads parse the file
-    - on writes update the file
-    - update the extension to use the new store (can use mimsy to do the edits)
-    - need to watch the file
-    - handle comment lines
 * Problems with the start of new lines.
     - maybe a problem with apply styles notification?
-* Need an app key-store:
-    - probably need to expose app settings
-    - may need to expose text/directory settings too
 * Calling getElementNames is problematic from extensions:
 	- layout may not have finished
 * Extending a double-click selection doesn't work right
