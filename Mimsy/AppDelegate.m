@@ -279,6 +279,20 @@ typedef void (^NullaryBlock)();
 	}
 }
 
++ (void)execute:(NSString*)name withSelector:(SEL)selector withObject:(id) object deferBy:(NSTimeInterval)delay
+{
+    AppDelegate* delegate = [NSApp delegate];
+    
+    NullaryBlock block = delegate->_pendingBlocks[name];
+    if (block)
+    {
+        [NSObject cancelPreviousPerformRequestsWithTarget:delegate selector:@selector(_executeSelector:) object:name];
+        [delegate->_pendingBlocks removeObjectForKey:name];
+    }
+    
+    [AppDelegate execute:name withSelector:selector withObject:object afterDelay:delay];
+}
+
 - (void)openLatestInTimeMachine:(id)sender
 {
 	UNUSED(sender);

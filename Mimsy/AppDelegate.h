@@ -22,6 +22,10 @@ void initLogGlobs(void);
 // name that is pending is a no-op.
 + (void)execute:(NSString*)name withSelector:(SEL)selector withObject:(id) object afterDelay:(NSTimeInterval)delay;
 
+// This works like performSelector:withObject:afterDelay: except that if called when the
+// block is pending it's execution time is pushed back by delay.
++ (void)execute:(NSString*)name withSelector:(SEL)selector withObject:(id) object deferBy:(NSTimeInterval)delay;
+
 - (void)runFTest:(id)sender;
 - (void)runFTests:(id)sender;
 

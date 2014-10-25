@@ -6,8 +6,6 @@ install http://osxfuse.github.io/
 
 
 
-* Problems with the start of new lines.
-    - maybe a problem with apply styles notification?
 * Calling getElementNames is problematic from extensions:
 	- layout may not have finished
 * Extending a double-click selection doesn't work right
@@ -157,6 +155,8 @@ install http://osxfuse.github.io/
 * Add a command line app to open files in mimsy
 * Would be great if there was a way to skip backward and forward between selections.
 	- xcode uses command-control left and right arrows
+    - or maybe some sort of map or tree view showing old selections
+    could even add bookmark support to this
 * Jump to selection would also be nice
 * http://www.emacswiki.org/emacs/uniquify looks neat
 * Add a little view with line and col numbers.

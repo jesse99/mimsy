@@ -222,7 +222,7 @@
 			_queued = false;
 			
 			TextController* tmp = _controller;
-				[tmp resetAttributes];
+            [tmp resetAttributes];
 			
 			dispatch_queue_t main = dispatch_get_main_queue();
 			dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 100*NSEC_PER_MSEC);	// 0.1s

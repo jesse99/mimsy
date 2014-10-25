@@ -877,7 +877,13 @@ static TextDocumentFiles* _files;
 				dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 50*NSEC_PER_MSEC);
 				dispatch_after(delay, main, ^{[_textView insertText:padding];});
 			}
-		}
+        }
+        
+        // TODO: For rich text documents we dont have a good way to consistently notify extensions
+        // about style changes. So, for now, we notify them after the user types (which we have to
+        // do anyway because typing changes text attributes).
+        if (!_applier)
+            [AppDelegate execute:@"apply styles" withSelector:@selector(onAppliedStyles) withObject:self deferBy:0.100];
 
 		[_files onTextChanged:self];
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowEdited" object:self];
