@@ -8,7 +8,7 @@ function init(script_dir)
 	
 	-- Temporary attributes are a bit annoying because they don't affect the typing attributes
 	-- so edits don't look right. It'd be possible to use normal attributes but then we'd have
-	-- somehow remove them before saving and copying. So, for now, we just re-apply the line
+	-- to somehow remove them before saving and copying. So, for now, we just re-apply the line
 	-- highlighting after normal styles are applied to fix the line up.
 	mimsy:watch_file(1.0, "/Volumes/Mimsy/extension-settings-changed", "load_prefs")
 	mimsy:watch_file(1.0, "/Volumes/Mimsy/text-document/line-number", "onLineChanged")
@@ -40,7 +40,7 @@ function onLineChanged()
 	--log("line = %s", line)
 	if line ~= "-1" then
 		local new_text = read_proc_file("text-document/line-selection")
-		local old_text = read_proc_file("text-document/key-values/highlight-line-selection")
+		local old_text = read_proc_file("text-document/key-values/highlight-line-old-selection")
 		--log("new_text = %s, old_text = %s", new_text, old_text)
 		if new_text ~= old_text then
 			if old_text ~= "" then
@@ -50,15 +50,15 @@ function onLineChanged()
 
 			local new_selection = split(new_text, "\f")
 			write_proc_file("text-document/add-temp-back-color", string.format("%d\f%d\f%s", new_selection[1], new_selection[2], color))
-			write_proc_file("text-document/key-values/highlight-line-selection", new_text)
+			write_proc_file("text-document/key-values/highlight-line-old-selection", new_text)
 		end
 	else
-		local old_text = read_proc_file("text-document/key-values/highlight-line-selection")
+		local old_text = read_proc_file("text-document/key-values/highlight-line-old-selection")
 		--log("old_text = %s", old_text)
 		if old_text ~= "" then
 			local old_selection = split(old_text, "\f")
 			write_proc_file("text-document/remove-temp-back-color", string.format("%d\f%d", old_selection[1], old_selection[2]))
-			write_proc_file("text-document/key-values/highlight-line-selection", "")
+			write_proc_file("text-document/key-values/highlight-line-old-selection", "")
 		end
 	end
 
@@ -67,6 +67,6 @@ end
 
 function onMainChanged()
     write_proc_file("text-document/remove-temp-back-color", "0\f100000")
-    write_proc_file("text-document/key-values/highlight-line-selection", "")
+    write_proc_file("text-document/key-values/highlight-line-old-selection", "")
     onLineChanged()
 end
