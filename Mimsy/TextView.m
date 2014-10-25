@@ -37,22 +37,30 @@
 - (NSRange)selectionRangeForProposedRange:(NSRange)proposedRange granularity:(NSSelectionGranularity)granularity
 {
 	NSRange result;
-	
+    
 	TextController* controller = _controller;
 	if (granularity == NSSelectByWord && controller && controller.language != nil)
 	{
 		result = proposedRange;
 		
-		while (result.location > 0 && [self _matchesWord:controller.language.word at:result.location - 1 len:result.length + 1])
-		{
-			--result.location;
-			++result.length;
-		}
-		
-		while ([self _matchesWord:controller.language.word at:result.location len:result.length + 1])
-		{
-			++result.length;
-		}
+        // If we have a word on the left side then try to extend it leftward. Note that we have to
+        // be careful about how we do this so that double click dragging works.
+        NSUInteger count = 0;
+        while (result.location > 0 && [self _matchesWord:controller.language.word at:result.location - count len:count + 1])
+        {
+            ++count;
+        }
+        result.location -= count;
+        result.length += count;
+        
+        // If we have a word on the right side then try to extend it rightward.
+        count = 0;
+        while ([self _matchesWord:controller.language.word at:result.location + result.length + count len:count + 1])
+        {
+            ++result.length;
+        }
+        result.location -= count;
+        result.length += count;
 	}
 	else
 	{

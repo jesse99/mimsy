@@ -6,8 +6,6 @@ install http://osxfuse.github.io/
 
 
 
-* Calling getElementNames is problematic from extensions:
-	- layout may not have finished
 * Extending a double-click selection doesn't work right
 * Building doesn't do a save
 * Add support for parsing build errors and selecting next and previous build errors
