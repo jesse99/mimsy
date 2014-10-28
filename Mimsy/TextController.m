@@ -883,8 +883,8 @@ static TextDocumentFiles* _files;
         // about style changes. So, for now, we notify them after the user types (which we have to
         // do anyway because typing changes text attributes).
         if (!_applier)
-            [AppDelegate execute:@"apply styles" withSelector:@selector(onAppliedStyles) withObject:self deferBy:0.100];
-
+            [AppDelegate execute:@"apply styles" withSelector:@selector(onAppliedStyles) withObject:self deferBy:0.333];
+        
 		[_files onTextChanged:self];
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowEdited" object:self];
 	}
