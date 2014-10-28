@@ -4,12 +4,24 @@ install http://osxfuse.github.io/
 	can skip this but a lot of features will be disabled
 	see http://osxbook.com/blog/2009/03/02/why-macfuse-installation-recommends-a-reboot/
 
+http://www.learnswift.tips/
 
 
-* Extending a double-click selection doesn't work right
-* Building doesn't do a save
+* Highlight line still doesn't work with rtf files, eg tabbing to add a comment
+    - maybe for rich text files can always re-apply style onApplyStyles
 * Add support for parsing build errors and selecting next and previous build errors
 	- maybe extensions can write tool+regex somewhere
+      or just have the language file add regexen for common tools
+    - window would be a good candidate for a plugin
+    - write the plugin in swift? seems to be a new beta 6
+    - loading plugins: https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/UsingPlugins.html#//apple_ref/doc/uid/20001276-100982
+    - should plugins go into ~/Library/Application Support/applicationSupportDirectory/PlugIns?
+    - probably need a protocol that plugins must implement
+        ` load, unload, settingsChanged (or maybe they can listen)
+    - will need to do something for building
+      maybe separate projects
+      could have a make file to build em all
+    - need some docs on writing plugins (and probably extensions)
 * Add goto line support
 * May want to add a command line helper
 * Can't search for: #	modified:

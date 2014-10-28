@@ -360,7 +360,7 @@ static DirectoryController* _lastBuilt;
 		NSString* target = [menu titleOfSelectedItem];
 		if (target && target.length > 0)
 		{
-			AppDelegate* app = [NSApp delegate];
+			AppDelegate* app = (AppDelegate*) [NSApp delegate];
 			[app saveAllDocuments:self];
 
 			NSString* flags = [self _findBuildFlags:target];

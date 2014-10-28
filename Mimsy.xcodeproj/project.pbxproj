@@ -791,7 +791,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = MIM;
-				LastTestingUpgradeCheck = 0510;
+				LastTestingUpgradeCheck = 0610;
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Jesse Jones";
 			};

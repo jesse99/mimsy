@@ -498,7 +498,7 @@
 {
 	ProcFileReader* file = nil;
 	
-	AppDelegate* app = [NSApp delegate];
+	AppDelegate* app = (AppDelegate*) [NSApp delegate];
 	ProcFileSystem* fs = app.procFileSystem;
 	if (fs)
 	{
@@ -520,7 +520,7 @@
 {
 	ProcFileReadWrite* file = nil;
 	
-	AppDelegate* app = [NSApp delegate];
+	AppDelegate* app = (AppDelegate*) [NSApp delegate];
 	ProcFileSystem* fs = app.procFileSystem;
 	if (fs)
 	{
@@ -548,7 +548,7 @@
 {
 	ProcFileKeyStore* file = nil;
 	
-	AppDelegate* app = [NSApp delegate];
+	AppDelegate* app = (AppDelegate*) [NSApp delegate];
 	ProcFileSystem* fs = app.procFileSystem;
 	if (fs)
 	{

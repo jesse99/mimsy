@@ -147,7 +147,7 @@ static NSString* _getTimeStr(double timestamp)
 		OldFile* file = oldFiles[0];
 		NSURL* url = [NSURL fileURLWithPath:file.path isDirectory:FALSE];
 
-		AppDelegate* app = [NSApp delegate];
+		AppDelegate* app = (AppDelegate*) [NSApp delegate];
 		[app openWithMimsy:url];
 	}
 	else
@@ -171,7 +171,7 @@ static NSString* _getTimeStr(double timestamp)
 		{
 			if ([OpenFile shouldOpenFiles:controller.selectedRows.count])
 			{
-				AppDelegate* app = [NSApp delegate];
+				AppDelegate* app = (AppDelegate*) [NSApp delegate];
 				[controller.selectedRows enumerateIndexesUsingBlock:
 					^(NSUInteger index, BOOL* stop)
 					 {

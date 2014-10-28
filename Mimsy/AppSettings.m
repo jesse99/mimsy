@@ -39,7 +39,7 @@ static LocalSettings* _cachedLangSettings;
 
 + (id)updateAppSettings
 {
-	AppDelegate* delegate = [NSApp delegate];
+	AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
 	LocalSettings* appSettings = delegate.settings;
 	
 	DirectoryController* controller = [DirectoryController getCurrentController];
@@ -95,7 +95,7 @@ static LocalSettings* _cachedLangSettings;
 	
 	if (!result)
 	{
-		AppDelegate* delegate = [NSApp delegate];
+		AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
 		result = [delegate.settings findValueForKey:name];
 	}
 	
@@ -112,7 +112,7 @@ static LocalSettings* _cachedLangSettings;
 	ASSERT([AppSettings isSetting:name]);
 	NSMutableArray* result = [NSMutableArray new];
 	
-	AppDelegate* delegate = [NSApp delegate];
+	AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
 	[result addObjectsFromArray:[delegate.settings findValuesForKey:name]];
 	
 	DirectoryController* controller = [DirectoryController getCurrentController];
@@ -128,7 +128,7 @@ static LocalSettings* _cachedLangSettings;
 
 + (void)enumerate:(NSString*) key with:(void (^)(NSString* fileName, NSString* value))block
 {
-	AppDelegate* delegate = [NSApp delegate];
+	AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
 	[delegate.settings enumerate:key with:block];
 	
 	DirectoryController* controller = [DirectoryController getCurrentController];

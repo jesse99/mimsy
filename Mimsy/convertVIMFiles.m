@@ -7,7 +7,7 @@
 
 @interface Group : NSObject
 @property NSString* name;				// eg "Conditional"
-@property NSString* description;		// eg "if, then, else, endif, switch, etc."
+@property NSString* info;           // eg "if, then, else, endif, switch, etc."
 @property NSString* parent;				// eg "Statement" (will be nil for "Normal")
 @property NSString* link;				// nil unless hi link was used
 @end
@@ -28,12 +28,12 @@
 @end
 
 @implementation Group
-+ (id)group:(NSString*)name description:(NSString*)description parent:(NSString*)parent
++ (id)group:(NSString*)name info:(NSString*)info parent:(NSString*)parent
 {
 	Group* group = [Group new];
 	
 	group.name = name;
-	group.description = description;
+	group.info = info;
 	group.parent = parent;
 	group.link = nil;
 	
@@ -730,65 +730,65 @@
 	];
 				
 	self.standardGroups = @[
-		[Group group:@"Normal" description:@"normal text" parent:nil],
-		[Group group:nil description:nil parent:nil],
+		[Group group:@"Normal" info:@"normal text" parent:nil],
+		[Group group:nil info:nil parent:nil],
 
-		[Group group:@"Type" description:@"int, long, char, etc." parent:@"Normal"],
-		[Group group:@"Structure" description:@"name in a struct or class declaration" parent:@"Type"],
-		[Group group:@"UserType" description:@"a user defined type name" parent:@"Type"],
-		[Group group:nil description:nil parent:nil],
+		[Group group:@"Type" info:@"int, long, char, etc." parent:@"Normal"],
+		[Group group:@"Structure" info:@"name in a struct or class declaration" parent:@"Type"],
+		[Group group:@"UserType" info:@"a user defined type name" parent:@"Type"],
+		[Group group:nil info:nil parent:nil],
 	
-		[Group group:@"Identifier" description:@"any variable name" parent:@"Normal"],
-		[Group group:@"Argument" description:@"formal argument" parent:@"Constant"],	// think Constant parent looks a bit better
-		[Group group:@"Function" description:@"function name (also: methods for classes)" parent:@"Identifier"],
-		[Group group:@"Macro" description:@"name of a macro: NDEBUG, __FILE, MIN, etc" parent:@"Identifier"],
-		[Group group:nil description:nil parent:nil],
+		[Group group:@"Identifier" info:@"any variable name" parent:@"Normal"],
+		[Group group:@"Argument" info:@"formal argument" parent:@"Constant"],	// think Constant parent looks a bit better
+		[Group group:@"Function" info:@"function name (also: methods for classes)" parent:@"Identifier"],
+		[Group group:@"Macro" info:@"name of a macro: NDEBUG, __FILE, MIN, etc" parent:@"Identifier"],
+		[Group group:nil info:nil parent:nil],
 	
-		[Group group:@"Statement" description:@"any statement" parent:@"Normal"],
-		[Group group:@"Conditional" description:@"if, then, else, endif, switch, etc." parent:@"Statement"],
-		[Group group:@"Exception" description:@"try, catch, throw" parent:@"Statement"],
-		[Group group:@"Keyword" description:@"any other keyword" parent:@"Statement"],
-		[Group group:@"Label" description:@"target of a goto or a case in a switch statement" parent:@"Statement"],
-		[Group group:@"Operator" description:@"\"sizeof\", \"+\", \"*\", etc." parent:@"Statement"],
-		[Group group:@"Repeat" description:@"for, do, while, etc." parent:@"Statement"],
-		[Group group:@"StorageClass" description:@"static, register, volatile, etc." parent:@"Statement"],
-		[Group group:nil description:nil parent:nil],
+		[Group group:@"Statement" info:@"any statement" parent:@"Normal"],
+		[Group group:@"Conditional" info:@"if, then, else, endif, switch, etc." parent:@"Statement"],
+		[Group group:@"Exception" info:@"try, catch, throw" parent:@"Statement"],
+		[Group group:@"Keyword" info:@"any other keyword" parent:@"Statement"],
+		[Group group:@"Label" info:@"target of a goto or a case in a switch statement" parent:@"Statement"],
+		[Group group:@"Operator" info:@"\"sizeof\", \"+\", \"*\", etc." parent:@"Statement"],
+		[Group group:@"Repeat" info:@"for, do, while, etc." parent:@"Statement"],
+		[Group group:@"StorageClass" info:@"static, register, volatile, etc." parent:@"Statement"],
+		[Group group:nil info:nil parent:nil],
 	
-		[Group group:@"Constant" description:@"any constant" parent:@"Normal"],
-		[Group group:@"Boolean" description:@"a boolean constant: TRUE, false, etc." parent:@"Constant"],
-		[Group group:@"Character" description:@"a character constant: 'c', '\\n'" parent:@"Constant"],
-		[Group group:@"Float" description:@"a floating point constant: 2.3e10" parent:@"Constant"],
-		[Group group:@"Number" description:@"a number constant: 234, 0xff" parent:@"Constant"],
-		[Group group:@"String" description:@"a string constant: \"this is a string\"" parent:@"Constant"],
-		[Group group:nil description:nil parent:nil],
+		[Group group:@"Constant" info:@"any constant" parent:@"Normal"],
+		[Group group:@"Boolean" info:@"a boolean constant: TRUE, false, etc." parent:@"Constant"],
+		[Group group:@"Character" info:@"a character constant: 'c', '\\n'" parent:@"Constant"],
+		[Group group:@"Float" info:@"a floating point constant: 2.3e10" parent:@"Constant"],
+		[Group group:@"Number" info:@"a number constant: 234, 0xff" parent:@"Constant"],
+		[Group group:@"String" info:@"a string constant: \"this is a string\"" parent:@"Constant"],
+		[Group group:nil info:nil parent:nil],
 	
-		[Group group:@"Comment" description:@"any comment" parent:@"Normal"],
-		[Group group:@"DocComment" description:@"comment used to generate documentation" parent:@"Comment"],
-		[Group group:nil description:nil parent:nil],
+		[Group group:@"Comment" info:@"any comment" parent:@"Normal"],
+		[Group group:@"DocComment" info:@"comment used to generate documentation" parent:@"Comment"],
+		[Group group:nil info:nil parent:nil],
 	
-		[Group group:@"PreProc" description:@"generic Preprocessor" parent:@"Normal"],
-		[Group group:@"Define" description:@"preprocessor #define" parent:@"PreProc"],
-		[Group group:@"Include" description:@"preprocessor #include" parent:@"PreProc"],
-		[Group group:@"PreCondit" description:@"preprocessor #if, #else, #endif, etc." parent:@"PreProc"],
-		[Group group:nil description:nil parent:nil],
+		[Group group:@"PreProc" info:@"generic Preprocessor" parent:@"Normal"],
+		[Group group:@"Define" info:@"preprocessor #define" parent:@"PreProc"],
+		[Group group:@"Include" info:@"preprocessor #include" parent:@"PreProc"],
+		[Group group:@"PreCondit" info:@"preprocessor #if, #else, #endif, etc." parent:@"PreProc"],
+		[Group group:nil info:nil parent:nil],
 	
-		[Group group:@"Special" description:@"any special symbol" parent:@"Normal"],
-		[Group group:@"Debug" description:@"debugging statements" parent:@"Special"],
-		[Group group:@"Delimiter" description:@"character that needs attention" parent:@"Special"],
-		[Group group:@"SpecialChar" description:@"special character in a constant" parent:@"Special"],
-		[Group group:@"SpecialComment" description:@"special things inside a comment" parent:@"Special"],
-		[Group group:@"Attribute" description:@"e.g. in C#, Rust, Python (decorator)" parent:@"Special"],
-		[Group group:nil description:nil parent:nil],
+		[Group group:@"Special" info:@"any special symbol" parent:@"Normal"],
+		[Group group:@"Debug" info:@"debugging statements" parent:@"Special"],
+		[Group group:@"Delimiter" info:@"character that needs attention" parent:@"Special"],
+		[Group group:@"SpecialChar" info:@"special character in a constant" parent:@"Special"],
+		[Group group:@"SpecialComment" info:@"special things inside a comment" parent:@"Special"],
+		[Group group:@"Attribute" info:@"e.g. in C#, Rust, Python (decorator)" parent:@"Special"],
+		[Group group:nil info:nil parent:nil],
 	
-		[Group group:@"Error" description:@"any erroneous construct" parent:@"Normal"],
-		[Group group:@"Underlined" description:@"text that stands out, HTML links" parent:@"Normal"],
-		[Group group:@"Warning" description:@"a problem which may not be an error" parent:@"Normal"],
-		[Group group:nil description:nil parent:nil],
+		[Group group:@"Error" info:@"any erroneous construct" parent:@"Normal"],
+		[Group group:@"Underlined" info:@"text that stands out, HTML links" parent:@"Normal"],
+		[Group group:@"Warning" info:@"a problem which may not be an error" parent:@"Normal"],
+		[Group group:nil info:nil parent:nil],
 	
-		[Group group:@"DiffAdd" description:@"added line" parent:@"Normal"],
-		[Group group:@"DiffChange" description:@"changed line" parent:@"Normal"],
-		[Group group:@"DiffDelete" description:@"deleted line" parent:@"Normal"],
-		[Group group:@"DiffText" description:@"changed text within a changed line" parent:@"Normal"]
+		[Group group:@"DiffAdd" info:@"added line" parent:@"Normal"],
+		[Group group:@"DiffChange" info:@"changed line" parent:@"Normal"],
+		[Group group:@"DiffDelete" info:@"deleted line" parent:@"Normal"],
+		[Group group:@"DiffText" info:@"changed text within a changed line" parent:@"Normal"]
 	];
 	
 	return self;
@@ -878,7 +878,7 @@ static Group* findGroup(GlobalStyle* global, NSString* name)
 	}
 	else
 	{
-		return [Group group:name description:@"ignored" parent:@"Normal"];
+		return [Group group:name info:@"ignored" parent:@"Normal"];
 	}
 }
 
@@ -1199,7 +1199,7 @@ static void addMissingElement(NSMutableAttributedString* text, Group* group, Glo
 	ElementStyle* element = findMissingElement(global, group);
 	if (element)
 	{
-		NSString* line = [NSString stringWithFormat:@"%@: %@\n", group.name, group.description];
+		NSString* line = [NSString stringWithFormat:@"%@: %@\n", group.name, group.info];
 		addLine(text, global, line, group.name, element);
 	}
 	else
@@ -1220,7 +1220,7 @@ static NSMutableAttributedString* createText(NSString* path, GlobalStyle* global
 			ElementStyle* element = global.elements[group.name];
 			if (element)
 			{
-				NSString* line = [NSString stringWithFormat:@"%@: %@\n", group.name, group.description];
+				NSString* line = [NSString stringWithFormat:@"%@: %@\n", group.name, group.info];
 				addLine(text, global, line, group.name, element);
 				element.processed = true;
 			}

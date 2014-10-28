@@ -259,7 +259,7 @@ typedef void (^NullaryBlock)();
 
 + (void)execute:(NSString*)name withSelector:(SEL)selector withObject:(id) object afterDelay:(NSTimeInterval)delay
 {
-	AppDelegate* delegate = [NSApp delegate];
+	AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
 	
 	if (!delegate->_pendingBlocks[name])
 	{
@@ -281,7 +281,7 @@ typedef void (^NullaryBlock)();
 
 + (void)execute:(NSString*)name withSelector:(SEL)selector withObject:(id) object deferBy:(NSTimeInterval)delay
 {
-    AppDelegate* delegate = [NSApp delegate];
+    AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
     
     NullaryBlock block = delegate->_pendingBlocks[name];
     if (block)

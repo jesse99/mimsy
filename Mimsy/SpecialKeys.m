@@ -31,7 +31,7 @@ static NSDictionary* _json;
 		  readStr:^NSString* {return @"";}
 		  writeStr:^(NSString* str) {[SpecialKeys _addExtensionData:str];}];
 	
-	AppDelegate* app = [NSApp delegate];
+	AppDelegate* app = (AppDelegate*) [NSApp delegate];
 	ProcFileSystem* fs = app.procFileSystem;
 	if (fs)
 		[fs addWriter:_extensionKeys];
