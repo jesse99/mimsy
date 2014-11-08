@@ -58,12 +58,25 @@ bool _shouldLog(const char* topic)
 
 void _doLog(const char* topic, const char* format, va_list args)
 {
-	[_lock lock];
-	_topicWidth = MAX(strlen(topic), _topicWidth);
-	
-	fprintf(_file, "%.3f %-*s ", getTime(), (int) _topicWidth, topic);
-	vfprintf(_file, format, args);
-	fprintf(_file, "\n");
-	fflush(_file);
-	[_lock unlock];
+    [_lock lock];
+    _topicWidth = MAX(strlen(topic), _topicWidth);
+    
+    fprintf(_file, "%.3f %-*s ", getTime(), (int) _topicWidth, topic);
+    vfprintf(_file, format, args);
+    fprintf(_file, "\n");
+    fflush(_file);
+    [_lock unlock];
+}
+
+void SLOG(NSString* topic, NSString* text)
+{
+    if (_shouldLog(topic.UTF8String))
+    {
+        [_lock lock];
+        _topicWidth = MAX(topic.length, _topicWidth);
+        
+        fprintf(_file, "%.3f %-*s %s\n", getTime(), (int) _topicWidth, topic.UTF8String, text.UTF8String);
+        fflush(_file);
+        [_lock unlock];
+    }
 }

@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 
-// Used to open files with Mimsy where posible and the Finder otherwise.
+// Used to open files with Mimsy where posible and the Finder otherwise. Note that OpenSelection can be
+// used to open file names or paths relative to the current project.
 @interface OpenFile : NSObject
 
 + (bool)shouldOpenFiles:(NSUInteger)numFiles;

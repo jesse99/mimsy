@@ -47,7 +47,7 @@
 	// Cheesy way to deselect the current field so that setObjectValue is called.
 	[[self window] makeFirstResponder: nil];
 	
-	[NSApp stopModalWithCode:NSOKButton];
+	[NSApp stopModalWithCode:NSModalResponseOK];
 	[self.window orderOut:self];
 	
 	DirectoryController* controller = _directoryController;
@@ -70,7 +70,7 @@
 - (IBAction)cancelPressed:(id)sender
 {
 	UNUSED(sender);
-	[NSApp stopModalWithCode:NSCancelButton];
+	[NSApp stopModalWithCode:NSModalResponseCancel];
 	[self.window orderOut:self];
 }
 

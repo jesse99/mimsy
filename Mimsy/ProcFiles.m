@@ -129,7 +129,7 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 	}
 	
 	int bytes = MIN((int) ((off_t) data.length - offset), (int) size);
-	memcpy(buffer, data.bytes + offset, bytes);
+	memcpy(buffer, data.bytes + offset, (unsigned long)bytes);
 	
 	return bytes;
 }

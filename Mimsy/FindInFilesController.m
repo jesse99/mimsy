@@ -111,7 +111,7 @@ static FindInFilesController* _findFilesController = nil;
 	[panel setAllowsMultipleSelection:YES];
 	
 	NSInteger button = [panel runModal];
-	if (button == NSOKButton)
+	if (button == NSModalResponseOK)
 	{
 		for (NSURL* url in panel.URLs)
 		{

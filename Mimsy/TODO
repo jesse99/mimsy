@@ -6,14 +6,16 @@ install http://osxfuse.github.io/
 
 http://www.learnswift.tips/
 
+GoFormat/format.go:20: syntax error: unexpected name, expecting semicolon or newline or }
 
-* Highlight line still doesn't work with rtf files, eg tabbing to add a comment
-    - maybe for rich text files can always re-apply style onApplyStyles
+
+
 * Add support for parsing build errors and selecting next and previous build errors
-	- maybe extensions can write tool+regex somewhere
-      or just have the language file add regexen for common tools
-    - window would be a good candidate for a plugin
-    - write the plugin in swift? seems to be a new beta 6
+    - do a commit
+    - use PersistentRange for the file
+    - use PersistentRange for the transcript
+
+
     - loading plugins: https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/UsingPlugins.html#//apple_ref/doc/uid/20001276-100982
     - should plugins go into ~/Library/Application Support/applicationSupportDirectory/PlugIns?
     - probably need a protocol that plugins must implement
@@ -22,7 +24,11 @@ http://www.learnswift.tips/
       maybe separate projects
       could have a make file to build em all
     - need some docs on writing plugins (and probably extensions)
+    - may want to add proc file support
+* Is appSettingsChanged being called at weird times?
+* Directories need to be bolded in the window menu
 * Add goto line support
+* Would be really nice to add a function/type popup.
 * May want to add a command line helper
 * Can't search for: #	modified:
 * Need support for save all

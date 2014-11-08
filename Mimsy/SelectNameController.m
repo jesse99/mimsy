@@ -42,7 +42,7 @@
 	// windows (this was happening with TimeMachine). It looked like the first responder
 	// in this window was resigning while the window was being torn down.
 	[self.window close];
-	[NSApp stopModalWithCode:NSOKButton];
+	[NSApp stopModalWithCode:NSModalResponseOK];
 }
 
 - (IBAction)pressedCancel:(id)sender
@@ -53,7 +53,7 @@
 	// windows (this was happening with TimeMachine). It looked like the first responder
 	// in this window was resigning while the window was being torn down.
 	[self.window close];
-	[NSApp stopModalWithCode:NSCancelButton];
+	[NSApp stopModalWithCode:NSModalResponseCancel];
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView*)view

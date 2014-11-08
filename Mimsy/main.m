@@ -57,7 +57,8 @@ static void setupInfrastructure(void)
 // These need to be registered rather early so, for the sake of convenience we do them all here.
 static void registerAppSettings()
 {
-	[AppSettings registerSetting:@"AppendPath"];
+    [AppSettings registerSetting:@"AppendPath"];
+	[AppSettings registerSetting:@"BuildError"];
 	[AppSettings registerSetting:@"ContextHelp"];
 	[AppSettings registerSetting:@"DefaultFindAllDirectory"];
 	[AppSettings registerSetting:@"DontOpenWithMimsy"];

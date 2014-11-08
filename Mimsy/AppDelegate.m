@@ -30,6 +30,7 @@
 #import "TranscriptController.h"
 #import "Utils.h"
 #import "WindowsDatabase.h"
+#import "Mimsy-Swift.h"
 
 void initLogGlobs()
 {
@@ -372,6 +373,7 @@ typedef void (^NullaryBlock)();
 	UNUSED(notification);
 	
 	[SearchSite updateMainMenu:self.searchMenu];
+    [BuildErrors.instance appSettingsChanged];
 	
 	NSMutableArray* helps = [NSMutableArray new];
 	[AppSettings enumerate:@"ContextHelp" with:
@@ -587,6 +589,18 @@ typedef void (^NullaryBlock)();
 	[SelectStyleController open];
 }
 
+- (void)nextBuildError:(id)sender
+{
+    UNUSED(sender);
+    [BuildErrors.instance gotoNextError];
+}
+
+- (void)previousBuildError:(id)sender
+{
+    UNUSED(sender);
+    [BuildErrors.instance gotoPreviousError];
+}
+
 - (void)openDirectory:(id)sender
 {
 	UNUSED(sender);
@@ -599,7 +613,7 @@ typedef void (^NullaryBlock)();
 	[panel setAllowsMultipleSelection:YES];
 	
 	NSInteger button = [panel runModal];
-	if (button == NSOKButton)
+	if (button == NSModalResponseOK)
 	{
 		for (NSURL* url in panel.URLs)
 		{
@@ -619,7 +633,7 @@ typedef void (^NullaryBlock)();
 	
 	NSInteger button = [panel runModal];
 	
-	if (button == NSOKButton)
+	if (button == NSModalResponseOK)
 	{
 		for (NSURL* url in [panel URLs])
 		{
@@ -705,6 +719,14 @@ typedef void (^NullaryBlock)();
 		FindResultsController* controller = [FindResultsController frontmost];
 		enabled = controller && controller.canOpenPrevious;
 	}
+    else if (sel == @selector(nextBuildError:))
+    {
+        enabled = [BuildErrors.instance canGotoNextError];
+    }
+    else if (sel == @selector(previousBuildError:))
+    {
+        enabled = [BuildErrors.instance canGotoPreviousError];
+    }
 	else if (sel == @selector(searchSite:))
 	{
 		NSWindow* window = [NSApp mainWindow];

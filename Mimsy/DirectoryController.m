@@ -17,6 +17,7 @@
 #import "TranscriptController.h"
 #import "UpdateConfig.h"
 #import "Utils.h"
+#import "Mimsy-Swift.h"
 
 static NSMutableArray* _controllers;
 static DirectoryController* _lastBuilt;
@@ -388,9 +389,9 @@ static DirectoryController* _lastBuilt;
 
 - (void)cancelBuild:(id)sender
 {
-	UNUSED(sender);
-	[_buildTask interrupt];		// this is the "polite" way to kill a task
-	_buildTask = nil;
+    UNUSED(sender);
+    [_buildTask interrupt];		// this is the "polite" way to kill a task
+    _buildTask = nil;
 }
 
 - (NSArray*)getHelpContext
@@ -407,10 +408,10 @@ static DirectoryController* _lastBuilt;
 	{
 		enabled = _buildTask == nil;
 	}
-	else if ([item.itemIdentifier isEqualToString:@"Cancel"])
-	{
-		enabled = _buildTask != nil;
-	}
+    else if ([item.itemIdentifier isEqualToString:@"Cancel"])
+    {
+        enabled = _buildTask != nil;
+    }
 	
 	return enabled;
 }
@@ -428,15 +429,15 @@ static DirectoryController* _lastBuilt;
 		[item setTitle:[NSString stringWithFormat:@"Open %@ Settings", name]];
 		enabled = YES;
 	}
-	else if (sel == @selector(duplicate:))
-	{
-		NSOutlineView* table = _table;
-		if (table)
-		{
-			NSIndexSet* selected = [table selectedRowIndexes];
-			enabled = selected.count > 0 && table.editedRow < 0;	// cocoa crashes if we do a duplicate while editing...
-		}
-	}
+    else if (sel == @selector(duplicate:))
+    {
+        NSOutlineView* table = _table;
+        if (table)
+        {
+            NSIndexSet* selected = [table selectedRowIndexes];
+            enabled = selected.count > 0 && table.editedRow < 0;	// cocoa crashes if we do a duplicate while editing...
+        }
+    }
 	else if ([self respondsToSelector:sel])
 	{
 		enabled = YES;
@@ -575,9 +576,14 @@ static DirectoryController* _lastBuilt;
 		  stderr = [stderr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 		  if (stderr && stderr.length > 0)
 		  {
-			  [TranscriptController writeStderr:stderr];
+			  NSRange range = [TranscriptController writeStderr:stderr];
+              NSAttributedString* text = [TranscriptController getString];
 			  [TranscriptController writeStderr:@"\n"];
-		  }
+
+              [BuildErrors.instance parseErrors:text.string range:range];
+              if (BuildErrors.instance.canGotoNextError)
+                  [BuildErrors.instance gotoNextError];
+          }
 		  _buildTask = nil;
 		  [self _updateBuildButtons];
 		  

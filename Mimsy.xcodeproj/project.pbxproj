@@ -114,6 +114,7 @@
 		37ABF9B318C2EA9C006AFDB7 /* SearchSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */; };
 		37ABF9B518E3C5A5006AFDB7 /* transforms in Resources */ = {isa = PBXBuildFile; fileRef = 37ABF9B418E3C5A4006AFDB7 /* transforms */; };
 		37AD7570171B95460054A75F /* UpdateConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AD756F171B95460054A75F /* UpdateConfig.m */; };
+		37BC76DC1A008DA30037DC6A /* BuildErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37BC76DB1A008DA30037DC6A /* BuildErrors.swift */; };
 		37BF4DFA16F56CB3008FD480 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 37BF4DF916F56CB3008FD480 /* images */; };
 		37CE3E6F19A967B8000AEA3C /* extensions in Resources */ = {isa = PBXBuildFile; fileRef = 37CE3E6E19A967B8000AEA3C /* extensions */; };
 		37CE3E7219A980A7000AEA3C /* Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CE3E7119A980A7000AEA3C /* Extensions.m */; };
@@ -339,6 +340,8 @@
 		37ABF9B418E3C5A4006AFDB7 /* transforms */ = {isa = PBXFileReference; lastKnownFileType = folder; path = transforms; sourceTree = "<group>"; };
 		37AD756E171B95460054A75F /* UpdateConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateConfig.h; sourceTree = "<group>"; };
 		37AD756F171B95460054A75F /* UpdateConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateConfig.m; sourceTree = "<group>"; };
+		37BC76DA1A008DA30037DC6A /* Mimsy-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Mimsy-Bridging-Header.h"; sourceTree = "<group>"; };
+		37BC76DB1A008DA30037DC6A /* BuildErrors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildErrors.swift; sourceTree = "<group>"; };
 		37BF4DF916F56CB3008FD480 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
 		37CE3E6E19A967B8000AEA3C /* extensions */ = {isa = PBXFileReference; lastKnownFileType = folder; path = extensions; sourceTree = "<group>"; };
 		37CE3E7019A980A7000AEA3C /* Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Extensions.h; sourceTree = "<group>"; };
@@ -533,6 +536,7 @@
 			children = (
 				3768CCE116ED322C00D5CB57 /* Builders.h */,
 				3768CCE216ED322C00D5CB57 /* Builders.m */,
+				37BC76DB1A008DA30037DC6A /* BuildErrors.swift */,
 				377C2CA917650650008E383E /* BuildOptionsController.h */,
 				377C2CAA17650650008E383E /* BuildOptionsController.m */,
 				377C2CA7176503B4008E383E /* BuildOptions.xib */,
@@ -666,6 +670,7 @@
 			children = (
 				37A8C6CD167590E700D4DB13 /* TODO */,
 				370040351676C89C0009907A /* README.md */,
+				37BC76DA1A008DA30037DC6A /* Mimsy-Bridging-Header.h */,
 				37979FEB16AAEE94009D9944 /* App */,
 				3768CCC316CDD9DF00D5CB57 /* Directory Editor */,
 				379A4114191FDB3B00ACEA5C /* Find */,
@@ -956,6 +961,7 @@
 				37ECF06419296C7A00061C0A /* Constants.m in Sources */,
 				37ECF067192EFCC100061C0A /* BaseTextController.m in Sources */,
 				37ECF06C193024B800061C0A /* FindInFilesController.m in Sources */,
+				37BC76DC1A008DA30037DC6A /* BuildErrors.swift in Sources */,
 				373B97181933B1CB0084CCC1 /* HelpItem.m in Sources */,
 				373B971D1937F1A40084CCC1 /* FindResultsController.m in Sources */,
 				373B97201937F3D90084CCC1 /* FindInFiles.m in Sources */,
@@ -1100,6 +1106,7 @@
 			buildSettings = {
 				"ADDITIONAL_SDKS[arch=*]" = "";
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
@@ -1126,12 +1133,16 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				HEADER_SEARCH_PATHS = /opt/local/include;
 				INFOPLIST_FILE = "Mimsy/Mimsy-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/local/lib,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Mimsy/Mimsy-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1140,6 +1151,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
@@ -1166,12 +1178,15 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				HEADER_SEARCH_PATHS = /opt/local/include;
 				INFOPLIST_FILE = "Mimsy/Mimsy-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/local/lib,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Mimsy/Mimsy-Bridging-Header.h";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

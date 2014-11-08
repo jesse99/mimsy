@@ -750,11 +750,105 @@ static TextDocumentFiles* _files;
 	[doc.undoManager setActionName:@"Shift Lines"];
 }
 
-- (void)showLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width
++ (NSUInteger)getOffset:(NSString*) text atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)tabWidth
 {
-	UNUSED(line, col, width);
-	
-	// TODO: this is Editor.ShowLine which calls TextController.ShowLine
+    ASSERT(line >= 1);
+    ASSERT(col == -1 || col >= 1);
+    ASSERT(tabWidth >= 1);
+    
+    NSUInteger begin = [TextController _getOffset:text atLine:line-1];
+    
+    NSInteger c = col - 1;
+    while (begin < text.length && c > 0)
+    {
+        if ([text characterAtIndex:begin] == '\t')
+            c -= tabWidth;
+        else
+            c -= 1;
+        
+        ++begin;
+    }
+    
+    return begin;
+}
+
+// TODO: may want to maintain a line offset table
++ (NSUInteger)_getOffset:(NSString*) text atLine:(NSInteger)forLine
+{
+    NSUInteger offset = 0;
+    NSInteger line = 0;
+    
+    while (line < forLine && offset < text.length)
+    {
+        if (offset + 1 < text.length && [text characterAtIndex:offset] == '\r' && [text characterAtIndex:offset+1] == '\n')
+        {
+            ++offset;
+            ++line;
+        }
+        else if ([text characterAtIndex:offset] == '\r' || [text characterAtIndex:offset] == '\n')
+        {
+            ++line;
+        }
+        
+        ++offset;
+    }
+    
+    return offset;
+}
+
+- (void)showLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)tabWidth
+{
+    ASSERT(line >= 1);
+    ASSERT(col == -1 || col >= 1);
+    ASSERT(tabWidth >= 1);
+    
+    NSString* text = self.text;
+    
+    NSUInteger begin = [TextController getOffset:text atLine:line atCol:col withTabWidth:tabWidth];
+    NSUInteger end = [TextController _getOffset:text atLine:line];
+    
+    if (begin > end)		// may happen if the line was edited
+    {
+        end = begin;
+        col = -1;
+    }
+    
+    if (begin < text.length)
+    {
+        NSUInteger count = 1;	// it looks kind of stupid to animate the entire line so we find a range of similar text to hilite
+        if (col > 0)
+        {
+            // Continuum, to a first approximation, skipped count characters that had
+            // the same unicode character category. But that seems overkill and we'd
+            // have to pull in ICU to do the same.
+            NSCharacterSet* alphaNum = [NSCharacterSet alphanumericCharacterSet];
+            while (begin + count < text.length && [alphaNum characterIsMember:[text characterAtIndex:begin+count]])
+                ++count;
+        }
+        else
+        {
+            NSCharacterSet* newLines = [NSCharacterSet whitespaceCharacterSet];
+            NSRange range = [text rangeOfCharacterFromSet:newLines options:0 range:NSMakeRange(begin, text.length - begin)];
+            if (range.location != NSNotFound)
+                count = range.location - begin;
+        }
+        
+        [self _showLine:begin end:end count:count];
+    }
+}
+
+- (void)_showLine:(NSUInteger)begin end:(NSUInteger)end count:(NSUInteger)count
+{
+    if (_restorer)
+    {
+        [_restorer showLineBegin:begin end:end count:count];
+    }
+    else
+    {
+        [_textView setSelectedRange:NSMakeRange(begin, 0)];
+        [_textView scrollRangeToVisible:NSMakeRange(begin, end - begin)];
+        [_textView showFindIndicatorForRange:NSMakeRange(begin, count)];
+    }
 }
 
 - (bool)isWordWrapping

@@ -11,6 +11,7 @@ bool _shouldLog(const char* topic);
 void _doLog(const char* topic, const char* format, va_list args);
 
 static inline void LOG(const char* topic, const char* format, ...) __printflike(2, 3);
+void SLOG(NSString* topic, NSString* text);
 
 static inline const char* STR(NSObject* object)
 {

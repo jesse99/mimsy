@@ -39,6 +39,22 @@ DefaultFindAllDirectory: /Applications/Xcode.app/Contents/Developer/Platforms/Ma
 DefaultFindAllDirectory: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/Foundation.framework/Versions/Current/Headers
 DefaultFindAllDirectory: /System/Library/Frameworks/CoreFoundation.framework/Versions/Current/Headers
 
+#### Build Errors ######################################################
+# These are used to parse build output for error messages. The values
+# are formatted as "flags regex" where flag indexes correspond to group
+# indexes in the regex and the flag names are:
+#   F   for the path to the file which had the error (may be a relative path or just a file name)
+#   L   for the 1-based line number within the file
+#   C   for the 1-based column number within the file
+#   M   for the error message
+# Not all flags need be present.
+
+# gcc
+BuildError: FLCM ^([^:\r\n]+):(\d+):(\d+):\s+\w+:\s+(.+)$
+
+# go
+BuildError: FLM ^([^:\r\n]+):(\d+):(.+)$
+
 #### Open Selection ####################################################
 # These are globs for paths that open selection will open preferentially: when open
 # selection uses the locate command and finds files matching these paths it will open 
