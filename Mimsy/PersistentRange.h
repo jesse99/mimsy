@@ -11,6 +11,7 @@ typedef void (^RangeBlock)(PersistentRange* pr);
 
 // Callback will be called if the location of the range changes.
 - (id)init:(NSString*)path range:(NSRange)range block:(RangeBlock)callback;
+- (id)init:(NSString*)path line:(NSUInteger)line col:(NSUInteger)col block:(RangeBlock)callback;
 
 // If the range has become invalidated (e.g. the associated text was
 // deleted) then the location will be NSNotFound.

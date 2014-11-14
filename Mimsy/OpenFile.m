@@ -7,8 +7,42 @@
 #import "Languages.h"
 #import "TextController.h"
 #import "TranscriptController.h"
+#import "Utils.h"
 
 @implementation OpenFile
+
++ (NSArray*)resolvePath:(NSString*)path rootedAt:(NSString*)root
+{
+    __block NSMutableArray* result = [NSMutableArray new];
+    
+    if ([path isAbsolutePath])
+    {
+        [result addObject:path];
+    }
+    else if ([path contains:@"/"])
+    {
+        [Utils enumerateDeepDir:root glob:nil error:NULL block:^(NSString* item, bool* stop)
+        {
+            if ([item endsWith:path])
+            {
+                [result addObject:item];
+                *stop = true;
+            }
+         }];
+    }
+    else
+    {
+        [Utils enumerateDeepDir:root glob:nil error:NULL block:^(NSString* item, bool* stop)
+        {
+            UNUSED(stop);
+            
+            if ([item endsWith:path])
+                [result addObject:item];
+         }];
+    }
+    
+    return result;
+}
 
 + (bool)shouldOpenFiles:(NSUInteger)numFiles
 {
@@ -45,48 +79,56 @@
 	return can;
 }
 
++ (void)openPath:(NSString*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width completed:(CompletionBlock)completed
+{
+    if (![self _dontOpenWithMimsy:path.lastPathComponent])
+    {
+        NSURL* url = [NSURL fileURLWithPath:path];
+        NSDocumentController* dc = [NSDocumentController sharedDocumentController];
+        [dc openDocumentWithContentsOfURL:url display:YES completionHandler:
+         ^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
+         {
+             (void) document;
+             (void) documentWasAlreadyOpen;
+             
+             if (!error && line != -1)
+             {
+                 // Note that we need to scroll even if the document was already open
+                 // so that errors are scrolled into view.
+                 ASSERT(document.windowControllers.count == 1);
+                 TextController* controller = (TextController*) document.windowControllers[0];
+                 [controller showLine:line atCol:col withTabWidth:width];
+                 
+                 if (completed)
+                     completed(controller);
+             }
+             else if (error && error.code != NSUserCancelledError)
+             {
+                 // We'll attempt to open everything (except blacklisted globs) in
+                 // Mimsy. This is good because there are all sorts of weird text
+                 // files that people may want to edit. If we cannot open it within
+                 // Mimsy then we'll open it like the Finder does (this will normally
+                 // only happen for binary files).
+                 bool opened = [[NSWorkspace sharedWorkspace] openFile:path];
+                 if (!opened)
+                 {
+                     NSString* reason = [error localizedFailureReason];
+                     NSString* mesg = [NSString stringWithFormat:@"Couldn't open '%@': %@", url, reason];
+                     [TranscriptController writeError:mesg];
+                 }
+             }
+         }
+         ];
+    }
+    else
+    {
+        [[NSWorkspace sharedWorkspace] openFile:path];
+    }
+}
+
 + (void)openPath:(NSString*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width
 {
-	if (![self _dontOpenWithMimsy:path.lastPathComponent])
-	{
-		NSURL* url = [NSURL fileURLWithPath:path];
-		NSDocumentController* dc = [NSDocumentController sharedDocumentController];
-		[dc openDocumentWithContentsOfURL:url display:YES completionHandler:
-			 ^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
-				 {
-					 (void) document;
-					 (void) documentWasAlreadyOpen;
-					 
-					 if (!error && line != -1)
-					 {
-						 // Note that we need to scroll even if the document was already open
-						 // so that errors are scrolled into view.
-						 ASSERT(document.windowControllers.count == 1);
-						 TextController* controller = (TextController*) document.windowControllers[0];
-						 [controller showLine:line atCol:col withTabWidth:width];
-					 }
-					 else if (error && error.code != NSUserCancelledError)
-					 {
-						 // We'll attempt to open everything (except blacklisted globs) in
-						 // Mimsy. This is good because there are all sorts of weird text
-						 // files that people may want to edit. If we cannot open it within
-						 // Mimsy then we'll open it like the Finder does (this will normally
-						 // only happen for binary files).
-						 bool opened = [[NSWorkspace sharedWorkspace] openFile:path];
-						 if (!opened)
-						 {
-							 NSString* reason = [error localizedFailureReason];
-							 NSString* mesg = [NSString stringWithFormat:@"Couldn't open '%@': %@", url, reason];
-							 [TranscriptController writeError:mesg];
-						 }
-					 }
-				 }
-			 ];
-	}
-	else
-	{
-		[[NSWorkspace sharedWorkspace] openFile:path];
-	}
+    [OpenFile openPath:path atLine:line atCol:col withTabWidth:width completed:nil];
 }
 
 + (void)openPath:(NSString*)path withRange:(NSRange)range

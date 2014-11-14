@@ -56,11 +56,13 @@ var _instance: BuildErrors = BuildErrors()
     func gotoNextError()
     {
         gotoNewError(1)
+        showErrorInFile()
     }
     
     func gotoPreviousError()
     {
         gotoNewError(-1)
+        showErrorInFile()
     }
     
     private func gotoNewError(delta: Int)
@@ -81,10 +83,42 @@ var _instance: BuildErrors = BuildErrors()
         // Typically we'd call showFindIndicatorForRange but that seems a bit
         // distracting when multiple windows are involved.
         view.scrollRangeToVisible(error.transcriptRange)
-      
-        if let file = error.file
+    }
+    
+    private func showErrorInFile()
+    {
+        var error = _errors[_index]
+        if error.path != nil && error.fileRange != nil  // this code would be simplier by matching on a tuple but that doesn't work with Xcode 6.1
         {
-            openFile(file, error.line, error.column)
+            let range = error.fileRange!.range.location != NSNotFound ? error.fileRange!.range : NSMakeRange(0, 0)  // NSNotFound means that the range was deleted
+            if let controller = error.fileRange!.controller
+            {
+                controller.getTextView().setSelectedRange(range)
+                controller.getTextView().scrollRangeToVisible(range)
+                controller.getTextView().scrollRangeToVisible(range)
+            }
+            else
+            {
+                OpenFile.openPath(error.path!, withRange: range)
+            }
+        }
+        else if error.path != nil
+        {
+            let main = dispatch_get_main_queue()
+            let delay = dispatch_time(DISPATCH_TIME_NOW, Int64(200*NSEC_PER_MSEC))
+            dispatch_after(delay, main,
+            { () in
+                OpenFile.openPath(error.path!, atLine: error.line, atCol: error.column, withTabWidth: 1, completed:
+                    { (tc) -> Void in
+                        // We need to defer this because the selection isn't correct when the document is opened.
+                        let r = tc.getTextView().selectedRange
+                        error.fileRange = PersistentRange(error.path!, range: r, block: nil)
+                })
+            })
+        }
+        else
+        {
+            // No path so we can't show the error in context.
         }
     }
     
@@ -145,9 +179,8 @@ var _instance: BuildErrors = BuildErrors()
         init(text: NSString, pattern: Pattern, match: NSTextCheckingResult)
         {
             transcriptRange = match.range
-            fileRange = NSMakeRange(NSNotFound, 0)
-            path = ""
             
+            var file: String?
             switch pattern.fields["F"]
             {
             case .Some(let i): file = text.substringWithRange(match.rangeAtIndex(i))
@@ -156,12 +189,12 @@ var _instance: BuildErrors = BuildErrors()
             
             if let i = pattern.fields["L"]
             {
-                line = Int32(text.substringWithRange(match.rangeAtIndex(i)).toInt()!)
+                line = text.substringWithRange(match.rangeAtIndex(i)).toInt()!
             }
             
             if let i = pattern.fields["C"]
             {
-                column = Int32(text.substringWithRange(match.rangeAtIndex(i)).toInt()!)
+                column = text.substringWithRange(match.rangeAtIndex(i)).toInt()!
             }
             
             switch pattern.fields["M"]
@@ -169,15 +202,31 @@ var _instance: BuildErrors = BuildErrors()
             case .Some(let i): message = text.substringWithRange(match.rangeAtIndex(i))
             default: message = nil
             }
+
+            let current = DirectoryController.getCurrentController()
+            if current != nil && file != nil
+            {
+                let paths = OpenFile.resolvePath(file!, rootedAt: current!.path)
+                if paths.count > 0
+                {
+                    // Hopefully tools will provide more than just a file name on errors.
+                    // Failing that people will hopefully not reuse source file names.
+                    path = paths[0] as NSString
+                }
+            }
+            else
+                {
+            
+                path = nil
+            }
         }
         
         let transcriptRange: NSRange
-        var fileRange: NSRange
-        var path: String            // TODO: remove this once we switch to PersistentRange
+        var fileRange: PersistentRange? = nil
         
-        let file: String?
-        let line: Int32 = -1
-        let column: Int32 = -1
+        let path: String?
+        let line: Int = -1
+        let column: Int = -1
         let message: String?
     }
     

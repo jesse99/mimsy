@@ -363,11 +363,11 @@ static DirectoryController* _lastBuilt;
 		{
 			AppDelegate* app = (AppDelegate*) [NSApp delegate];
 			[app saveAllDocuments:self];
+            _lastBuilt = self;
 
 			NSString* flags = [self _findBuildFlags:target];
 			NSDictionary* info = [Builders build:_builderInfo target:target flags:flags env:_buildVars];
 			[self _doBuild:info];
-			_lastBuilt = self;
 		}
 		else
 		{

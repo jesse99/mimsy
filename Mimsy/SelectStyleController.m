@@ -294,8 +294,10 @@ static SelectStyleController* _controller;
 	
 	NSError* error = nil;
 	[Utils enumerateDeepDir:dir glob:glob error:&error block:
-	 ^(NSString* path)
+	 ^(NSString* path, bool* stop)
 	 {
+         UNUSED(stop);
+         
 		 if (![path hasSuffix:@"README.rtf"])
 		 {
 			 StyleRowObject* object = [StyleRowObject new];

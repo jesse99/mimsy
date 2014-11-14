@@ -7,6 +7,8 @@
 	NSString* _path;
 	NSRange _onDiskRange;
 	NSRange _inMemoryRange;
+    NSUInteger _line;
+    NSUInteger _col;
 	RangeBlock _callback;
 	
 	__weak TextController* _controller;
@@ -16,7 +18,6 @@
 {
 	ASSERT(path);
 	ASSERT(range.location != NSNotFound);
-	ASSERT(callback);
 	
 	self = [super init];
 	if (self)
@@ -40,6 +41,34 @@
 	return self;
 }
 
+- (id)init:(NSString*)path line:(NSUInteger)line col:(NSUInteger)col block:(RangeBlock)callback
+{
+    ASSERT(path);
+    
+    self = [super init];
+    if (self)
+    {
+        _path = path;
+        _onDiskRange = NSMakeRange(NSNotFound, 0);
+        _inMemoryRange = NSMakeRange(NSNotFound, 0);
+        _line = line;
+        _col = col;
+        _callback = callback;
+        LOG("Text:PersistentRange:Verbose", "line:col = %lu, %lu", _line, _col);
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowOpened:) name:@"TextWindowOpened" object:nil];
+        
+        TextController* controller = [TextController find:path];
+        if (controller)
+        {
+            [self _registerNotifications:controller];
+            _controller = controller;
+        }
+    }
+    
+    return self;
+}
+
 - (void)dealloc
 {
 	TextController* controller = _controller;
@@ -59,6 +88,7 @@
 		return _onDiskRange;
 }
 
+// TODO: reset _line and _col after deleting them
 - (void)_windowOpened:(NSNotification*)notification
 {
 	TextController* controller = notification.object;
@@ -109,13 +139,15 @@
 
 			_inMemoryRange.location = _inMemoryRange.location + changedLength;
 			LOG("Text:PersistentRange", "   inMemory = %lu, %lu", _inMemoryRange.location, _inMemoryRange.length);
-			_callback(self);
+            if (_callback)
+                _callback(self);
 		}
 		else if (NSIntersectionRange(affectedRange, self.range).length > 0)
 		{
 			_inMemoryRange.location = NSNotFound;
 			LOG("Text:PersistentRange", "inMemory = %lu, %lu", _inMemoryRange.location, _inMemoryRange.length);
-			_callback(self);
+            if (_callback)
+                _callback(self);
 		}
 	}
 }
@@ -135,7 +167,6 @@
 	
 	[center removeObserver:self name:@"TextWindowClosing" object:controller];
 	[center removeObserver:self name:@"TextWindowEdited" object:controller];
-	[center removeObserver:self name:@"ReadingTextDocument" object:controller.document];
 	[center removeObserver:self name:@"TextDocumentSaved" object:controller.document];
 }
 

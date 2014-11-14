@@ -1,4 +1,8 @@
 #import "AppSettings.h"
+#import "DirectoryController.h"
 #import "Logger.h"
+#import "OpenFile.h"
 #import "OpenSelection.h"
+#import "PersistentRange.h"
+#import "TextController.h"
 #import "TranscriptController.h"

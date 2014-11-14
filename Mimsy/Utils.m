@@ -150,7 +150,7 @@ bool rangeIntersects(NSRange lhs, NSRange rhs)
 	return candidates;
 }
 
-+ (bool)enumerateDeepDir:(NSString*)path glob:(Glob*)glob error:(NSError**)outError block:(void (^)(NSString* item))block
++ (bool)enumerateDeepDir:(NSString*)path glob:(Glob*)glob error:(NSError**)outError block:(void (^)(NSString* item, bool* stop))block
 {	
 	NSFileManager* fm = [NSFileManager new];
 	NSMutableArray* errors = [NSMutableArray new];
@@ -169,6 +169,7 @@ bool rangeIntersects(NSRange lhs, NSRange rhs)
 			}
 	];
 	
+    bool stop = false;
 	for (NSURL* url in enumerator)
 	{		
 		NSNumber* isDirectory;
@@ -179,7 +180,11 @@ bool rangeIntersects(NSRange lhs, NSRange rhs)
 		{
 			NSString* candidate = url.path;
 			if (!glob || [glob matchName:candidate])
-				block(candidate);
+            {
+				block(candidate, &stop);
+                if (stop)
+                    break;
+            }
 		}
 		else if (error)
 		{

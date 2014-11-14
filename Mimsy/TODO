@@ -10,10 +10,13 @@ GoFormat/format.go:20: syntax error: unexpected name, expecting semicolon or new
 
 
 
+
+* Do a commit
+* Use PersistentRange for the transcript:
+    - need an init that takes a BaseTextController
+    - use a BaseTextController instead of a TextController
+    - BaseTextController needs to broadcast TextWindowEdited
 * Add support for parsing build errors and selecting next and previous build errors
-    - do a commit
-    - use PersistentRange for the file
-    - use PersistentRange for the transcript
 
 
     - loading plugins: https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/UsingPlugins.html#//apple_ref/doc/uid/20001276-100982
@@ -25,8 +28,15 @@ GoFormat/format.go:20: syntax error: unexpected name, expecting semicolon or new
       could have a make file to build em all
     - need some docs on writing plugins (and probably extensions)
     - may want to add proc file support
+* Can't double click numbers, eg 122/7
+* Double click selects leading parens
+* Highlight line extension falls down when quickly appending onto lines
 * Is appSettingsChanged being called at weird times?
 * Directories need to be bolded in the window menu
+* Need directory editor context menu:
+    - delete
+    - add
+    - trash
 * Add goto line support
 * Would be really nice to add a function/type popup.
 * May want to add a command line helper

@@ -41,6 +41,6 @@ bool rangeIntersects(NSRange lhs, NSRange rhs);
 + (bool)enumerateDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item))block;
 
 // Just like the above except that sub-directories are searched.
-+ (bool)enumerateDeepDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item))block;
++ (bool)enumerateDeepDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item, bool* stop))block;
 
 @end

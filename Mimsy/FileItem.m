@@ -70,7 +70,7 @@
 		if (isDir)
 		{
 			if (![Utils enumerateDeepDir:path glob:nil error:&error block:	// this is the package case
-				  ^(NSString* item) {bytes += [self _getBytes:item];}])
+                  ^(NSString* item, bool* stop) {UNUSED(stop); bytes += [self _getBytes:item];}])
 			{
 				NSString* reason = [error localizedFailureReason];
 				LOG("Warning", "error getting sizes for %s: %s", STR(path), STR(reason));

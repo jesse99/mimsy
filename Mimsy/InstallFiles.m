@@ -232,8 +232,9 @@
 {
 	NSError* error = nil;
 	[Utils enumerateDeepDir:dir glob:nil error:&error block:
-		^(NSString* item)
+		^(NSString* item, bool* stop)
 		{
+            UNUSED(stop);
 			[self _processSourceFile:dict forItem:item];
 		}
 	];

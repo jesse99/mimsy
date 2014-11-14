@@ -29,8 +29,10 @@ static void addTestItems(NSMenu* testMenu)
 	
 	NSError* error = nil;
 	[Utils enumerateDeepDir:_ftestPath glob:glob error:&error block:
-		 ^(NSString* path)
+		 ^(NSString* path, bool* stop)
 		 {
+             UNUSED(stop);
+             
 			 NSString* name = [[path substringFromIndex:_ftestPath.length] stringByDeletingPathExtension];
 			 NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:name action:@selector(runFTest:) keyEquivalent:@""];
 			 [item setRepresentedObject:path];
@@ -259,8 +261,9 @@ void runFunctionalTests(void)
 				
 		NSError* error = nil;
 		[Utils enumerateDeepDir:_ftestPath glob:glob error:&error block:
-			 ^(NSString* path)
+			 ^(NSString* path, bool* stop)
 			 {
+                 UNUSED(stop);
 				 [tests addObject:path];
 			 }
 		 ];

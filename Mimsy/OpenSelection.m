@@ -123,8 +123,9 @@ static bool _openLocalPath(NSString* path, int line, int col)
 		DirectoryController* controller = [DirectoryController getCurrentController];
 		if (controller)
 		{
-			[Utils enumerateDeepDir:controller.path glob:nil error:NULL block:^(NSString* item)
+			[Utils enumerateDeepDir:controller.path glob:nil error:NULL block:^(NSString* item, bool* stop)
 			{
+                UNUSED(stop);
 				NSRange range = [item rangeOfString:path];
 				if (range.location != NSNotFound)
 					if (_doAbsolutePath(item, line, col))
@@ -292,29 +293,6 @@ static void _getLineAndCol(NSString* text, NSUInteger location, NSUInteger lengt
 	{
 		*line = l;
 	}
-	
-	// gendarme - Application.cs(?10)		TODO: not sure why we get this sometimes from gendarme...
-	[scanner setScanLocation:location + length];
-	if ([scanner skip:'('] && [scanner skip:'?'] && [scanner scanInt:&l] && [scanner skip:')'])
-	{
-		*line = l;
-	}
-}
-
-bool openFile(NSString* file, int line, int col)
-{
-    bool found = false;
-
-    if (!found)
-        found = _openAbsolutePath(file, line, col);
-    
-    if (!found)
-        found = _openRelativePath(file, line, col);
-    
-    if (!found)
-        found = _openLocalPath(file, line, col);
-
-    return found;
 }
 
 static bool _openFile(NSString* text, NSUInteger location, NSUInteger length)
