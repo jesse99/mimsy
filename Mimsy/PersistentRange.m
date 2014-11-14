@@ -1,6 +1,7 @@
 #import "PersistentRange.h"
 
 #import "TextController.h"
+#import "TranscriptController.h"
 
 @implementation PersistentRange
 {
@@ -11,7 +12,30 @@
     NSUInteger _col;
 	RangeBlock _callback;
 	
-	__weak TextController* _controller;
+	__weak BaseTextController* _controller;
+}
+
+// We take a TranscriptController instead of a BaseTextController because we don't want to use this method
+// for normal text documents (because we need the path when those are re-opened).
+- (id)init:(TranscriptController*)controller range:(NSRange)range
+{
+    ASSERT(controller);
+    ASSERT(range.location != NSNotFound);
+    
+    self = [super init];
+    if (self)
+    {
+        _path = nil;
+        _onDiskRange = range;
+        _inMemoryRange = range;
+        _callback = nil;
+        LOG("Text:PersistentRange:Verbose", "ranges = %lu, %lu", _onDiskRange.location, _onDiskRange.length);
+        
+        [self _registerNotifications:controller];
+        _controller = controller;
+    }
+    
+    return self;
 }
 
 - (id)init:(NSString*)path range:(NSRange)range block:(RangeBlock)callback
@@ -30,7 +54,7 @@
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowOpened:) name:@"TextWindowOpened" object:nil];
 		
-		TextController* controller = [TextController find:path];
+		BaseTextController* controller = [TextController find:path];
 		if (controller)
 		{
 			[self _registerNotifications:controller];
@@ -58,7 +82,7 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowOpened:) name:@"TextWindowOpened" object:nil];
         
-        TextController* controller = [TextController find:path];
+        BaseTextController* controller = [TextController find:path];
         if (controller)
         {
             [self _registerNotifications:controller];
@@ -71,17 +95,19 @@
 
 - (void)dealloc
 {
-	TextController* controller = _controller;
+	BaseTextController* controller = _controller;
 	if (controller)
 	{
 		[self _deregisterNotifications:controller];
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:@"TextWindowOpened" object:nil];
+        
+        if (_path)
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:@"TextWindowOpened" object:nil];
 	}
 }
 
 - (NSRange)range
 {
-	TextController* controller = _controller;
+	BaseTextController* controller = _controller;
 	if (controller)
 		return _inMemoryRange;
 	else
@@ -91,17 +117,19 @@
 // TODO: reset _line and _col after deleting them
 - (void)_windowOpened:(NSNotification*)notification
 {
-	TextController* controller = notification.object;
-	if ([_path compare:controller.path] == NSOrderedSame)
-	{
-		[self _registerNotifications:controller];
-		_controller = controller;
-	}
+    ASSERT(_path);
+
+    TextController* controller = notification.object;
+    if ([_path compare:controller.path] == NSOrderedSame)
+    {
+        [self _registerNotifications:controller];
+        _controller = controller;
+    }
 }
 
 - (void)_windowClosing:(NSNotification*)notification
 {
-	TextController* controller = notification.object;
+	BaseTextController* controller = notification.object;
 	[self _deregisterNotifications:controller];
 	
 	_controller = nil;
@@ -125,7 +153,7 @@
 {
 	if (_inMemoryRange.location != NSNotFound)
 	{
-		TextController* controller = notification.object;
+		BaseTextController* controller = notification.object;
 		NSTextStorage* storage = controller.getTextView.textStorage;
 		
 		NSRange editedRange = storage.editedRange;
@@ -152,22 +180,30 @@
 	}
 }
 
-- (void)_registerNotifications:(TextController*)controller
+- (void)_registerNotifications:(BaseTextController*)controller
 {
 	NSNotificationCenter* center = [NSNotificationCenter defaultCenter];
 	
-	[center addObserver:self selector:@selector(_windowClosing:) name:@"TextWindowClosing" object:controller];
 	[center addObserver:self selector:@selector(_windowEdited:) name:@"TextWindowEdited" object:controller];
-	[center addObserver:self selector:@selector(_windowSaved:) name:@"TextDocumentSaved" object:controller.document];
+    
+    if (_path)
+    {
+        [center addObserver:self selector:@selector(_windowClosing:) name:@"TextWindowClosing" object:controller];
+        [center addObserver:self selector:@selector(_windowSaved:) name:@"TextDocumentSaved" object:controller.document];
+    }
 }
 
-- (void)_deregisterNotifications:(TextController*)controller
+- (void)_deregisterNotifications:(BaseTextController*)controller
 {
 	NSNotificationCenter* center = [NSNotificationCenter defaultCenter];
 	
-	[center removeObserver:self name:@"TextWindowClosing" object:controller];
 	[center removeObserver:self name:@"TextWindowEdited" object:controller];
-	[center removeObserver:self name:@"TextDocumentSaved" object:controller.document];
+
+    if (_path)
+    {
+        [center removeObserver:self name:@"TextWindowClosing" object:controller];
+        [center removeObserver:self name:@"TextDocumentSaved" object:controller.document];
+    }
 }
 
 @end

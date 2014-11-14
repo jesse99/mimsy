@@ -17,6 +17,7 @@
 
 + (void)writeError:(NSString*)text;		// Mimsy error (unlike the others this appends a new-line)
 
++ (TranscriptController*)getInstance;
 + (NSTextView*)getView;
 + (NSMutableAttributedString*)getString;
 

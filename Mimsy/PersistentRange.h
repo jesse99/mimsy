@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@class PersistentRange, TextController;
+@class PersistentRange, BaseTextController, TranscriptController;
 typedef void (^RangeBlock)(PersistentRange* pr);
 
 // Represents a range into a text window that is kept up to date as the
@@ -12,6 +12,7 @@ typedef void (^RangeBlock)(PersistentRange* pr);
 // Callback will be called if the location of the range changes.
 - (id)init:(NSString*)path range:(NSRange)range block:(RangeBlock)callback;
 - (id)init:(NSString*)path line:(NSUInteger)line col:(NSUInteger)col block:(RangeBlock)callback;
+- (id)init:(TranscriptController*)controller range:(NSRange)range;
 
 // If the range has become invalidated (e.g. the associated text was
 // deleted) then the location will be NSNotFound.
@@ -19,6 +20,6 @@ typedef void (^RangeBlock)(PersistentRange* pr);
 
 @property (readonly) NSString* path;
 
-@property (readonly) __weak TextController* controller;
+@property (readonly) __weak BaseTextController* controller;
 
 @end

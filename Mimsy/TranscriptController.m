@@ -70,6 +70,7 @@ static TranscriptController* controller;
 	if ((mask & NSTextStorageEditedCharacters))
 	{
 		_editCount++;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowEdited" object:self];
 	}
 }
 

@@ -40,7 +40,7 @@ var _instance: BuildErrors = BuildErrors()
             })
         }
 
-        _errors = sorted(_errors) {$0.transcriptRange.location < $1.transcriptRange.location}
+        _errors = sorted(_errors) {$0.transcriptRange.range.location < $1.transcriptRange.range.location}
     }
     
     func canGotoNextError() -> Bool
@@ -71,18 +71,25 @@ var _instance: BuildErrors = BuildErrors()
         if _index >= 0 && _index < _errors.count
         {
             let oldError = _errors[_index]
-            view.textStorage!.removeAttribute(NSUnderlineStyleAttributeName, range: oldError.transcriptRange)
+            let range = oldError.transcriptRange.range
+            if range.location != NSNotFound
+            {
+                view.textStorage!.removeAttribute(NSUnderlineStyleAttributeName, range: range)
+            }
         }
         
         _index += delta
         let error = _errors[_index]
-        
-        let attrs = [NSUnderlineStyleAttributeName: NSUnderlineStyleSingle]
-        view.textStorage!.addAttributes(attrs, range: error.transcriptRange)
+        let range = error.transcriptRange.range
+        if range.location != NSNotFound
+        {
+            let attrs = [NSUnderlineStyleAttributeName: NSUnderlineStyleSingle]
+            view.textStorage!.addAttributes(attrs, range: range)
 
-        // Typically we'd call showFindIndicatorForRange but that seems a bit
-        // distracting when multiple windows are involved.
-        view.scrollRangeToVisible(error.transcriptRange)
+            // Typically we'd call showFindIndicatorForRange but that seems a bit
+            // distracting when multiple windows are involved.
+            view.scrollRangeToVisible(range)
+        }
     }
     
     private func showErrorInFile()
@@ -178,7 +185,7 @@ var _instance: BuildErrors = BuildErrors()
     {
         init(text: NSString, pattern: Pattern, match: NSTextCheckingResult)
         {
-            transcriptRange = match.range
+            transcriptRange = PersistentRange(TranscriptController.getInstance(), range: match.range)
             
             var file: String?
             switch pattern.fields["F"]
@@ -221,7 +228,7 @@ var _instance: BuildErrors = BuildErrors()
             }
         }
         
-        let transcriptRange: NSRange
+        let transcriptRange: PersistentRange
         var fileRange: PersistentRange? = nil
         
         let path: String?
