@@ -22,6 +22,7 @@
 	ProcFileReader* _elementNamesFile;
 	ProcFileKeyStore* _keyStoreFile;
 	ProcFileReader* _languageFile;
+    ProcFileReader* _lengthFile;
 	ProcFileReadWrite* _lineNumFile;
 	ProcFileReader* _lineSelectionFile;
 	ProcFileReader* _pathFile;
@@ -181,8 +182,11 @@
 		
 		_keyStoreFile = [self _createKeyStore:@"key-values"];
 		
-		_languageFile = [self _createReader:@"language"
-			readBlock:^NSString* (TextController* controller) {return controller.language ? controller.language.name : @"";}];
+        _languageFile = [self _createReader:@"language"
+                                  readBlock:^NSString* (TextController* controller) {return controller.language ? controller.language.name : @"";}];
+        
+		_lengthFile = [self _createReader:@"length"
+			readBlock:^NSString* (TextController* controller) {return [NSString stringWithFormat:@"%lu", controller.text.length];}];
 
 		_lineNumFile = [self _createReadWriter:@"line-number"
 			readBlock:^NSString* (TextController* controller)

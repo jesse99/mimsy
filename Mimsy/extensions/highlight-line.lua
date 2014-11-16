@@ -35,38 +35,28 @@ prefs = {
     end
 end
 
+-- The classy way to do this is to store the state of the current line highlighting within a
+-- file in "text-document/key-values/" and remove the associated background color when the
+-- line changes. Unfortunately we don't always get notified sufficiently often (I think
+-- Cocoa sometimes coalesces text edited notifications). So we'll just brute force it to
+-- ensure the display stays consistent.
+--
+-- This might impact other extensions that manipulate the back color but those will always
+-- be iffy with this extension (unless they're very transient).
 function onLineChanged()
-	local line = read_proc_file("text-document/line-number")
-	--log("line = %s", line)
-	if line ~= "-1" then
-		local new_text = read_proc_file("text-document/line-selection")
-		local old_text = read_proc_file("text-document/key-values/highlight-line-old-selection")
-		--log("new_text = %s, old_text = %s", new_text, old_text)
-		if new_text ~= old_text then
-			if old_text ~= "" then
-				local old_selection = split(old_text, "\f")
-				write_proc_file("text-document/remove-temp-back-color", string.format("%d\f%d", old_selection[1], old_selection[2]))
-			end
+    -- First remove all the old highlighting.
+    local length = read_proc_file("text-document/length")
+    write_proc_file("text-document/remove-temp-back-color", string.format("0\f%s", length))
 
-			local new_selection = split(new_text, "\f")
-			write_proc_file("text-document/add-temp-back-color", string.format("%d\f%d\f%s", new_selection[1], new_selection[2], color))
-			write_proc_file("text-document/key-values/highlight-line-old-selection", new_text)
-		end
-	else
-		local old_text = read_proc_file("text-document/key-values/highlight-line-old-selection")
-		--log("old_text = %s", old_text)
-		if old_text ~= "" then
-			local old_selection = split(old_text, "\f")
-			write_proc_file("text-document/remove-temp-back-color", string.format("%d\f%d", old_selection[1], old_selection[2]))
-			write_proc_file("text-document/key-values/highlight-line-old-selection", "")
-		end
-	end
-
-	return false
+    -- Then, if only a single line is selected, highlight the current line.
+    local line = read_proc_file("text-document/line-number")
+    if line ~= "-1" then
+        local new_text = read_proc_file("text-document/line-selection")
+        local new_selection = split(new_text, "\f")
+        write_proc_file("text-document/add-temp-back-color", string.format("%d\f%d\f%s", new_selection[1], new_selection[2], color))
+    end
 end
 
 function onMainChanged()
-    write_proc_file("text-document/remove-temp-back-color", "0\f100000")
-    write_proc_file("text-document/key-values/highlight-line-old-selection", "")
     onLineChanged()
 end

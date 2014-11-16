@@ -6,18 +6,15 @@ install http://osxfuse.github.io/
 
 http://www.learnswift.tips/
 
-GoFormat/format.go:20: syntax error: unexpected name, expecting semicolon or newline or }
 
 
-
-* Should be able to normally use the default Word setting
 * Highlight line extension falls down when quickly appending onto lines
 * Is appSettingsChanged being called at weird times?
 * Directories need to be bolded in the window menu
 * Need directory editor context menu:
-- delete
-- add
-- trash
+    - delete
+    - add
+    - trash
 * Add goto line support
 * Would be really nice to add a function/type popup.
 * Pick something to use for a plugin:
