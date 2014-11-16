@@ -299,9 +299,11 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	NSRegularExpression* regex = nil;
 	
 	NSString* pattern = [self _getFindPattern];
-	NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
+	NSRegularExpressionOptions options = NSRegularExpressionAnchorsMatchLines;
 	if (_caseSensitiveCheckBox.state == NSOffState)
 		options |= NSRegularExpressionCaseInsensitive;
+    if (_useRegexCheckBox.state == NSOnState)
+        options |= NSRegularExpressionAllowCommentsAndWhitespace;
 
 	NSError* error = nil;
 	regex = [NSRegularExpression regularExpressionWithPattern:pattern options:options error:&error];
