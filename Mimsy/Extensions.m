@@ -44,7 +44,7 @@ static BaseExtension* _executing;			// the extension currently being executed (o
 // block the main thread until the extension either finishes or times out.
 static bool block_timed_out(void (^block)())
 {
-	dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+	dispatch_semaphore_t sem = dispatch_semaphore_create(0);    // note that ARC releases this for us
 	
 	dispatch_queue_t concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	dispatch_async(concurrent,
@@ -162,23 +162,31 @@ static bool block_timed_out(void (^block)())
 	
 	__block bool handled = false;
 	__block NSString* mesg = nil;
+    __block bool timedout = false;
 	
-	bool timedout = block_timed_out(^{
-		LOG("Extensions:Verbose", "invoking %s for %s", STR(fname), STR(self.name));
-		lua_getglobal(self.state, fname.UTF8String);
-		if (lua_pcall(self.state, 0, 1, 0) == 0)				// 0 args, bool result
-		{
-			handled = lua_toboolean(self.state, 1);
-			lua_pop(self.state, 1);
-			LOG("Extensions:Verbose", "   done invoking %s", STR(self.name));
-		}
-		else
-		{
-			NSString* reason = [NSString stringWithUTF8String:lua_tostring(_state, -1)];
-			mesg = [NSString stringWithFormat:@"%@ invoke failed: %@", self.name, reason];
-		}
-	});
-	
+    // invoke should always be called on the main thread but even then we seem to get deadlocks
+    // on occasion. But using dispatch_after ensures that we always call into extensions at a
+    // known good point.
+	dispatch_queue_t main = dispatch_get_main_queue();
+    dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 0*NSEC_PER_MSEC);
+    dispatch_after(delay, main, ^{
+        timedout = block_timed_out(^{
+            LOG("Extensions:Verbose", "invoking %s for %s", STR(fname), STR(self.name));
+            lua_getglobal(self.state, fname.UTF8String);
+            if (lua_pcall(self.state, 0, 1, 0) == 0)				// 0 args, bool result
+            {
+                handled = lua_toboolean(self.state, 1);
+                lua_pop(self.state, 1);
+                LOG("Extensions:Verbose", "   done invoking %s", STR(self.name));
+            }
+            else
+            {
+                NSString* reason = [NSString stringWithUTF8String:lua_tostring(_state, -1)];
+                mesg = [NSString stringWithFormat:@"%@ invoke failed: %@", self.name, reason];
+            }
+        });
+    });
+
 	if (timedout)
 		mesg = [NSString stringWithFormat:@"%@ extension's invoke for '%@' took longer than %ds to run", self.name, path, BLOCK_TIMEOUT];
 	
