@@ -36,38 +36,28 @@
 
 - (NSRange)selectionRangeForProposedRange:(NSRange)proposedRange granularity:(NSSelectionGranularity)granularity
 {
-	NSRange result;
+    NSRange result = NSMakeRange(NSNotFound, 0);
     
-	TextController* controller = _controller;
-	if (granularity == NSSelectByWord && controller && controller.language != nil)
-	{
-		result = proposedRange;
-		
-        // If we have a word on the left side then try to extend it leftward. Note that we have to
-        // be careful about how we do this so that double click dragging works.
-        NSUInteger count = 0;
-        while (result.location > 0 && [self _matchesWord:controller.language.word at:result.location - count len:count + 1])
-        {
-            ++count;
-        }
-        result.location -= count;
-        result.length += count;
+    TextController* controller = _controller;
+    if (granularity == NSSelectByWord && controller && controller.language != nil)
+    {
+        if (proposedRange.length == 0)
+            proposedRange.length = 1;
         
-        // If we have a word on the right side then try to extend it rightward.
-        count = 0;
-        while ([self _matchesWord:controller.language.word at:result.location + result.length + count len:count + 1])
-        {
-            ++result.length;
-        }
-        result.location -= count;
-        result.length += count;
-	}
-	else
-	{
-		result = [super selectionRangeForProposedRange:proposedRange granularity:granularity];
-	}
-	
-	return result;
+        if (result.length == 0)
+            result = [self _extendRe:controller.language.word proposedRange:proposedRange lookAround:4];
+    
+        // Yuckily enough we also need to special case numbers because Cocoa selects too little of "10.11e+100"
+        // and too much of "10,20,30". Note that we need a lookAround large enough to handle the maximum
+        // number of fractional digits ("11e+100" isn't always a legal number).
+        if (result.length == 0)
+            result = [self _extendRe:controller.language.number proposedRange:proposedRange lookAround:16];
+    }
+    
+    if (result.length == 0)
+        result = [super selectionRangeForProposedRange:proposedRange granularity:granularity];
+    
+    return result;
 }
 
 - (void)keyDown:(NSEvent*)event
@@ -757,6 +747,63 @@ static NSString* getKey(NSEvent* event)
 	}
 }
 
+- (NSRange)_extendRe:(NSRegularExpression*)re proposedRange:(NSRange)proposedRange lookAround:(NSUInteger)lookAround
+{
+    NSRange result = NSMakeRange(NSNotFound, 0);
+    
+    //LOG("App", "text = %s", STR([self.textStorage.string substringWithRange:proposedRange]));
+    //LOG("App", "re = %s", STR(re));
+    
+    if ([self _matchesWord:re at:proposedRange.location len:proposedRange.length])
+    {
+        result = proposedRange;
+        
+        // If we have a word on the left side then try to extend it leftward. Note that we have to
+        // be careful about how we do this so that double click dragging works. Also for numbers
+        // we need to allow jumping by more than one character (otherwise stuff the "3.14e-" in
+        // "3.14e-2" won't match.
+        while (true)
+        {
+            NSUInteger count = 0;
+            for (NSUInteger i = 1; result.location >= i && i <= lookAround && count == 0; ++i)
+            {
+                if ([self _matchesWord:re at:result.location - i len:result.length + i])
+                    count = i;
+            }
+            
+            if (count > 0)
+            {
+                result.location -= count;
+                result.length += count;
+            }
+            else
+                break;
+
+            //LOG("App", "   text1 = %s", STR([self.textStorage.string substringWithRange:result]));
+        }
+        
+        // If we have a word on the right side then try to extend it rightward.
+        while (true)
+        {
+            NSUInteger count = 0;
+            for (NSUInteger i = 1; i <= lookAround && count == 0; ++i)
+            {
+                if ([self _matchesWord:re at:result.location len:result.length + i])
+                    count = i;
+            }
+            
+            if (count > 0)
+                result.length += count;
+            else
+                break;
+            
+            //LOG("App", "   text2 = %s", STR([self.textStorage.string substringWithRange:result]));
+        }
+    }
+    
+    return result;
+}
+
 - (bool)_matchesWord:(NSRegularExpression*)word at:(NSUInteger)loc len:(NSUInteger)len
 {
 	bool matches = false;
@@ -766,6 +813,7 @@ static NSString* getKey(NSEvent* event)
 		NSTextCheckingResult* match = [word firstMatchInString:self.textStorage.string options:NSMatchingWithTransparentBounds range:NSMakeRange(loc, len)];
 		matches = match != nil && match.range.length == len;
 	}
+    //LOG("App", "      match '%s' = %s", STR([self.textStorage.string substringWithRange:NSMakeRange(loc, len)]), matches ? "true" : "false");
 	
 	return matches;
 }

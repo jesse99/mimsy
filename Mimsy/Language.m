@@ -28,7 +28,8 @@
 		NSMutableArray* names = [NSMutableArray new];
 		NSMutableArray* patterns = [NSMutableArray new];
 		NSMutableArray* lines = [NSMutableArray new];
-		__block NSString* word = nil;
+        __block NSString* word = nil;
+		__block NSMutableArray* numbers = [NSMutableArray new];
 		__block NSUInteger wordLine = 0;
 		
 		[names addObject:@"normal"];
@@ -97,6 +98,9 @@
 				else if (![AppSettings isSetting:entry.key])
 				{
 					// Note that it is OK to use the same element name multiple times.
+                    if ([key isEqualToString:@"number"] || [key isEqualToString:@"float"])
+                        [numbers addObject:entry.value];
+                    
 					[names addObject:key];
 					[patterns addObject:entry.value];
 					[lines addObject:[NSNumber numberWithUnsignedLong:entry.line]];
@@ -119,6 +123,12 @@
 		{
 			[errors addObject:[NSString stringWithFormat:@"regex on line %ld failed to parse: %@", wordLine, e.localizedFailureReason]];
 		}
+        
+        numbers = [numbers map:^id(NSString* element) {
+            return [NSString stringWithFormat:@"(%@)", element];
+        }];
+        NSString* pattern = [numbers componentsJoinedByString:@"|"];
+        _number = [[NSRegularExpression alloc] initWithPattern:pattern options:options error:&e];   // we'll report any errors below
 
 		if (!_name)
 			[errors addObject:@"Language key is missing"];

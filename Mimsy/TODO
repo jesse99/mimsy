@@ -10,8 +10,7 @@ GoFormat/format.go:20: syntax error: unexpected name, expecting semicolon or new
 
 
 
-* Can't double click numbers, eg 122/7
-* Double click selects leading parens
+* Should be able to normally use the default Word setting
 * Highlight line extension falls down when quickly appending onto lines
 * Is appSettingsChanged being called at weird times?
 * Directories need to be bolded in the window menu

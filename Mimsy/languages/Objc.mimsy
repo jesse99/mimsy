@@ -26,10 +26,10 @@ String: " (?: [^"\r\n\\] | \\.)* "
 Character: ' (?: [^'\r\n\\] | \\.)* '
 String: (?<= \x23 (?: include | import)) \s+ (< (?: [^>\r\n\\] | \\.)* >)
 
-Float: \W (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)? [fFlL]?) \W
-Float: \W (\. [\d_]+ (?: [eE] [+-]? [\d_]+)? [fFlL]?) \W
-Number: \W (\d+ (?: [luLU]{0, 2})) \W
-Number: \W (0x [0-9a-fA-f]+ (?: [luLU]{0, 2})) \W
+Float: (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)? [fFlL]?)
+Float: (\. [\d_]+ (?: [eE] [+-]? [\d_]+)? [fFlL]?)
+Number: (\d+ (?: [luLU]{0, 2}))
+Number: (0x [0-9a-fA-f]+ (?: [luLU]{0, 2}))
 
 PreProc: \x23 \s* (?: define | undef) .* $
 PreProc: \x23 \s* (?: warning | error | line | pragma)

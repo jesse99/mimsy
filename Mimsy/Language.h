@@ -33,5 +33,6 @@
 
 // Used to match words when double clicking.
 @property (readonly) NSRegularExpression* word;
+@property (readonly) NSRegularExpression* number;
 
 @end

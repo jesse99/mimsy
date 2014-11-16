@@ -24,8 +24,8 @@ String: " (?: [^"\r\n\\] | \\.)* "
 String: ' (?: [^'\r\n\\] | \\.)* '
 String: \[=*\[ (?: . | \r | \n)*? \]=*\]
 
-Float: \W (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)?) \W
-Float: \W (\. [\d_]+ (?: [eE] [+-]? [\d_]+)?) \W
-Number: \W (\d+) \W
-Number: \W (0x [0-9a-fA-f]+) \W
+Float: (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)?)
+Float: (\. [\d_]+ (?: [eE] [+-]? [\d_]+)?)
+Number: (\d+)
+Number: (0x [0-9a-fA-f]+)
 

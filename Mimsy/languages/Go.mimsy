@@ -20,11 +20,11 @@ String: ` (?: [^`\\] | \\.)* `
 String: " (?: [^"\r\n\\] | \\.)* "
 Character: ' (?: [^'\r\n\\] | \\.)* '
 
-Float: \W (\d+ \. \d* (?: [eE] [+-]? \d+)? i?) \W
-Float: \W (\d+ [eE] [+-]? \d+ i?) \W
-Float: \W (\. \d+ (?: [eE] [+-]? \d+)? i?) \W
-Number: \W (\d+ i?) \W
-Number: \W (0[xX] [0-9a-fA-f]+ i?) \W
+Float: (\d+ \. \d* (?: [eE] [+-]? \d+)? i?)
+Float: (\d+ [eE] [+-]? \d+ i?)
+Float: (\. \d+ (?: [eE] [+-]? \d+)? i?)
+Number: (\d+ i?)
+Number: (0[xX] [0-9a-fA-f]+ i?)
 
 PreProc: \x23 \s* (?: define | undef) .* $
 PreProc: \x23 \s* (?: warning | error | line | pragma)

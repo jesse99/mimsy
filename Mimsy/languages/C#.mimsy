@@ -24,12 +24,12 @@ String: " (?: [^"\r\n\\] | \\.)* "
 String: @" (?: [^"\\] | \\. | (?: " "))* "
 Character: ' (?: [^'\r\n\\] | \\.)* '
 
-Float: (?<= \W) \d+ \. \d+ (?: [eE] [\+-]? \d+)? [FfDdMm]? (?= \W)
-Float: (?<= \W) \. \d+ (?: [eE] [\+-]? \d+)? [FfDdMm]? (?= \W)
-Float: (?<= \W) \d+ [eE] [\+-]? \d+ [FfDdMm]? (?= \W)
-Float: (?<= \W) \d+ [FfDdMm] (?= \W)
-Number: (?<= \W) \d+ (?= \W)
-Number: (?<= \W) 0x [0-9a-fA-f]+ (?= \W)
+Float: \d+ \. \d+ (?: [eE] [\+-]? \d+)? [FfDdMm]?
+Float: \. \d+ (?: [eE] [\+-]? \d+)? [FfDdMm]?
+Float: \d+ [eE] [\+-]? \d+ [FfDdMm]?
+Float: \d+ [FfDdMm]
+Number: \d+
+Number: 0x [0-9a-fA-f]+
 
 #Attribute: (?<= ^ \s* \[ (?: \w+ \s* :)? \s*) [\w\.]+ \s* (?= \]|\()
 PreProc: \x23 \s* (?: define | pragma) .* $

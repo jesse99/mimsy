@@ -25,7 +25,7 @@ Identifier: \b [a-zA-Z_] [\w_]* \b
 
 String: " (?: [^"\r\n\\] | \\.)* "
 String: ' (?: [^'\r\n\\] | \\.)* '
-Number: (?<= \W) [\d_]+ \. \d+ (?: [eE] [\+-]? \d+)? (?= \W)
-Number: (?<= \W) [\d_]+ (?: [eE] [\+-]? \d+)? L? (?= \W)
+Number: [\d_]+ \. \d+ (?: [eE] [\+-]? \d+)?
+Number: [\d_]+ (?: [eE] [\+-]? \d+)? L?
 
 Function: ^ \s* ([\w_]+) \s* (?= (?: <-)|= \s* function)
