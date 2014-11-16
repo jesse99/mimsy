@@ -8,9 +8,8 @@ http://www.learnswift.tips/
 
 
 
-* Highlight line extension falls down when quickly appending onto lines
-* Is appSettingsChanged being called at weird times?
-* Directories need to be bolded in the window menu
+* Can't search for: #	modified:
+* When does the proc files help file appear?
 * Need directory editor context menu:
     - delete
     - add
@@ -18,7 +17,7 @@ http://www.learnswift.tips/
 * Add goto line support
 * Would be really nice to add a function/type popup.
 * Pick something to use for a plugin:
-    = maybe function popup
+    - maybe function popup
     - loading plugins: https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/UsingPlugins.html#//apple_ref/doc/uid/20001276-100982
     - should plugins go into ~/Library/Application Support/applicationSupportDirectory/PlugIns?
     - probably need a protocol that plugins must implement
@@ -29,9 +28,8 @@ http://www.learnswift.tips/
     - need some docs on writing plugins (and probably extensions)
     - may want to add proc file support
 * May want to add a command line helper
-* Can't search for: #	modified:
-* Need support for save all
 * Modern objc: https://developer.apple.com/library/Mac/releasenotes/ObjectiveC/ModernizationObjC/AdoptingModernObjective-C/AdoptingModernObjective-C.html#//apple_ref/doc/uid/TP40014150
+* OSXFUSE is releasing version 3.0 soon (can update via system preferences).
 * Should be able to double click in find in time machine.
 * Add a go extension for search on sites:
 	- will need language proc files
@@ -39,6 +37,7 @@ http://www.learnswift.tips/
 	- need to shutdown executable extensions on exit
 * NSString adds an API that can be used to detect the string encoding of an array of bytes
 * Can tag files, for searching? Color coding? NSURLTagNamesKey
+    - maybe a context menu item
 * Add go to search for a file:
 	- color code and location column
 	- locations are current project, open windows, open projects, global

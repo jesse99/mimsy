@@ -68,8 +68,6 @@ void initLogGlobs()
 	setForceLogGlob(glob);
 }
 
-typedef void (^NullaryBlock)();
-
 @implementation AppDelegate
 {
     ProcFileReadWrite* _beepFile;
@@ -258,26 +256,30 @@ typedef void (^NullaryBlock)();
 	[self->_pendingBlocks removeObjectForKey:name];
 }
 
++ (void)execute:(NSString*)name afterDelay:(NSTimeInterval)delay withBlock:(NullaryBlock)block
+{
+    AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
+    
+    if (!delegate->_pendingBlocks[name])
+    {
+        delegate->_pendingBlocks[name] = block;
+        [delegate performSelector:@selector(_executeSelector:) withObject:name afterDelay:delay];
+    }
+}
+
 + (void)execute:(NSString*)name withSelector:(SEL)selector withObject:(id) object afterDelay:(NSTimeInterval)delay
 {
-	AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
-	
-	if (!delegate->_pendingBlocks[name])
-	{
-		NullaryBlock block = ^()
-			{
-				#pragma clang diagnostic push
-				#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-				
-				id result = [object performSelector:selector];
-				ASSERT(result == nil);
-				
-				#pragma clang diagnostic pop
-			};
-		
-		delegate->_pendingBlocks[name] = block;
-		[delegate performSelector:@selector(_executeSelector:) withObject:name afterDelay:delay];
-	}
+    NullaryBlock block = ^()
+        {
+            #pragma clang diagnostic push
+            #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+            
+            id result = [object performSelector:selector];
+            ASSERT(result == nil);
+            
+            #pragma clang diagnostic pop
+        };
+    [AppDelegate execute:name afterDelay:delay withBlock:block];
 }
 
 + (void)execute:(NSString*)name withSelector:(SEL)selector withObject:(id) object deferBy:(NSTimeInterval)delay
@@ -292,6 +294,20 @@ typedef void (^NullaryBlock)();
     }
     
     [AppDelegate execute:name withSelector:selector withObject:object afterDelay:delay];
+}
+
++ (void)execute:(NSString*)name deferBy:(NSTimeInterval)delay withBlock:(NullaryBlock)block
+{
+    AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
+    
+    NullaryBlock oldBlock = delegate->_pendingBlocks[name];
+    if (oldBlock)
+    {
+        [NSObject cancelPreviousPerformRequestsWithTarget:delegate selector:@selector(_executeSelector:) object:name];
+        [delegate->_pendingBlocks removeObjectForKey:name];
+    }
+    
+    [AppDelegate execute:name afterDelay:delay withBlock:block];
 }
 
 - (void)openLatestInTimeMachine:(id)sender
