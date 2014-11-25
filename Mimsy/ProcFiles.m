@@ -165,7 +165,7 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 		if ([newValue compare:_value] != NSOrderedSame)
 		{
 			if (_value)
-				[Extensions invoke:self.path];
+				[Extensions invokeOnMainThread:self.path];
 			_value = newValue;
 		}
 	}
@@ -340,7 +340,7 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 		NSString* newValue = _readStr();
 		if ([newValue compare:_value] != NSOrderedSame)
 		{
-			[Extensions invoke:self.path];
+			[Extensions invokeOnMainThread:self.path];
 			_value = newValue;
 		}
 	}
@@ -497,7 +497,7 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 	NSString* path = [directory stringByAppendingPathComponent:key];
 
 	if ([Extensions watching:path])
-		[Extensions invoke:path];
+		[Extensions invokeOnMainThread:path];
 }
 
 @end

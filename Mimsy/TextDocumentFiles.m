@@ -494,7 +494,7 @@
 {
     if (controller == _frontmost)
     {
-        (void) [Extensions invoke:@"/text-document/applied-styles"];
+        [Extensions invokeOnMainThread:@"/text-document/applied-styles"];
     }
 }
 
@@ -580,7 +580,7 @@
 			_frontmost = window.windowController;
     
     if (_frontmost && _frontmost != oldFront)
-        (void) [Extensions invoke:@"/text-document/main-changed"];
+        [Extensions invokeOnMainThread:@"/text-document/main-changed"];
 }
 
 @end

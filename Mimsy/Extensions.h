@@ -11,6 +11,10 @@
 // skipped. Path should be something like "/Volumes/Mimsy/keydown/text-editor/left-arrow/pressed".
 + (bool)invoke:(NSString*)path;
 
+// Like invoke except that the call is defered to ensure that the extension can
+// use our proc files without deadlocking.
++ (void)invokeOnMainThread:(NSString*)path;
+
 // Returns true if an extension is watching path.
 + (bool)watching:(NSString*)path;
 

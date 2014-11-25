@@ -8,11 +8,20 @@ http://www.learnswift.tips/
 
 
 
-* When does the proc files help file appear?
 * Need directory editor context menu:
+    - creating-context menu invoke
+        ` include path to file or directory
+        ` maybe as a proc file with the selection(s)
+    - context-menu file: extensions add menu item titles and a key
+    - on selection an invoke with the key is called
+    - maybe should sort the items
+    - would be nice to support sub-menus
+
     - delete
     - add
-    - trash
+    - trash (may need some sort of file-ops proc file for this)
+    - hide
+    - duplicate (ideally asking for a new name)
 * Add goto line support
 * Would be really nice to add a function/type popup.
 * Pick something to use for a plugin:
