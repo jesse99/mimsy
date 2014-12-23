@@ -10,7 +10,7 @@ SearchIn: [lua.org]https://www.google.com/search?q=${TEXT}&sitesearch=lua.org
 Function: (?<=\b function) \s+ (\w+)
 
 Conditional: \b(?: else | elseif | if)\b
-Keyword: \b(?: break | do | end | function | in | nil | return | then)\b
+Keyword: \b(?: arg | break | do | end | function | in | nil | return | then)\b
 Operator:  \x23 | \.\. | \b(?: and | not | or)\b
 Repeat: \b(?: for | repeat | until | while)\b
 StorageClass: \b(?: local)\b
