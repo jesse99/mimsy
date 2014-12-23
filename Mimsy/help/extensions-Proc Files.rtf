@@ -1,4 +1,4 @@
-{\rtf1\ansi\ansicpg1252\cocoartf1343\cocoasubrtf140
+{\rtf1\ansi\ansicpg1252\cocoartf1343\cocoasubrtf160
 {\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\fnil\fcharset0 Menlo-Regular;}
 {\colortbl;\red255\green255\blue255;}
 \viewkind0
@@ -103,7 +103,32 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \b \
 \pard\tx626\pardeftab626\pardirnatural
 
-\fs48 \cf0 /Volumes/Mimsy/keydown/text-editor/<key>/\
+\fs48 \cf0 /Volumes/Mimsy/directory/\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b0\fs36 \cf0 This is for the frontmost directory window.\
+
+\b \
+\pard\tx626\pardeftab626\pardirnatural
+
+\b0 \cf0 \CocoaLigature0 	
+\b \CocoaLigature1 menu-action
+\b0 \CocoaLigature0  (r)\
+	Written to if the user selects an item from a directory window contextual menu item. Formatted as in the menu-selection file except that the first line is an action string (generated using the menu-context file).\
+\
+	
+\b \CocoaLigature1 menu-content
+\b0 \CocoaLigature0  (w)\
+	Extensions that wish to populate a directory window contextual menu should write to this file. The first line should be the title of the menu item and the second line should be an action string (Mimsy uses this when writing to the menu-action file). Extensions should only write to this file if the action is useable with each item the user selected.\
+\
+	
+\b \CocoaLigature1 menu-selection
+\b0 \CocoaLigature0  (r)\
+	Written to when the user right clicks in a directory window to display a contextual menu. The first line has a form-feed separated list of the selected file absolute paths. The second line has a form-feed separated list of the selected directory absolute paths. Either or both lines may be empty.\
+\pard\tx626\pardeftab626\pardirnatural
+
+\b\fs48 \cf0 \CocoaLigature1 \
+/Volumes/Mimsy/keydown/text-editor/<key>/\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
 \b0\fs36 \cf0 	Currently the key may be: "clear", "delete", "down-arrow", "end", "enter", "escape", "f<number>", "forward-delete" "help", "home", "left-arrow", "page-down", "page-up", "right-arrow", "tab", "up-arrow". The key may be preceded by one or more of the following modifiers: "command", "control", "option", "shift". If multiple modifiers are used they should be listed in alphabetical order, e.g. "option-shift-tab".\

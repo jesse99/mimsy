@@ -16,6 +16,7 @@ function init(script_dir)
 	mimsy:watch_file(1.0, "/Volumes/Mimsy/text-document/main-changed", "onMainChanged")
 
     assert(dofile(script_dir .. "/helpers.inc.lua"))
+    inspect = dofile(script_dir .. "/inspect.inc.lua")
 
     load_prefs()
 end

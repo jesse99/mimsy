@@ -19,6 +19,7 @@ function init(script_dir)
 	mimsy:watch_file(1.0, "/Volumes/Mimsy/keydown/text-editor/option-shift-tab/pressed", "onOptionShiftTab")
 
     assert(dofile(script_dir .. "/helpers.inc.lua"))
+    inspect = dofile(script_dir .. "/inspect.inc.lua")
 	write_proc_file("special-keys", keys)
 end
 
@@ -27,7 +28,7 @@ function tab(delta)
 	--log("option tabbing")
 
 	local elements = read_proc_file("text-document/element-names")
-	--log("elements = %s", elements)
+	--log("elements = ", elements)
 	if elements ~= "" then
 		local lines = split(elements, "\n")
 		local selection_index = lines[1] + 2	-- +2 because lua arrays are 1-based and we skip the first line
