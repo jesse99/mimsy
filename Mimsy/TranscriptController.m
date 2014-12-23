@@ -104,6 +104,8 @@ static TranscriptController* controller;
 
 + (NSRange)writeStderr:(NSString*)text
 {
+    ASSERT([NSThread isMainThread]);    // otherwise we don't have a legit return value
+    
     TranscriptController* instance = [TranscriptController getInstance];
     return [instance _write:text withAttrs:instance->_stderrAttrs];
 }
@@ -144,6 +146,16 @@ static TranscriptController* controller;
 
 - (NSRange)_write:(NSString*)text withAttrs:(NSDictionary*)attrs
 {
+    if (![NSThread isMainThread])
+    {
+        dispatch_queue_t main = dispatch_get_main_queue();
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_MSEC);
+        dispatch_after(delay, main, ^{
+            [self _write:text withAttrs:attrs];
+        });
+        return NSMakeRange(0, 0);
+    }
+    
     NSRange range = NSMakeRange(0, 0);
     
     if (text.length > 0)
