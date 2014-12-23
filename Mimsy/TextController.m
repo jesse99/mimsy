@@ -933,7 +933,7 @@ static TextDocumentFiles* _files;
 - (void)textStorageDidProcessEditing:(NSNotification*)notification
 {
 	UNUSED(notification);
-	
+    	
 	NSUInteger mask = self.textView.textStorage.editedMask;
 	if ((mask & NSTextStorageEditedCharacters))
 	{

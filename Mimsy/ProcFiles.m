@@ -157,18 +157,38 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 	return -1;
 }
 
-- (void)notifyIfChanged;
+- (bool)changed
 {
-	if ([Extensions watching:self.path])
-	{
-		NSString* newValue = _readStr();
-		if ([newValue compare:_value] != NSOrderedSame)
-		{
-			if (_value)
-				[Extensions invokeOnMainThread:self.path];
-			_value = newValue;
-		}
-	}
+    NSString* oldValue = _value;
+    _value = _readStr();
+    return [_value compare:oldValue] != NSOrderedSame;
+}
+
+- (void)notifyIfChangedBlocking
+{
+    if ([Extensions watching:self.path] && self.changed)
+    {
+        _value = _readStr();
+        if (_value)
+            [Extensions invokeBlocking:self.path];
+    }
+}
+
+- (void)notifyIfChangedNonBlocking
+{
+    if ([Extensions watching:self.path])
+    {
+        dispatch_queue_t main = dispatch_get_main_queue();
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 0*NSEC_PER_MSEC);
+        dispatch_after(delay, main, ^{
+            if (self.changed)
+            {
+                _value = _readStr();
+                if (_value)
+                    (void) [Extensions invokeBlocking:self.path];
+            }
+        });
+    }
 }
 
 @end
@@ -333,17 +353,38 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 	return (int)size;
 }
 
-- (void)notifyIfChanged;
+- (bool)changed
 {
-	if ([Extensions watching:self.path])
-	{
-		NSString* newValue = _readStr();
-		if ([newValue compare:_value] != NSOrderedSame)
-		{
-			[Extensions invokeOnMainThread:self.path];
-			_value = newValue;
-		}
-	}
+    NSString* oldValue = _value;
+    _value = _readStr();
+    return [_value compare:oldValue] != NSOrderedSame;
+}
+
+- (void)notifyIfChangedBlocking
+{
+    if ([Extensions watching:self.path] && self.changed)
+    {
+        _value = _readStr();
+        if (_value)
+            [Extensions invokeBlocking:self.path];
+    }
+}
+
+- (void)notifyIfChangedNonBlocking
+{
+    if ([Extensions watching:self.path])
+    {
+        dispatch_queue_t main = dispatch_get_main_queue();
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 0*NSEC_PER_MSEC);
+        dispatch_after(delay, main, ^{
+            if (self.changed)
+            {
+                _value = _readStr();
+                if (_value)
+                    (void) [Extensions invokeBlocking:self.path];
+            }
+        });
+    }
 }
 
 @end
@@ -435,7 +476,7 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 	_openedKey = nil;
 	
 	if (key && _dirty)
-		[self _notifyChanged:key];
+		[self notifyBlocking:key];
 }
 
 - (unsigned long long)sizeFor:(NSString*)path
@@ -491,13 +532,18 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 	return (int)size;
 }
 
-- (void)_notifyChanged:(NSString*)key;
+- (void)notifyBlocking:(NSString*)key;
 {
 	NSString* directory = _directory();
 	NSString* path = [directory stringByAppendingPathComponent:key];
-
-	if ([Extensions watching:path])
-		[Extensions invokeOnMainThread:path];
+    if ([Extensions watching:path])
+    {
+        dispatch_queue_t main = dispatch_get_main_queue();
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 0*NSEC_PER_MSEC);
+        dispatch_after(delay, main, ^{
+            (void) [Extensions invokeBlocking:path];
+        });
+    }
 }
 
 @end

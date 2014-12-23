@@ -7,21 +7,18 @@ install http://osxfuse.github.io/
 http://www.learnswift.tips/
 
 
-
 * Need directory editor context menu:
-    - creating-context menu invoke
-        ` include path to file or directory
-        ` maybe as a proc file with the selection(s)
-    - context-menu file: extensions add menu item titles and a key
-    - on selection an invoke with the key is called
-    - maybe should sort the items
-    - would be nice to support sub-menus
-
-    - delete
-    - add
-    - trash (may need some sort of file-ops proc file for this)
-    - hide
-    - duplicate (ideally asking for a new name)
+    - add extension support for
+        ` duplicate (cp)                                    lua (os.execute)
+        ` trash (need a proc file to move paths to trash)   lua
+        ` open as binary?                                   lua
+        ` git diff/checkout                                 lua (os.execute)
+        ` dump symbols?                                     lua (os.execute)
+    - sort the items (use an addSortedItem category)
+* option-tab isn't working with lua?
+* Directory menu items are now too bold
+* Saying no when trying to open a large file still causes it to open
+* Would be nice if open as binary always used a mono-spaced font
 * Add goto line support
 * Would be really nice to add a function/type popup.
 * Pick something to use for a plugin:

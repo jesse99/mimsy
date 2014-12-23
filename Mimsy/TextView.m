@@ -217,7 +217,7 @@ static NSString* getKey(NSEvent* event)
 	{
 		NSString* fn = keyToFileName(event, key);
 		NSString* path = [NSString stringWithFormat:@"/keydown/text-editor/%@/pressed", fn];
-		handled = [Extensions invoke:path];
+		handled = [Extensions invokeBlocking:path];
 	}
 	
 	return handled;

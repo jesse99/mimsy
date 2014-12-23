@@ -465,11 +465,11 @@
 {
 	if (controller == _frontmost)
 	{
-		[_colNumFile notifyIfChanged];
-		[_lineNumFile notifyIfChanged];				// TODO: this seems awfully slow
-		[_lineSelectionFile notifyIfChanged];
-		[_selectionRangeFile notifyIfChanged];
-		[_selectionTextFile notifyIfChanged];
+        [_colNumFile notifyIfChangedNonBlocking];
+        [_lineNumFile notifyIfChangedNonBlocking];				// TODO: this seems awfully slow
+        [_lineSelectionFile notifyIfChangedNonBlocking];
+        [_selectionRangeFile notifyIfChangedNonBlocking];
+        [_selectionTextFile notifyIfChangedNonBlocking];
 	}
 }
 
@@ -477,24 +477,26 @@
 {
 	if (controller == _frontmost)
 	{
-		[_selectionTextFile notifyIfChanged];
-		[_textFile notifyIfChanged];			// TODO: watching this can be expensive for large files, could maybe use a custom proc file class
+        [_selectionTextFile notifyIfChangedNonBlocking];
+        [_textFile notifyIfChangedNonBlocking];			// TODO: watching this can be expensive for large files, could maybe use a custom proc file class
 	}
 }
 
 - (void)onWordWrapChanged:(TextController*)controller
 {
 	if (controller == _frontmost)
-	{
-		[_wordWrapFile notifyIfChanged];
-	}
+        [_wordWrapFile notifyIfChangedNonBlocking];
 }
 
 - (void)onAppliedStyles:(TextController*)controller
 {
     if (controller == _frontmost)
     {
-        [Extensions invokeOnMainThread:@"/text-document/applied-styles"];
+        dispatch_queue_t main = dispatch_get_main_queue();
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 0*NSEC_PER_MSEC);
+        dispatch_after(delay, main, ^{
+            [Extensions invokeBlocking:@"/text-document/applied-styles"];
+        });
     }
 }
 
@@ -580,7 +582,7 @@
 			_frontmost = window.windowController;
     
     if (_frontmost && _frontmost != oldFront)
-        [Extensions invokeOnMainThread:@"/text-document/main-changed"];
+        [Extensions invokeNonBlocking:@"/text-document/main-changed"];
 }
 
 @end

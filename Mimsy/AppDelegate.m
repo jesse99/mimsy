@@ -142,7 +142,7 @@ void initLogGlobs()
              if (!invoking)
              {
                  invoking = true;
-                 [Extensions invokeOnMainThread:@"/extension-settings-changed"];
+                 [Extensions invokeNonBlocking:@"/extension-settings-changed"];
                  invoking = false;
              }
          }
