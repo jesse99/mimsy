@@ -9,7 +9,6 @@ http://www.learnswift.tips/
 
 * Need directory editor context menu:
     - add extension support for
-        ` new directory                        createDirectory
         ` rename duplicate-file (fix the comment too)
         ` trash                                trashAtItem
         ` show in finder

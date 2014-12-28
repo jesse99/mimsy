@@ -16,7 +16,7 @@ function onMenuSelection()
 	local files = split(lines[1], "\f")
 
     if #files > 0 then
-		write_proc_file("directory/menu-content", "New Directory\nnew-directory")
+		write_proc_file("directory/menu-content", "Add New Directory\nnew-directory")
 	end
 end
 
