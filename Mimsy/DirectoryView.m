@@ -71,8 +71,8 @@
     
     ProcFileReader* menuSelection = [self _createReader:@"menu-selection" readBlock:^NSString *() {
         NSString* result = [NSString stringWithFormat:@"%@\n%@",
-                [_files componentsJoinedByString:@"\f"],
-                [_dirs componentsJoinedByString:@"\f"]];
+                            [_files componentsJoinedByString:@"\f"],
+                            [_dirs componentsJoinedByString:@"\f"]];
         return result;
     }];
     ProcFileReadWrite* menuContent = [self _createWriter:@"menu-content" readBlock:^(NSString *text) {
@@ -93,6 +93,11 @@
     [menuContent close];
     [menuSelection close];
     
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
+    ProcFileSystem* fs = app.procFileSystem;
+    [fs removeWriter:menuContent];
+    [fs removeReader:menuSelection];
+    
     return _contextMenu;
 }
 
@@ -100,13 +105,17 @@
 {
     ProcFileReader* menuAction = [self _createReader:@"menu-action" readBlock:^NSString *() {
         NSString* result = [NSString stringWithFormat:@"%@\n%@\n%@",
-                [item.representedObject description],
-                [_files componentsJoinedByString:@"\f"],
-                [_dirs componentsJoinedByString:@"\f"]];
+                            [item.representedObject description],
+                            [_files componentsJoinedByString:@"\f"],
+                            [_dirs componentsJoinedByString:@"\f"]];
         return result;
     }];
     [menuAction notifyIfChangedBlocking];    // TODO: bit safer to use notifyIfChangedNonBlocking but we'd need to somehow ensure that we kept only one menuAction alive at any one time
     [menuAction close];
+    
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
+    ProcFileSystem* fs = app.procFileSystem;
+    [fs removeReader:menuAction];
 }
 
 - (void)keyDown:(NSEvent*)event
