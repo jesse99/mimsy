@@ -9,8 +9,9 @@ http://www.learnswift.tips/
 
 * Need directory editor context menu:
     - add extension support for
-        ` rename duplicate-file (fix the comment too)
-        ` trash                                trashAtItem
+        ` switch back to duplicate-file
+        ` delete (just the proc file)
+        ` why doesn't context menu work in weights directory?
         ` show in finder
         ` open as binary?                                   lua
         ` git diff/checkout                                 lua (os.execute)

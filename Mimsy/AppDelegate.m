@@ -76,6 +76,7 @@ void initLogGlobs()
 	ProcFileSystem* _procFileSystem;
 	ProcFileReader* _versionFile;
     ProcFileAction* _copyItem;
+    ProcFileAction* _trashItem;
     ProcFileAction* _newDirectory;
 
 	DirectoryWatcher* _languagesWatcher;
@@ -219,6 +220,22 @@ void initLogGlobs()
                                                 }
                                             }];
     
+    _trashItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/file-manager/trash";}
+                handler:^NSArray *(NSArray *args) {
+                    NSString* path = args[0];
+                    
+                    NSError* error = nil;
+                    NSURL* url = [[NSURL alloc] initFileURLWithPath:path];
+                    if ([[NSFileManager defaultManager] trashItemAtURL:url resultingItemURL:nil error:&error])
+                    {
+                        return @[@"0", @""];
+                    }
+                    else
+                    {
+                        return @[[NSString stringWithFormat:@"%ld", (long)error.code], error.localizedFailureReason];
+                    }
+                }];
+    
     _newDirectory = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/file-manager/new-directory";}
         handler:^NSArray *(NSArray *args) {
             NSString* path = args[0];
@@ -239,6 +256,7 @@ void initLogGlobs()
     [_procFileSystem addWriter:_logFile];
     [_procFileSystem addReader:_versionFile];
     [_procFileSystem addReader:_copyItem];
+    [_procFileSystem addReader:_trashItem];
 	[_procFileSystem addReader:_newDirectory];
 
     [TextController startup];
