@@ -76,6 +76,7 @@ void initLogGlobs()
 	ProcFileSystem* _procFileSystem;
 	ProcFileReader* _versionFile;
     ProcFileAction* _copyItem;
+    ProcFileAction* _deleteItem;
     ProcFileAction* _trashItem;
     ProcFileAction* _newDirectory;
 
@@ -220,6 +221,21 @@ void initLogGlobs()
                                                 }
                                             }];
     
+    _deleteItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/file-manager/delete";}
+         handler:^NSArray *(NSArray *args) {
+             NSString* path = args[0];
+             
+             NSError* error = nil;
+             if ([[NSFileManager defaultManager] removeItemAtPath:path error:&error])
+             {
+                 return @[@"0", @""];
+             }
+             else
+             {
+                 return @[[NSString stringWithFormat:@"%ld", (long)error.code], error.localizedFailureReason];
+             }
+         }];
+
     _trashItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/file-manager/trash";}
                 handler:^NSArray *(NSArray *args) {
                     NSString* path = args[0];
@@ -256,6 +272,7 @@ void initLogGlobs()
     [_procFileSystem addWriter:_logFile];
     [_procFileSystem addReader:_versionFile];
     [_procFileSystem addReader:_copyItem];
+    [_procFileSystem addReader:_deleteItem];
     [_procFileSystem addReader:_trashItem];
 	[_procFileSystem addReader:_newDirectory];
 

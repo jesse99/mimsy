@@ -9,7 +9,6 @@ http://www.learnswift.tips/
 
 * Need directory editor context menu:
     - add extension support for
-        ` switch back to duplicate-file
         ` delete (just the proc file)
         ` why doesn't context menu work in weights directory?
         ` show in finder
