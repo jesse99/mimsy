@@ -133,7 +133,7 @@ If the extension supports multiple contexts then it should do multiple writes.\
 /Volumes/Mimsy/file-manager/\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
-\b0\fs36 \cf0 This provides access to various NSFileManager operations. It is especially useful for lua extensions because of lua's weak IO library. Arguments are form-feed separated and base64 encoded into the file name. When the file is read an error code and the localized failure reason are returned separated by a form feed character. A zero error code implies success.\
+\b0\fs36 \cf0 This provides access to various NSFileManager (and related) operations. It is especially useful for lua extensions because of lua's weak IO library. Arguments are form-feed separated and base64 encoded into the file name. When the file is read an error code and the localized failure reason are returned separated by a form feed character. A zero error code implies success.\
 
 \b \
 \pard\tx626\pardeftab626\pardirnatural
@@ -156,6 +156,11 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \b \CocoaLigature1 new-directory/path
 \b0 \CocoaLigature0  (r)\
 	Creates the directory along with any intermediate directories. It is an error if a file exists at any of the parent directories.\
+\
+	
+\b \CocoaLigature1 show-in-finder/path
+\b0 \CocoaLigature0  (r)\
+	Displays the item in a Finder window.\
 \
 	
 \b \CocoaLigature1 trash/path

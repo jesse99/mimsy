@@ -78,6 +78,7 @@ void initLogGlobs()
     ProcFileAction* _copyItem;
     ProcFileAction* _deleteItem;
     ProcFileAction* _trashItem;
+    ProcFileAction* _showItem;
     ProcFileAction* _newDirectory;
 
 	DirectoryWatcher* _languagesWatcher;
@@ -237,12 +238,27 @@ void initLogGlobs()
          }];
 
     _trashItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/file-manager/trash";}
+                                             handler:^NSArray *(NSArray *args) {
+                                                 NSString* path = args[0];
+                                                 
+                                                 NSError* error = nil;
+                                                 NSURL* url = [[NSURL alloc] initFileURLWithPath:path];
+                                                 if ([[NSFileManager defaultManager] trashItemAtURL:url resultingItemURL:nil error:&error])
+                                                 {
+                                                     return @[@"0", @""];
+                                                 }
+                                                 else
+                                                 {
+                                                     return @[[NSString stringWithFormat:@"%ld", (long)error.code], error.localizedFailureReason];
+                                                 }
+                                             }];
+    
+    _showItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/file-manager/show-in-finder";}
                 handler:^NSArray *(NSArray *args) {
                     NSString* path = args[0];
                     
                     NSError* error = nil;
-                    NSURL* url = [[NSURL alloc] initFileURLWithPath:path];
-                    if ([[NSFileManager defaultManager] trashItemAtURL:url resultingItemURL:nil error:&error])
+                    if ([[NSWorkspace sharedWorkspace] selectFile:path inFileViewerRootedAtPath:@""])
                     {
                         return @[@"0", @""];
                     }
@@ -274,6 +290,7 @@ void initLogGlobs()
     [_procFileSystem addReader:_copyItem];
     [_procFileSystem addReader:_deleteItem];
     [_procFileSystem addReader:_trashItem];
+    [_procFileSystem addReader:_showItem];
 	[_procFileSystem addReader:_newDirectory];
 
     [TextController startup];
