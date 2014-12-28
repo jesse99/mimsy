@@ -37,11 +37,8 @@ function onMenuSelection()
 	local lines = split(elements, "\n")
 	local files = split(lines[1], "\f")
 	local dirs = split(lines[2], "\f")
-log("files = ", files)
-    log("dirs = ", dirs)
 
     local root = selection_root(files, dirs)
-log("root = ", root)
 	if root ~= nil then
 		write_proc_file("directory/menu-content", "Add New File\nnew-file")
 	end
