@@ -75,6 +75,7 @@ void initLogGlobs()
     ProcFileReadWrite* _logFile;
 	ProcFileSystem* _procFileSystem;
 	ProcFileReader* _versionFile;
+    ProcFileAction* _copyItem;
 
 	DirectoryWatcher* _languagesWatcher;
     DirectoryWatcher* _settingsWatcher;
@@ -200,11 +201,28 @@ void initLogGlobs()
                         NSDictionary* info = [[NSBundle mainBundle] infoDictionary];
                         return [info objectForKey:@"CFBundleShortVersionString"];
                     }];
+    
+    _copyItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/file-manager/copy";}
+        handler:^NSArray *(NSArray *args) {
+            NSString* srcPath = args[0];
+            NSString* dstPath = args[1];
+            
+            NSError* error = nil;
+            if (([[NSFileManager defaultManager] copyItemAtPath:srcPath toPath:dstPath error:&error]))
+            {
+                return @[@"0", @""];
+            }
+            else
+            {
+                return @[[NSString stringWithFormat:@"%ld", (long)error.code], error.localizedFailureReason];
+            }
+        }];
 	
     [_procFileSystem addWriter:_beepFile];
     [_procFileSystem addReader:_extensionSettings];
     [_procFileSystem addWriter:_logFile];
-	[_procFileSystem addReader:_versionFile];
+    [_procFileSystem addReader:_versionFile];
+	[_procFileSystem addReader:_copyItem];
 
     [TextController startup];
 

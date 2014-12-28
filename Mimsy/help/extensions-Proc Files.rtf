@@ -53,9 +53,11 @@ The proc files are:\
 
 \b \cf0 \CocoaLigature1 	
 \b0 Does an NSBeep when written to.\
+
+\b \
 \pard\tx626\pardeftab626\pardirnatural
-\cf0 \CocoaLigature0 \
-	
+
+\b0 \cf0 \CocoaLigature0 	
 \b \CocoaLigature1 extension-settings
 \b0 \CocoaLigature0  (r)\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
@@ -128,7 +130,22 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \pard\tx626\pardeftab626\pardirnatural
 
 \b\fs48 \cf0 \CocoaLigature1 \
-/Volumes/Mimsy/keydown/text-editor/<key>/\
+/Volumes/Mimsy/file-manager/\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b0\fs36 \cf0 This provides access to various NSFileManager operations. It is especially useful for lua extensions because of lua's weak IO library. Arguments are form-feed separated and base64 encoded into the file name. When the file is read an error code and the localized failure reason are returned separated by a form feed character. A zero error code implies success.\
+
+\b \
+\pard\tx626\pardeftab626\pardirnatural
+
+\b0 \cf0 \CocoaLigature0 	
+\b \CocoaLigature1 copy/src-path\\fdst-path
+\b0 \CocoaLigature0  (r)\
+	Copies a file or directory. It is an error if an item exists at dst-path.\
+\
+\pard\tx626\pardeftab626\pardirnatural
+
+\b\fs48 \cf0 \CocoaLigature1 /Volumes/Mimsy/keydown/text-editor/<key>/\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
 \b0\fs36 \cf0 	Currently the key may be: "clear", "delete", "down-arrow", "end", "enter", "escape", "f<number>", "forward-delete" "help", "home", "left-arrow", "page-down", "page-up", "right-arrow", "tab", "up-arrow". The key may be preceded by one or more of the following modifiers: "command", "control", "option", "shift". If multiple modifiers are used they should be listed in alphabetical order, e.g. "option-shift-tab".\

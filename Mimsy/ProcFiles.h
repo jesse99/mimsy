@@ -65,3 +65,26 @@
 - (int)write:(const char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error;
 
 @end
+
+// Args and result are arrays of NSString.
+typedef NSArray* (^ProcAction)(NSArray* args);
+
+// Proc file used to execute arbitrary commands.
+@interface ProcFileAction : NSObject <ProcFile>
+
+- (id)initWithDir:(NSString* (^) ())directory handler:(ProcAction)handler;
+
+- (bool)matchesAnyDirectory:(NSString*)path;
+- (bool)matchesFile:(NSString*)path;
+- (NSArray*)directChildren:(NSString*)path;
+
+- (unsigned long long)sizeFor:(NSString*)path;
+- (bool)setSize:(unsigned long long)size;
+
+- (bool)openPath:(NSString*) path read:(bool)reading write:(bool)writing;
+- (void)close;
+
+- (int)read:(char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error;
+- (int)write:(const char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error;
+
+@end

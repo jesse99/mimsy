@@ -10,13 +10,16 @@ http://www.learnswift.tips/
 * Need directory editor context menu:
     - add extension support for
         ` duplicate (cp)                                    lua (os.execute)
+        ` new directory (cp)                                lua (os.execute)
         ` trash (need a proc file to move paths to trash)   lua
         ` open as binary?                                   lua
         ` git diff/checkout                                 lua (os.execute)
         ` dump symbols?                                     lua (os.execute)
     - sort the items (use an addSortedItem category)
+    - might be cool to git enable these
 * option-tab isn't working with lua?
 * Directory menu items are now too bold
+* Make sure we're using dataUsingEncoding to get data from a string
 * Saying no when trying to open a large file still causes it to open
 * Would be nice if open as binary always used a mono-spaced font
 * Add goto line support

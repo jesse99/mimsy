@@ -547,3 +547,156 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 }
 
 @end
+
+@implementation ProcFileAction
+{
+    NSString* (^_directory ) ();
+    ProcAction _action;
+    NSData* _data;
+}
+
+- (id)initWithDir:(NSString* (^) ())directory handler:(ProcAction)action;
+{
+    self = [super init];
+    
+    if (self)
+    {
+        _directory = directory;
+        _action = action;
+    }
+    
+    return self;
+}
+
+- (NSString*)description
+{
+    NSString* directory = _directory();
+    NSString* path = [directory stringByAppendingPathComponent:@"*"];
+    return path;
+}
+
+static bool matchesAnyDirectory2(NSString* path, NSString* directory)
+{
+    while (directory.length > 0 && ![directory isEqualToString:@"/"])
+    {
+        if ([directory isEqualToString:path])
+            return true;
+        
+        directory = [directory stringByDeletingLastPathComponent];
+    }
+    
+    return false;
+}
+
+- (bool)matchesAnyDirectory:(NSString*)path
+{
+    return matchesAnyDirectory2(path, _directory());
+}
+
+- (bool)matchesFile:(NSString*)path
+{
+    NSString* directory = _directory();
+    return [directory isEqualToString:path.stringByDeletingLastPathComponent];
+}
+
+static NSArray* directChildren2(NSString* path, NSString* directory)
+{
+    if ([directory isEqualToString:path])
+    {
+        return @[];
+    }
+    else
+    {
+        while (directory.length > 0 && ![directory isEqualToString:@"/"])
+        {
+            NSString* child = directory.lastPathComponent;
+            directory = [directory stringByDeletingLastPathComponent];
+            
+            if ([directory isEqualToString:path])
+                return @[child];
+        }
+    }
+    
+    return @[];
+}
+
+- (NSArray*)directChildren:(NSString*)path
+{
+    return directChildren2(path, _directory());
+}
+
+- (NSData*)_execute:(NSString*)path
+{
+    NSData* data = [[NSData alloc] initWithBase64EncodedString:path.lastPathComponent options:0];
+    NSString* text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSArray* args = [text componentsSeparatedByString:@"\f"];
+    
+    NSArray* result = _action(args);
+    text = [result componentsJoinedByString:@"\f"];
+    return [text dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+- (bool)openPath:(NSString*)path read:(bool)reading write:(bool)writing
+{
+    ASSERT(!writing);
+    ASSERT(reading);
+    
+    if (_data == nil)
+        _data = [self _execute:path];
+
+    return true;
+}
+
+- (void)close;
+{
+    _data = nil;
+}
+
+- (unsigned long long)sizeFor:(NSString*)path
+{
+    if (_data == nil)
+        _data = [self _execute:path];
+    return _data.length;
+}
+
+- (bool)setSize:(unsigned long long)size
+{
+    UNUSED(size);
+    return false;
+}
+
++ (int)readInto:(char*)buffer size:(size_t)size offset:(off_t)offset from:(NSData*)data error:(NSError**)error
+{
+    if (offset < 0 || offset > data.length)
+    {
+        if (error)
+            *error = [NSError errorWithDomain:NSPOSIXErrorDomain code:EINVAL userInfo:nil];
+        return -1;
+    }
+    else if (offset == data.length)
+    {
+        return 0;
+    }
+    
+    int bytes = MIN((int) ((off_t) data.length - offset), (int) size);
+    memcpy(buffer, data.bytes + offset, (unsigned long)bytes);
+    
+    return bytes;
+}
+
+- (int)read:(char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error
+{
+    return [ProcFileReader readInto:buffer size:size offset:offset from:_data error:error];
+}
+
+- (int)write:(const char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error
+{
+    UNUSED(buffer, size, offset);
+    
+    if (error)
+        *error = [NSError errorWithDomain:NSPOSIXErrorDomain code:EPERM userInfo:nil];
+    
+    return -1;
+}
+
+@end
