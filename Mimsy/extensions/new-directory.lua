@@ -44,7 +44,7 @@ function onMenuAction()
         for i, file in ipairs(files) do
             local dst = findDstPath(directory_path(file))
             if dst ~= nil then
-                local procFile = string.format("file-manager/new-directory/%s", to_base64(dst))
+                local procFile = string.format("actions/new-directory/%s", to_base64(dst))
                 local text = read_proc_file(procFile)
                 local result = split(text, "\f")
                 if result[1] ~= "0" then

@@ -45,7 +45,7 @@ function onMenuAction()
             local dst = findDstPath(file)
             if dst ~= nil then
                 local commandLine = string.format("%s\f%s", file, dst)
-                local procFile = string.format("file-manager/copy/%s", to_base64(commandLine))
+                local procFile = string.format("actions/copy/%s", to_base64(commandLine))
                 local text = read_proc_file(procFile)
                 local result = split(text, "\f")
                 if result[1] ~= "0" then

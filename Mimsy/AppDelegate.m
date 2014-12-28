@@ -206,7 +206,7 @@ void initLogGlobs()
                         return [info objectForKey:@"CFBundleShortVersionString"];
                     }];
     
-    _copyItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/file-manager/copy";}
+    _copyItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/copy";}
                                             handler:^NSArray *(NSArray *args) {
                                                 NSString* srcPath = args[0];
                                                 NSString* dstPath = args[1];
@@ -222,7 +222,7 @@ void initLogGlobs()
                                                 }
                                             }];
     
-    _deleteItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/file-manager/delete";}
+    _deleteItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/delete";}
          handler:^NSArray *(NSArray *args) {
              NSString* path = args[0];
              
@@ -237,7 +237,7 @@ void initLogGlobs()
              }
          }];
 
-    _trashItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/file-manager/trash";}
+    _trashItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/trash";}
                                              handler:^NSArray *(NSArray *args) {
                                                  NSString* path = args[0];
                                                  
@@ -253,7 +253,7 @@ void initLogGlobs()
                                                  }
                                              }];
     
-    _showItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/file-manager/show-in-finder";}
+    _showItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/show-in-finder";}
                 handler:^NSArray *(NSArray *args) {
                     NSString* path = args[0];
                     
@@ -268,7 +268,7 @@ void initLogGlobs()
                     }
                 }];
     
-    _newDirectory = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/file-manager/new-directory";}
+    _newDirectory = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/new-directory";}
         handler:^NSArray *(NSArray *args) {
             NSString* path = args[0];
             

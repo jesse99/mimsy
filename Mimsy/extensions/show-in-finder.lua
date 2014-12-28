@@ -35,7 +35,7 @@ end
 
 function showItems(items)
     for i, item in ipairs(items) do
-        local procFile = string.format("file-manager/show-in-finder/%s", to_base64(item))
+        local procFile = string.format("actions/show-in-finder/%s", to_base64(item))
         local text = read_proc_file(procFile)
         local result = split(text, "\f")
         if result[1] ~= "0" then

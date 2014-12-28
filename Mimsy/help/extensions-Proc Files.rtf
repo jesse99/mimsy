@@ -130,10 +130,10 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \pard\tx626\pardeftab626\pardirnatural
 
 \b\fs48 \cf0 \CocoaLigature1 \
-/Volumes/Mimsy/file-manager/\
+/Volumes/Mimsy/actions/\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
-\b0\fs36 \cf0 This provides access to various NSFileManager (and related) operations. It is especially useful for lua extensions because of lua's weak IO library. Arguments are form-feed separated and base64 encoded into the file name. When the file is read an error code and the localized failure reason are returned separated by a form feed character. A zero error code implies success.\
+\b0\fs36 \cf0 Unlike the other proc files the files underneath action are used to perform some action, not manage state. The arguments to the action form-feed separated and base64 encoded into the file name. Unless otherwise noted the contents of the file are an error code and the localized failure reason separated by a form feed character. A zero error code implies success.\
 
 \b \
 \pard\tx626\pardeftab626\pardirnatural

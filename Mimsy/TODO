@@ -9,9 +9,7 @@ http://www.learnswift.tips/
 
 * Need directory editor context menu:
     - add extension support for
-        ` why doesn't context menu work in weights directory?
-        ` show in finder
-        ` copy path
+        ` copy path (NSPasteboard)
         ` open as binary?                                   lua
         ` git diff/checkout                                 lua (os.execute)
         ` dump symbols?                                     lua (os.execute)
