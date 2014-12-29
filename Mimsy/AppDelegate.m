@@ -81,6 +81,7 @@ void initLogGlobs()
     ProcFileAction* _trashItem;
     ProcFileAction* _showItem;
     ProcFileAction* _newDirectory;
+    ProcFileAction* _openAsBinary;
 
 	DirectoryWatcher* _languagesWatcher;
     DirectoryWatcher* _settingsWatcher;
@@ -285,18 +286,32 @@ void initLogGlobs()
                 }];
     
     _newDirectory = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/new-directory";}
+                                                handler:^NSArray *(NSArray *args) {
+                                                    NSString* path = args[0];
+                                                    
+                                                    NSError* error = nil;
+                                                    if (([[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&error]))
+                                                    {
+                                                        return @[@"0", @""];
+                                                    }
+                                                    else
+                                                    {
+                                                        return @[[NSString stringWithFormat:@"%ld", (long)error.code], error.localizedFailureReason];
+                                                    }
+                                                }];
+
+    _openAsBinary = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/open-as-binary";}
         handler:^NSArray *(NSArray *args) {
             NSString* path = args[0];
             
-            NSError* error = nil;
-            if (([[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&error]))
-            {
-                return @[@"0", @""];
-            }
-            else
-            {
-                return @[[NSString stringWithFormat:@"%ld", (long)error.code], error.localizedFailureReason];
-            }
+            dispatch_queue_t main = dispatch_get_main_queue();
+            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_MSEC);
+            dispatch_after(delay, main, ^{
+                NSURL* url = [[NSURL alloc] initFileURLWithPath:path];
+                [self openBinary:url];
+            });
+            
+            return @[@"0", @""];
         }];
 	
     [_procFileSystem addWriter:_beepFile];
@@ -309,7 +324,8 @@ void initLogGlobs()
     [_procFileSystem addReader:_trashItem];
     [_procFileSystem addReader:_showItem];
     [_procFileSystem addReader:_newDirectory];
-	[_procFileSystem addReader:_pasteBoardText];
+    [_procFileSystem addReader:_pasteBoardText];
+	[_procFileSystem addReader:_openAsBinary];
 
     [TextController startup];
 

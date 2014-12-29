@@ -9,7 +9,6 @@ http://www.learnswift.tips/
 
 * Need directory editor context menu:
     - add extension support for
-        ` copy path (NSPasteboard)
         ` open as binary?                                   lua
         ` git diff/checkout                                 lua (os.execute)
         ` dump symbols?                                     lua (os.execute)
