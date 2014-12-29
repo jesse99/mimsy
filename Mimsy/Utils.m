@@ -58,7 +58,7 @@ bool rangeIntersects(NSRange lhs, NSRange rhs)
 	while (i < length)
 	{
 		// Offset
-		[result appendFormat:@"%.8lX", i];
+		[result appendFormat:@"%.8lX\t", i];
 		
 		// Byte values
 		for (NSUInteger d = 0; d < 16 && i + d < length; ++d)

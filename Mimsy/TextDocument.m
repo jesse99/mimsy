@@ -550,7 +550,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		NSMutableString* str = [storage mutableString];
 		LOG("Text", "Saving document to %s", STR(self.fileURL));
 		
-		if ([typeName isEqualToString:@"Plain Text, UTF8 Encoded"])
+		if ([typeName isEqualToString:@"Plain Text, UTF8 Encoded"] || [typeName isEqualToString:@"binary"])
 		{
 			// This is more like the default plain text type: when loading a document that is not
 			// rtf or word or whatever this typename will be chosen via the plist. However the actual

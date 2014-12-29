@@ -91,7 +91,7 @@ static TextDocumentFiles* _files;
 	if (!_language)
 	{
 		NSDocument* doc = self.document;
-		if ([doc.fileType contains:@"Plain Text"])
+		if ([doc.fileType contains:@"Plain Text"] || [doc.fileType isEqualToString:@"binary"])
 			[self.textView setBackgroundColor:_styles.backColor];
 	}
 }
@@ -516,7 +516,7 @@ static TextDocumentFiles* _files;
 {
 	NSDocument* doc = self.document;
 	NSString* type = doc.fileType;
-	bool enable = _language == nil && ![type contains:@"Plain Text"] && [AppSettings boolValue:@"EnableSubstitutions" missing:true];
+	bool enable = _language == nil && ![type contains:@"Plain Text"] && ![type isEqualToString:@"binary"] && [AppSettings boolValue:@"EnableSubstitutions" missing:true];
 	[self.textView setAutomaticQuoteSubstitutionEnabled:enable];
 	[self.textView setAutomaticDashSubstitutionEnabled:enable];
 	[self.textView setAutomaticTextReplacementEnabled:enable];
@@ -584,12 +584,16 @@ static TextDocumentFiles* _files;
 - (void)onPathChanged
 {
 	NSString* path = [self path];
+    NSDocument* doc = self.document;
 	if (path)
 	{
 		[self _positionWindow:path];
 		
 		NSString* name = [path lastPathComponent];
-		self.Language = [Languages findWithFileName:name contents:self.text];
+        if ([doc.fileType isEqualToString:@"binary"])
+            self.Language = [Languages findWithlangName:@"binary"];
+        else
+            self.Language = [Languages findWithFileName:name contents:self.text];
 		
 		if (_restorer)
 			[_restorer setPath:path];
@@ -612,8 +616,7 @@ static TextDocumentFiles* _files;
 	[self.textView setTypingAttributes:attrs];
 	if (!_language)
 	{
-		NSDocument* doc = self.document;
-		if ([doc.fileType contains:@"Plain Text"])
+		if ([doc.fileType contains:@"Plain Text"] || [doc.fileType isEqualToString:@"binary"])
 			[self.textView.textStorage setAttributes:attrs range:NSMakeRange(0, self.textView.textStorage.length)];
 	}
 

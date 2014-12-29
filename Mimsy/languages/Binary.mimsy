@@ -1,0 +1,6 @@
+Language: binary
+Globs: no-glob
+
+String: \t[^\t\n\r]+(?: \ + [^\t\n\r]+)? $
+Delimiter: \u2193 | \u21A9
+Number: \t[0-9A-F]+\t
