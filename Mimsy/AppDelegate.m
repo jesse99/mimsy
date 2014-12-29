@@ -73,6 +73,7 @@ void initLogGlobs()
     ProcFileReadWrite* _beepFile;
     ProcFileReader* _extensionSettings;
     ProcFileReadWrite* _logFile;
+    ProcFileReadWrite* _pasteBoardText;
 	ProcFileSystem* _procFileSystem;
 	ProcFileReader* _versionFile;
     ProcFileAction* _copyItem;
@@ -180,21 +181,36 @@ void initLogGlobs()
                         return esPath;
                     }];
 	
-	_logFile = [[ProcFileReadWrite alloc]
-				initWithDir:^NSString *{return @"/log";}
-				fileName:@"line"
-				readStr:^NSString* {return @"";}
+    _logFile = [[ProcFileReadWrite alloc]
+                initWithDir:^NSString *{return @"/log";}
+                fileName:@"line"
+                readStr:^NSString* {return @"";}
+                writeStr:^(NSString* str)
+                {
+                    NSRange range = [str rangeOfString:@"\f"];
+                    if (range.location != NSNotFound)
+                    {
+                        NSString* text = [str substringFromIndex:range.location+1];
+                        text = [text replaceCharacters:@"\f" with:@"\\f"];
+                        LOG(STR([str substringToIndex:range.location]), "%s", STR(text));
+                    }
+                    else
+                        LOG("Error", "expected '<topic>\f<line>' not: '%s'", STR(str));
+                }];
+    
+	_pasteBoardText = [[ProcFileReadWrite alloc]
+				initWithDir:^NSString *{return @"/";}
+				fileName:@"pasteboard-text"
+				readStr:^NSString* {
+                    NSPasteboard* pb = [NSPasteboard generalPasteboard];
+                    NSString* str = [pb stringForType:NSStringPboardType];
+                    return str;
+                }
 				writeStr:^(NSString* str)
 				{
-					NSRange range = [str rangeOfString:@"\f"];
-					if (range.location != NSNotFound)
-					{
-						NSString* text = [str substringFromIndex:range.location+1];
-						text = [text replaceCharacters:@"\f" with:@"\\f"];
-						LOG(STR([str substringToIndex:range.location]), "%s", STR(text));
-					}
-					else
-						LOG("Error", "expected '<topic>\f<line>' not: '%s'", STR(str));
+                    NSPasteboard* pb = [NSPasteboard generalPasteboard];
+                    [pb clearContents];
+                    [pb writeObjects:@[str]];
 				}];
     
     _versionFile = [[ProcFileReader alloc]
@@ -286,12 +302,14 @@ void initLogGlobs()
     [_procFileSystem addWriter:_beepFile];
     [_procFileSystem addReader:_extensionSettings];
     [_procFileSystem addWriter:_logFile];
+    [_procFileSystem addWriter:_pasteBoardText];
     [_procFileSystem addReader:_versionFile];
     [_procFileSystem addReader:_copyItem];
     [_procFileSystem addReader:_deleteItem];
     [_procFileSystem addReader:_trashItem];
     [_procFileSystem addReader:_showItem];
-	[_procFileSystem addReader:_newDirectory];
+    [_procFileSystem addReader:_newDirectory];
+	[_procFileSystem addReader:_pasteBoardText];
 
     [TextController startup];
 
