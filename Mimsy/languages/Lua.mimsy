@@ -15,7 +15,7 @@ Operator:  \x23 | \.\. | \b(?: and | not | or)\b
 Repeat: \b(?: for | repeat | until | while)\b
 StorageClass: \b(?: local)\b
 Comment: -- .* $
-Macro: \b(?: _G |  | _VERSION)\b
+Macro: \b(?: _G | _VERSION)\b
 
 Boolean: \b(?: false | true | FALSE | TRUE)\b
 Identifier: \b [a-zA-Z_] [\w_]* \b
