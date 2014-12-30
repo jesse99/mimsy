@@ -9,10 +9,6 @@ http://www.learnswift.tips/
 
 
 * Need directory editor context menu:
-    - add extension support for
-        ` open as binary?                                   lua
-        ` git diff/checkout                                 lua (os.execute)
-        ` dump symbols?                                     lua (os.execute)
     - sort the items (use an addSortedItem category)
     - might be cool to git enable these
 * option-tab isn't working with lua?
@@ -89,6 +85,14 @@ http://www.learnswift.tips/
     - can see this with open as binary
     - probably need custom code in the styler
     - few other styles have similar issues
+* Add some directory editor git extensions:
+    - diff
+    - checkout
+    - blame
+    - log
+* Might want stuff like dissasemble too
+* May want a language option to force monospace
+    - useful with open as binary
 * Use alertWithError where we don't just write to the transcript.
 * Should be something to manage extensions:
 	- see what is installed

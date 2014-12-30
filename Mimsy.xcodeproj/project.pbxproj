@@ -117,6 +117,7 @@
 		37AD7570171B95460054A75F /* UpdateConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AD756F171B95460054A75F /* UpdateConfig.m */; };
 		37BC76DC1A008DA30037DC6A /* BuildErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37BC76DB1A008DA30037DC6A /* BuildErrors.swift */; };
 		37BF4DFA16F56CB3008FD480 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 37BF4DF916F56CB3008FD480 /* images */; };
+		37C1D1A91A5232210031B90F /* MenuCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 37C1D1A81A5232210031B90F /* MenuCategory.m */; };
 		37CE3E6F19A967B8000AEA3C /* extensions in Resources */ = {isa = PBXBuildFile; fileRef = 37CE3E6E19A967B8000AEA3C /* extensions */; };
 		37CE3E7219A980A7000AEA3C /* Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CE3E7119A980A7000AEA3C /* Extensions.m */; };
 		37CF062616AB998A00069A20 /* LuaSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF062516AB998A00069A20 /* LuaSupport.m */; };
@@ -346,6 +347,8 @@
 		37BC76DA1A008DA30037DC6A /* Mimsy-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Mimsy-Bridging-Header.h"; sourceTree = "<group>"; };
 		37BC76DB1A008DA30037DC6A /* BuildErrors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildErrors.swift; sourceTree = "<group>"; };
 		37BF4DF916F56CB3008FD480 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
+		37C1D1A71A5232210031B90F /* MenuCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuCategory.h; sourceTree = "<group>"; };
+		37C1D1A81A5232210031B90F /* MenuCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuCategory.m; sourceTree = "<group>"; };
 		37CE3E6E19A967B8000AEA3C /* extensions */ = {isa = PBXFileReference; lastKnownFileType = folder; path = extensions; sourceTree = "<group>"; };
 		37CE3E7019A980A7000AEA3C /* Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Extensions.h; sourceTree = "<group>"; };
 		37CE3E7119A980A7000AEA3C /* Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Extensions.m; sourceTree = "<group>"; };
@@ -417,6 +420,8 @@
 				3712632216B5A079007AF3BF /* DataCategory.m */,
 				372293D619CE80EC0024426C /* FileHandleCategory.h */,
 				372293D719CE80EC0024426C /* FileHandleCategory.m */,
+				37C1D1A71A5232210031B90F /* MenuCategory.h */,
+				37C1D1A81A5232210031B90F /* MenuCategory.m */,
 				3751BCFD1846E69000DD2C8A /* ScannerCategory.h */,
 				3751BCFE1846E69000DD2C8A /* ScannerCategory.m */,
 				3752CC1616A2F7EA00B623F5 /* StringCategory.h */,
@@ -938,6 +943,7 @@
 				37CF062616AB998A00069A20 /* LuaSupport.m in Sources */,
 				3712631F16B4AA53007AF3BF /* InstallFiles.m in Sources */,
 				3712632316B5A079007AF3BF /* DataCategory.m in Sources */,
+				37C1D1A91A5232210031B90F /* MenuCategory.m in Sources */,
 				376407EB16BB60D4000B7AE3 /* DirectoryWatcher.m in Sources */,
 				376407EE16BEB856000B7AE3 /* ColorCategory.m in Sources */,
 				377BDE6616C006BD008DADA5 /* StartupScripts.m in Sources */,

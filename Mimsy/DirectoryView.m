@@ -4,6 +4,7 @@
 #import "DirectoryController.h"
 #import "FolderItem.h"
 #import "Logger.h"
+#import "MenuCategory.h"
 #import "ProcFiles.h"
 #import "ProcFileSystem.h"
 #import "TranscriptController.h"
@@ -79,7 +80,7 @@
         NSArray* lines = [text componentsSeparatedByString:@"\n"];
         if (lines.count == 2)
         {
-            NSMenuItem* item = [_contextMenu addItemWithTitle:lines[0] action:@selector(contextMenuClicked:) keyEquivalent:@""];
+            NSMenuItem* item = [_contextMenu addSortedItemWithTitle:lines[0] action:@selector(contextMenuClicked:) keyEquivalent:@""];
             [item setTarget:self];
             [item setRepresentedObject:lines[1]];
         }
