@@ -8,8 +8,6 @@ http://www.learnswift.tips/
 
 
 
-* Make sure we're using dataUsingEncoding to get data from a string
-* Saying no when trying to open a large file still causes it to open
 * Add goto line support
 * Would be really nice to add a function/type popup.
 * Pick something to use for a plugin:
@@ -41,6 +39,7 @@ http://www.learnswift.tips/
 	- weight column for how close the match is
 	- for menus could have a jsonfile describing menus
 	for edits have an op field that could be "add" or "remove"
+* Redo transforms?
 * Experiment with a different proc-file based design:
 	- extensions use json messages and replies to get notifications (including event processing), to register for notifications, and to execute functions (eg select a string from a list or log)
 	- state is exposed to extensions via proc files

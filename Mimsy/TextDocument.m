@@ -443,7 +443,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	[alert addButtonWithTitle:@"Yes"];
 	
 	NSInteger button = [alert runModal];
-	if (button == NSAlertSecondButtonReturn)
+	if (button != NSAlertSecondButtonReturn)
 	{
 		*outError = [NSError errorWithDomain:NSCocoaErrorDomain code:NSUserCancelledError userInfo:nil];
 	}
