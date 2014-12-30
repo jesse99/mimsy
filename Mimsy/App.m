@@ -37,10 +37,10 @@
         NSMenuItem* item = [self _getWindowMenuItem:window];
         if (item)
         {
-            NSDictionary* attrs = @{
-                NSFontAttributeName: [NSFont menuBarFontOfSize:0.0],
-                NSStrokeWidthAttributeName: @(-14.0)};
-            NSAttributedString* str = [[NSAttributedString alloc] initWithString:item.title attributes:attrs];
+            
+            NSDictionary* attrs = @{NSFontAttributeName: [NSFont menuBarFontOfSize:0.0]};
+            NSMutableAttributedString* str = [[NSMutableAttributedString alloc] initWithString:item.title attributes:attrs];
+            [str applyFontTraits:NSBoldFontMask range:NSMakeRange(0, str.length)];
             [item setAttributedTitle:str];
         }
     }
