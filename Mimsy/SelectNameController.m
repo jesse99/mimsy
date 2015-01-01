@@ -25,11 +25,6 @@
 	return self;
 }
 
-- (void)windowDidLoad
-{
-    [super windowDidLoad];
-}
-
 - (IBAction)pressedOK:(id)sender
 {
 	UNUSED(sender);
