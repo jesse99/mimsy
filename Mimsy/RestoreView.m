@@ -77,7 +77,10 @@
 						[scrollerv reflectScrolledClipView:clip];
 						
 						if (!NSEqualRanges(_info.selection, NSZeroRange))
+                        {
 							[textv setSelectedRange:_info.selection];
+                            [textv scrollRangeToVisible:_info.selection];
+                        }
 					}
 					else if (!NSEqualRanges(_info.selection, NSZeroRange) && _info.selection.location + _info.selection.length <= controller.text.length)
 					{
