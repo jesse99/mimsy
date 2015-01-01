@@ -9,6 +9,7 @@ http://www.learnswift.tips/
 
 
 * Add goto line support
+    - doesn't work for rtf (tries to use _restorer)
 * Would be really nice to add a function/type popup.
 * Pick something to use for a plugin:
     - maybe function popup

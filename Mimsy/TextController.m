@@ -6,6 +6,7 @@
 #import "Balance.h"
 #import "ConfigParser.h"
 #import "FunctionalTest.h"
+#import "IntegerDialogController.h"
 #import "Language.h"
 #import "Languages.h"
 #import "Paths.h"
@@ -799,6 +800,19 @@ static TextDocumentFiles* _files;
     return offset;
 }
 
+- (void)jumpToLine:(id)sender
+{
+    UNUSED(sender);
+    
+    IntegerDialogController* controller = [[IntegerDialogController alloc] initWithTitle:@"Jump to Line" value:1];
+    (void) [NSApp runModalForWindow:controller.window];
+    
+    if (controller.hasValue)
+    {
+        [self showLine:controller.textField.integerValue atCol:-1 withTabWidth:1];
+    }
+}
+
 - (void)showLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)tabWidth
 {
     ASSERT(line >= 1);
@@ -816,28 +830,27 @@ static TextDocumentFiles* _files;
         col = -1;
     }
     
-    if (begin < text.length)
+    begin = MIN(begin, text.length);
+    
+    NSUInteger count = 1;	// it looks kind of stupid to animate the entire line so we find a range of similar text to hilite
+    if (col > 0)
     {
-        NSUInteger count = 1;	// it looks kind of stupid to animate the entire line so we find a range of similar text to hilite
-        if (col > 0)
-        {
-            // Continuum, to a first approximation, skipped count characters that had
-            // the same unicode character category. But that seems overkill and we'd
-            // have to pull in ICU to do the same.
-            NSCharacterSet* alphaNum = [NSCharacterSet alphanumericCharacterSet];
-            while (begin + count < text.length && [alphaNum characterIsMember:[text characterAtIndex:begin+count]])
-                ++count;
-        }
-        else
-        {
-            NSCharacterSet* newLines = [NSCharacterSet whitespaceCharacterSet];
-            NSRange range = [text rangeOfCharacterFromSet:newLines options:0 range:NSMakeRange(begin, text.length - begin)];
-            if (range.location != NSNotFound)
-                count = range.location - begin;
-        }
-        
-        [self _showLine:begin end:end count:count];
+        // Continuum, to a first approximation, skipped count characters that had
+        // the same unicode character category. But that seems overkill and we'd
+        // have to pull in ICU to do the same.
+        NSCharacterSet* alphaNum = [NSCharacterSet alphanumericCharacterSet];
+        while (begin + count < text.length && [alphaNum characterIsMember:[text characterAtIndex:begin+count]])
+            ++count;
     }
+    else
+    {
+        NSCharacterSet* newLines = [NSCharacterSet whitespaceCharacterSet];
+        NSRange range = [text rangeOfCharacterFromSet:newLines options:0 range:NSMakeRange(begin, text.length - begin)];
+        if (range.location != NSNotFound)
+            count = range.location - begin;
+    }
+    
+    [self _showLine:begin end:end count:count];
 }
 
 - (void)_showLine:(NSUInteger)begin end:(NSUInteger)end count:(NSUInteger)count

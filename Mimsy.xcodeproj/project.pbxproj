@@ -16,6 +16,8 @@
 		3705C816167BC2F000E5D54C /* TranscriptWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3705C814167BC2F000E5D54C /* TranscriptWindow.xib */; };
 		3705C81E167BE9BD00E5D54C /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 3705C81D167BE9BD00E5D54C /* Utils.m */; };
 		3705C821167BF72200E5D54C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3705C820167BF72200E5D54C /* AppDelegate.m */; };
+		370DFDFF1A54B47100A169DB /* IntegerDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 370DFDFE1A54B47100A169DB /* IntegerDialog.xib */; };
+		370DFE021A54B6DC00A169DB /* IntegerDialogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 370DFE011A54B6DC00A169DB /* IntegerDialogController.m */; };
 		3712631F16B4AA53007AF3BF /* InstallFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 3712631E16B4AA53007AF3BF /* InstallFiles.m */; };
 		3712632316B5A079007AF3BF /* DataCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3712632216B5A079007AF3BF /* DataCategory.m */; };
 		3712632516B5A431007AF3BF /* libcrypto.0.9.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */; };
@@ -158,6 +160,9 @@
 		3705C81D167BE9BD00E5D54C /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
 		3705C81F167BF72200E5D54C /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3705C820167BF72200E5D54C /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		370DFDFE1A54B47100A169DB /* IntegerDialog.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IntegerDialog.xib; sourceTree = "<group>"; };
+		370DFE001A54B6DC00A169DB /* IntegerDialogController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntegerDialogController.h; sourceTree = "<group>"; };
+		370DFE011A54B6DC00A169DB /* IntegerDialogController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntegerDialogController.m; sourceTree = "<group>"; };
 		3712631D16B4AA53007AF3BF /* InstallFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstallFiles.h; sourceTree = "<group>"; };
 		3712631E16B4AA53007AF3BF /* InstallFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstallFiles.m; sourceTree = "<group>"; };
 		3712632116B5A079007AF3BF /* DataCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataCategory.h; sourceTree = "<group>"; };
@@ -447,6 +452,9 @@
 				376407EA16BB60D4000B7AE3 /* DirectoryWatcher.m */,
 				37862C49168DE67200DB9E66 /* Glob.h */,
 				37862C4A168DE67200DB9E66 /* Glob.m */,
+				370DFDFE1A54B47100A169DB /* IntegerDialog.xib */,
+				370DFE001A54B6DC00A169DB /* IntegerDialogController.h */,
+				370DFE011A54B6DC00A169DB /* IntegerDialogController.m */,
 				37862C61169096CF00DB9E66 /* Logger.h */,
 				37862C62169096CF00DB9E66 /* Logger.m */,
 				37862C721698754F00DB9E66 /* Metadata.h */,
@@ -857,6 +865,7 @@
 				3782A8B21916BAF1005ED276 /* create-vector.py in Resources */,
 				379A4116191FDB8B00ACEA5C /* FindWindow.xib in Resources */,
 				37ECF0691930201A00061C0A /* FindInFilesWindow.xib in Resources */,
+				370DFDFF1A54B47100A169DB /* IntegerDialog.xib in Resources */,
 				37CE3E6F19A967B8000AEA3C /* extensions in Resources */,
 				373B971A1937F1240084CCC1 /* FindResultsWindow.xib in Resources */,
 				372293D519CD30880024426C /* GoExtensions in Resources */,
@@ -977,6 +986,7 @@
 				373B97181933B1CB0084CCC1 /* HelpItem.m in Sources */,
 				373B971D1937F1A40084CCC1 /* FindResultsController.m in Sources */,
 				373B97201937F3D90084CCC1 /* FindInFiles.m in Sources */,
+				370DFE021A54B6DC00A169DB /* IntegerDialogController.m in Sources */,
 				373B9723194167680084CCC1 /* FindResultsView.m in Sources */,
 				373B97281942BC110084CCC1 /* AttributedStringCategory.m in Sources */,
 				373B972C194374FA0084CCC1 /* PersistentRange.m in Sources */,
