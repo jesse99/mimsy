@@ -79,15 +79,15 @@ static TextDocumentFiles* _files;
 
 - (void)windowDidLoad
 {
+    __weak id this = self;
+    [self.textView setDelegate:this];
+    [self.textView.textStorage setDelegate:this];
+    [self.textView.layoutManager setDelegate:this];
+    [self.textView.layoutManager setBackgroundLayoutEnabled:YES];
+    
     [super windowDidLoad];
 	[self.document controllerDidLoad];
 	[self.textView onOpened:self];
-
-	__weak id this = self;
-	[self.textView setDelegate:this];
-	[self.textView.textStorage setDelegate:this];
-	[self.textView.layoutManager setDelegate:this];
-	[self.textView.layoutManager setBackgroundLayoutEnabled:YES];
 
 	if (!_language)
 	{
