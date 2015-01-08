@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TextController">
             <connections>
+                <outlet property="declarationsPopup" destination="bPe-A6-7qb" id="cgz-6F-1dU"/>
+                <outlet property="lineButton" destination="YDK-HE-XMG" id="8gE-u5-VTU"/>
                 <outlet property="scrollView" destination="100027" id="100060"/>
                 <outlet property="textView" destination="100028" id="100059"/>
                 <outlet property="window" destination="5" id="100054"/>
@@ -22,8 +24,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="600" height="636"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <scrollView misplaced="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="100027">
-                        <rect key="frame" x="0.0" y="0.0" width="10000" height="636"/>
+                    <scrollView misplaced="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="100027" customClass="TextScrollView">
+                        <rect key="frame" x="-4905" y="-578" width="10000" height="636"/>
                         <clipView key="contentView" misplaced="YES" id="Vby-yv-Mdu">
                             <rect key="frame" x="0.0" y="0.0" width="10000" height="636"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -50,6 +52,30 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
+                    <button fixedFrame="YES" tag="100" translatesAutoresizingMaskIntoConstraints="NO" id="YDK-HE-XMG" userLabel="line number">
+                        <rect key="frame" x="58" y="79" width="48" height="48"/>
+                        <buttonCell key="cell" type="square" title="1:100" bezelStyle="shadowlessSquare" alignment="center" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="p6c-LC-xvg">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="_clickedLineButton:" target="-2" id="juK-6X-YUs"/>
+                        </connections>
+                    </button>
+                    <popUpButton fixedFrame="YES" tag="101" translatesAutoresizingMaskIntoConstraints="NO" id="bPe-A6-7qb" userLabel="declarations popup">
+                        <rect key="frame" x="142" y="93" width="95" height="21"/>
+                        <popUpButtonCell key="cell" type="square" title="Item 1" bezelStyle="shadowlessSquare" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" arrowPosition="noArrow" selectedItem="2HQ-sQ-PA4" id="kpc-rd-QZq">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                            <menu key="menu" id="ewu-Ge-zsB">
+                                <items>
+                                    <menuItem title="Item 1" state="on" id="2HQ-sQ-PA4"/>
+                                    <menuItem title="Item 2" id="EUu-Mg-rV3"/>
+                                    <menuItem title="Item 3" id="zaz-T5-xYB"/>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                    </popUpButton>
                 </subviews>
                 <constraints>
                     <constraint firstItem="100027" firstAttribute="top" secondItem="6" secondAttribute="top" id="100047"/>

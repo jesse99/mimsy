@@ -130,29 +130,9 @@ static TextDocumentFiles* _files;
 			[WindowsDatabase saveInfo:&info frame:frame forPath:path];
 		}
 		
-//		if (Path.Contains("/var/") && Path.Contains("/-Tmp-/"))		// TODO: seems kind of fragile
+//		if (Path.Contains("/var/") && Path.Contains("/-Tmp-/"))		// TODO: seems kind of fragile, maybe we should have a Mimsy specific tmp directory
 //			DoDeleteFile(Path);
 	}
-	
-//	var complete = m_boss.Get<IAutoComplete>();
-//	complete.Close();
-//	
-//	if (m_watcher != null)
-//	{
-//		m_watcher.Dispose();
-//		m_watcher.Changed -= this.DoDirChanged;
-//		m_watcher = null;
-//	}
-//	
-//	Broadcaster.Unregister(this);
-//	
-//	if (m_applier != null)
-//	{
-//		m_applier.Stop();
-//	}
-//	((DeclarationsPopup) m_decPopup.Value).Stop();
-//	
-//	m_textView.Value.Call("onClosing:", this);
 	
 	// If the windows are closed very very quickly and we don't do this
 	// we get a crash when Cocoa tries to call our delegate.
@@ -930,6 +910,7 @@ static TextDocumentFiles* _files;
 		[_applier toggleBraceHighlightFrom:0 to:0 on:false];
 	}
 	
+    [self _updateLineNumberButton];
 	[_files onSelectionChanged:self];
 
 	[StartupScripts invokeTextSelectionChanged:self.document slocation:range.location slength:range.length];
@@ -989,6 +970,9 @@ static TextDocumentFiles* _files;
 			}
         }
         
+        // Update line number button.
+        [self _updateLineNumberButton];
+        
         // TODO: For rich text documents we dont have a good way to consistently notify extensions
         // about style changes. So, for now, we notify them after the user types (which we have to
         // do anyway because typing changes text attributes).
@@ -1035,6 +1019,48 @@ static TextDocumentFiles* _files;
 //			DoPruneRanges();
 		}
 	}
+}
+- (IBAction)_clickedLineButton:(id)sender
+{
+    [self jumpToLine:sender];
+}
+
+- (void)_updateLineNumberButton
+{
+    NSString* label = @"";
+    
+    NSRange range = self.textView.selectedRange;
+    NSUInteger firstLine = [self _offsetToLine:range.location];
+    
+    if (range.length > 0)
+    {
+        NSUInteger lastLine = [self _offsetToLine:range.location + range.length - 1];
+        label = [NSString stringWithFormat:@"%ld-%ld", firstLine, lastLine];
+    }
+    else
+    {
+        NSUInteger col = [self _offsetToCol:range.location];
+        label = [NSString stringWithFormat:@"%ld:%ld", firstLine, col];
+    }
+    
+    [self.lineButton setTitle:label];
+}
+
+- (NSUInteger)_offsetToCol:(NSUInteger)offset
+{
+    NSUInteger col = 0;
+
+    NSString* text = _textView.textStorage.string;
+    while (offset > 0 && offset < text.length)
+    {
+        unichar ch = [text characterAtIndex:offset - 1];
+        if (ch == '\r' || ch == '\n')
+            break;
+        --offset;
+        ++col;
+    }
+    
+    return col + 1;
 }
 
 // Note that line numbers are 1-based.

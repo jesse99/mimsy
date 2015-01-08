@@ -8,9 +8,17 @@ http://www.learnswift.tips/
 
 
 
-* Add goto line support
-    - doesn't work for rtf (tries to use _restorer)
-* Would be really nice to add a function/type popup.
+* Work on widgets:
+    - get something like RegexDeclarations working
+    - may want to expose this within a proc file
+    - need a custom class for the declarations popup
+    - add declarations
+    - selecting should goto declaration
+    - support option keyin declarations
+    - select declaration before current selection
+    - may want to allow extensions to add their own text window widgets
+      what would be a good example?
+* Got an error trying to open a continuum nib
 * Pick something to use for a plugin:
     - maybe function popup
     - loading plugins: https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/UsingPlugins.html#//apple_ref/doc/uid/20001276-100982
@@ -22,6 +30,35 @@ http://www.learnswift.tips/
       could have a make file to build em all
     - need some docs on writing plugins (and probably extensions)
     - may want to add proc file support
+* Experiment with a different proc-file based design:
+    - extensions use json messages and replies to get notifications (including event processing), to register for notifications, and to execute functions (eg select a string from a list or log)
+    - state is exposed to extensions via proc files
+    - some proc files are writeable, eg selection range
+    - some proc files are links, eg main window
+    - plugins are objective-c (or swift)
+    - notifications should support some sort of granulatirity option
+    - would be really cool to have an extenion that maintains the function popup menu
+        ` probably want a proc file with function menu items
+        ` maybe settings that control regex to use per file type
+        ` could use this to keep an index for the larger help files
+    - could have extensions to add some sort of chrome
+        ` replace chars with unicode smbols
+        ` load image files
+        ` add links to local (relative path) files
+        ` will need menu item to turn chrome off
+        ` how do we handle saving? some magic attribute?
+
+    - state is exposed via files
+    - stuff like settings are exposed as individual files (array like settings may ave multiple lines)
+    - plugins directory
+    - install needs to install plugin files as well
+    - control can be done via plugin stdin and stdout
+    - maybe plugins could write lua to control mimsy
+      replies could be json
+    - plugins with a UI could be objc
+    - show proc files.rtf somehow, maybe a components menu
+    - remove startup scripts
+    - FUSE for OSX is not installed disable extensions
 * May want to add a command line helper
 * Modern objc: https://developer.apple.com/library/Mac/releasenotes/ObjectiveC/ModernizationObjC/AdoptingModernObjective-C/AdoptingModernObjective-C.html#//apple_ref/doc/uid/TP40014150
 * OSXFUSE is releasing version 3.0 soon (can update via system preferences).
@@ -41,35 +78,6 @@ http://www.learnswift.tips/
 	- for menus could have a jsonfile describing menus
 	for edits have an op field that could be "add" or "remove"
 * Redo transforms?
-* Experiment with a different proc-file based design:
-	- extensions use json messages and replies to get notifications (including event processing), to register for notifications, and to execute functions (eg select a string from a list or log)
-	- state is exposed to extensions via proc files
-	- some proc files are writeable, eg selection range
-	- some proc files are links, eg main window
-	- plugins are objective-c (or swift)
-	- notifications should support some sort of granulatirity option
-	- would be really cool to have an extenion that maintains the function popup menu
-		` probably want a proc file with function menu items
-		` maybe settings that control regex to use per file type
-		` could use this to keep an index for the larger help files
-	- could have extensions to add some sort of chrome
-		` replace chars with unicode smbols
-		` load image files
-		` add links to local (relative path) files
-		` will need menu item to turn chrome off
-		` how do we handle saving? some magic attribute?
-
-	- state is exposed via files
-	- stuff like settings are exposed as individual files (array like settings may ave multiple lines)
-	- plugins directory
-	- install needs to install plugin files as well
-	- control can be done via plugin stdin and stdout
-	- maybe plugins could write lua to control mimsy
-	  replies could be json
-	- plugins with a UI could be objc
-	- show proc files.rtf somehow, maybe a components menu
-	- remove startup scripts
-	- FUSE for OSX is not installed disable extensions
 * Add tab stops
 	- they get screwed up now for things like tabbing to add comments to long lines)
 	  e.g. replaceSelection in TextEditorView.cs

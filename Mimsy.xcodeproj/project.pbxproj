@@ -18,6 +18,7 @@
 		3705C821167BF72200E5D54C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3705C820167BF72200E5D54C /* AppDelegate.m */; };
 		370DFDFF1A54B47100A169DB /* IntegerDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 370DFDFE1A54B47100A169DB /* IntegerDialog.xib */; };
 		370DFE021A54B6DC00A169DB /* IntegerDialogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 370DFE011A54B6DC00A169DB /* IntegerDialogController.m */; };
+		370DFE051A5A56EE00A169DB /* TextScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 370DFE041A5A56EE00A169DB /* TextScrollView.m */; };
 		3712631F16B4AA53007AF3BF /* InstallFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 3712631E16B4AA53007AF3BF /* InstallFiles.m */; };
 		3712632316B5A079007AF3BF /* DataCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3712632216B5A079007AF3BF /* DataCategory.m */; };
 		3712632516B5A431007AF3BF /* libcrypto.0.9.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */; };
@@ -163,6 +164,8 @@
 		370DFDFE1A54B47100A169DB /* IntegerDialog.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IntegerDialog.xib; sourceTree = "<group>"; };
 		370DFE001A54B6DC00A169DB /* IntegerDialogController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntegerDialogController.h; sourceTree = "<group>"; };
 		370DFE011A54B6DC00A169DB /* IntegerDialogController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntegerDialogController.m; sourceTree = "<group>"; };
+		370DFE031A5A56EE00A169DB /* TextScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextScrollView.h; sourceTree = "<group>"; };
+		370DFE041A5A56EE00A169DB /* TextScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextScrollView.m; sourceTree = "<group>"; };
 		3712631D16B4AA53007AF3BF /* InstallFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstallFiles.h; sourceTree = "<group>"; };
 		3712631E16B4AA53007AF3BF /* InstallFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstallFiles.m; sourceTree = "<group>"; };
 		3712632116B5A079007AF3BF /* DataCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataCategory.h; sourceTree = "<group>"; };
@@ -537,6 +540,8 @@
 				370040391676D4790009907A /* TextDocument.m */,
 				3717692419F00EA6007DC658 /* TextDocumentFiles.h */,
 				3717692519F00EA6007DC658 /* TextDocumentFiles.m */,
+				370DFE031A5A56EE00A169DB /* TextScrollView.h */,
+				370DFE041A5A56EE00A169DB /* TextScrollView.m */,
 				37862C5C168FEC3A00DB9E66 /* TextStyles.h */,
 				37862C5D168FEC3A00DB9E66 /* TextStyles.m */,
 				37862C691692070600DB9E66 /* TextView.h */,
@@ -944,6 +949,7 @@
 				37862C711694BFBA00DB9E66 /* InfoController.m in Sources */,
 				37862C741698755100DB9E66 /* Metadata.m in Sources */,
 				3796F6FE169A8CC900659DBD /* convertVIMFiles.m in Sources */,
+				370DFE051A5A56EE00A169DB /* TextScrollView.m in Sources */,
 				37F2C58B169E7B92009C5355 /* ArrayCategory.m in Sources */,
 				3752CC1516A1F2B400B623F5 /* SelectStyleController.m in Sources */,
 				3752CC1816A2F7EA00B623F5 /* StringCategory.m in Sources */,

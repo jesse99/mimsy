@@ -53,5 +53,7 @@ typedef void (^LayoutCallback)(TextController* controller);
 @property (readonly) NSUInteger editCount;
 @property (readonly) TextStyles* styles;
 @property NSString* customTitle;
+@property (strong) IBOutlet NSButton *lineButton;
+@property (strong) IBOutlet NSPopUpButton *declarationsPopup;
 
 @end
