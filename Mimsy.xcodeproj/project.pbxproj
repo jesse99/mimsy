@@ -19,6 +19,7 @@
 		370DFDFF1A54B47100A169DB /* IntegerDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 370DFDFE1A54B47100A169DB /* IntegerDialog.xib */; };
 		370DFE021A54B6DC00A169DB /* IntegerDialogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 370DFE011A54B6DC00A169DB /* IntegerDialogController.m */; };
 		370DFE051A5A56EE00A169DB /* TextScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 370DFE041A5A56EE00A169DB /* TextScrollView.m */; };
+		370DFE071A60DAD700A169DB /* DeclarationsPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370DFE061A60DAD700A169DB /* DeclarationsPopup.swift */; };
 		3712631F16B4AA53007AF3BF /* InstallFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 3712631E16B4AA53007AF3BF /* InstallFiles.m */; };
 		3712632316B5A079007AF3BF /* DataCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3712632216B5A079007AF3BF /* DataCategory.m */; };
 		3712632516B5A431007AF3BF /* libcrypto.0.9.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */; };
@@ -76,6 +77,7 @@
 		377BDE6E16CDACD1008DADA5 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 377BDE6D16CDACD1008DADA5 /* libsqlite3.0.dylib */; };
 		377C2CA8176503B4008E383E /* BuildOptions.xib in Resources */ = {isa = PBXBuildFile; fileRef = 377C2CA7176503B4008E383E /* BuildOptions.xib */; };
 		377C2CAB17650650008E383E /* BuildOptionsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 377C2CAA17650650008E383E /* BuildOptionsController.m */; };
+		377D49AE1A68AB8200DB4A03 /* SwiftExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377D49AD1A68AB8200DB4A03 /* SwiftExtensions.swift */; };
 		3782A8AD190D7CDC005ED276 /* TimeMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = 3782A8AC190D7CDC005ED276 /* TimeMachine.m */; };
 		3782A8B01916B425005ED276 /* Balance.m in Sources */ = {isa = PBXBuildFile; fileRef = 3782A8AF1916B425005ED276 /* Balance.m */; };
 		3782A8B21916BAF1005ED276 /* create-vector.py in Resources */ = {isa = PBXBuildFile; fileRef = 3782A8B11916BAF1005ED276 /* create-vector.py */; };
@@ -166,6 +168,7 @@
 		370DFE011A54B6DC00A169DB /* IntegerDialogController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntegerDialogController.m; sourceTree = "<group>"; };
 		370DFE031A5A56EE00A169DB /* TextScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextScrollView.h; sourceTree = "<group>"; };
 		370DFE041A5A56EE00A169DB /* TextScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextScrollView.m; sourceTree = "<group>"; };
+		370DFE061A60DAD700A169DB /* DeclarationsPopup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeclarationsPopup.swift; sourceTree = "<group>"; };
 		3712631D16B4AA53007AF3BF /* InstallFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstallFiles.h; sourceTree = "<group>"; };
 		3712631E16B4AA53007AF3BF /* InstallFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstallFiles.m; sourceTree = "<group>"; };
 		3712632116B5A079007AF3BF /* DataCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataCategory.h; sourceTree = "<group>"; };
@@ -270,6 +273,7 @@
 		377C2CA7176503B4008E383E /* BuildOptions.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BuildOptions.xib; sourceTree = "<group>"; };
 		377C2CA917650650008E383E /* BuildOptionsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuildOptionsController.h; sourceTree = "<group>"; };
 		377C2CAA17650650008E383E /* BuildOptionsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuildOptionsController.m; sourceTree = "<group>"; };
+		377D49AD1A68AB8200DB4A03 /* SwiftExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftExtensions.swift; sourceTree = "<group>"; };
 		3782A8AB190D7CDC005ED276 /* TimeMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeMachine.h; sourceTree = "<group>"; };
 		3782A8AC190D7CDC005ED276 /* TimeMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeMachine.m; sourceTree = "<group>"; };
 		3782A8AE1916B425005ED276 /* Balance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Balance.h; sourceTree = "<group>"; };
@@ -434,6 +438,7 @@
 				3751BCFE1846E69000DD2C8A /* ScannerCategory.m */,
 				3752CC1616A2F7EA00B623F5 /* StringCategory.h */,
 				3752CC1716A2F7EA00B623F5 /* StringCategory.m */,
+				377D49AD1A68AB8200DB4A03 /* SwiftExtensions.swift */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -522,6 +527,7 @@
 				3782A8AF1916B425005ED276 /* Balance.m */,
 				37ECF065192EFCC000061C0A /* BaseTextController.h */,
 				37ECF066192EFCC100061C0A /* BaseTextController.m */,
+				370DFE061A60DAD700A169DB /* DeclarationsPopup.swift */,
 				3759B65E1678376000D3F3B8 /* Decode.h */,
 				3759B65F1678376000D3F3B8 /* Decode.m */,
 				37862C6F1694BFB800DB9E66 /* InfoController.h */,
@@ -984,6 +990,7 @@
 				379A41191920031500ACEA5C /* FindController.m in Sources */,
 				379A411C192033BF00ACEA5C /* BaseFindController.m in Sources */,
 				379A41211925B17F00ACEA5C /* AppSettings.m in Sources */,
+				370DFE071A60DAD700A169DB /* DeclarationsPopup.swift in Sources */,
 				37ECF06119291A0500061C0A /* LocalSettings.m in Sources */,
 				37ECF06419296C7A00061C0A /* Constants.m in Sources */,
 				37ECF067192EFCC100061C0A /* BaseTextController.m in Sources */,
@@ -991,6 +998,7 @@
 				37BC76DC1A008DA30037DC6A /* BuildErrors.swift in Sources */,
 				373B97181933B1CB0084CCC1 /* HelpItem.m in Sources */,
 				373B971D1937F1A40084CCC1 /* FindResultsController.m in Sources */,
+				377D49AE1A68AB8200DB4A03 /* SwiftExtensions.swift in Sources */,
 				373B97201937F3D90084CCC1 /* FindInFiles.m in Sources */,
 				370DFE021A54B6DC00A169DB /* IntegerDialogController.m in Sources */,
 				373B9723194167680084CCC1 /* FindResultsView.m in Sources */,

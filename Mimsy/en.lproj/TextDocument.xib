@@ -24,7 +24,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="600" height="636"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <scrollView misplaced="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="100027" customClass="TextScrollView">
+                    <scrollView misplaced="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="100027" customClass="TextScrollView">
                         <rect key="frame" x="-4905" y="-578" width="10000" height="636"/>
                         <clipView key="contentView" misplaced="YES" id="Vby-yv-Mdu">
                             <rect key="frame" x="0.0" y="0.0" width="10000" height="636"/>
@@ -34,20 +34,20 @@
                                     <rect key="frame" x="0.0" y="0.0" width="10000" height="636"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <size key="minSize" width="10000" height="636"/>
+                                    <size key="minSize" width="9985" height="621"/>
                                     <size key="maxSize" width="60000" height="10000000"/>
                                     <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                    <size key="minSize" width="10000" height="636"/>
+                                    <size key="minSize" width="9985" height="621"/>
                                     <size key="maxSize" width="60000" height="10000000"/>
                                 </textView>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="100029">
+                        <scroller key="horizontalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="100029">
                             <rect key="frame" x="-100" y="-100" width="87" height="18"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="100030">
+                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="100030">
                             <rect key="frame" x="4" y="0.0" width="15" height="12"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
@@ -62,18 +62,12 @@
                             <action selector="_clickedLineButton:" target="-2" id="juK-6X-YUs"/>
                         </connections>
                     </button>
-                    <popUpButton fixedFrame="YES" tag="101" translatesAutoresizingMaskIntoConstraints="NO" id="bPe-A6-7qb" userLabel="declarations popup">
+                    <popUpButton fixedFrame="YES" tag="101" translatesAutoresizingMaskIntoConstraints="NO" id="bPe-A6-7qb" userLabel="declarations popup" customClass="DeclarationsPopup" customModule="Mimsy" customModuleProvider="target">
                         <rect key="frame" x="142" y="93" width="95" height="21"/>
-                        <popUpButtonCell key="cell" type="square" title="Item 1" bezelStyle="shadowlessSquare" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" arrowPosition="noArrow" selectedItem="2HQ-sQ-PA4" id="kpc-rd-QZq">
+                        <popUpButtonCell key="cell" type="square" bezelStyle="shadowlessSquare" alignment="left" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" arrowPosition="noArrow" id="kpc-rd-QZq">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="smallSystem"/>
-                            <menu key="menu" id="ewu-Ge-zsB">
-                                <items>
-                                    <menuItem title="Item 1" state="on" id="2HQ-sQ-PA4"/>
-                                    <menuItem title="Item 2" id="EUu-Mg-rV3"/>
-                                    <menuItem title="Item 3" id="zaz-T5-xYB"/>
-                                </items>
-                            </menu>
+                            <menu key="menu" id="ewu-Ge-zsB"/>
                         </popUpButtonCell>
                     </popUpButton>
                 </subviews>

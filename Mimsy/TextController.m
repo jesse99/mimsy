@@ -23,6 +23,7 @@
 #import "Utils.h"
 #import "WarningWindow.h"
 #import "WindowsDatabase.h"
+#import "Mimsy-Swift.h"
 
 static TextDocumentFiles* _files;
 
@@ -863,6 +864,7 @@ static TextDocumentFiles* _files;
 - (void)onAppliedStyles
 {
     [_files onAppliedStyles:self];
+    [self.declarationsPopup onAppliedStyles:self.textView];
 }
 
 - (void)doResetWordWrap
@@ -912,6 +914,7 @@ static TextDocumentFiles* _files;
 	
     [self _updateLineNumberButton];
 	[_files onSelectionChanged:self];
+    [_declarationsPopup onSelectionChanged:self.textView];
 
 	[StartupScripts invokeTextSelectionChanged:self.document slocation:range.location slength:range.length];
 }

@@ -2,7 +2,7 @@
 
 #import "BaseTextController.h"
 
-@class Language, TextController, TextStyles, TextView;
+@class DeclarationsPopup, Language, TextController, TextStyles, TextView;
 
 typedef void (^LayoutCallback)(TextController* controller);
 
@@ -54,6 +54,6 @@ typedef void (^LayoutCallback)(TextController* controller);
 @property (readonly) TextStyles* styles;
 @property NSString* customTitle;
 @property (strong) IBOutlet NSButton *lineButton;
-@property (strong) IBOutlet NSPopUpButton *declarationsPopup;
+@property (strong) IBOutlet DeclarationsPopup *declarationsPopup;
 
 @end

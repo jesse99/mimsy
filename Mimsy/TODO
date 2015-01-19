@@ -8,16 +8,8 @@ http://www.learnswift.tips/
 
 
 
-* Work on widgets:
-    - get something like RegexDeclarations working
-    - may want to expose this within a proc file
-    - need a custom class for the declarations popup
-    - add declarations
-    - selecting should goto declaration
-    - support option keyin declarations
-    - select declaration before current selection
-    - may want to allow extensions to add their own text window widgets
-      what would be a good example?
+* Might be next to have a goto next (style) element
+    - could possibly replace option-tab
 * Got an error trying to open a continuum nib
 * Pick something to use for a plugin:
     - maybe function popup

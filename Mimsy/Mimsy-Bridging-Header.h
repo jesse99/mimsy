@@ -1,4 +1,5 @@
 #import "AppSettings.h"
+#import "Constants.h"
 #import "DirectoryController.h"
 #import "Logger.h"
 #import "OpenFile.h"
