@@ -81,7 +81,7 @@
 
 + (void)openPath:(NSString*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width completed:(CompletionBlock)completed
 {
-    if (![self _dontOpenWithMimsy:path.lastPathComponent])
+    if (![self _dontOpenWithMimsy:path])
     {
         NSURL* url = [NSURL fileURLWithPath:path];
         NSDocumentController* dc = [NSDocumentController sharedDocumentController];
@@ -133,7 +133,7 @@
 
 + (void)openPath:(NSString*)path withRange:(NSRange)range
 {
-	if (![self _dontOpenWithMimsy:path.lastPathComponent])
+	if (![self _dontOpenWithMimsy:path])
 	{
 		NSURL* url = [NSURL fileURLWithPath:path];
 		NSDocumentController* dc = [NSDocumentController sharedDocumentController];
@@ -179,8 +179,7 @@
 {
 	// Check to see if the user has marked the file as something he doesn't
 	// want to open with Mimsy.
-	NSString* name = [path lastPathComponent];
-	if ([self _dontOpenWithMimsy:name])
+	if ([self _dontOpenWithMimsy:path])
 		return false;
 	
 	// If the file is part of an open directory then check the directory prefs.
@@ -193,7 +192,7 @@
 	// text file we'll wind up opening it anyway so we'll avoid the work of
 	// reading the file twice in the common case where the extension is enough
 	// to figure out whether we can open it.
-	if ([Languages findWithFileName:name contents:@""])
+	if ([Languages findWithFileName:path.lastPathComponent contents:@""])
 		return true;
 
 	// Fallback to checking to see if the file can be read as text.
@@ -202,9 +201,13 @@
 	return decode.text != nil;
 }
 
-+ (bool)_dontOpenWithMimsy:(NSString*)fileName
++ (bool)_dontOpenWithMimsy:(NSString*)path
 {
-	NSString* setting = [AppSettings stringValue:@"DontOpenWithMimsy" missing:nil];
+    if ([[NSWorkspace sharedWorkspace] isFilePackageAtPath:path])
+        return true;
+    
+    NSString* fileName = [path lastPathComponent];
+    NSString* setting = [AppSettings stringValue:@"DontOpenWithMimsy" missing:nil];
 	if (setting)
 	{
 		NSArray* patterns = [setting splitByString:@" "];
