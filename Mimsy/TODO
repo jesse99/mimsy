@@ -7,50 +7,37 @@ install http://osxfuse.github.io/
 http://www.learnswift.tips/
 
 
-
-* Might be next to have a goto next (style) element
-    - could possibly replace option-tab
-* Got an error trying to open a continuum nib
-* Pick something to use for a plugin:
-    - maybe function popup
-    - loading plugins: https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/UsingPlugins.html#//apple_ref/doc/uid/20001276-100982
-    - should plugins go into ~/Library/Application Support/applicationSupportDirectory/PlugIns?
-    - probably need a protocol that plugins must implement
-        ` load, unload, settingsChanged (or maybe they can listen)
-    - will need to do something for building
-      maybe separate projects
-      could have a make file to build em all
-    - need some docs on writing plugins (and probably extensions)
-    - may want to add proc file support
+* Work on a way to override styles:
+    - ideally could write to a proc file a regex and a style name (or a special style like "back-color:blue")
+- simplest to use background color instead of glyphs: see http://asciiwwdc.com/2010/sessions/114
+    - show trailing spaces
+    - need a way to add menu items
+    - gracefuly handle unloaded extensions
+    - add a note about substituting glyphs
+    - show return characters
+    - show control characters
+    - show tabs
+    - show spaces
+    - 80 char line limit
+        ideally using a setting
+    - maybe some common errors (like using the wrong comment characters)
+* #define looks lame
 * Experiment with a different proc-file based design:
-    - extensions use json messages and replies to get notifications (including event processing), to register for notifications, and to execute functions (eg select a string from a list or log)
-    - state is exposed to extensions via proc files
-    - some proc files are writeable, eg selection range
-    - some proc files are links, eg main window
-    - plugins are objective-c (or swift)
-    - notifications should support some sort of granulatirity option
-    - would be really cool to have an extenion that maintains the function popup menu
-        ` probably want a proc file with function menu items
-        ` maybe settings that control regex to use per file type
-        ` could use this to keep an index for the larger help files
     - could have extensions to add some sort of chrome
-        ` replace chars with unicode smbols
         ` load image files
         ` add links to local (relative path) files
         ` will need menu item to turn chrome off
         ` how do we handle saving? some magic attribute?
-
-    - state is exposed via files
-    - stuff like settings are exposed as individual files (array like settings may ave multiple lines)
-    - plugins directory
-    - install needs to install plugin files as well
-    - control can be done via plugin stdin and stdout
-    - maybe plugins could write lua to control mimsy
-      replies could be json
-    - plugins with a UI could be objc
     - show proc files.rtf somehow, maybe a components menu
     - remove startup scripts
-    - FUSE for OSX is not installed disable extensions
+    - if FUSE for OSX is not installed disable extensions
+* Try and get functions working with C
+    - might have to do something lame like line starts wih non-whitespace+word+(+anything not )+)+whitespace+{
+      how do we gobble up the chars before the word? non-greedy kleene?
+    - maybe structs too
+* Should be a way for extensions to override styles:
+    - 89 char lines (or use a setting for the limit)
+    - pjlib types
 * May want to add a command line helper
 * Modern objc: https://developer.apple.com/library/Mac/releasenotes/ObjectiveC/ModernizationObjC/AdoptingModernObjective-C/AdoptingModernObjective-C.html#//apple_ref/doc/uid/TP40014150
 * OSXFUSE is releasing version 3.0 soon (can update via system preferences).
@@ -60,6 +47,10 @@ http://www.learnswift.tips/
 	- will need an open-url proc file
 	- need to shutdown executable extensions on exit
 * NSString adds an API that can be used to detect the string encoding of an array of bytes
+* Need an extension (or an option) to show a line at N characters.
+* Tab handling is sketchy.
+* Would be great to get something working for C functions and structs.
+* Use FUSE to enable remote editing.
 * Can tag files, for searching? Color coding? NSURLTagNamesKey
     - maybe a context menu item
 * Add go to search for a file:
@@ -86,6 +77,15 @@ http://www.learnswift.tips/
     - blame
     - log
 * Might want stuff like dissasemble too
+* Pick something to use for a plugin:
+    - loading plugins: https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/UsingPlugins.html#//apple_ref/doc/uid/20001276-100982
+    - should plugins go into ~/Library/Application Support/applicationSupportDirectory/PlugIns?
+    - probably need a protocol that plugins must implement
+        ` load, unload, settingsChanged (or maybe they can listen)
+    - will need to do something for building
+    maybe separate projects
+    could have a make file to build em all
+    - need some docs on writing plugins (and probably extensions)
 * May want a language option to force monospace
     - useful with open as binary
 * Use alertWithError where we don't just write to the transcript.
