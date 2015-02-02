@@ -299,6 +299,7 @@ static bool block_timed_out(void (^block)())
     {
         NSString* text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         [TranscriptController writeStderr:text];
+        [TranscriptController writeStderr:@"\n"];
     }
     
     return [line compare:@"true"] == NSOrderedSame;
@@ -463,11 +464,12 @@ static void initMimsyMethods(struct lua_State* state, LuaExtension* extension)
         {"watch_file", watch_file},
         {NULL, NULL}
     };
-    luaL_register(state, "mimsy", methods);
+    lua_newtable(state);
+    luaL_setfuncs(state, methods, 0);
     
     lua_pushlightuserdata(state, (__bridge void*) extension);
     lua_setfield(state, -2, "target");
-    
+
     lua_setglobal(state, "mimsy");
 }
 

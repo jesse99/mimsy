@@ -86,7 +86,9 @@ static NSArray* _valid;
 			int err = lua_pcall(_state, 3, 0, 0);		// 3 args, no result
 			if (err)
 			{
+                [TranscriptController writeStderr:@"Error invoking apply styles: "];
 				[TranscriptController writeStderr:[NSString stringWithUTF8String:lua_tostring(_state, -1)]];
+                [TranscriptController writeStderr:@"\n"];
 			}
 		}
 	}
@@ -108,7 +110,11 @@ static NSArray* _valid;
 			int err = lua_pcall(_state, 4, 0, 0);		// 4 args, no result
 			if (err)
 			{
+                [TranscriptController writeStderr:@"Error invoking "];
+                [TranscriptController writeStderr:hname];
+                [TranscriptController writeStderr:@": "];
 				[TranscriptController writeStderr:[NSString stringWithUTF8String:lua_tostring(_state, -1)]];
+                [TranscriptController writeStderr:@"\n"];
 			}
 		}
 	}
@@ -128,7 +134,9 @@ static NSArray* _valid;
 			int err = lua_pcall(_state, 3, 0, 0);		// 3 args, no result
 			if (err)
 			{
+                [TranscriptController writeStderr:@"Error invoking text selection changed: "];
 				[TranscriptController writeStderr:[NSString stringWithUTF8String:lua_tostring(_state, -1)]];
+                [TranscriptController writeStderr:@"\n"];
 			}
 		}
 	}

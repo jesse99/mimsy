@@ -84,13 +84,14 @@ static void startNextTest()
 			if (err)
 			{
 				[TranscriptController writeStderr:[NSString stringWithUTF8String:lua_tostring(_state, -1)]];
+                [TranscriptController writeStderr:@"\n"];
 				lua_pop(_state, 1);
 			}
 		}
 		else
 		{
 			NSString* reason = [error localizedFailureReason];
-			[TranscriptController writeStderr:[NSString stringWithFormat:@"failed to load '%@': %@", path, reason]];
+			[TranscriptController writeStderr:[NSString stringWithFormat:@"failed to load '%@': %@\n", path, reason]];
 		}
 	}
 	else
@@ -123,7 +124,7 @@ static int ftest_passed(struct lua_State* state)
 	else
 	{
 		_numFailed++;
-		[TranscriptController writeStderr:[NSString stringWithFormat:@"FAILED...%@", _error]];
+		[TranscriptController writeStderr:[NSString stringWithFormat:@"FAILED...%@\n", _error]];
 	}
 		
 	dispatch_queue_t main = dispatch_get_main_queue();
@@ -139,7 +140,7 @@ int ftest_failed(struct lua_State* state)
 	_numFailed++;
 	
 	NSString* failure = [NSString stringWithUTF8String:lua_tostring(state, 2)];
-	[TranscriptController writeStderr:[NSString stringWithFormat:@"FAILED...%@", failure]];
+	[TranscriptController writeStderr:[NSString stringWithFormat:@"FAILED...%@\n", failure]];
 	[TranscriptController writeStdout:@"\n"];
 	
 	dispatch_queue_t main = dispatch_get_main_queue();
@@ -163,7 +164,7 @@ static int ftest_expecterror(struct lua_State* state)
 	else
 	{
 		_numFailed++;
-		[TranscriptController writeStderr:[NSString stringWithFormat:@"FAILED...expected error '%@' but found '%@'", mesg, _error]];
+		[TranscriptController writeStderr:[NSString stringWithFormat:@"FAILED...expected error '%@' but found '%@'\n", mesg, _error]];
 		[TranscriptController writeStdout:@"\n"];
 	}
 	
@@ -212,8 +213,8 @@ static void initFTestMethods(lua_State* state)
 		{"instancecount", ftest_instancecount},
 		{NULL, NULL}
 	};
-	luaL_register(state, "ftest", methods);
-		
+    lua_newtable(state);
+    luaL_setfuncs(state, methods, 0);    
 	lua_setglobal(state, "ftest");
 }
 

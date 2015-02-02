@@ -89,10 +89,14 @@ void pushTextDoc(struct lua_State* state, NSDocument* doc)
 		{"setunderline", textdoc_setunderline},
 		{NULL, NULL}
 	};
-	luaL_register(state, "doc", methods);
+    lua_newtable(state);
+    luaL_setfuncs(state, methods, 0);
 	
 	lua_pushlightuserdata(state, (__bridge void*) doc);
 	lua_setfield(state, -2, "target");
+
+    lua_pushvalue(state, -1);
+    lua_setglobal(state, "doc");
 }
 
 void pushDirWindow(struct lua_State* state, NSWindow* window)
@@ -102,10 +106,14 @@ void pushDirWindow(struct lua_State* state, NSWindow* window)
 		{"close", window_close},
 		{NULL, NULL}
 	};
-	luaL_register(state, "window", methods);
-	
+    lua_newtable(state);
+    luaL_setfuncs(state, methods, 0);
+
 	lua_pushlightuserdata(state, (__bridge void*) window);
 	lua_setfield(state, -2, "target");
+
+    lua_pushvalue(state, -1);
+    lua_setglobal(state, "window");
 }
 
 void initAppMethods(struct lua_State* state)
@@ -122,11 +130,13 @@ void initAppMethods(struct lua_State* state)
 		{"stdout", app_stdout},
 		{NULL, NULL}
 	};
-	luaL_register(state, "app", methods);
+    lua_newtable(state);
+    luaL_setfuncs(state, methods, 0);
 	
 	lua_pushlightuserdata(state, (__bridge void*) NSApp);
 	lua_setfield(state, -2, "target");
 	
+    lua_pushvalue(state, -1);
 	lua_setglobal(state, "app");
 }
 
@@ -219,7 +229,9 @@ int app_schedule(struct lua_State* state)
 				}
 				else
 				{
+                    [TranscriptController writeStderr:@"Error scheduling lua callback:  "];
 					[TranscriptController writeStderr:[NSString stringWithUTF8String:lua_tostring(state, -1)]];
+                    [TranscriptController writeStderr:@"\n"];
 				}
 			}
 		}
@@ -334,6 +346,7 @@ int app_stderr(struct lua_State* state)
 	const char* mesg = lua_tostring(state, 2);
 	LUA_ASSERT(mesg != NULL, "mesg was NULL");
 	[TranscriptController writeStderr:[NSString stringWithUTF8String:mesg]];
+    [TranscriptController writeStderr:@"\n"];
 	return 0;
 }
 
