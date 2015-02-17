@@ -13,6 +13,10 @@ DocComment: /\*! (?: . | \r | \n)*? \*/
 DocComment: /\*\* (?: . | \r | \n)*? \*/
 Comment: // .* $
 Comment: /\* (?: . | \r | \n)*? \*/
+String: " (?: [^"\\] | \\. | \\\n | \\\r)* "
+
+Character: ' (?: [^'\r\n\\] | \\.)* '
+
 Conditional: \b(?: else | if | loop | match)\b
 Exception: \b(?: fail)\b
 Keyword: \b(?: once | as | assert | break | do | enum | fn | impl | let | log | mod | return | struct | trait | type | use)\b
@@ -23,10 +27,7 @@ Type: \b(?: Const | Copy | Durable | Send | Owned | binary32 | binary64 | bool |
 Macro: \b(?: fmt\! | error! | warn\! | info\! | debug\! | env\! | stringify\! | proto\! | include\! | include_str\! | include_bin\! | log_syntax\! | trace_macros\! | ident_to_str\! | concat_idents\!)
 
 Boolean: \b(?: false | true)\b
-Identifier: \b [a-zA-Z_] [\w_]* \b
 
-String: " (?: [^"\\] | \\. | \\\n | \\\r)* "
-Character: ' (?: [^'\r\n\\] | \\.)* '
 Float: (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)? (?: f \d+)?)
 Float: (\. [\d_]+ (?: [eE] [+-]? [\d_]+)? (?: f \d+)?)
 Number: (0b [01_]+ (?: [uif] \d*)?)
@@ -46,3 +47,5 @@ Function: ^ \s* (new) \s*  \(
 Function: ^ \s* (drop) \s*  \{
 Operator: \s+ (\&\& | \|\|) \s+
 Identifier: \$ \w+
+
+Identifier: \b [a-zA-Z_] [\w_]* \b

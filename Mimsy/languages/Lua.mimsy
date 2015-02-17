@@ -7,6 +7,11 @@ ContextHelp: {lua}[Lua Tech Notes]http://www.lua.org/notes/
 ContextHelp: {lua}[Lua Reference Manual]http://www.lua.org/manual/5.1/
 SearchIn: [lua.org]https://www.google.com/search?q=${TEXT}&sitesearch=lua.org
 
+Comment: -- .* $
+String: " (?: [^"\r\n\\] | \\.)* "
+String: ' (?: [^'\r\n\\] | \\.)* '
+String: \[=*\[ (?: . | \r | \n)*? \]=*\]
+
 Function: (?<=\b function) \s+ (\w+)
 
 Conditional: \b(?: else | elseif | if)\b
@@ -14,18 +19,13 @@ Keyword: \b(?: arg | break | do | end | function | in | nil | return | then)\b
 Operator:  \x23 | \.\. | \b(?: and | not | or)\b
 Repeat: \b(?: for | repeat | until | while)\b
 StorageClass: \b(?: local)\b
-Comment: -- .* $
 Macro: \b(?: _G | _VERSION)\b
 
 Boolean: \b(?: false | true | FALSE | TRUE)\b
-Identifier: \b [a-zA-Z_] [\w_]* \b
-
-String: " (?: [^"\r\n\\] | \\.)* "
-String: ' (?: [^'\r\n\\] | \\.)* '
-String: \[=*\[ (?: . | \r | \n)*? \]=*\]
 
 Float: (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)?)
 Float: (\. [\d_]+ (?: [eE] [+-]? [\d_]+)?)
 Number: (\d+)
 Number: (0x [0-9a-fA-f]+)
 
+Identifier: \b [a-zA-Z_] [\w_]* \b

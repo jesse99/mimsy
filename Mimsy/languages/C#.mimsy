@@ -8,6 +8,13 @@ SearchIn: [.NET Framework]http://social.msdn.microsoft.com/Search/en-US/vstudio?
 
 Comment: // .* $
 Comment: /\* (?: . | \r | \n)*? \*/
+String: " (?: [^"\r\n\\] | \\.)* "
+String: @" (?: [^"\\] | \\. | (?: " "))* "
+
+# TODO: could probably match Structure and Type like C does
+
+Character: ' (?: [^'\r\n\\] | \\.)* '
+
 Type: \b(?:  object | bool | byte | decimal | double | fixed | float | int | sbyte | long | ulong | uint | char | ushort | short | string | void)\b
 Conditional: \b(?: case | if | switch)\b
 Exception: \b(?: catch | finally | throw | try)\b
@@ -18,11 +25,6 @@ Repeat: \b(?: do | foreach | for | while)\b
 StorageClass: \b(?: const | explicit | extern | out | readonly | unsafe  | implicit | internal | ref | virtual | sealed | volatile | static)\b
 
 Boolean: \b(?: false | true)\b
-Identifier: \b [a-zA-Z_] [\w_]* \b
-
-String: " (?: [^"\r\n\\] | \\.)* "
-String: @" (?: [^"\\] | \\. | (?: " "))* "
-Character: ' (?: [^'\r\n\\] | \\.)* '
 
 Float: \d+ \. \d+ (?: [eE] [\+-]? \d+)? [FfDdMm]?
 Float: \. \d+ (?: [eE] [\+-]? \d+)? [FfDdMm]?
@@ -38,3 +40,4 @@ PreCondit: \x23 \s* (?: if | elif | region) .* $
 PreCondit: \x23 \s* (?: endregion)
 Include: \x23 \s* include
 
+Identifier: \b [a-zA-Z_] [\w_]* \b

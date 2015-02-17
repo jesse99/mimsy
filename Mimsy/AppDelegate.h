@@ -33,6 +33,7 @@ void initLogGlobs(void);
 - (void)runFTest:(id)sender;
 - (void)runFTests:(id)sender;
 
+@property (readonly) bool inited;
 @property (readonly) ProcFileSystem *procFileSystem;
 @property (readonly) LocalSettings *settings;
 @property (weak) IBOutlet NSMenu *searchMenu;

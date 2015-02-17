@@ -7,9 +7,14 @@ install http://osxfuse.github.io/
 http://www.learnswift.tips/
 
 
+
+
 * Work on a way to override styles:
-    - ideally could write to a proc file a regex and a style name (or a special style like "back-color:blue")
-- simplest to use background color instead of glyphs: see http://asciiwwdc.com/2010/sessions/114
+    - update docs: longest regexes should be listed first, can use (one) group, use a group where you would otherwise use an unbounded look-behind assertion
+    - do a commit
+* Double clicking IEEE80211_STYPE_ACTION sucks
+* Need an extension to toggle between headers and source files.
+* Simplest to use background color instead of glyphs: see http://asciiwwdc.com/2010/sessions/114
     - show trailing spaces
     - need a way to add menu items
     - gracefuly handle unloaded extensions
@@ -21,7 +26,14 @@ http://www.learnswift.tips/
     - 80 char line limit
         ideally using a setting
     - maybe some common errors (like using the wrong comment characters)
-* #define looks lame
+* Local search should try all open projects before doing a global search.
+* Editor features: http://texteditors.org/cgi-bin/wiki.pl?HomePage
+* Get remote builds working:
+    remote-test:
+    ssh jjones@10.4.0.128 'make package/coco-mesh-minder/{compile,install} V=1 && scp bin/rb433-chaos/packages/coco/coco-mesh-minder_1_ar71xx.ipk root@192.168.6.11:/tmp && ssh root@192.168.6.11 "opkg install /tmp/coco-mesh-minder_1_ar71xx.ipk"'
+    - probably need to set USER and maybe HOME
+    - probably need to special case file matching
+      if no match do a local search for the file name
 * Experiment with a different proc-file based design:
     - could have extensions to add some sort of chrome
         ` load image files
@@ -384,5 +396,138 @@ http://www.learnswift.tips/
 	- increment support files version number, also build scripts version numbers
 	- ship the release version
 	
-	
-	
+------------------------------------------------------------------------------------------------------------------------
+#import "RegexStyler.h"
+
+#import "Logger.h"
+#import "StyleRuns.h"
+
+@implementation RegexStyler
+{
+NSArray* _regexen;
+NSArray* _names;
+}
+
+- (id)initWithRegexen:(NSArray*)regexen elementNames:(NSArray*)names
+{
+ASSERT(regexen.count >= names.count - 1);
+
+_regexen = regexen;
+_names = names;
+
+return self;
+}
+
+// threaded
+static int compareRun(const struct StyleRun* lhs, const struct StyleRun* rhs)
+{
+if (lhs->range.location < rhs->range.location)
+return -1;
+else if (lhs->range.location > rhs->range.location)
+return -1;
+
+if (lhs->range.length < rhs->range.length)
+return -1;
+else if (lhs->range.length > rhs->range.length)
+return -1;
+
+return 0;
+}
+
+// threaded
+// Sets foundIndex if the run was found.
+// Otherwise sets notFoundIndex to an index such that if the run was inserted there the runs will still be sorted.
+// Adapted from http://rosettacode.org/wiki/Binary_search#C
+static void findIntersectedRun(const struct StyleRunVector* runs, const struct StyleRun* run, NSUInteger* foundIndex, NSUInteger* notFoundIndex)
+{
+if (runs->count == 0) {
+*notFoundIndex = 0;
+return;
+}
+
+NSUInteger left = 1, right = runs->count; // `unsigned' to avoid overflow in `(left + right)/2'
+while (left < right)
+{
+// invariant: a[left] <= *run <= a[right] or *run not in runs
+NSUInteger m = (left  +  right) / 2; //NOTE: *intentionally* truncate for odd sum
+
+if (compareRun(runs->data + m, run) < 0)
+left = m + 1;       // a[m] < *run <= a[right] or *run not in runs
+else
+// assert(right != m) or infinite loop possible
+right = m;          // a[left] <= *run <= a[m] or *run not in runs
+}
+// assert(left == right)
+if (compareRun(runs->data + right, run) == 0)
+*foundIndex = right;
+else
+*notFoundIndex = right;
+}
+
+static bool intersects(const struct StyleRun* lhs, const struct StyleRun* rhs)
+{
+
+}
+
+// threaded
+- (StyleRuns*)computeStyles:(NSString*)text editCount:(NSUInteger)count
+{
+__block struct StyleRunVector runs = newStyleRunVector();
+reserveStyleRunVector(&runs, 2*text.length/40);	// this is how many runs I had in a screen of random rust code (x2 because of Normal runs)
+
+for (NSUInteger i = 0; i < _regexen.count; ++i)
+{
+NSRegularExpression* re = _regexen[i];
+[self _matchRegex:re runs:&runs index:i text:text];
+}
+
+[self _insertNormalStyles:&runs];
+
+return [[StyleRuns alloc] initWithElementNames:_names runs:runs editCount:count];
+}
+
+// threaded
+- (void) _matchRegex:(NSRegularExpression*)re runs:(struct StyleRunVector*)runs index:(NSUInteger)index text:(NSString*)text
+{
+[re enumerateMatchesInString:text options:0 range:NSMakeRange(0, text.length) usingBlock:
+^(NSTextCheckingResult* match, NSMatchingFlags flags, BOOL* stop)
+{
+(void) flags;
+(void) stop;
+
+// TODO: do nothing if the range intersects an existing run
+NSRange range = re.numberOfCaptureGroups == 0 ? [match rangeAtIndex:0] : [match rangeAtIndex:1];
+struct StyleRun run = {.elementIndex = index+1, .range = range};
+
+NSUInteger foundIndex = INT_MAX;
+NSUInteger notFoundIndex = INT_MAX;
+findIntersectedRun(runs, &run, &foundIndex, &notFoundIndex);
+if (foundIndex != INT_MAX && !intersects(&runs->data[foundIndex], &run))
+pushStyleRunVector(runs, run);
+else if (notFoundIndex != INT_MAX && !intersects(&runs->data[notFoundIndex - 1], &run))
+pushStyleRunVector(runs, run);
+}
+];
+}
+
+// threaded
+- (void) _insertNormalStyles:(struct StyleRunVector*)runs
+{
+
+
+
+
+
+if (index < NSIntegerMax)
+{
+if (range.location > lastMatch)
+pushStyleRunVector(&runs, (struct StyleRun) {.elementIndex = 0, .range = NSMakeRange(lastMatch, range.location - lastMatch)});
+
+pushStyleRunVector(&runs, (struct StyleRun) {.elementIndex = index, .range = range});
+lastMatch = range.location + range.length;
+}
+}
+}
+
+@end
+

@@ -1,10 +1,12 @@
 #import "TranscriptController.h"
 
+#import "AppDelegate.h"
 #import "FunctionalTest.h"
 #import "Paths.h"
 #import "TextStyles.h"
 
 static TranscriptController* controller;
+static NSMutableArray* startupErrors;
 
 @implementation TranscriptController
 {
@@ -14,6 +16,19 @@ static TranscriptController* controller;
 	NSDictionary* _stderrAttrs;
 	NSUInteger _editCount;
 	double _maxChars;
+}
+
++ (void)startedUp
+{
+    if (startupErrors)
+    {
+        TranscriptController* instance = [TranscriptController getInstance];
+        for (NSString* err in startupErrors)
+        {
+            [instance _write:[err stringByAppendingString:@"\n"] withAttrs:instance->_stderrAttrs];
+        }
+        startupErrors = nil;
+    }
 }
 
 - (id)init
@@ -122,6 +137,16 @@ static TranscriptController* controller;
     
     if (!functionalTestsAreRunning())
     {
+        AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
+        if (!delegate || delegate.inited)
+        {
+            if (!startupErrors)
+                startupErrors = [NSMutableArray new];
+
+            [startupErrors addObject:text];
+            return;
+        }
+
         TranscriptController* instance = [TranscriptController getInstance];
         [instance _write:[text stringByAppendingString:@"\n"] withAttrs:instance->_stderrAttrs];
     }

@@ -197,45 +197,18 @@
 
 - (RegexStyler*)_createStyler:(NSArray*)names patterns:(NSArray*)patterns lines:(NSArray*)lines errors:(NSMutableArray*)errors
 {
-	ASSERT(patterns.count + 1 == names.count);
+	ASSERT(patterns.count == names.count-1);
 	
-	struct UIntVector groupToName = [self _preflightPatterns:patterns lines:lines errors:errors];
-	if (groupToName.count > 0)
-	{
-		NSArray* groups = [patterns map:
-			^id (NSString* p) {return [NSString stringWithFormat:@"(%@)", p];}];
-		NSString* pattern = [groups componentsJoinedByString:@"|"];
-
-		NSError* error = nil;
-		NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
-		NSRegularExpression* re = [[NSRegularExpression alloc] initWithPattern:pattern options:options error:&error];
-		if (re)
-		{
-			return [[RegexStyler alloc] initWithRegex:re elementNames:names groupToName:groupToName];
-		}
-		else
-		{
-			NSString* reason = [error localizedFailureReason];
-			[errors addObject:[NSString stringWithFormat:@"aggregate regex failed to parse: %@", reason]];
-			freeUIntVector(&groupToName);
-			return nil;
-		}
-	}
-	else
-	{
-		freeUIntVector(&groupToName);
-		return nil;
-	}
+    NSArray* regexen = [self _compilePatterns:patterns lines:lines errors:errors];
+    return regexen ? [[RegexStyler alloc] initWithRegexen:regexen elementNames:names] : nil;
 }
 
-- (struct UIntVector)_preflightPatterns:(NSArray*)patterns lines:(NSArray*)lines errors:(NSMutableArray*)errors
+- (NSArray*)_compilePatterns:(NSArray*)patterns lines:(NSArray*)lines errors:(NSMutableArray*)errors
 {
 	ASSERT(patterns.count == lines.count);
-		
-	struct UIntVector groupToName = newUIntVector();
-	reserveUIntVector(&groupToName, patterns.count);
-	pushUIntVector(&groupToName, 0);					// group 0 (the entire match) doesn't actually map to an element
-	
+    
+    NSMutableArray* regexen = [NSMutableArray new];
+			
 	NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
 
 	NSUInteger oldErrCount = errors.count;
@@ -245,25 +218,22 @@
 				
 		NSError* error = nil;
 		NSRegularExpression* re = [[NSRegularExpression alloc] initWithPattern:pattern options:options error:&error];
-		if (re)
+        if (!re)
+        {
+            NSString* reason = [error localizedFailureReason];
+            [errors addObject:[NSString stringWithFormat:@"regex on line %@ failed to parse: %@", lines[i], reason]];
+            continue;
+        }
+		if (re.numberOfCaptureGroups > 1)
 		{
-			pushUIntVector(&groupToName, i+1);
-			for (int j = 0; j < re.numberOfCaptureGroups; ++j)
-			{
-				pushUIntVector(&groupToName, i+1);
-			}
+            [errors addObject:[NSString stringWithFormat:@"regex on line %@ has more than one capture group", lines[i]]];
+            continue;
 		}
-		else
-		{
-			NSString* reason = [error localizedFailureReason];
-			[errors addObject:[NSString stringWithFormat:@"regex on line %@ failed to parse: %@", lines[i], reason]];
-		}
+        
+        [regexen addObject:re];
 	}
-	
-	if (errors.count > oldErrCount)
-		setSizeUIntVector(&groupToName, 0);
-	
-	return groupToName;
+    
+    return errors.count == oldErrCount ? regexen : nil;
 }
 
 @end

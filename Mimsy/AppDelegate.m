@@ -125,6 +125,7 @@ void initLogGlobs()
 		[center addObserver:self selector:@selector(_mountFailed:)
 					   name:kGMUserFileSystemMountFailed object:nil];
 		_procFileSystem = [ProcFileSystem new];
+        _inited = true;
 
 		initFunctionalTests();
 	}
@@ -348,6 +349,7 @@ void initLogGlobs()
 	UNUSED(notification);
 	
 	__weak AppDelegate* this = self;
+    [TranscriptController startedUp];
 	[[NSApp helpMenu] setDelegate:this];
 
 	[self _addTransformItems];

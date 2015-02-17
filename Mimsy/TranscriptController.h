@@ -2,11 +2,14 @@
 
 #import "BaseTextController.h"
 
+
 // Manages access to the window used to display the results of builds
 // (and the occasional message from Mimsy).
 @interface TranscriptController : BaseTextController
 
 @property IBOutlet NSTextView* view;
+
++ (void)startedUp;
 
 + (bool)empty;
 
