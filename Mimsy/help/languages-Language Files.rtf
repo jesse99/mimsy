@@ -1,4 +1,4 @@
-{\rtf1\ansi\ansicpg1252\cocoartf1343\cocoasubrtf140
+{\rtf1\ansi\ansicpg1252\cocoartf1343\cocoasubrtf160
 {\fonttbl\f0\froman\fcharset0 Times-Roman;}
 {\colortbl;\red255\green255\blue255;\red24\green123\blue11;\red255\green0\blue0;}
 \viewkind0
@@ -12,8 +12,9 @@ These settings can also override app settings in directory .app.mimsy files whic
 New languages can be added to the user directory. Languages are defined using a simple line-based file format consisting of settings and elements. The settings configure various aspects of the language and the elements affect highlighting.\
 \
 The settings are:\
+\pard\pardeftab480\pardirnatural
 
-\b Language
+\b \cf0 Language
 \b0 : is the name of the language. By convention this is lower case. This is a required setting.\
 \
 
@@ -30,11 +31,11 @@ The settings are:\
 \
 
 \b Shebang
-\b0 : name of the associated tool appearing on a shebang line. May appear multiple times. This is an alternative way to associate files with a language.\
+\b0 : name of the associated tool appearing on a shebang line. May appear multiple times. This is an alternative way to associate files with a language. \cf3 Not implemented yet.\cf0 \
 \
 
 \b IgnoreWhitespace
-\b0 : if this is true then leading and trailing whitespace is not highlighted. Defaults to false.\
+\b0 : if this is true then leading and trailing whitespace is not highlighted. Defaults to false. \cf3 Not implemented yet.\cf0 \
 \
 
 \b LineComment
@@ -46,15 +47,15 @@ Help
 \
 
 \b Shebangs
-\b0 : space separated list of shebangs associated with the language, eg sh ksh csh bash. This allows files written in the language to be highlighted even if they don't have a matching glob.\
+\b0 : space separated list of shebangs associated with the language, eg sh ksh csh bash. This allows files written in the language to be highlighted even if they don't have a matching glob. \cf3 Not implemented yet.\cf0 \
 \
 
 \b SpacesNotTabs
-\b0 : if true spaces are inserted instead of tabs. If present this will override the directory editor preference.\
+\b0 : if true spaces are inserted instead of tabs. If present this will override the directory editor preference. \cf3 Not implemented yet.\cf0 \
 \
 
 \b TabStops
-\b0 : space separated list of integral tab stops. This overrides the normal tab stops set in the preferences panel and is useful for languages that have fixed columns (like disassembled code).\
+\b0 : space separated list of integral tab stops. This overrides the normal tab stops set in the preferences panel and is useful for languages that have fixed columns (like disassembled code). \cf3 Not implemented yet.\cf0 \
 \
 
 \b Word
@@ -72,16 +73,15 @@ Commonly used meta-characters include:\
 Commonly used operators include:\
 	e*?		Match zero or more times, matching as few as possible.\
 	e+?		Match one or more times, matching as few as possible.\
-	(?: e)		non-capturing group, this should be used instead of ()\
+	(e)			capturing group\
+	(?: e)		non-capturing group\
 	(?= e)		zero-width positive look ahead assertion\
 	(?! e)		zero-width negative look ahead assertion\
 	(?<= e)	zero-width positive look behind assertion (must be bounded: no * or + operators)\
 	(?<! e)	zero-width negative look behind assertion (must be bounded: no * or + operators)\
 	\
-The requirement that look behind assertions must be bounded can cause problems, e.g. if you want to match foo in something like \cf2 "  def foo(self):"\cf0 . To work around this Mimsy uses the shortest non-zero match. So a regex for foo would look something like \cf2 r"(?<= \\s def) \\s+ ([\\w_]+) (?= \\()"\cf0 . We still need a look behind assertion so that def is recognized as a keyword. (This isn't a great example because it can be written without using a capturing group).\
-	\
+The regular expressions are applied in the order that they are declared. If the expression includes a capturing group then that capture is styled; this can be used to work around the limitation that look behind assertions must be bounded. If a later regular expression match intersects an earlier regex then the later match is ignored.\
+\
 Changes to language files are dynamic: the prefs panel and text documents will both update when a lang file is saved. \
 \
-\pard\pardeftab480\pardirnatural
-\cf3 A lot of this isn't implemented yet.\cf0 \
 }
