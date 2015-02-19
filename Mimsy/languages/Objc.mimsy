@@ -26,14 +26,14 @@ Macro: \b(?: __FILE__ | __LINE__ | __DATE__ | __TIME__ | __STDC__ | __STDC_VERSI
 
 Boolean: \b(?: false | true | YES | NO)\b
 
-Float: (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)? [fFlL]?)
-Float: (\. [\d_]+ (?: [eE] [+-]? [\d_]+)? [fFlL]?)
-Number: (\d+ (?: [luLU]{0, 2}))
-Number: (0x [0-9a-fA-f]+ (?: [luLU]{0, 2}))
-
 PreProc: \x23 \s* (?: define | undef) .* $
 PreProc: \x23 \s* (?: warning | error | line | pragma)
 PreCondit: \x23 \s* (?: ifdef | ifndef | if | else | elif | endif) .* $
 Include: \x23 \s* (?: include | import)
 
 Identifier: \b [a-zA-Z_] [\w_:]* \b
+
+Float: (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)? [fFlL]?)
+Float: (\. [\d_]+ (?: [eE] [+-]? [\d_]+)? [fFlL]?)
+Number: (\d+ (?: [luLU]{0, 2}))
+Number: (0x [0-9a-fA-f]+ (?: [luLU]{0, 2}))

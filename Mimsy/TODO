@@ -9,9 +9,6 @@ http://www.learnswift.tips/
 
 
 
-* Work on a way to override styles:
-    - update docs: longest regexes should be listed first, can use (one) group, use a group where you would otherwise use an unbounded look-behind assertion
-    - do a commit
 * Double clicking IEEE80211_STYPE_ACTION sucks
 * Need an extension to toggle between headers and source files.
 * Simplest to use background color instead of glyphs: see http://asciiwwdc.com/2010/sessions/114
@@ -19,7 +16,7 @@ http://www.learnswift.tips/
     - need a way to add menu items
     - gracefuly handle unloaded extensions
     - add a note about substituting glyphs
-    - show return characters
+    - show return characters  uj
     - show control characters
     - show tabs
     - show spaces

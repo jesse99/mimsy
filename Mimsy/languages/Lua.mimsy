@@ -23,9 +23,9 @@ Macro: \b(?: _G | _VERSION)\b
 
 Boolean: \b(?: false | true | FALSE | TRUE)\b
 
+Identifier: \b [a-zA-Z_] [\w_]* \b
+
 Float: (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)?)
 Float: (\. [\d_]+ (?: [eE] [+-]? [\d_]+)?)
 Number: (\d+)
 Number: (0x [0-9a-fA-f]+)
-
-Identifier: \b [a-zA-Z_] [\w_]* \b

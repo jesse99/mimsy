@@ -20,12 +20,6 @@ Repeat: \b(?: for)\b
 
 Boolean: \b(?: false | true)\b
 
-Float: (\d+ \. \d* (?: [eE] [+-]? \d+)? i?)
-Float: (\d+ [eE] [+-]? \d+ i?)
-Float: (\. \d+ (?: [eE] [+-]? \d+)? i?)
-Number: (\d+ i?)
-Number: (0[xX] [0-9a-fA-f]+ i?)
-
 PreProc: \x23 \s* (?: define | undef) .* $
 PreProc: \x23 \s* (?: warning | error | line | pragma)
 PreCondit: \x23 \s* (?: ifdef | ifndef | if | else | elif | endif) .* $
@@ -36,3 +30,9 @@ Function: (?<= \s func) \s+ ([\w_]+) \s* (?= \(|<)
 Function: (?<= \s func) \s* \( [^)]+ \) \s* ([\w_]+) \s* (?= \(|<)
 
 Identifier: \b [a-zA-Z_] [\w_]* \b
+
+Float: (\d+ \. \d* (?: [eE] [+-]? \d+)? i?)
+Float: (\d+ [eE] [+-]? \d+ i?)
+Float: (\. \d+ (?: [eE] [+-]? \d+)? i?)
+Number: (\d+ i?)
+Number: (0[xX] [0-9a-fA-f]+ i?)

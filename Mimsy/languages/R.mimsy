@@ -27,7 +27,7 @@ Keyword: [^\w_.](?: abbreviate | abs | acos | acosh | addNA | addTaskCallback | 
 
 Repeat: \b(?: for | repeat | while)\b
 
+Identifier: \b [a-zA-Z_] [\w_]* \b
+
 Number: [\d_]+ \. \d+ (?: [eE] [\+-]? \d+)?
 Number: [\d_]+ (?: [eE] [\+-]? \d+)? L?
-
-Identifier: \b [a-zA-Z_] [\w_]* \b

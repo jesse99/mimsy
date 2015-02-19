@@ -28,13 +28,6 @@ Macro: \b(?: fmt\! | error! | warn\! | info\! | debug\! | env\! | stringify\! | 
 
 Boolean: \b(?: false | true)\b
 
-Float: (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)? (?: f \d+)?)
-Float: (\. [\d_]+ (?: [eE] [+-]? [\d_]+)? (?: f \d+)?)
-Number: (0b [01_]+ (?: [uif] \d*)?)
-Number: (0x [0-9A-Fa-f_]+ (?: [uif] \d*)?)
-Number: ([\d_]+ (?: [uif] \d*)?)
-Float: ([eE] [+-]? [\d_]+ (?: f \d+)?)
-
 Attribute: ^ \s* \x23 \s* \[ (\w+)
 Argument: \b(?: (?<! (?: let | impl | struct) \s) \s* [&+]? (\w+) \s* : (?! :))
 Structure: (?<= enum) \s+ (\w+)
@@ -49,3 +42,10 @@ Operator: \s+ (\&\& | \|\|) \s+
 Identifier: \$ \w+
 
 Identifier: \b [a-zA-Z_] [\w_]* \b
+
+Float: (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)? (?: f \d+)?)
+Float: (\. [\d_]+ (?: [eE] [+-]? [\d_]+)? (?: f \d+)?)
+Number: (0b [01_]+ (?: [uif] \d*)?)
+Number: (0x [0-9A-Fa-f_]+ (?: [uif] \d*)?)
+Number: ([\d_]+ (?: [uif] \d*)?)
+Float: ([eE] [+-]? [\d_]+ (?: f \d+)?)
