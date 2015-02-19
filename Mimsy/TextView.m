@@ -45,7 +45,7 @@
             proposedRange.length = 1;
         
         if (result.length == 0)
-            result = [self _extendRe:controller.language.word proposedRange:proposedRange lookAround:4];
+            result = [self _extendRe:controller.language.word proposedRange:proposedRange lookAround:16];
     
         // Yuckily enough we also need to special case numbers because Cocoa selects too little of "10.11e+100"
         // and too much of "10,20,30". Note that we need a lookAround large enough to handle the maximum
