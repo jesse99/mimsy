@@ -465,6 +465,12 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 			bool hasMac, hasWindows;
 			_endian = getEndian(text, &hasMac, &hasWindows);
 			_encoding = decode.encoding;
+            if (hasWindows && hasMac)
+                LOG("Text", "The document has both mac and windows line endings");
+            else if (hasWindows)
+                LOG("Text", "The document has windows line endings");
+            else if (hasMac)
+                LOG("Text", "The document has windows line endings");
 			
 			if (self.encoding == NSMacOSRomanStringEncoding)
 				[TranscriptController writeError:@"Read the file as Mac OS Roman (it isn't utf-8, utf-16, or utf-32)."];
@@ -557,7 +563,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 			// encoding is inferred from the contents of the file (or set via the Get Info panel).
 			if (!_encoding)
 				_encoding = NSUTF8StringEncoding;
-			[self restoreEndian:str];
+			str = [self restoreEndian:str];
 			[self checkForControlChars:str];
 			data = [str dataUsingEncoding:self.encoding allowLossyConversion:YES];
 		}
@@ -565,14 +571,14 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		{
 			// This case is only used when the user selects save as and then the utf16 encoding.
 			_encoding = NSUTF16LittleEndianStringEncoding;
-			[self restoreEndian:str];
+			str = [self restoreEndian:str];
 			[self checkForControlChars:str];
 			data = [str dataUsingEncoding:self.encoding allowLossyConversion:YES];
 		}
 		else if ([typeName isEqualToString:@"HTML"])
 		{
 			NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType};
-			[self restoreEndian:str];
+			str = [self restoreEndian:str];
 			[self checkForControlChars:str];
 			data = [storage dataFromRange:NSMakeRange(0, storage.length) documentAttributes:attrs error:outError];
 		}
@@ -646,13 +652,21 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		LOG("Text:Verbose", "Couldn't read back-color for '%s': %s", STR(path), STR([error localizedFailureReason]));
 }
 
-- (void)restoreEndian:(NSMutableString*)str
+- (NSMutableString*)restoreEndian:(NSMutableString*)str
 {
 	NSRange range = NSMakeRange(0, str.length);
 	if (self.endian == MacEndian)
+    {
+        str = [str mutableCopy];   // need to copy because we're operating on the backing store
 		[str replaceOccurrencesOfString:@"\n" withString:@"\r" options:NSLiteralSearch range:range];
+    }
 	else if (self.endian == WindowsEndian)
+    {
+        str = [str mutableCopy];
 		[str replaceOccurrencesOfString:@"\n" withString:@"\r\n" options:NSLiteralSearch range:range];
+    }
+    
+    return str;
 }
 
 // It is fairly rare for control characters to wind up in text files, but when it does happen
