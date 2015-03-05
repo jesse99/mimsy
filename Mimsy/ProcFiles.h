@@ -46,8 +46,31 @@
 
 @end
 
+typedef NSArray* (^KeysBlock)();
+typedef NSString* (^ValueBlock)(NSString*);
+
+// Proc file used to return read-only values by key.
+@interface ProcFileKeyStoreR : NSObject <ProcFile>
+
+- (id)initWithDir:(NSString* (^) ())directory keys:(KeysBlock)keys values:(ValueBlock)values;
+
+- (bool)matchesAnyDirectory:(NSString*)path;
+- (bool)matchesFile:(NSString*)path;
+- (NSArray*)directChildren:(NSString*)path;
+
+- (unsigned long long)sizeFor:(NSString*)path;
+- (bool)setSize:(unsigned long long)size;
+
+- (bool)openPath:(NSString*) path read:(bool)reading write:(bool)writing;
+- (void)close;
+
+- (int)read:(char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error;
+- (int)write:(const char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error;
+
+@end
+
 // Proc file used to store arbitrary extension state.
-@interface ProcFileKeyStore : NSObject <ProcFile>
+@interface ProcFileKeyStoreRW : NSObject <ProcFile>
 
 - (id)initWithDir:(NSString* (^) ())directory;
 

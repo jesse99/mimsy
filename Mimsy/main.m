@@ -63,6 +63,7 @@ static void registerAppSettings()
 	[AppSettings registerSetting:@"DefaultFindAllDirectory"];
 	[AppSettings registerSetting:@"DontOpenWithMimsy"];
 	[AppSettings registerSetting:@"EnableSubstitutions"];
+    [AppSettings registerSetting:@"FileDual"];
 	[AppSettings registerSetting:@"FindAllAlwaysExclude"];
 	[AppSettings registerSetting:@"FindAllExcludes"];
 	[AppSettings registerSetting:@"FindAllIncludes"];

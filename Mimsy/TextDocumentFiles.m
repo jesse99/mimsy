@@ -20,7 +20,7 @@
 	ProcFileReadWrite* _colNumFile;
 	ProcFileReader* _elementNameFile;
 	ProcFileReader* _elementNamesFile;
-	ProcFileKeyStore* _keyStoreFile;
+	ProcFileKeyStoreRW* _keyStoreFile;
 	ProcFileReader* _languageFile;
     ProcFileReader* _lengthFile;
 	ProcFileReadWrite* _lineNumFile;
@@ -550,15 +550,15 @@
 	return file;
 }
 
-- (ProcFileKeyStore*)_createKeyStore:(NSString*)name
+- (ProcFileKeyStoreRW*)_createKeyStore:(NSString*)name
 {
-	ProcFileKeyStore* file = nil;
+	ProcFileKeyStoreRW* file = nil;
 	
 	AppDelegate* app = (AppDelegate*) [NSApp delegate];
 	ProcFileSystem* fs = app.procFileSystem;
 	if (fs)
 	{
-		file = [[ProcFileKeyStore alloc] initWithDir:^NSString*
+		file = [[ProcFileKeyStoreRW alloc] initWithDir:^NSString*
 			 {
 				 return [NSString stringWithFormat:@"/text-document/%@", name];
 			 }];

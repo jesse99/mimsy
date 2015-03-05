@@ -19,6 +19,8 @@
 // be included.
 + (void)enumerate:(NSString*) key with:(void (^)(NSString* fileName, NSString* value))block;
 
++ (NSArray*)getKeys;
+
 // This is used to distinguish between app settings and directory/
 // language settings.
 + (void)registerSetting:(NSString*)name;

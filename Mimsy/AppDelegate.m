@@ -18,6 +18,7 @@
 #import "Languages.h"
 #import "LocalSettings.h"
 #import "Logger.h"
+#import "OpenSelection.h"
 #import "Paths.h"
 #import "ProcFileSystem.h"
 #import "ProcFiles.h"
@@ -71,6 +72,8 @@ void initLogGlobs()
 @implementation AppDelegate
 {
     ProcFileReadWrite* _beepFile;
+    ProcFileKeyStoreR* _appSetting;
+    ProcFileKeyStoreR* _appSettings;
     ProcFileReader* _extensionSettings;
     ProcFileReadWrite* _logFile;
     ProcFileReadWrite* _pasteBoardText;
@@ -82,6 +85,7 @@ void initLogGlobs()
     ProcFileAction* _showItem;
     ProcFileAction* _newDirectory;
     ProcFileAction* _openAsBinary;
+    ProcFileAction* _openLocal;
 
 	DirectoryWatcher* _languagesWatcher;
     DirectoryWatcher* _settingsWatcher;
@@ -109,15 +113,6 @@ void initLogGlobs()
 		_pendingBlocks = [NSMutableDictionary new];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appSettingsChanged:) name:@"AppSettingsChanged" object:nil];
-		
-		[self _installFiles];
-		[self _loadSettings];
-		[self _loadHelpFiles];
-		[self _watchInstalledFiles];
-        [TranscriptController writeInfo:@""];   // make sure we create this within the main thread
-		[StartupScripts setup];
-		[WindowsDatabase setup];
-		[Languages setup];
 		
 		NSNotificationCenter* center = [NSNotificationCenter defaultCenter];
 		[center addObserver:self selector:@selector(_didMount:)
@@ -165,6 +160,21 @@ void initLogGlobs()
 					 UNUSED(str);
 					 NSBeep();
 				 }];
+    
+    _appSetting = [[ProcFileKeyStoreR alloc] initWithDir:^NSString *{return @"/app-setting";}
+        keys:^NSArray *{
+            return [AppSettings getKeys];
+        } values:^NSString *(NSString *key) {
+            return [AppSettings stringValue:key missing:@""];
+        }];
+    
+    _appSettings = [[ProcFileKeyStoreR alloc] initWithDir:^NSString *{return @"/app-settings";}
+        keys:^NSArray *{
+            return [AppSettings getKeys];
+        } values:^NSString *(NSString *key) {
+            NSArray* values = [AppSettings stringValues:key];
+            return [values componentsJoinedByString:@"\f"];
+        }];
     
     _extensionSettings = [[ProcFileReader alloc]
                     initWithDir:^NSString *{return @"/";}
@@ -302,20 +312,35 @@ void initLogGlobs()
                                                 }];
 
     _openAsBinary = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/open-as-binary";}
+                                                handler:^NSArray *(NSArray *args) {
+                                                    NSString* path = args[0];
+                                                    
+                                                    dispatch_queue_t main = dispatch_get_main_queue();
+                                                    dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_MSEC);
+                                                    dispatch_after(delay, main, ^{
+                                                        NSURL* url = [[NSURL alloc] initFileURLWithPath:path];
+                                                        [self openBinary:url];
+                                                    });
+                                                    
+                                                    return @[@"0", @""];
+                                                }];
+    
+    _openLocal = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/open-local";}
         handler:^NSArray *(NSArray *args) {
             NSString* path = args[0];
             
             dispatch_queue_t main = dispatch_get_main_queue();
             dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_MSEC);
             dispatch_after(delay, main, ^{
-                NSURL* url = [[NSURL alloc] initFileURLWithPath:path];
-                [self openBinary:url];
+                (void) openLocalPath(path);
             });
             
             return @[@"0", @""];
         }];
 	
     [_procFileSystem addWriter:_beepFile];
+    [_procFileSystem addReader:_appSetting];
+    [_procFileSystem addReader:_appSettings];
     [_procFileSystem addReader:_extensionSettings];
     [_procFileSystem addWriter:_logFile];
     [_procFileSystem addWriter:_pasteBoardText];
@@ -326,7 +351,8 @@ void initLogGlobs()
     [_procFileSystem addReader:_showItem];
     [_procFileSystem addReader:_newDirectory];
     [_procFileSystem addReader:_pasteBoardText];
-	[_procFileSystem addReader:_openAsBinary];
+    [_procFileSystem addReader:_openAsBinary];
+	[_procFileSystem addReader:_openLocal];
 
     [TextController startup];
 
@@ -351,6 +377,15 @@ void initLogGlobs()
 	__weak AppDelegate* this = self;
     [TranscriptController startedUp];
 	[[NSApp helpMenu] setDelegate:this];
+    
+    [self _installFiles];
+    [self _loadSettings];
+    [self _loadHelpFiles];
+    [self _watchInstalledFiles];
+    [TranscriptController writeInfo:@""];   // make sure we create this within the main thread
+    [StartupScripts setup];
+    [WindowsDatabase setup];
+    [Languages setup];
 
 	[self _addTransformItems];
 }

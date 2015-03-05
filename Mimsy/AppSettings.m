@@ -128,16 +128,34 @@ static LocalSettings* _cachedLangSettings;
 
 + (void)enumerate:(NSString*) key with:(void (^)(NSString* fileName, NSString* value))block
 {
+    AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
+    [delegate.settings enumerate:key with:block];
+    
+    DirectoryController* controller = [DirectoryController getCurrentController];
+    if (controller)
+        [controller.settings enumerate:key with:block];
+    
+    TextController* tc = [TextController frontmost];
+    if (tc && tc.language)
+        [tc.language.settings enumerate:key with:block];
+}
+
++ (NSArray*)getKeys
+{
+    NSMutableArray* names = [NSMutableArray new];
+    
 	AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
-	[delegate.settings enumerate:key with:block];
+    [names addObjectsFromArray:delegate.settings.getKeys];
 	
 	DirectoryController* controller = [DirectoryController getCurrentController];
 	if (controller)
-		[controller.settings enumerate:key with:block];
+        [names addObjectsFromArray:controller.settings.getKeys];
 	
 	TextController* tc = [TextController frontmost];
 	if (tc && tc.language)
-		[tc.language.settings enumerate:key with:block];
+        [names addObjectsFromArray:tc.language.settings.getKeys];
+    
+    return names;
 }
 
 // ---- convenience methods ----------------------------------

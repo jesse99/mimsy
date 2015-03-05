@@ -114,3 +114,10 @@ DontOpenWithMimsy:
 # When pasting from something like Terminal into a Mimsy RTF file it's
 # usually annoying to preserve the window back color.
 PasteCopiesBackColor: false
+
+# File extensions used by the open-dual extension.
+FileDual: h c cpp c++
+FileDual: c h
+FileDual: cpp h hpp h++
+FileDual: c++ h hpp h++
+

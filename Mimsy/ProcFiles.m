@@ -389,7 +389,125 @@ static NSArray* directChildren(NSString* path, NSString* directory, NSString* fi
 
 @end
 
-@implementation ProcFileKeyStore
+@implementation ProcFileKeyStoreR
+{
+    NSString* (^_directory ) ();
+    KeysBlock _keys;
+    ValueBlock _values;
+    NSData* _data;
+}
+
+- (id)initWithDir:(NSString* (^) ())directory keys:(KeysBlock)keys values:(ValueBlock)values;
+{
+    self = [super init];
+    
+    if (self)
+    {
+        _directory = directory;
+        _keys = keys;
+        _values = values;
+    }
+    
+    return self;
+}
+
+- (NSString*)description
+{
+    return _directory();
+}
+
+- (bool)matchesAnyDirectory:(NSString*)path
+{
+    return matchesAnyDirectory(path, _directory());
+}
+
+- (bool)matchesFile:(NSString*)path
+{
+    NSString* directory = _directory();
+    NSString* root = [path stringByDeletingLastPathComponent];
+    
+    return [directory isEqualToString:root];
+}
+
+- (NSArray*)directChildren:(NSString*)path
+{
+    NSString* directory = _directory();
+    if ([directory isEqualToString:path])
+    {
+        return _keys();
+    }
+    else
+    {
+        return directChildren(path, directory, @"not a valid file name");
+    }
+}
+
+- (bool)openPath:(NSString*) path read:(bool)reading write:(bool)writing
+{
+    UNUSED(path, reading, writing);
+    
+    // Don't allow a process to open the file if another process has the file
+    // opened. This should be OK because extensions should execute
+    // when triggered by Mimsy which will serialize their execution.
+    bool ok = _data == nil;
+    
+    if (ok)
+    {
+        NSString* key = path.lastPathComponent;
+        NSString* value = _values(key);
+        
+        if (value)
+            _data = [value dataUsingEncoding:NSUTF8StringEncoding];
+        else
+            ok = false;
+    }
+    
+    return ok;
+}
+
+- (void)close;
+{
+    _data = nil;
+}
+
+- (unsigned long long)sizeFor:(NSString*)path
+{
+    NSString* key = path.lastPathComponent;
+    NSString* value = _values(key);
+    
+    if (value)
+        return [[value dataUsingEncoding:NSUTF8StringEncoding] length];
+    else
+        return 0;
+}
+
+- (bool)setSize:(unsigned long long)size
+{
+    UNUSED(size);
+    
+    return false;
+}
+
+- (int)read:(char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error
+{
+    ASSERT(_data);
+    
+    return [ProcFileReader readInto:buffer size:size offset:offset from:_data error:error];
+}
+
+- (int)write:(const char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error
+{
+    UNUSED(buffer, size, offset);
+    
+    if (error)
+        *error = [NSError errorWithDomain:NSPOSIXErrorDomain code:EPERM userInfo:nil];
+    
+    return -1;
+}
+
+@end
+
+@implementation ProcFileKeyStoreRW
 {
 	NSMutableDictionary* _store;
 	NSString* (^_directory ) ();

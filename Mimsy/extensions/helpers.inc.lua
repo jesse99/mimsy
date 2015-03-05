@@ -79,9 +79,20 @@ end
 
 -- Returns the file name component of a full path or nil.
 function file_name(path)
-	local i = rfind(path, "/")
-	if i ~= nil then
-		return string.sub(path, i + 1, string.len(path) - i)
+    local i = rfind(path, "/")
+    if i ~= nil then
+        return string.sub(path, i + 1)
+    else
+        return nil
+    end
+end
+
+-- Returns the file extension of a path or nil. Does not return the period.
+function file_extension(path)
+	local i = rfind(path, ".")
+    local j = rfind(path, "/")
+	if i ~= nil and (j == nil or i > j) then
+		return string.sub(path, i + 1)
 	else
 		return nil
 	end

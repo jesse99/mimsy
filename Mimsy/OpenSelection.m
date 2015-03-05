@@ -295,6 +295,20 @@ static void _getLineAndCol(NSString* text, NSUInteger location, NSUInteger lengt
 	}
 }
 
+bool openLocalPath(NSString* path)
+{
+    int line = -1, col = -1;
+
+    bool found = false;
+    if (!found)
+        found = _openRelativePath(path, line, col);
+    
+    if (!found)
+        found = _openLocalPath(path, line, col);
+    
+    return found;
+}
+
 static bool _openFile(NSString* text, NSUInteger location, NSUInteger length)
 {
 	bool found = false;

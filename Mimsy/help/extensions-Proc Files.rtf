@@ -1,4 +1,4 @@
-{\rtf1\ansi\ansicpg1252\cocoartf1343\cocoasubrtf160
+{\rtf1\ansi\ansicpg1252\cocoartf1344\cocoasubrtf720
 {\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\fnil\fcharset0 Menlo-Regular;}
 {\colortbl;\red255\green255\blue255;}
 \viewkind0
@@ -8,8 +8,9 @@
 \f0\fs36 \cf0 The proc files are used by extensions to customize the behavior of Mimsy. Extensions are either Lua scripts or executables (scripts ending with ".inc.lua" are not loaded). \
 \
 When an executable extension starts up it must write lines formatted as "<key>\\f<value>" to stdout where the keys may be:\
+\pard\pardeftab480\pardirnatural
 
-\b name		
+\b \cf0 name		
 \b0 The name of the extension. This is required.\
 
 \b version	
@@ -112,10 +113,28 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \b \
 \pard\tx626\pardeftab626\pardirnatural
 
+\fs48 \cf0 /Volumes/Mimsy/app-setting/<name>\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b0\fs36 \cf0 	Returns the value of the named setting or an empty string. The value is taken from the first of the language file of the current text document, the .mimsy.rtf file in the current directory, or the app.mimsy file.\
+\pard\tx626\pardeftab626\pardirnatural
+
+\b \cf0 \
+\pard\tx626\pardeftab626\pardirnatural
+
+\fs48 \cf0 /Volumes/Mimsy/app-settings/<name>\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b0\fs36 \cf0 	Returns all the values of the named setting. The values are taken from the language file of the current text document, the .mimsy.rtf file in the current directory, and the app.mimsy file. The values are form-feed separated.\
+\pard\tx626\pardeftab626\pardirnatural
+
+\b \cf0 \
+\pard\tx626\pardeftab626\pardirnatural
+
 \fs48 \cf0 /Volumes/Mimsy/actions/\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
-\b0\fs36 \cf0 Unlike the other proc files the files underneath action are used to perform some action, not manage state. The arguments to the action form-feed separated and base64 encoded into the file name. Unless otherwise noted the contents of the file are an error code and the localized failure reason separated by a form feed character. A zero error code implies success.\
+\b0\fs36 \cf0 Unlike the other proc files the files underneath action are used to perform some action, not manage state. The arguments to the action are form-feed separated and base64 encoded into the file name. Unless otherwise noted the contents of the file are an error code and the localized failure reason separated by a form feed character. A zero error code implies success.\
 
 \b \
 \pard\tx626\pardeftab626\pardirnatural
@@ -143,6 +162,11 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \b \CocoaLigature1 open-as-binary/path
 \b0 \CocoaLigature0  (r)\
 	Creates a new window showing the contents of the file as binary data.\
+\
+	
+\b \CocoaLigature1 open-local/path
+\b0 \CocoaLigature0  (r)\
+	Open files within open directories matching (the usually partial) path.\
 \
 	
 \b \CocoaLigature1 show-in-finder/path
