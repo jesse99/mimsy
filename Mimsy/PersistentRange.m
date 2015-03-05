@@ -133,7 +133,7 @@
 	[self _deregisterNotifications:controller];
 	
 	_controller = nil;
-	LOG("Text:PersistentRange", "closed window");
+	LOG("Text:PersistentRange:Verbose", "closed window");
 }
 
 - (void)_windowSaved:(NSNotification*)notification
@@ -141,7 +141,7 @@
 	UNUSED(notification);
 	
 	_onDiskRange = _inMemoryRange;
-	LOG("Text:PersistentRange", "onDisk = %lu, %lu (saved)", _onDiskRange.location, _onDiskRange.length);
+	LOG("Text:PersistentRange:Verbose", "onDisk = %lu, %lu (saved)", _onDiskRange.location, _onDiskRange.length);
 }
 
 // TODO: We do not handle reverting changes properly. Not sure how to
@@ -162,18 +162,18 @@
 
 		if (affectedRange.location + affectedRange.length < self.range.location)
 		{
-			LOG("Text:PersistentRange", "   editedRange = %lu, %lu", editedRange.location, editedRange.length);
-			LOG("Text:PersistentRange", "   self.range = %lu, %lu", self.range.location, self.range.length);
+			LOG("Text:PersistentRange:Verbose", "   editedRange = %lu, %lu", editedRange.location, editedRange.length);
+			LOG("Text:PersistentRange:Verbose", "   self.range = %lu, %lu", self.range.location, self.range.length);
 
 			_inMemoryRange.location = _inMemoryRange.location + changedLength;
-			LOG("Text:PersistentRange", "   inMemory = %lu, %lu", _inMemoryRange.location, _inMemoryRange.length);
+			LOG("Text:PersistentRange:Verbose", "   inMemory = %lu, %lu", _inMemoryRange.location, _inMemoryRange.length);
             if (_callback)
                 _callback(self);
 		}
 		else if (NSIntersectionRange(affectedRange, self.range).length > 0)
 		{
 			_inMemoryRange.location = NSNotFound;
-			LOG("Text:PersistentRange", "inMemory = %lu, %lu", _inMemoryRange.location, _inMemoryRange.length);
+			LOG("Text:PersistentRange:Verbose", "inMemory = %lu, %lu", _inMemoryRange.location, _inMemoryRange.length);
             if (_callback)
                 _callback(self);
 		}
