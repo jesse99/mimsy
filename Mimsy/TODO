@@ -8,8 +8,6 @@ http://www.learnswift.tips/
 
 
 
-* "http://%s/ubus" wasn't formatted properly in go
-* shift-option-right arrow selected periods in stuff like target.field_name
 * Simplest to use background color instead of glyphs: see http://asciiwwdc.com/2010/sessions/114
     - show trailing spaces
     - need a way to add menu items
@@ -64,6 +62,10 @@ http://www.learnswift.tips/
 * Use FUSE to enable remote editing.
 * Can tag files, for searching? Color coding? NSURLTagNamesKey
     - maybe a context menu item
+* Stuff like "http://%s/ubus" isn't formatted correctly:
+    - // is formatted as a comment
+    - if Comment and String regexen are flipped get the inverse problem
+    - might need to go back to building a mega regex
 * Add go to search for a file:
 	- color code and location column
 	- locations are current project, open windows, open projects, global

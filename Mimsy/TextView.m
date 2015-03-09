@@ -39,19 +39,24 @@
     NSRange result = NSMakeRange(NSNotFound, 0);
     
     TextController* controller = _controller;
-    if (granularity == NSSelectByWord && controller && controller.language != nil)
+    if (controller && controller.language != nil)
     {
-        if (proposedRange.length == 0)
-            proposedRange.length = 1;
+        // TODO: This breaks when doing stuff like option-shift-left arrow for foo.bar because the original
+        // proposed range is too long. Not sure how to fix this without breaking option-shift-right arrow.
+        if (granularity == NSSelectByWord || (granularity == NSSelectByCharacter && proposedRange.length > 1))
+        {
+            // Sometimes the proposed range is too large...
+            NSRange proposed = NSMakeRange(proposedRange.location, 1);
+            
+            if (result.length == 0)
+                result = [self _extendRe:controller.language.word proposedRange:proposed lookAround:16];
         
-        if (result.length == 0)
-            result = [self _extendRe:controller.language.word proposedRange:proposedRange lookAround:16];
-    
-        // Yuckily enough we also need to special case numbers because Cocoa selects too little of "10.11e+100"
-        // and too much of "10,20,30". Note that we need a lookAround large enough to handle the maximum
-        // number of fractional digits ("11e+100" isn't always a legal number).
-        if (result.length == 0)
-            result = [self _extendRe:controller.language.number proposedRange:proposedRange lookAround:16];
+            // Yuckily enough we also need to special case numbers because Cocoa selects too little of "10.11e+100"
+            // and too much of "10,20,30". Note that we need a lookAround large enough to handle the maximum
+            // number of fractional digits ("11e+100" isn't always a legal number).
+            if (result.length == 0)
+                result = [self _extendRe:controller.language.number proposedRange:proposed lookAround:16];
+        }
     }
     
     if (result.length == 0)
