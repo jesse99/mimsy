@@ -8,10 +8,8 @@ http://www.learnswift.tips/
 
 
 
-* Need an extension to toggle between headers and source files:
-    - need to include the extension name in the special keys help doc
-    - do a push
-* Need to get rid of startup scripts
+* "http://%s/ubus" wasn't formatted properly in go
+* shift-option-right arrow selected periods in stuff like target.field_name
 * Simplest to use background color instead of glyphs: see http://asciiwwdc.com/2010/sessions/114
     - show trailing spaces
     - need a way to add menu items
@@ -25,6 +23,7 @@ http://www.learnswift.tips/
         ideally using a setting
     - maybe some common errors (like using the wrong comment characters)
 * Local search should try all open projects before doing a global search.
+* Need to get rid of startup scripts
 * Seems like we could get goto definition working with just the styler
     - maybe use a special regex for files that are not open
 * Editor features: http://texteditors.org/cgi-bin/wiki.pl?HomePage

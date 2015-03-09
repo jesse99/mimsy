@@ -9,7 +9,8 @@
 	"fonts":
 	{
 		"key-name": ["Times Bold", 18],
-		"key-text": ["Times", 18]
+        "key-text": ["Times", 18],
+		"key-src": ["Times Italic", 14]
 	},
 	"contexts":
 	{

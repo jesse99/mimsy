@@ -8,6 +8,7 @@
 
 static NSDictionary* _keyNameAttrs;
 static NSDictionary* _keyTextAttrs;
+static NSDictionary* _keySrcAttrs;
 static ProcFileReadWrite* _extensionKeys;
 
 static NSDictionary* _json;
@@ -78,7 +79,8 @@ static NSDictionary* _json;
 	for (NSString* name in json[@"keys"])
 	{
 		NSString* description = json[@"keys"][name];
-		keys[name] = description;
+        keys[name] = description;
+        keys[[name stringByAppendingString:@"-extension"]] = json[@"extension"];
 	}
 }
 
@@ -96,6 +98,7 @@ static NSDictionary* _json;
 	
 	_keyNameAttrs = [SpecialKeys _createAttributes:_json name:@"key-name"];
 	_keyTextAttrs = [SpecialKeys _createAttributes:_json name:@"key-text"];
+    _keySrcAttrs = [SpecialKeys _createAttributes:_json name:@"key-src"];
 }
 
 + (void)_writeFiles:(NSDictionary*)contexts footers:(NSDictionary*)footers
@@ -158,9 +161,18 @@ static NSDictionary* _json;
 	{
 		[SpecialKeys _appendText:text attrs:_keyNameAttrs contents:name];
 		[SpecialKeys _appendText:text attrs:_keyNameAttrs contents:@"\t\t"];
+        
 		[SpecialKeys _appendText:text attrs:_keyTextAttrs contents:keys[name]];
-		[SpecialKeys _appendText:text attrs:_keyTextAttrs contents:@"\n"];
-	}
+        
+        NSString* extension = keys[[name stringByAppendingString:@"-extension"]];
+        if (extension)
+        {
+            [SpecialKeys _appendText:text attrs:_keyNameAttrs contents:@" "];
+            [SpecialKeys _appendText:text attrs:_keySrcAttrs contents:extension];
+        }
+
+        [SpecialKeys _appendText:text attrs:_keyTextAttrs contents:@"\n"];
+}
 	
 	if (footer && footer.length > 0)
 	{
