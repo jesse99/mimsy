@@ -116,8 +116,9 @@ DontOpenWithMimsy:
 PasteCopiesBackColor: false
 
 # File extensions used by the open-dual extension.
-FileDual: h c cpp c++
+FileDual: h c cpp c++ m
 FileDual: c h
 FileDual: cpp h hpp h++
 FileDual: c++ h hpp h++
+FileDual: m h
 

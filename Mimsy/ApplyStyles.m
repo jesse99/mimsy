@@ -1,6 +1,7 @@
 #import "ApplyStyles.h"
 
 #import "AsyncStyler.h"
+#import "GlyphsAttribute.h"
 #import "Logger.h"
 #import "StartupScripts.h"
 #import "StyleRuns.h"
@@ -208,8 +209,12 @@
 				}
 			}
 		];
-		[self _applyBraceStylesAt:beginLoc length:endLoc-beginLoc storage:storage];
-		[StartupScripts invokeApplyStyles:tmp.document location:beginLoc length:endLoc-beginLoc];
+        if (endLoc > beginLoc)
+        {
+            [self _applyBraceStylesAt:beginLoc length:endLoc-beginLoc storage:storage];
+            [self _applyGlyphStylesAt:beginLoc length:endLoc-beginLoc storage:storage];
+            [StartupScripts invokeApplyStyles:tmp.document location:beginLoc length:endLoc-beginLoc];
+        }
 		[storage endEditing];
 		
 		double elapsed = getTime() - startTime;
@@ -258,14 +263,54 @@
 
 - (void)_applyBraceStylesAt:(NSUInteger)location length:(NSUInteger)length storage:(NSTextStorage*)storage
 {
-	if (_braceRight > 0)
-	{
-		if (location <= _braceLeft && _braceLeft < location + length)
-			[storage addAttributes:_braceAttrs range:NSMakeRange(_braceLeft, 1)];
+    if (_braceRight > 0)
+    {
+        if (location <= _braceLeft && _braceLeft < location + length)
+            [storage addAttributes:_braceAttrs range:NSMakeRange(_braceLeft, 1)];
+        
+        if (location <= _braceRight && _braceRight < location + length)
+            [storage addAttributes:_braceAttrs range:NSMakeRange(_braceRight, 1)];
+    }
+}
 
-		if (location <= _braceRight && _braceRight < location + length)
-			[storage addAttributes:_braceAttrs range:NSMakeRange(_braceRight, 1)];
-	}
+- (void)_applyGlyphStylesAt:(NSUInteger)location length:(NSUInteger)length storage:(NSTextStorage*)storage
+{
+    TextController* tmp = _controller;
+    if (tmp)
+    {
+        NSDictionary* style = [tmp.styles attributesForElement:@"error"];
+        
+        NSError* error = nil;
+        NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"\\S+([ \\t]+)\\n" options:NSRegularExpressionAnchorsMatchLines error:&error];
+        if (!error)
+        {
+            if (regex.numberOfCaptureGroups <= 1)
+            {
+                LOG("Text:Styler", "removing from (%lu, %lu)", (unsigned long)location, (unsigned long)length);
+               [storage removeAttribute:GlyphsAttributeName range:NSMakeRange(location, length)];
+                
+                [regex enumerateMatchesInString:storage.string options:NSMatchingWithTransparentBounds range:NSMakeRange(location, length) usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop)
+                 {
+                     UNUSED(flags, stop);
+                     
+                     NSRange range = [match rangeAtIndex:regex.numberOfCaptureGroups];
+                     LOG("Text:Styler", "   adding to (%lu, %lu)", (unsigned long)range.location, (unsigned long)range.length);
+                     [storage addAttributes:style range:range];
+
+                     GlyphsAttribute* glyphs = [[GlyphsAttribute alloc] initWithStyle:style chars:@"✶"];
+                     [storage addAttributes:@{GlyphsAttributeName: glyphs} range:range];
+                 }];
+            }
+            else
+            {
+                LOG("Text:Styler", "re has more than one capture group");
+            }
+        }
+        else
+        {
+            LOG("Text:Styler", "bad re");
+        }
+    }
 }
 
 @end

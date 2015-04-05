@@ -7,19 +7,59 @@ install http://osxfuse.github.io/
 http://www.learnswift.tips/
 
 
+extensions register a regex and a replacement string
+    string can be empty (use null glyph)
+    maybe also a style name
+styler adds an attribute containing the string
+generator looks for that attribute
 
+
+* Double-click drag seems kind of annoying
+* Sometimes get annoying beeps when savinghark
+* Access violation changing file name
+* option-tab seems to screw up at the start of lines, eg for
+    func doRun(env *fnet.Env) tests.Samples {
+* Find in files window has a crappy title.
+* runBuilder is still locking up
+* Work on replacing glyphs:
+    - add a file to set regex, style, and glyph chars
+    - _applyGlyphStylesAt needs to use this (probably getting it from the controller)
+    - add a trailing space extension
+    - need a menu item to toggle this
+        ` when selected write to a menu-item-selected file
+        ` use extension settings to control whether it is on or off
+        ` add a View menu
+        ` add a proc file to add menu items, sorted by name, maybe include a hint as to where
+
+    - need to refresh glyphs if normal font changes
+    - handle extension umloading?
+    - document that a capture group can be used
+* Should be able to open extension settings directory
+* #if defined(__cplusplus) wasn't styled right
 * Simplest to use background color instead of glyphs: see http://asciiwwdc.com/2010/sessions/114
+    - could use a custom glyph generator
+        need to figure out how to get an NSGlyph from a unichar
+        probably need to setup a layout manager with the normal font
+        add the characters
+        then call glyphAtIndex
+
     - show trailing spaces
-    - need a way to add menu items
-    - gracefuly handle unloaded extensions
     - add a note about substituting glyphs
-    - show return characters  uj
+    - show return characters
     - show control characters
-    - show tabs
-    - show spaces
+    - show leading tabs (hard code this)
+    - show leading spaces (hard code this)
     - 80 char line limit
         ideally using a setting
+        hard code this
+        optionally count tabs as N spaces
     - maybe some common errors (like using the wrong comment characters)
+    - TODO, FIXME, HACK
+* Strings in comments suck
+    - match the longest regex?
+    - but that has problems with things like function declarations
+    - maybe just switch comments and strings (should be fewer foul ups)
+    - special case strings and comments?
 * Local search should try all open projects before doing a global search.
 * Need to get rid of startup scripts
 * Seems like we could get goto definition working with just the styler
@@ -55,6 +95,10 @@ http://www.learnswift.tips/
 	- will need language proc files
 	- will need an open-url proc file
 	- need to shutdown executable extensions on exit
+* Can maybe collapse lines by using null glyphs:
+    - and can embed UI widgets using text attachments
+    - see http://asciiwwdc.com/2010/sessions/114
+    - and Downloads/WWDC_2010_114
 * NSString adds an API that can be used to detect the string encoding of an array of bytes
 * Need an extension (or an option) to show a line at N characters.
 * Tab handling is sketchy.
