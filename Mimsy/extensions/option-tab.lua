@@ -44,11 +44,11 @@ function tab(delta)
 		end
 
 		if line > #lines then
-            log("option tab line is ", line, " but there are only ", #lines, " lines")
+            log("line is ", line, " but there are only ", #lines, " lines")
 			write_proc_file("beep", "")
 		end
     else
-        log("no element names in option tab")
+        log("no element names")
 	end
 
     -- We don't return false because the default behavior of option-tab is insert some

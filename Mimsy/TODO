@@ -14,9 +14,6 @@ styler adds an attribute containing the string
 generator looks for that attribute
 
 
-* Command-d is doing something yucky.
-* Sometimes get annoying beeps when saving (it's an extension)
-    - maybe the beep file should take a message
 * Work on replacing glyphs:
     - add a file to set regex, style, and glyph chars
     - _applyGlyphStylesAt needs to use this (probably getting it from the controller)
