@@ -24,7 +24,6 @@ function init(script_dir)
 end
 
 function tab(delta)
-	local handled = false
 	--log("option tabbing")
 
 	local elements = read_proc_file("text-document/element-names")
@@ -45,13 +44,16 @@ function tab(delta)
 		end
 
 		if line > #lines then
+            log("option tab line is ", line, " but there are only ", #lines, " lines")
 			write_proc_file("beep", "")
 		end
-
-		handled = true
+    else
+        log("no element names in option tab")
 	end
 
-	return handled
+    -- We don't return false because the default behavior of option-tab is insert some
+    -- weird character that seems to screw up formatting.
+	return true
 end
 
 function onOptionTab()
