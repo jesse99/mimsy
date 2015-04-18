@@ -123,17 +123,35 @@ static bool _openLocalPath(NSString* path, int line, int col)
 		DirectoryController* controller = [DirectoryController getCurrentController];
 		if (controller)
 		{
+            NSMutableArray* normalFiles = [NSMutableArray new];
+            NSMutableArray* hiddenFiles = [NSMutableArray new];
+            
 			[Utils enumerateDeepDir:controller.path glob:nil error:NULL block:^(NSString* item, bool* stop)
 			{
                 UNUSED(stop);
 				NSRange range = [item rangeOfString:path];
-				if (range.location != NSNotFound)
-					if (_doAbsolutePath(item, line, col))
-					{
-						LOG("Text:Verbose", "opened using local path");
-						opened = true;
-					}
+                if (range.location != NSNotFound)
+                {
+                    NSString* name = [item lastPathComponent];
+                    if ([name startsWith:@"."])
+                        [hiddenFiles addObject:item];
+                    else
+                        [normalFiles addObject:item];
+                }
 			}];
+            
+            // Only open hidden files if there are no normal files to open.
+            if (normalFiles.count == 0)
+                normalFiles = hiddenFiles;
+            
+            for (NSString* item in normalFiles)
+            {
+                if (_doAbsolutePath(item, line, col))
+                {
+                    LOG("Text:Verbose", "opened using local path");
+                    opened = true;
+                }
+            }
 		}
 	}
 	
@@ -403,3 +421,18 @@ bool openTextRange(NSTextStorage* storage, NSRange range)
 	
 	return opened;
 }
+
+bool openPath(NSString* path)
+{
+    bool opened = false;
+    LOG("Text", "trying to open path");
+    
+    if (!opened)
+        opened = _openFile(path, 0, path.length);
+    
+    if (!opened)
+        opened = _openHtml(path, 0, path.length);
+    
+    return opened;
+}
+

@@ -3,3 +3,5 @@
 bool openLocalPath(NSString* path);
 
 bool openTextRange(NSTextStorage* storage, NSRange range);
+
+bool openPath(NSString* path);

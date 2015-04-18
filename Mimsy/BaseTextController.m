@@ -3,6 +3,7 @@
 #import "FindController.h"
 #import "FindInFilesController.h"
 #import "OpenSelection.h"
+#import "StringDialogController.h"
 #import "WarningWindow.h"
 
 @implementation BaseTextController
@@ -58,7 +59,6 @@
 	[FindController show];
 }
 
-
 - (void)findNext:(id)sender
 {
 	UNUSED(sender);
@@ -95,8 +95,19 @@
 	
 	NSTextStorage* storage = self.getTextView.textStorage;
 	NSRange range = self.getTextView.selectedRange;
-	if (!openTextRange(storage, range))
+    if (range.length == 0)
+    {
+        StringDialogController* controller = [[StringDialogController alloc] initWithTitle:@"Path" value:@""];
+        (void) [NSApp runModalForWindow:controller.window];
+
+        if (controller.hasValue && controller.textField.stringValue.length > 0)
+            if (!openPath(controller.textField.stringValue))
+                NSBeep();
+    }
+	else if (!openTextRange(storage, range))
+    {
 		NSBeep();
+    }
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem*)item

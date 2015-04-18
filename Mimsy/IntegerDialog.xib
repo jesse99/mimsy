@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6254"/>
     </dependencies>
@@ -15,14 +15,14 @@
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="integer-dialog" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="316" height="89"/>
+            <rect key="contentRect" x="196" y="240" width="316" height="92"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="316" height="89"/>
+                <rect key="frame" x="0.0" y="0.0" width="316" height="92"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BwC-xN-0c7">
-                        <rect key="frame" x="222" y="11" width="80" height="32"/>
+                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BwC-xN-0c7">
+                        <rect key="frame" x="222" y="14" width="80" height="32"/>
                         <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="XhQ-e6-8zF">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -34,8 +34,19 @@ DQ
                             <action selector="pressedOK:" target="-2" id="pFO-hh-ncz"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="38n-Mf-ei7">
-                        <rect key="frame" x="142" y="11" width="80" height="32"/>
+                    <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L32-7B-bOC">
+                        <rect key="frame" x="20" y="50" width="276" height="22"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="8bE-N9-ovj">
+                            <numberFormatter key="formatter" formatterBehavior="custom10_4" numberStyle="decimal" allowsFloats="NO" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="mtP-W5-MOh">
+                                <real key="minimum" value="1"/>
+                            </numberFormatter>
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="38n-Mf-ei7">
+                        <rect key="frame" x="142" y="14" width="80" height="32"/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="BGJ-Kv-hAm">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -47,23 +58,18 @@ Gw
                             <action selector="pressedCancel:" target="-2" id="7lJ-Vq-KWF"/>
                         </connections>
                     </button>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L32-7B-bOC">
-                        <rect key="frame" x="20" y="47" width="276" height="22"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="8bE-N9-ovj">
-                            <numberFormatter key="formatter" formatterBehavior="custom10_4" numberStyle="decimal" allowsFloats="NO" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="mtP-W5-MOh">
-                                <real key="minimum" value="1"/>
-                            </numberFormatter>
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
                 </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="38n-Mf-ei7" secondAttribute="trailing" constant="100" id="B2M-6X-JKP"/>
+                    <constraint firstAttribute="trailing" secondItem="BwC-xN-0c7" secondAttribute="trailing" constant="20" id="Rrz-vM-6NH"/>
+                    <constraint firstItem="L32-7B-bOC" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" id="XWq-0u-IS6"/>
+                    <constraint firstAttribute="trailing" secondItem="L32-7B-bOC" secondAttribute="trailing" constant="20" id="sB6-PR-lcc"/>
+                </constraints>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="PXX-Ml-KQ3"/>
             </connections>
-            <point key="canvasLocation" x="191" y="187.5"/>
+            <point key="canvasLocation" x="191" y="189"/>
         </window>
     </objects>
 </document>

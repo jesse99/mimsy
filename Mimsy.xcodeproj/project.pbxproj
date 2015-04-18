@@ -129,6 +129,8 @@
 		37CE3E7219A980A7000AEA3C /* Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CE3E7119A980A7000AEA3C /* Extensions.m */; };
 		37CF062616AB998A00069A20 /* LuaSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF062516AB998A00069A20 /* LuaSupport.m */; };
 		37CF13D0194FC51800F35944 /* BaseInFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF13CF194FC51800F35944 /* BaseInFiles.m */; };
+		37E7A8CA1AE1FD7700BD93B4 /* StringDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37E7A8C91AE1FD7700BD93B4 /* StringDialog.xib */; };
+		37E7A8CD1AE1FDB800BD93B4 /* StringDialogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37E7A8CC1AE1FDB800BD93B4 /* StringDialogController.m */; };
 		37ECF06119291A0500061C0A /* LocalSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ECF06019291A0500061C0A /* LocalSettings.m */; };
 		37ECF06419296C7A00061C0A /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ECF06319296C7A00061C0A /* Constants.m */; };
 		37ECF067192EFCC100061C0A /* BaseTextController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ECF066192EFCC100061C0A /* BaseTextController.m */; };
@@ -376,6 +378,9 @@
 		37CF13CD194E3EE000F35944 /* RangeVectorUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RangeVectorUtils.h; sourceTree = "<group>"; };
 		37CF13CE194FC51800F35944 /* BaseInFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseInFiles.h; sourceTree = "<group>"; };
 		37CF13CF194FC51800F35944 /* BaseInFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseInFiles.m; sourceTree = "<group>"; };
+		37E7A8C91AE1FD7700BD93B4 /* StringDialog.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StringDialog.xib; sourceTree = "<group>"; };
+		37E7A8CB1AE1FDB800BD93B4 /* StringDialogController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringDialogController.h; sourceTree = "<group>"; };
+		37E7A8CC1AE1FDB800BD93B4 /* StringDialogController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringDialogController.m; sourceTree = "<group>"; };
 		37ECF05F19291A0500061C0A /* LocalSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalSettings.h; sourceTree = "<group>"; };
 		37ECF06019291A0500061C0A /* LocalSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalSettings.m; sourceTree = "<group>"; };
 		37ECF06219296C7A00061C0A /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
@@ -480,6 +485,9 @@
 				370552A218710C27005F1438 /* SelectName.xib */,
 				370552A418710E14005F1438 /* SelectNameController.h */,
 				370552A518710E15005F1438 /* SelectNameController.m */,
+				37E7A8C91AE1FD7700BD93B4 /* StringDialog.xib */,
+				37E7A8CB1AE1FDB800BD93B4 /* StringDialogController.h */,
+				37E7A8CC1AE1FDB800BD93B4 /* StringDialogController.m */,
 				37AD756E171B95460054A75F /* UpdateConfig.h */,
 				37AD756F171B95460054A75F /* UpdateConfig.m */,
 				37862C6C1693ABF100DB9E66 /* UIntVector.h */,
@@ -868,6 +876,7 @@
 				3700403D1676D4860009907A /* TextDocument.xib in Resources */,
 				3705C816167BC2F000E5D54C /* TranscriptWindow.xib in Resources */,
 				375140EF168B789100C329AF /* languages in Resources */,
+				37E7A8CA1AE1FD7700BD93B4 /* StringDialog.xib in Resources */,
 				37862C60168FF58900DB9E66 /* styles in Resources */,
 				37862C651690BC0600DB9E66 /* settings in Resources */,
 				37862C6E1694BE7400DB9E66 /* InfoWindow.xib in Resources */,
@@ -983,6 +992,7 @@
 				3768CCCC16CDDCB000D5CB57 /* DirectoryController.m in Sources */,
 				3768CCD116CFFFEE00D5CB57 /* FileSystemItem.m in Sources */,
 				3768CCD516D052D400D5CB57 /* FileItem.m in Sources */,
+				37E7A8CD1AE1FDB800BD93B4 /* StringDialogController.m in Sources */,
 				3768CCD816D0547A00D5CB57 /* FolderItem.m in Sources */,
 				3768CCDB16E0F54900D5CB57 /* OpenFile.m in Sources */,
 				3768CCDE16E1A61100D5CB57 /* DirectoryView.m in Sources */,

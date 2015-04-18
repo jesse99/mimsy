@@ -14,13 +14,9 @@ styler adds an attribute containing the string
 generator looks for that attribute
 
 
-* Double-click drag seems kind of annoying
-* Sometimes get annoying beeps when savinghark
-* Access violation changing file name
-* option-tab seems to screw up at the start of lines, eg for
-    func doRun(env *fnet.Env) tests.Samples {
-* Find in files window has a crappy title.
-* runBuilder is still locking up
+* Command-d is doing something yucky.
+* Sometimes get annoying beeps when saving (it's an extension)
+    - maybe the beep file should take a message
 * Work on replacing glyphs:
     - add a file to set regex, style, and glyph chars
     - _applyGlyphStylesAt needs to use this (probably getting it from the controller)

@@ -2,6 +2,7 @@
 
 @interface IntegerDialogController : NSWindowController
 
+// Call [NSApp runModalForWindow:controller.window] after this.
 - (IntegerDialogController*)initWithTitle:(NSString*)title value:(int)value;
 
 @property bool hasValue;
