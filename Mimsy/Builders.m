@@ -51,7 +51,7 @@ static NSDictionary* _globs;	// name => glob
 	[task setArguments:@[[NSString stringWithFormat:@"--path=%@", info[@"path"]]]];	// note that task arguments are not processed by a shell and so don't need to be quoted
 	[task setEnvironment:vars];
 	
-	NSDictionary* json = [self _runBuilder:task];
+    NSDictionary* json = [self _runBuilder:task timeout:10];
 	if (json)
 	{
 		NSString* error = json[@"error"];
@@ -86,7 +86,7 @@ static NSDictionary* _globs;	// name => glob
 	[task setArguments:args];
 	[task setEnvironment:vars];
 	
-	NSDictionary* json = [self _runBuilder:task];
+    NSDictionary* json = [self _runBuilder:task timeout:NoTimeOut];
 	if (json)
 	{
 		NSString* error = json[@"error"];
@@ -122,7 +122,7 @@ static NSDictionary* _globs;	// name => glob
 				NSTask* task = [NSTask new];
 				[task setLaunchPath:path];
 				
-				NSDictionary* json = [self _runBuilder:task];
+                NSDictionary* json = [self _runBuilder:task timeout:10];
 				if (json)
 				{
 					NSString* name = json[@"name"];
@@ -143,7 +143,7 @@ static NSDictionary* _globs;	// name => glob
 	_globs = globs;
 }
 
-+ (NSDictionary*)_runBuilder:(NSTask*)task
++ (NSDictionary*)_runBuilder:(NSTask*)task timeout:(time_t)timeout
 {
 	NSDictionary* result = nil;
 	
@@ -151,7 +151,7 @@ static NSDictionary* _globs;	// name => glob
 	[task setStandardError:[NSPipe new]];
 	
 	NSString* stderr = nil;
-	NSError* err = [Utils run:task stdout:nil stderr:&stderr timeout:NoTimeOut];
+	NSError* err = [Utils run:task stdout:nil stderr:&stderr timeout:timeout];
 	if (!err)
 	{
 		NSError* error = nil;
