@@ -1,7 +1,7 @@
 Language: R
 Globs: *.R
 Word: [a-zA-Z_][a-zA-Z0-9_.]*
-LineComment: \x23
+LineComment: #
 ContextHelp: {R}[Go Into]http://cran.r-project.org/doc/manuals/R-intro.html
 ContextHelp: {R}[R Lanuage Spec]http://cran.r-project.org/doc/manuals/R-lang.html
 ContextHelp: {R}[R FAQ]http://cran.r-project.org/doc/manuals/R-FAQ.html
