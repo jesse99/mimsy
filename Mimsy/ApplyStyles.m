@@ -276,39 +276,33 @@
 - (void)_applyGlyphStylesAt:(NSUInteger)location length:(NSUInteger)length storage:(NSTextStorage*)storage
 {
     TextController* tmp = _controller;
-    if (tmp)
+    if (tmp && tmp.charMappings.count > 0)
     {
-        NSDictionary* style = [tmp.styles attributesForElement:@"error"];
+        // Mapping often want to operate on entire lines so we'll ensure that the range is a full line
+        // (NSMatchingWithTransparentBounds isn't sufficient).
+        while (location > 0 && [storage.string characterAtIndex:location] != '\n')
+            --location;
         
-        NSError* error = nil;
-        NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"\\S+([ \\t]+)\\n" options:NSRegularExpressionAnchorsMatchLines error:&error];
-        if (!error)
+        while (location + length < storage.length && [storage.string characterAtIndex:location + length - 1] != '\n')
+            ++length;
+        
+        LOG("Text:Styler:Verbose", "removing from (%lu, %lu)", (unsigned long)location, (unsigned long)length);
+        [storage removeAttribute:GlyphsAttributeName range:NSMakeRange(location, length)];
+        
+        for (CharacterMapping* mapping in tmp.charMappings)
         {
-            if (regex.numberOfCaptureGroups <= 1)
-            {
-                LOG("Text:Styler", "removing from (%lu, %lu)", (unsigned long)location, (unsigned long)length);
-               [storage removeAttribute:GlyphsAttributeName range:NSMakeRange(location, length)];
-                
-                [regex enumerateMatchesInString:storage.string options:NSMatchingWithTransparentBounds range:NSMakeRange(location, length) usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop)
-                 {
-                     UNUSED(flags, stop);
-                     
-                     NSRange range = [match rangeAtIndex:regex.numberOfCaptureGroups];
-                     LOG("Text:Styler", "   adding to (%lu, %lu)", (unsigned long)range.location, (unsigned long)range.length);
-                     [storage addAttributes:style range:range];
+            [mapping.regex enumerateMatchesInString:storage.string options:NSMatchingWithTransparentBounds range:NSMakeRange(location, length) usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop)
+             {
+                 UNUSED(flags, stop);
+                 
+                 NSRange range = [match rangeAtIndex:mapping.regex.numberOfCaptureGroups];
+                 LOG("Text:Styler:Verbose", "   adding to (%lu, %lu)", (unsigned long)range.location, (unsigned long)range.length);
 
-                     GlyphsAttribute* glyphs = [[GlyphsAttribute alloc] initWithStyle:style chars:@"✶"];
-                     [storage addAttributes:@{GlyphsAttributeName: glyphs} range:range];
-                 }];
-            }
-            else
-            {
-                LOG("Text:Styler", "re has more than one capture group");
-            }
-        }
-        else
-        {
-            LOG("Text:Styler", "bad re");
+                 NSDictionary* style = [tmp.styles attributesForElement:mapping.style];
+                 [storage addAttributes:style range:range];
+                 
+                 [storage addAttributes:@{GlyphsAttributeName:mapping.glyphs} range:range];
+             }];
         }
     }
 }

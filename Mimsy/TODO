@@ -7,17 +7,15 @@ install http://osxfuse.github.io/
 http://www.learnswift.tips/
 
 
-extensions register a regex and a replacement string
-    string can be empty (use null glyph)
-    maybe also a style name
-styler adds an attribute containing the string
-generator looks for that attribute
+map-characters (w)
+    <key>\f<regex>\f<style>\f<glyphs>\f<repeat>
+    glyphs can be empty
+    glyphs can be \xXX or \uXXXX
+unmap-characters (w)
+    <key>
 
 
 * Work on replacing glyphs:
-    - add a file to set regex, style, and glyph chars
-    - _applyGlyphStylesAt needs to use this (probably getting it from the controller)
-    - add a trailing space extension
     - need a menu item to toggle this
         ` when selected write to a menu-item-selected file
         ` use extension settings to control whether it is on or off
@@ -26,6 +24,7 @@ generator looks for that attribute
 
     - need to refresh glyphs if normal font changes
     - handle extension umloading?
+    - need an option to show whitespace even for blank lines
     - document that a capture group can be used
 * Should be able to open extension settings directory
 * #if defined(__cplusplus) wasn't styled right
@@ -54,6 +53,7 @@ generator looks for that attribute
     - maybe just switch comments and strings (should be fewer foul ups)
     - special case strings and comments?
 * Local search should try all open projects before doing a global search.
+* Work on tab handling.
 * Need to get rid of startup scripts
 * Seems like we could get goto definition working with just the styler
     - maybe use a special regex for files that are not open

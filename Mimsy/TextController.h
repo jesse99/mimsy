@@ -2,9 +2,20 @@
 
 #import "BaseTextController.h"
 
-@class DeclarationsPopup, Language, TextController, TextStyles, TextView;
+@class DeclarationsPopup, GlyphsAttribute, Language, TextController, TextStyles, TextView;
 
 typedef void (^LayoutCallback)(TextController* controller);
+
+@interface CharacterMapping : NSObject
+
+- (id)initWithFields:(NSString*)fields controller:(TextController*)controller;
+
+@property (readonly) NSString* key;
+@property (readonly) NSRegularExpression* regex;
+@property (readonly) NSString* style;
+@property (readonly) GlyphsAttribute* glyphs;
+
+@end
 
 // Contoller used to mediate between text documents and the NSTextView in the associated window.
 @interface TextController : BaseTextController
@@ -45,6 +56,10 @@ typedef void (^LayoutCallback)(TextController* controller);
 - (NSUInteger)getEditCount;
 
 - (void)onAppliedStyles;
+
+- (void)addMapping:(CharacterMapping*)mapping;
+- (void)removeMapping:(NSString*)key;
+- (NSArray*) charMappings;
 
 @property IBOutlet TextView* textView;
 @property IBOutlet __weak NSScrollView* scrollView;

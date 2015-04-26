@@ -6,9 +6,10 @@ NSString* GlyphsAttributeName = @"mimsy-glyphs";
 {
     NSUInteger _count;
     NSGlyph* _glyphs;
+    bool _repeat;
 }
 
-- (id)initWithStyle:(NSDictionary*)style chars:(NSString*)text
+- (id)initWithStyle:(NSDictionary*)style chars:(NSString*)text repeat:(bool)repeat
 {
     NSTextStorage *storage = [[NSTextStorage alloc] initWithString:text];
     NSTextContainer *container = [NSTextContainer new];
@@ -21,6 +22,7 @@ NSString* GlyphsAttributeName = @"mimsy-glyphs";
     _glyphs = malloc(capacity*sizeof(NSGlyph));
     
     _count = [layout getGlyphs:_glyphs range:NSMakeRange(0, capacity)];
+    _repeat = repeat;
     
     return self;
 }
@@ -38,6 +40,11 @@ NSString* GlyphsAttributeName = @"mimsy-glyphs";
 - (NSGlyph*)glyphs
 {
     return _glyphs;
+}
+
+- (bool)repeat
+{
+    return _repeat;
 }
 
 @end

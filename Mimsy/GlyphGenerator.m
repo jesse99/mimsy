@@ -37,7 +37,10 @@
 
             // Note that Cocoa complains if we don't supply length glyphs.
             for (; i < range.length && i < length; ++i)
-                glyphs[i + offset] = NSNullGlyph;
+                if (attr.repeat)
+                    glyphs[i + offset] = attr.glyphs[i % attr.numGlyphs];
+                else
+                    glyphs[i + offset] = NSNullGlyph;
         }
     }];
     

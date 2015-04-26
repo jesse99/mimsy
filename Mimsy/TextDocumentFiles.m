@@ -25,6 +25,8 @@
     ProcFileReader* _lengthFile;
 	ProcFileReadWrite* _lineNumFile;
 	ProcFileReader* _lineSelectionFile;
+    ProcFileReadWrite* _mapCharacters;
+    ProcFileReadWrite* _unmapCharacters;
 	ProcFileReader* _pathFile;
 	ProcFileReadWrite* _removeTempBackColorFile;
 	ProcFileReadWrite* _removeTempForeColorFile;
@@ -244,7 +246,31 @@
 				return [NSString stringWithFormat:@"%lu\f%lu", (unsigned long)start, (unsigned long)(end-start)];
 			}];
 		
-		_pathFile = [self _createReader:@"path"
+        _mapCharacters = [self _createReadWriter:@"map-characters"
+              readBlock:^NSString* (TextController* controller)
+              {
+                  UNUSED(controller);
+                  return @"";
+              }
+              writeBlock:^(TextController* controller, NSString* text)
+              {
+                  CharacterMapping* mapping = [[CharacterMapping alloc] initWithFields:text controller:controller];
+                  if (mapping)
+                      [controller addMapping:mapping];
+              }];
+
+        _unmapCharacters = [self _createReadWriter:@"unmap-characters"
+            readBlock:^NSString* (TextController* controller)
+            {
+                UNUSED(controller);
+                return @"";
+            }
+            writeBlock:^(TextController* controller, NSString* text)
+            {
+                [controller removeMapping:text];
+            }];
+        
+        _pathFile = [self _createReader:@"path"
 			readBlock:^NSString* (TextController* controller) {return controller.path;}];
 
 		_removeTempBackColorFile = [self _createReadWriter:@"remove-temp-back-color"
@@ -566,6 +592,17 @@
 	}
 	
 	return file;
+}
+
+- (void)opened:(TextController*)controller
+{
+    // We can't rely on _mainChanged when starting up so we special case that here.
+    __weak TextController* oldController = _frontmost;
+    _frontmost = controller;
+    
+    [Extensions invokeBlocking:@"/text-document/opened"];
+    
+    _frontmost = oldController;
 }
 
 - (void)_mainChanged:(NSNotification*)notification

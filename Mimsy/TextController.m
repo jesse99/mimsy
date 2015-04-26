@@ -5,7 +5,9 @@
 #import "AppSettings.h"
 #import "Balance.h"
 #import "ConfigParser.h"
+#import "Extensions.h"
 #import "FunctionalTest.h"
+#import "GlyphsAttribute.h"
 #import "IntegerDialogController.h"
 #import "Language.h"
 #import "Languages.h"
@@ -27,6 +29,48 @@
 
 static TextDocumentFiles* _files;
 
+@implementation CharacterMapping
+
+- (id)initWithFields:(NSString*)fields controller:(TextController*)controller
+{
+    self = [super init];
+    
+    if (self)
+    {
+        NSArray* parts = [fields componentsSeparatedByString:@"\f"];
+        if (parts.count != 5)
+        {
+            LOG("Extensions", "Expected <key>\f<regex>\f<style>\f<glyphs>\f<repeat> not '%s'", STR(fields));
+            return nil;
+        }
+        
+        _key = parts[0];
+        
+        NSError* error = nil;
+        NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
+        _regex = [[NSRegularExpression alloc] initWithPattern:parts[1] options:options error:&error];
+        if (!_regex)
+        {
+            LOG("Extensions", "'%s' is not a valid regex: %s", STR(parts[1]), STR(error.localizedFailureReason));
+            return nil;
+        }
+        if (_regex.numberOfCaptureGroups > 1)
+        {
+            LOG("Extensions", "'%s' regex has more than one capture group", STR(parts[1]));
+            return nil;
+        }
+        
+        _style = [parts[2] lowercaseString];
+        
+        NSDictionary* style = [controller.styles attributesForElement:_style];
+        _glyphs = [[GlyphsAttribute alloc] initWithStyle:style chars:parts[3] repeat:[parts[4] isEqualToString:@"true"]];
+    }
+    
+    return self;
+}
+
+@end
+
 @implementation TextController
 {
 	RestoreView* _restorer;
@@ -38,6 +82,7 @@ static TextDocumentFiles* _files;
 	ApplyStyles* _applier;
 	NSMutableArray* _layoutBlocks;
 	struct UIntVector _lineStarts;	// first index is at zero, other indexes are one past new-lines
+    NSMutableArray* _mappings;
 }
 
 + (void)startup
@@ -59,6 +104,7 @@ static TextDocumentFiles* _files;
 		
 		_layoutBlocks = [NSMutableArray new];
 		_lineStarts = newUIntVector();
+        _mappings = [NSMutableArray new];
 		
  		updateInstanceCount(@"TextController", +1);
 		updateInstanceCount(@"TextWindow", +1);
@@ -96,6 +142,8 @@ static TextDocumentFiles* _files;
 		if ([doc.fileType contains:@"Plain Text"] || [doc.fileType isEqualToString:@"binary"])
 			[self.textView setBackgroundColor:_styles.backColor];
 	}
+    
+    [_files opened:self];
 }
 
 - (void)registerBlockWhenLayoutCompletes:(LayoutCallback)block
@@ -404,6 +452,29 @@ static TextDocumentFiles* _files;
 			[result addObject:parts[0]];
 		}
 	}
+}
+
+- (void)addMapping:(CharacterMapping*)mapping
+{
+    ASSERT(mapping != nil);
+    [_mappings addObject:mapping];
+}
+
+- (void)removeMapping:(NSString*)key
+{
+    for (NSUInteger i = _mappings.count - 1; i < _mappings.count; --i)
+    {
+        CharacterMapping* mapping = _mappings[i];
+        if ([mapping.key isEqualToString:key])
+        {
+            [_mappings removeObjectAtIndex:i];
+        }
+    }
+}
+
+- (NSArray*) charMappings
+{
+    return _mappings;
 }
 
 - (NSAttributedString*)attributedText

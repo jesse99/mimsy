@@ -7,6 +7,8 @@
 
 - (TextController*)frontmost;
 
+- (void)opened:(TextController*)controller;
+
 - (void)onSelectionChanged:(TextController*)controller;
 - (void)onTextChanged:(TextController*)controller;
 - (void)onWordWrapChanged:(TextController*)controller;
