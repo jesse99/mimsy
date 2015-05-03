@@ -31,7 +31,7 @@ func rewriteFile(path string) {
 	}
 
 	// Re-format it.
-	var command = exec.Command("gofmt", "--tabwidth=4")
+	var command = exec.Command("gofmt")
 	command.Stdin = bytes.NewReader(oldBytes)
 
 	var stdout, stderr bytes.Buffer
@@ -39,8 +39,8 @@ func rewriteFile(path string) {
 	command.Stderr = &stderr
 	err = command.Run()
 	if err != nil {
-		logVerbose(true, "%s", err)
-		logVerbose(true, "%s", string(stderr.Bytes()))
+		logVerbose(false, "%s", err)
+		logVerbose(false, "%s", string(stderr.Bytes()))
 		ioutil.WriteFile("/Volumes/Mimsy/beep", []byte{}, 0644)
 		return
 	}
