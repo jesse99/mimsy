@@ -15,6 +15,17 @@ unmap-characters (w)
     <key>
 
 
+* PATH isn't set for gofmt
+* Extensions need to support menus:
+    - need a way to add and remove menu items
+        maybe just append to menu, maybe sorted
+        or maybe allow adding to some specifc places
+        for the first one, if the menu doesn't end with dash then add a dash
+        extensions could include a pusedo-path
+    - need a way for extensions to get notified of menu selections
+        when an item is selected get the extension name and invoke using the psuedo path
+    - show trailing spaces needs a menu item to toggle it on and off
+* Double clicking on the numnber in CPTCFG_MAC80211_MPL_DEBUG doesn't work
 * Work on replacing glyphs:
     - need a menu item to toggle this
         ` when selected write to a menu-item-selected file
@@ -23,7 +34,7 @@ unmap-characters (w)
         ` add a proc file to add menu items, sorted by name, maybe include a hint as to where
 
     - need to refresh glyphs if normal font changes
-    - handle extension umloading?
+    - handle extension unloading?
     - need an option to show whitespace even for blank lines
     - document that a capture group can be used
 * Should be able to open extension settings directory

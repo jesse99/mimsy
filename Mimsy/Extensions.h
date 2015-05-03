@@ -15,6 +15,9 @@
 // use our proc files without deadlocking.
 + (void)invokeNonBlocking:(NSString*)path;
 
+// Returns the name of the extension currently executing.
++ (NSString*)invoked;
+
 // Returns true if an extension is watching path.
 + (bool)watching:(NSString*)path;
 

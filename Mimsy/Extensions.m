@@ -541,6 +541,14 @@ static void initMimsyMethods(struct lua_State* state, LuaExtension* extension)
     return extensions && (extensions.count > 1 || (extensions.count == 1 && extensions[0] != _executing));
 }
 
++ (NSString*)invoked
+{
+    if (_executing)
+        return _executing.name;
+    else
+        return @"?";
+}
+
 + (bool)invokeBlocking:(NSString*)path
 {
     bool handled = false;
