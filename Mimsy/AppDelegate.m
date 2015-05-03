@@ -99,6 +99,10 @@ void initLogGlobs()
 	NSMutableDictionary* _pendingBlocks;
 	NSArray* _helpFileItems;
 	NSArray* _helpSettingsItems;
+    
+    bool _mounted;
+    NSString* _mountPath;
+    bool _launched;
 }
 
 - (id)init
@@ -130,8 +134,17 @@ void initLogGlobs()
 
 - (void)_didMount:(NSNotification*)notification
 {
-	NSDictionary* userInfo = [notification userInfo];
-	NSString* path = [userInfo objectForKey:kGMUserFileSystemMountPathKey];
+    NSDictionary* userInfo = [notification userInfo];
+    _mountPath = [userInfo objectForKey:kGMUserFileSystemMountPathKey];
+    
+    _mounted = true;
+    if (_launched)
+        [self _postInit];
+}
+
+- (void)_handleMount
+{
+	NSString* path = _mountPath;
 	LOG("ProcFS", "mounted %s", STR(path));
 	
     NSString* esPath = [Paths installedDir:@"settings"];
@@ -158,6 +171,7 @@ void initLogGlobs()
 				 writeStr:^(NSString* str)
 				 {
 					 UNUSED(str);
+                     LOG("App", "beeping for %s", STR([Extensions invoked]));
 					 NSBeep();
 				 }];
     
@@ -368,15 +382,17 @@ void initLogGlobs()
 	NSString* path = [userInfo objectForKey:kGMUserFileSystemMountPathKey];
 	NSError* error = [userInfo objectForKey:kGMUserFileSystemErrorKey];
 	LOG("Error", "failed to mount %s: %s", STR(path), STR(error.localizedFailureReason));
+  
+    _mounted = true;
+    if (_launched)
+        [self _postInit];
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)notification
+- (void)_postInit
 {
-	UNUSED(notification);
-	
-	__weak AppDelegate* this = self;
+    __weak AppDelegate* this = self;
     [TranscriptController startedUp];
-	[[NSApp helpMenu] setDelegate:this];
+    [[NSApp helpMenu] setDelegate:this];
     
     [self _installFiles];
     [self _loadSettings];
@@ -386,8 +402,21 @@ void initLogGlobs()
     [StartupScripts setup];
     [WindowsDatabase setup];
     [Languages setup];
+    
+    [self _addTransformItems];
+    
+    if (_mountPath)
+        [self _handleMount];
+}
 
-	[self _addTransformItems];
+- (void)applicationDidFinishLaunching:(NSNotification *)notification
+{
+	UNUSED(notification);
+	
+    _launched = true;
+    
+    if (_mounted)
+        [self _postInit];
 }
 
 // Note that windows will still be open when this is called.
