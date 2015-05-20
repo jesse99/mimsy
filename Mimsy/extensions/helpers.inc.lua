@@ -114,10 +114,13 @@ end
 -- Returns the contents of a proc file as a string.
 function read_proc_file(path)
 	local file, err = io.open("/Volumes/Mimsy/" .. path, "r")
-	assert(file, string.format("failed to open %s: %q", path, err and err or "nil"))
-	local contents = file:read("*a")
-	io.close(file)
-	return contents
+	if file ~= nil then
+        local contents = file:read("*a")
+        io.close(file)
+        return contents
+    else
+        return ""
+    end
 end
 
 -- Writes text into a proc file.

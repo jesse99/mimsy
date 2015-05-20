@@ -7,24 +7,12 @@ install http://osxfuse.github.io/
 http://www.learnswift.tips/
 
 
-map-characters (w)
-    <key>\f<regex>\f<style>\f<glyphs>\f<repeat>
-    glyphs can be empty
-    glyphs can be \xXX or \uXXXX
-unmap-characters (w)
-    <key>
 
-
-* PATH isn't set for gofmt
+* Might want a helper to read from an action proc file
+    - take a file name and variadic args
 * Extensions need to support menus:
-    - need a way to add and remove menu items
-        maybe just append to menu, maybe sorted
-        or maybe allow adding to some specifc places
-        for the first one, if the menu doesn't end with dash then add a dash
-        extensions could include a pusedo-path
-    - need a way for extensions to get notified of menu selections
-        when an item is selected get the extension name and invoke using the psuedo path
-    - show trailing spaces needs a menu item to toggle it on and off
+    - should only be enabled if there is a language
+    - probably want a config option to default showing trailing spaces to on
 * Double clicking on the numnber in CPTCFG_MAC80211_MPL_DEBUG doesn't work
 * Work on replacing glyphs:
     - need a menu item to toggle this
@@ -402,6 +390,7 @@ unmap-characters (w)
 	- show range (eg for find) would need to auto-unfold
 * Do something with the About box.
 * The suggestions that XCode provides when there are errors are pretty cool.
+* Extensions should be able to add a menu item before or after a named item.
 * Might want to cache styles:
 	- its fairly common to open and close large source files
 	- probably want some logging for how large the cache gets

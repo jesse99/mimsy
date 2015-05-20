@@ -37,6 +37,8 @@ mimsy:set_extension_version(str)
 \b mimsy:watch_file(priority, path, name) 
 \b0 name should be the name of a lua function with no arguments and a bool result that is called when the proc file changes. Return true to suppress further handling of the event.\
 \
+When a Lua extension is loaded its init function is called. Note that all extensions are re-loaded when a file in the extensions directory changes.\
+\
 Note that, in general, the proc files should only be accessed when mimsy calls into an extension. Doing so elsewhere (e.g. from within a terminal window) may not produce sensible results due to threading issues.\
 \
 For colors CSS3 color names ("Dark Green"), VIM 7.3 names ("gray50"), hex RGB or RGBA values ("#FF0000" or "#FF0000FF"), or decimal RGB or RGBA values ("(255, 0, 0)" or "(255, 0, 0, 255)") may be used. Text document proc files also accept "back color", "selection back color", and colors from the active style file ("keyword color"). Spaces and case differences are ignored.\
@@ -141,6 +143,14 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \pard\tx626\pardeftab626\pardirnatural
 
 \b0 \cf0 \CocoaLigature0 	
+\b \CocoaLigature1 add-menu-item/location\\fpath
+\b0 \CocoaLigature0  (r)\
+	Used to add a new menu item to a pre-defined location. \
+	Currently location may be "text view" for menu items that affect the visual appearance of text windows.\
+	Path is an arbitrary string that extensions can watch to be notified of when the menu item is selected.\
+	When read this will return a unique id that can be used to modify the menu item (or an error code, a form feed character, and a localized failure reason).\
+\
+	
 \b \CocoaLigature1 copy/src-path\\fdst-path
 \b0 \CocoaLigature0  (r)\
 	Copies a file or directory. It is an error if an item exists at dst-path.\
@@ -168,6 +178,11 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \b \CocoaLigature1 open-local/path
 \b0 \CocoaLigature0  (r)\
 	Open files within open directories matching (the usually partial) path.\
+\
+	
+\b \CocoaLigature1 set-menu-item-title/id\\ftitle
+\b0 \CocoaLigature0  (r)\
+	Used to change the title of a menu item added via the add-menu-item proc file. \
 \
 	
 \b \CocoaLigature1 show-in-finder/path

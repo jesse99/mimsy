@@ -276,7 +276,7 @@
 - (void)_applyGlyphStylesAt:(NSUInteger)location length:(NSUInteger)length storage:(NSTextStorage*)storage
 {
     TextController* tmp = _controller;
-    if (tmp && tmp.charMappings.count > 0)
+    if (tmp)
     {
         // Mapping often want to operate on entire lines so we'll ensure that the range is a full line
         // (NSMatchingWithTransparentBounds isn't sufficient).

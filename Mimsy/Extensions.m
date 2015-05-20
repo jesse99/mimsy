@@ -346,7 +346,8 @@ static bool block_timed_out(void (^block)())
             }
             else if (![path startsWith:@"/Volumes/Mimsy/"])
             {
-                error = [NSString stringWithFormat:@"'%@' doesn't start with /Volumes/Mimsy/", path];
+                [self.priorities setObject:@(priority) forKey:path];
+                [Extensions watch:path extension:self];
             }
             else
             {
@@ -443,8 +444,8 @@ static int watch_file(struct lua_State* state)
     // The file system strips off the "/Volumes/Mimsy from paths so to keep things
     // consistent internally we always do the same.
     NSString* key = [NSString stringWithUTF8String:path];
-    LUA_ASSERT([key startsWith:@"/Volumes/Mimsy/"], "path doesn't start with '/Volumes/Mimsy/'");
-    key = [key substringFromIndex:[@"/Volumes/Mimsy" length]];
+    if ([key startsWith:@"/Volumes/Mimsy/"])
+        key = [key substringFromIndex:[@"/Volumes/Mimsy" length]];
     
     [extension.priorities setObject:@(priority) forKey:key];
     [extension.watched setObject:[NSString stringWithUTF8String:fname] forKey:key];

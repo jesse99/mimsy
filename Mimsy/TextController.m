@@ -190,12 +190,14 @@ static TextDocumentFiles* _files;
 
 - (NSString*)getElementNames
 {
-	__block NSInteger currentIndex = -1;
-	__block struct RangeVector ranges = newRangeVector();
-	__block NSMutableArray* names = [NSMutableArray new];
-	
-	if (_language)
+    NSMutableString* text = [NSMutableString new];
+
+    if (_language)
 	{
+        __block NSInteger currentIndex = -1;
+        __block struct RangeVector ranges = newRangeVector();
+        __block NSMutableArray* names = [NSMutableArray new];
+        
 		NSAttributedString* str = self.textView.textStorage;
 		NSRange currentRange = self.textView.selectedRange;
 		[str enumerateAttribute:@"element name" inRange:NSMakeRange(0, str.length) options:0 usingBlock:^(NSString* value, NSRange range, BOOL *stop) {
@@ -206,17 +208,17 @@ static TextDocumentFiles* _files;
 			if (currentIndex < 0 && currentRange.location >= range.location && currentRange.location+currentRange.length <= range.location+range.length)
 				currentIndex = (int) names.count - 1;
 		}];
+        
+        text = [NSMutableString stringWithCapacity:names.count*(6+1 + 3+1 + 2+1)];
+        [text appendFormat:@"%ld\n", (long)currentIndex];
+        
+        for (NSUInteger i = 0; i < names.count; ++i)
+        {
+            [text appendFormat:@"%@\f%lu\f%lu\n", names[i], (unsigned long)ranges.data[i].location, (unsigned long)ranges.data[i].length];
+        }
+        
+        freeRangeVector(&ranges);
 	}
-	
-	NSMutableString* text = [NSMutableString stringWithCapacity:names.count*(6+1 + 3+1 + 2+1)];
-	[text appendFormat:@"%ld\n", (long)currentIndex];
-	
-	for (NSUInteger i = 0; i < names.count; ++i)
-	{
-		[text appendFormat:@"%@\f%lu\f%lu\n", names[i], (unsigned long)ranges.data[i].location, (unsigned long)ranges.data[i].length];
-	}
-	
-	freeRangeVector(&ranges);
 	
 	return text;
 }
@@ -458,6 +460,8 @@ static TextDocumentFiles* _files;
 {
     ASSERT(mapping != nil);
     [_mappings addObject:mapping];
+    if (_applier)
+        [_applier addDirtyLocation:0 reason:@"new mapping"];
 }
 
 - (void)removeMapping:(NSString*)key
@@ -470,6 +474,8 @@ static TextDocumentFiles* _files;
             [_mappings removeObjectAtIndex:i];
         }
     }
+    if (_applier)
+        [_applier addDirtyLocation:0 reason:@"removed mapping"];
 }
 
 - (NSArray*) charMappings
