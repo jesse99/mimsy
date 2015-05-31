@@ -165,6 +165,16 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \pard\tx626\pardeftab626\pardirnatural
 
 \b0 \cf0 \CocoaLigature0 	
+\b \CocoaLigature1 disaable-menu-item/id
+\b0 \CocoaLigature0  (r)\
+	Used to disable a menu item added via the add-menu-item proc file. \
+\
+	
+\b \CocoaLigature1 enable-menu-item/id
+\b0 \CocoaLigature0  (r)\
+	Used to enable a menu item added via the add-menu-item proc file. \
+\
+	
 \b \CocoaLigature1 new-directory/path
 \b0 \CocoaLigature0  (r)\
 	Creates the directory along with any intermediate directories. It is an error if a file exists at any of the parent directories.\
@@ -239,7 +249,15 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \b \CocoaLigature1 \
 \pard\tx626\pardeftab626\pardirnatural
 
-\fs48 \cf0 /Volumes/Mimsy/log/\
+\fs48 \cf0 /Volumes/Mimsy/key-values/<name>\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b0\fs36 \cf0 	Arbitrary string values associated with the application. This is the preferred way for extensions to persist app-wide state. Reading a value that has not been set returns an empty file. To avoid collisions key names should include the name of the extension. \CocoaLigature0 \
+\pard\tx626\pardeftab626\pardirnatural
+\cf0 \
+\pard\tx626\pardeftab626\pardirnatural
+
+\b\fs48 \cf0 \CocoaLigature1 /Volumes/Mimsy/log/\
 \pard\tx626\pardeftab626\pardirnatural
 
 \b0\fs36 \cf0 \CocoaLigature0 	

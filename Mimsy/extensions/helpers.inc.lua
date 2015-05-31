@@ -123,6 +123,32 @@ function read_proc_file(path)
     end
 end
 
+-- Used to invoke a /Volumes/Mimsy/actions file and return the results.
+-- fileName is the name under the actions directory.
+-- The variadic arguments are the action arguments and may be of any type.
+-- Returns a numeric table of results, typically an error code and a failure string.
+function perform_action(fileName, ...)
+    local args = ""
+
+    for i = 1, select("#", ...) do
+        if #args > 0 then
+            args = args .. "\f"
+        end
+
+        local arg = select(i, ...)
+        if type(arg) == 'string' then
+            args = args .. arg
+        else
+            args = args .. inspect(arg)
+        end
+    end
+
+    args = to_base64(args)
+    local procFile = string.format("actions/%s/%s", fileName, args)
+    local result = read_proc_file(procFile)
+    return split(result, "\f")
+end
+
 -- Writes text into a proc file.
 function write_proc_file(path, text)
 	local file, err = io.open("/Volumes/Mimsy/" .. path, "w")

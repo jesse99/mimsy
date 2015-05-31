@@ -8,19 +8,11 @@ http://www.learnswift.tips/
 
 
 
-* Might want a helper to read from an action proc file
-    - take a file name and variadic args
+* Do a commit
 * Extensions need to support menus:
-    - should only be enabled if there is a language
     - probably want a config option to default showing trailing spaces to on
 * Double clicking on the numnber in CPTCFG_MAC80211_MPL_DEBUG doesn't work
 * Work on replacing glyphs:
-    - need a menu item to toggle this
-        ` when selected write to a menu-item-selected file
-        ` use extension settings to control whether it is on or off
-        ` add a View menu
-        ` add a proc file to add menu items, sorted by name, maybe include a hint as to where
-
     - need to refresh glyphs if normal font changes
     - handle extension unloading?
     - need an option to show whitespace even for blank lines
@@ -28,13 +20,6 @@ http://www.learnswift.tips/
 * Should be able to open extension settings directory
 * #if defined(__cplusplus) wasn't styled right
 * Simplest to use background color instead of glyphs: see http://asciiwwdc.com/2010/sessions/114
-    - could use a custom glyph generator
-        need to figure out how to get an NSGlyph from a unichar
-        probably need to setup a layout manager with the normal font
-        add the characters
-        then call glyphAtIndex
-
-    - show trailing spaces
     - add a note about substituting glyphs
     - show return characters
     - show control characters
@@ -63,6 +48,9 @@ http://www.learnswift.tips/
     - probably need to set USER and maybe HOME
     - probably need to special case file matching
       if no match do a local search for the file name
+* Would be great to have some sort of filtering extension
+    - maybe a little language allowing edits to be made
+    - could even do some MPW sort of thing
 * Experiment with a different proc-file based design:
     - could have extensions to add some sort of chrome
         ` load image files

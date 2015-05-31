@@ -12,10 +12,16 @@ function init(script_dir)
     mimsy:watch_file(1.0, "/Volumes/Mimsy/text-document/main-changed", "onMainChanged")
 	mimsy:watch_file(1.0, "toggle-trailing-whitespace", "onToggleDisplay")
 
-    if id == nil then
-        local procFile = string.format("actions/add-menu-item/%s", to_base64("text view\ftoggle-trailing-whitespace"))
-        id = read_proc_file(procFile)
-        setTitle("Show Trailing Whitespace")
+    local installedID = read_proc_file("key-values/show-trailing-whitespace-id")
+    if #installedID == 0 then
+        id = perform_action("add-menu-item", "text view", "toggle-trailing-whitespace")[1]
+        write_proc_file("key-values/show-trailing-whitespace-id", id)
+
+        log("added menu item ", id)
+        perform_action("set-menu-item-title", id, "Show Trailing Whitespace")
+    else
+        id = installedID
+        log("old menu item ", id)
     end
 end
 
@@ -23,7 +29,7 @@ function show()
     local key = "show-trailing-whitespace"
     local pattern = [[\S+([\ \t]+)\n]]
     local style = "Error"
-    local chars = "\xE2\x99\xA6"    -- BLACK DIAMOND SUIT in UTF-8
+    local chars = "\xE2\x99\xA6"    -- BLACK DIAMOND SUIT encoded as UTF-8
     local repeated = "true"
     write_proc_file("text-document/map-characters", string.format("%s\f%s\f%s\f%s\f%s", key, pattern, style, chars, repeated))
 end
@@ -33,38 +39,44 @@ function hide()
     write_proc_file("text-document/unmap-characters", key)
 end
 
-function setTitle(title)
-    local args = to_base64(string.format("%s\f%s", id, title))
-    local procFile = string.format("actions/set-menu-item-title/%s", args)
-    read_proc_file(procFile)
-end
-
 function onToggleDisplay()
     local showing = read_proc_file("text-document/key-values/show-trailing-whitespace") == "true"
     showing = not showing
 
     if showing then
         write_proc_file("text-document/key-values/show-trailing-whitespace", "true")
-        setTitle("Hide Trailing Whitespace")
+        perform_action("set-menu-item-title", "Hide Trailing Whitespace", title)
         show()
     else
         write_proc_file("text-document/key-values/show-trailing-whitespace", "false")
-        setTitle("Show Trailing Whitespace")
+        perform_action("set-menu-item-title", id, "Show Trailing Whitespace")
         hide()
     end
 end
 
 function onOpened()
-    write_proc_file("text-document/key-values/show-trailing-whitespace", "true")
-    setTitle("Hide Trailing Whitespace")
-    show()
+    if #read_proc_file("text-document/language") > 0 then
+        log("on opened (languge set)")
+        write_proc_file("text-document/key-values/show-trailing-whitespace", "true")
+        show()
+    else
+        log("on opened (no languge)")
+    end
 end
 
 function onMainChanged()
-    local showing = read_proc_file("text-document/key-values/show-trailing-whitespace") == "true"
-    if showing then
-        setTitle("Hide Trailing Whitespace")
+    if #read_proc_file("text-document/language") > 0 then
+        log("main changed (languge set)")
+        local showing = read_proc_file("text-document/key-values/show-trailing-whitespace") == "true"
+        if showing then
+            perform_action("set-menu-item-title", id, "Hide Trailing Whitespace")
+        else
+            perform_action("set-menu-item-title", id, "Show Trailing Whitespace")
+        end
+        perform_action("enable-menu-item", id)
     else
-        setTitle("Show Trailing Whitespace")
+        log("main changed (no languge)")
+        perform_action("set-menu-item-title", id, "Show Trailing Whitespace")
+        perform_action("disable-menu-item", id)
     end
 end

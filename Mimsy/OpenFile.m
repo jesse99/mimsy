@@ -146,9 +146,16 @@
 				 {
 					 LayoutCallback callback = ^(TextController *controller)
 					 {
-						 [controller.getTextView scrollRangeToVisible:range];
-						 [controller.getTextView showFindIndicatorForRange:range];
-						 [controller.getTextView setSelectedRange:range];
+                         // Need a bit of a delay to allow the document to fully load
+                         // (especially when documents are mounted remotely via something
+                         // like SMB).
+                         dispatch_queue_t main = dispatch_get_main_queue();
+                         dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 250*NSEC_PER_MSEC);
+                         dispatch_after(delay, main, ^{
+                             [controller.getTextView scrollRangeToVisible:range];
+                             [controller.getTextView showFindIndicatorForRange:range];
+                             [controller.getTextView setSelectedRange:range];
+                         });
 					 };
 					 
 					 TextController* controller = (TextController*) document.windowControllers[0];

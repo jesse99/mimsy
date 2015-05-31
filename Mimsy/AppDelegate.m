@@ -88,6 +88,8 @@ void initLogGlobs()
     ProcFileAction* _openLocal;
     ProcFileAction* _addMenuItem;
     ProcFileAction* _setMenuItemTitle;
+    ProcFileAction* _disableMenuItem;
+    ProcFileAction* _enableMenuItem;
 
 	DirectoryWatcher* _languagesWatcher;
     DirectoryWatcher* _settingsWatcher;
@@ -97,6 +99,7 @@ void initLogGlobs()
 	DirectoryWatcher* _extensionsWatcher;
 	DirectoryWatcher* _transformsWatcher;
 	DirectoryWatcher* _helpWatcher;
+    ProcFileKeyStoreRW* _keyStoreFile;
 	
 	NSMutableDictionary* _pendingBlocks;
 	NSArray* _helpFileItems;
@@ -392,6 +395,32 @@ void initLogGlobs()
             
             return @[@"0", @""];
         }];
+    
+    _disableMenuItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/disable-menu-item";}
+        handler:^NSArray *(NSArray *args) {
+            NSString* ID = args[0];
+            
+            dispatch_queue_t main = dispatch_get_main_queue();
+            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_MSEC);
+            dispatch_after(delay, main, ^{
+                [self _toggleMenuItem:ID enabled:false];
+            });
+            
+            return @[@"0", @""];
+        }];
+    
+    _enableMenuItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/enable-menu-item";}
+        handler:^NSArray *(NSArray *args) {
+            NSString* ID = args[0];
+            
+            dispatch_queue_t main = dispatch_get_main_queue();
+            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_MSEC);
+            dispatch_after(delay, main, ^{
+                [self _toggleMenuItem:ID enabled:true];
+            });
+            
+            return @[@"0", @""];
+        }];
 	
     [_procFileSystem addWriter:_beepFile];
     [_procFileSystem addReader:_appSetting];
@@ -409,7 +438,9 @@ void initLogGlobs()
     [_procFileSystem addReader:_openAsBinary];
     [_procFileSystem addReader:_openLocal];
     [_procFileSystem addReader:_addMenuItem];
-	[_procFileSystem addReader:_setMenuItemTitle];
+    [_procFileSystem addReader:_setMenuItemTitle];
+    [_procFileSystem addReader:_disableMenuItem];
+	[_procFileSystem addReader:_enableMenuItem];
 
     [TextController startup];
 
@@ -446,6 +477,19 @@ void initLogGlobs()
     if (item)
     {
         [item setTitle:title];
+    }
+    else
+    {
+        LOG("App", "Couldn't find a menu item with ID '%s'", STR(ID));
+    }
+}
+
+- (void) _toggleMenuItem:(NSString*)ID enabled:(bool)enabled
+{
+    NSMenuItem* item = [_items objectForKey:ID];
+    if (item)
+    {
+        [item setEnabled:enabled];
     }
     else
     {
@@ -1037,6 +1081,10 @@ void initLogGlobs()
 			}
 		}
 	}
+    else if (sel == @selector(_onSelectExtensionMenuItem:))
+    {
+        enabled = item.enabled;
+    }
 	else if ([self respondsToSelector:sel])
 	{
 		enabled = YES;
@@ -1307,7 +1355,9 @@ void initLogGlobs()
 		}
 	];
 	
-	dir = [Paths installedDir:@"styles"];
+    _keyStoreFile = [self _createKeyStore:@"key-values"];
+    
+    dir = [Paths installedDir:@"styles"];
 	_stylesWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		  ^(NSString* path, FSEventStreamEventFlags flags)
 		  {
@@ -1324,6 +1374,23 @@ void initLogGlobs()
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"TransformsChanged" object:self];
 		}
 	];
+}
+
+- (ProcFileKeyStoreRW*)_createKeyStore:(NSString*)name
+{
+    ProcFileKeyStoreRW* file = nil;
+    
+    ProcFileSystem* fs = self.procFileSystem;
+    if (fs)
+    {
+        file = [[ProcFileKeyStoreRW alloc] initWithDir:^NSString*
+            {
+                return [NSString stringWithFormat:@"/%@", name];
+            }];
+        [fs addWriter:file];
+    }
+    
+    return file;
 }
 
 @end
