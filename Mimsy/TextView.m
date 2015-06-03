@@ -54,7 +54,13 @@
             result = [self _extendRe:controller.language.word proposedRange:proposed lookAround:16];
             
             if (result.length == 0)
+            {
                 result = [self _extendRe:controller.language.number proposedRange:proposed lookAround:16];
+                
+                // special case where the user double-clicks a number embedded in a word
+                if (result.length > 0)
+                    result = [self _extendRe:controller.language.word proposedRange:result lookAround:16];
+            }
         }
         else
         {
