@@ -66,8 +66,8 @@ static LocalSettings* _cachedLangSettings;
 	
 	// This is called when we get a new main window or resign the current one.
 	// Because these events are often paired we'll defer doing the work for a
-	// tenth of a second.
-	[AppDelegate execute:@"update app settings" withSelector:@selector(updateAppSettings) withObject:self afterDelay:0.1];
+	// tiny bit.
+	[AppDelegate execute:@"update app settings" withSelector:@selector(updateAppSettings) withObject:self afterDelay:0.001];
 }
 
 + (bool)isSetting:(NSString*)name

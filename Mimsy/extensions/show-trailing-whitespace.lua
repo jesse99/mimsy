@@ -16,12 +16,9 @@ function init(script_dir)
     if #installedID == 0 then
         id = perform_action("add-menu-item", "text view", "toggle-trailing-whitespace")[1]
         write_proc_file("key-values/show-trailing-whitespace-id", id)
-
-        log("added menu item ", id)
         perform_action("set-menu-item-title", id, "Show Trailing Whitespace")
     else
         id = installedID
-        log("old menu item ", id)
     end
 end
 
@@ -37,6 +34,10 @@ end
 function hide()
     local key = "show-trailing-whitespace"
     write_proc_file("text-document/unmap-characters", key)
+end
+
+function enabled()
+    return #read_proc_file("text-document/language") > 0 and read_proc_file("app-settings/ShowTrailingWhiteSpace") == "true"
 end
 
 function onToggleDisplay()
@@ -55,18 +56,13 @@ function onToggleDisplay()
 end
 
 function onOpened()
-    if #read_proc_file("text-document/language") > 0 then
-        log("on opened (languge set)")
+    if enabled() then
         write_proc_file("text-document/key-values/show-trailing-whitespace", "true")
-        show()
-    else
-        log("on opened (no languge)")
     end
 end
 
 function onMainChanged()
-    if #read_proc_file("text-document/language") > 0 then
-        log("main changed (languge set)")
+    if enabled() then
         local showing = read_proc_file("text-document/key-values/show-trailing-whitespace") == "true"
         if showing then
             perform_action("set-menu-item-title", id, "Hide Trailing Whitespace")
@@ -74,9 +70,10 @@ function onMainChanged()
             perform_action("set-menu-item-title", id, "Show Trailing Whitespace")
         end
         perform_action("enable-menu-item", id)
+        show()
     else
-        log("main changed (no languge)")
         perform_action("set-menu-item-title", id, "Show Trailing Whitespace")
         perform_action("disable-menu-item", id)
+        hide()
     end
 end

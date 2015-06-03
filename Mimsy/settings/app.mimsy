@@ -67,6 +67,9 @@ IgnoredPath: */.svn/*
 IgnoredPath: */Backups.backupdb/*
 IgnoredPath: */Xcode.app/*
 
+#### Extension Settings ###############################################
+ShowTrailingWhiteSpace: true
+
 #### Misc Settings ####################################################
 # This is added to the PATH enviroment variable used by executable extensions
 # (this is useful because extensions inherit Mimsy's environment variables and
