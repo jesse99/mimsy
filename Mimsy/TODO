@@ -7,10 +7,7 @@ install http://osxfuse.github.io/
 http://www.learnswift.tips/
 
 
-
 * Simplest to use background color instead of glyphs: see http://asciiwwdc.com/2010/sessions/114
-    - show return characters
-    - show control characters
     - show leading tabs (hard code this)
     - show leading spaces (hard code this)
     - 80 char line limit

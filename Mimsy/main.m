@@ -75,6 +75,7 @@ static void registerAppSettings()
 	[AppSettings registerSetting:@"ReversePaths"];
 	[AppSettings registerSetting:@"SearchIn"];
     [AppSettings registerSetting:@"SearchWithin"];
+    [AppSettings registerSetting:@"ShowControlChars"];
 	[AppSettings registerSetting:@"ShowTrailingWhiteSpace"];
 	[AppSettings registerSetting:@"WarnWindowDelay"];
 }

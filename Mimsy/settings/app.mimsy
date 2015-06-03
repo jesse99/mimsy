@@ -68,6 +68,7 @@ IgnoredPath: */Backups.backupdb/*
 IgnoredPath: */Xcode.app/*
 
 #### Extension Settings ###############################################
+ShowControlChars: true
 ShowTrailingWhiteSpace: true
 
 #### Misc Settings ####################################################
