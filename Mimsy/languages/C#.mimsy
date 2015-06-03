@@ -15,6 +15,12 @@ String: @" (?: [^"\\] | \\. | (?: " "))* "
 
 Character: ' (?: [^'\r\n\\] | \\.)* '
 
+PreProc: \x23 \s* (?: define | pragma) .* $
+PreProc: \x23 \s* (?: else | endif | line | warning | error | undef)
+PreCondit: \x23 \s* (?: if | elif | region) .* $
+PreCondit: \x23 \s* (?: endregion)
+Include: \x23 \s* include
+
 Type: \b(?:  object | bool | byte | decimal | double | fixed | float | int | sbyte | long | ulong | uint | char | ushort | short | string | void)\b
 Conditional: \b(?: case | if | switch)\b
 Exception: \b(?: catch | finally | throw | try)\b
@@ -27,12 +33,6 @@ StorageClass: \b(?: const | explicit | extern | out | readonly | unsafe  | impli
 Boolean: \b(?: false | true)\b
 
 #Attribute: (?<= ^ \s* \[ (?: \w+ \s* :)? \s*) [\w\.]+ \s* (?= \]|\()
-PreProc: \x23 \s* (?: define | pragma) .* $
-PreProc: \x23 \s* (?: else | endif | line | warning | error | undef)
-PreCondit: \x23 \s* (?: if | elif | region) .* $
-PreCondit: \x23 \s* (?: endregion)
-Include: \x23 \s* include
-
 Identifier: \b [a-zA-Z_] [\w_]* \b
 
 Float: \d+ \. \d+ (?: [eE] [\+-]? \d+)? [FfDdMm]?

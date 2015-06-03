@@ -8,11 +8,7 @@ http://www.learnswift.tips/
 
 
 
-* Double clicking on the numnber in CPTCFG_MAC80211_MPL_DEBUG doesn't work
-* Should be able to open extension settings directory
-* #if defined(__cplusplus) wasn't styled right
 * Simplest to use background color instead of glyphs: see http://asciiwwdc.com/2010/sessions/114
-    - add a note about substituting glyphs
     - show return characters
     - show control characters
     - show leading tabs (hard code this)
