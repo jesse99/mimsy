@@ -8,9 +8,6 @@ http://www.learnswift.tips/
 
 
 
-* Work on replacing glyphs:
-    - need to refresh glyphs if normal font changes
-    - document that a capture group can be used
 * Double clicking on the numnber in CPTCFG_MAC80211_MPL_DEBUG doesn't work
 * Should be able to open extension settings directory
 * #if defined(__cplusplus) wasn't styled right

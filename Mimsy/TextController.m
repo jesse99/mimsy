@@ -30,6 +30,10 @@
 static TextDocumentFiles* _files;
 
 @implementation CharacterMapping
+{
+    NSString* _chars;
+    bool _repeat;
+}
 
 - (id)initWithFields:(NSString*)fields controller:(TextController*)controller
 {
@@ -61,12 +65,20 @@ static TextDocumentFiles* _files;
         }
         
         _style = [parts[2] lowercaseString];
+        _chars = parts[3];
+        _repeat = [parts[4] isEqualToString:@"true"];
         
         NSDictionary* style = [controller.styles attributesForElement:_style];
-        _glyphs = [[GlyphsAttribute alloc] initWithStyle:style chars:parts[3] repeat:[parts[4] isEqualToString:@"true"]];
+        _glyphs = [[GlyphsAttribute alloc] initWithStyle:style chars:_chars repeat:_repeat];
     }
     
     return self;
+}
+
+- (void)reload:(TextController*)controller
+{
+    NSDictionary* style = [controller.styles attributesForElement:_style];
+    _glyphs = [[GlyphsAttribute alloc] initWithStyle:style chars:_chars repeat:_repeat];
 }
 
 @end
@@ -88,7 +100,7 @@ static TextDocumentFiles* _files;
 + (void)startup
 {
     if (!_files)
-        _files = [TextDocumentFiles new];    
+        _files = [TextDocumentFiles new];
 }
 
 - (id)init
@@ -595,7 +607,12 @@ static TextDocumentFiles* _files;
 	
 	if (_language)
 	{
-		_styles = [[TextStyles alloc] initWithPath:_styles.path expectBackColor:true];
+        for (CharacterMapping* mapping in _mappings)
+        {
+            [mapping reload:self];
+        }
+
+        _styles = [[TextStyles alloc] initWithPath:_styles.path expectBackColor:true];
 		if (_applier)
 			[_applier resetStyles];
 	}

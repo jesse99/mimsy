@@ -10,6 +10,8 @@ typedef void (^LayoutCallback)(TextController* controller);
 
 - (id)initWithFields:(NSString*)fields controller:(TextController*)controller;
 
+- (void)reload:(TextController*)controller;
+
 @property (readonly) NSString* key;
 @property (readonly) NSRegularExpression* regex;
 @property (readonly) NSString* style;
