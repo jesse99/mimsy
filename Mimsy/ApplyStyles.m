@@ -304,6 +304,155 @@
                  [storage addAttributes:@{GlyphsAttributeName:mapping.glyphs} range:range];
              }];
         }
+        
+        // These are very awkward to handle via a regex so instead of using an extension we simply
+        // hard-code them.
+        [self _applyLeadingTabGlyphsAt:location length:length controller:tmp];
+        [self _applyLeadingSpaceGlyphsAt:location length:length controller:tmp];
+        [self _applyLongLineStyleAt:location length:length controller:tmp];
+    }
+}
+
+- (void)_applyLeadingTabGlyphsAt:(NSUInteger)location length:(NSUInteger)length controller:(TextController*)controller
+{
+    NSDictionary* style = [controller.styles attributesForElement:@"warning"];
+    GlyphsAttribute* glyphs = [[GlyphsAttribute alloc] initWithStyle:style chars:@"\u279C" repeat:true];    // HEAVY ROUND-TIPPED RIGHTWARDS ARROW
+    
+    NSUInteger offset = 0;
+    while (offset < length)
+    {
+        if (location + offset == 0 || [controller.text characterAtIndex:location + offset - 1] == '\n')   // note that Mimsy always uses Unix line endings internally
+        {
+            while (offset < length)
+            {
+                unichar ch = [controller.text characterAtIndex:location + offset];
+                if (ch == '\t')
+                {
+                    NSUInteger start = location + offset;
+                    while (offset < length && ch == '\t')
+                    {
+                        ++offset;
+                        ch = [controller.text characterAtIndex:location + offset];
+                    }
+                    
+                    NSRange range = NSMakeRange(start, location + offset - start);
+                    [controller.textView.textStorage addAttributes:style range:range];
+                    
+                    [controller.textView.textStorage removeAttribute:GlyphsAttributeName range:range];
+                    [controller.textView.textStorage addAttributes:@{GlyphsAttributeName:glyphs} range:range];
+                }
+                else if (ch == ' ')
+                {
+                    ++offset;
+                }
+                else
+                {
+                    ++offset;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            ++offset;
+        }
+    }
+}
+
+- (void)_applyLeadingSpaceGlyphsAt:(NSUInteger)location length:(NSUInteger)length controller:(TextController*)controller
+{
+    NSDictionary* style = [controller.styles attributesForElement:@"warning"];
+    GlyphsAttribute* glyphs = [[GlyphsAttribute alloc] initWithStyle:style chars:@"\u2022" repeat:true];    // BULLET
+    
+    NSUInteger offset = 0;
+    while (offset < length)
+    {
+        NSUInteger lineStart = location + offset;
+        if (lineStart == 0 || [controller.text characterAtIndex:lineStart - 1] == '\n')   // note that Mimsy always uses Unix line endings internally
+        {
+            while (offset < length)
+            {
+                unichar ch = [controller.text characterAtIndex:location + offset];
+                if (ch == '\t')
+                {
+                    ++offset;
+                }
+                else if (ch == ' ')
+                {
+                    NSUInteger start = location + offset;
+                    while (offset < length && ch == ' ')
+                    {
+                        ++offset;
+                        ch = [controller.text characterAtIndex:location + offset];
+                    }
+                    
+                    // We highlight spaces at the very start of a line and spaces between tabs,
+                    // but not spaces following tabs.
+                    if (start == lineStart || ch == '\t')
+                    {
+                        NSRange range = NSMakeRange(start, location + offset - start);
+                        [controller.textView.textStorage addAttributes:style range:range];
+                        
+                        [controller.textView.textStorage removeAttribute:GlyphsAttributeName range:range];
+                        [controller.textView.textStorage addAttributes:@{GlyphsAttributeName:glyphs} range:range];
+                    }
+                }
+                else
+                {
+                    ++offset;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            ++offset;
+        }
+    }
+}
+
+- (void)_applyLongLineStyleAt:(NSUInteger)location length:(NSUInteger)length controller:(TextController*)controller
+{
+    NSUInteger offset = 0;
+    while (offset < length)
+    {
+        NSUInteger lineStart = location + offset;
+        if (lineStart == 0 || [controller.text characterAtIndex:lineStart - 1] == '\n')   // note that Mimsy always uses Unix line endings internally
+        {
+            NSUInteger longStart = 0;
+            NSUInteger length = 0;
+            while (location + offset < controller.text.length)
+            {
+                unichar ch = [controller.text characterAtIndex:location+offset];
+                ++offset;
+
+                if (ch == '\n')
+                {
+                   break;
+                }
+                else
+                {
+                    if (ch == '\t')
+                        length += 8;    // TODO: use a setting
+                    else
+                        length += 1;
+                    
+                    if (length > 80 && longStart == 0)    // TODO: use a setting
+                        longStart = location + offset - 1;
+                }
+            }
+            
+            if (longStart > 0)
+            {
+                NSRange range = NSMakeRange(longStart, location + offset - longStart);
+                [controller.textView.textStorage removeAttribute:NSForegroundColorAttributeName range:range];
+                [controller.textView.textStorage addAttributes:@{NSForegroundColorAttributeName:[NSColor redColor]} range:range];
+            }
+        }
+        else
+        {
+            ++offset;
+        }
     }
 }
 

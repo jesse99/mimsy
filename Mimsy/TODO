@@ -7,15 +7,17 @@ install http://osxfuse.github.io/
 http://www.learnswift.tips/
 
 
-* Simplest to use background color instead of glyphs: see http://asciiwwdc.com/2010/sessions/114
-    - show leading tabs (hard code this)
-    - show leading spaces (hard code this)
+* Hard code show leading tabs:
+    - add a menu item to toggle it on and off
+    - add a setting to enable it
+* Work on text view stuff:
     - 80 char line limit
         ideally using a setting
         hard code this
         optionally count tabs as N spaces
     - maybe some common errors (like using the wrong comment characters)
     - TODO, FIXME, HACK
+    - view menu items should be sorted
 * Strings in comments suck
     - match the longest regex?
     - but that has problems with things like function declarations
@@ -23,6 +25,7 @@ http://www.learnswift.tips/
     - special case strings and comments?
 * Local search should try all open projects before doing a global search.
 * Work on tab handling.
+    - maybe could use glyphs to render tabs
 * Need to get rid of startup scripts
 * Seems like we could get goto definition working with just the styler
     - maybe use a special regex for files that are not open
