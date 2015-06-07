@@ -6,15 +6,19 @@ install http://osxfuse.github.io/
 
 http://www.learnswift.tips/
 
+177.2
+
 
 * Hard code show leading tabs:
     - add a menu item to toggle it on and off
     - add a setting to enable it
+* Special case leading tab with multi-line comment
 * Work on text view stuff:
     - 80 char line limit
         ideally using a setting
         hard code this
         optionally count tabs as N spaces
+    - show non-leading tabs
     - maybe some common errors (like using the wrong comment characters)
     - TODO, FIXME, HACK
     - view menu items should be sorted

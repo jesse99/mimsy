@@ -307,7 +307,9 @@
         
         // These are very awkward to handle via a regex so instead of using an extension we simply
         // hard-code them.
-        [self _applyLeadingTabGlyphsAt:location length:length controller:tmp];
+        if (false)
+            [self _applyLeadingTabGlyphsAt:location length:length controller:tmp];
+        [self _applyNonLeadingTabGlyphsAt:location length:length controller:tmp];
         [self _applyLeadingSpaceGlyphsAt:location length:length controller:tmp];
         [self _applyLongLineStyleAt:location length:length controller:tmp];
     }
@@ -351,6 +353,49 @@
                     break;
                 }
             }
+        }
+        else
+        {
+            ++offset;
+        }
+    }
+}
+
+- (void)_applyNonLeadingTabGlyphsAt:(NSUInteger)location length:(NSUInteger)length controller:(TextController*)controller
+{
+    NSDictionary* style = [controller.styles attributesForElement:@"warning"];
+    GlyphsAttribute* glyphs = [[GlyphsAttribute alloc] initWithStyle:style chars:@"\u279C" repeat:true];    // HEAVY ROUND-TIPPED RIGHTWARDS ARROW
+    
+    NSUInteger offset = 0;
+    while (offset < length)
+    {
+        unichar ch = [controller.text characterAtIndex:location + offset];
+        if (ch == '\t')
+        {
+            if (location + offset == 0 || [controller.text characterAtIndex:location + offset - 1] == '\n')   // note that Mimsy always uses Unix line endings internally
+            {
+                while (offset < length && ch == '\t')
+                {
+                    ++offset;
+                    ch = [controller.text characterAtIndex:location + offset];
+                }
+            }
+            else
+            {
+                NSUInteger start = location + offset;
+                while (offset < length && ch == '\t')
+                {
+                    ++offset;
+                    ch = [controller.text characterAtIndex:location + offset];
+                }
+                
+                NSRange range = NSMakeRange(start, location + offset - start);
+                [controller.textView.textStorage addAttributes:style range:range];
+                
+                [controller.textView.textStorage removeAttribute:GlyphsAttributeName range:range];
+                [controller.textView.textStorage addAttributes:@{GlyphsAttributeName:glyphs} range:range];
+            }
+            
         }
         else
         {
