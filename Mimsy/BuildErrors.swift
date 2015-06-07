@@ -28,7 +28,7 @@ var _instance: BuildErrors = BuildErrors()
 
         for pattern in _patterns
         {
-            pattern.regex.enumerateMatchesInString(text, options: nil, range: range, usingBlock:
+            pattern.regex.enumerateMatchesInString(text as String, options: nil, range: range, usingBlock:
             {
             (match, flags, stop) -> Void in
                 if matches[match.range.location] == nil
@@ -198,10 +198,18 @@ var _instance: BuildErrors = BuildErrors()
             {
                 line = text.substringWithRange(match.rangeAtIndex(i)).toInt()!
             }
+            else
+            {
+                line = -1
+            }
             
             if let i = pattern.fields["C"]
             {
                 column = text.substringWithRange(match.rangeAtIndex(i)).toInt()!
+            }
+            else
+            {
+                column = -1
             }
             
             switch pattern.fields["M"]
@@ -218,11 +226,15 @@ var _instance: BuildErrors = BuildErrors()
                 {
                     // Hopefully tools will provide more than just a file name on errors.
                     // Failing that people will hopefully not reuse source file names.
-                    path = paths[0] as NSString
+                    path = paths[0] as! NSString as String
+                }
+                else
+                {
+                    path = nil;
                 }
             }
             else
-                {
+            {
             
                 path = nil
             }
@@ -232,8 +244,8 @@ var _instance: BuildErrors = BuildErrors()
         var fileRange: PersistentRange? = nil
         
         let path: String?
-        let line: Int = -1
-        let column: Int = -1
+        let line: Int
+        let column: Int
         let message: String?
     }
     

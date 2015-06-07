@@ -667,9 +667,9 @@ static TextDocumentFiles* _files;
 		
 		NSString* name = [path lastPathComponent];
         if ([doc.fileType isEqualToString:@"binary"])
-            self.Language = [Languages findWithlangName:@"binary"];
+            self.language = [Languages findWithlangName:@"binary"];
         else
-            self.Language = [Languages findWithFileName:name contents:self.text];
+            self.language = [Languages findWithFileName:name contents:self.text];
 		
 		if (_restorer)
 			[_restorer setPath:path];

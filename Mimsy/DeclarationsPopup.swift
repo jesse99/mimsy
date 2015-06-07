@@ -69,7 +69,7 @@ class DeclarationsPopup : NSPopUpButton
     
     func onSelectItem(sender: NSMenuItem)
     {
-        let range = sender.representedObject as NSRange
+        let range = sender.representedObject as! NSRange
         
         _view!.setSelectedRange(range)
         _view!.scrollRangeToVisible(range)
