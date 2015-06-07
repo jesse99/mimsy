@@ -431,15 +431,19 @@
                         ch = [controller.text characterAtIndex:location + offset];
                     }
                     
-                    // We highlight spaces at the very start of a line and spaces between tabs,
-                    // but not spaces following tabs.
-                    if (start == lineStart || ch == '\t')
+                    // Allow leading spaces before multi-line C-style comments.
+                    if (ch != '*')
                     {
-                        NSRange range = NSMakeRange(start, location + offset - start);
-                        [controller.textView.textStorage addAttributes:style range:range];
-                        
-                        [controller.textView.textStorage removeAttribute:GlyphsAttributeName range:range];
-                        [controller.textView.textStorage addAttributes:@{GlyphsAttributeName:glyphs} range:range];
+                        // We highlight spaces at the very start of a line and spaces between tabs,
+                        // but not spaces following tabs.
+                        if (start == lineStart || ch == '\t')
+                        {
+                            NSRange range = NSMakeRange(start, location + offset - start);
+                            [controller.textView.textStorage addAttributes:style range:range];
+                            
+                            [controller.textView.textStorage removeAttribute:GlyphsAttributeName range:range];
+                            [controller.textView.textStorage addAttributes:@{GlyphsAttributeName:glyphs} range:range];
+                        }
                     }
                 }
                 else
