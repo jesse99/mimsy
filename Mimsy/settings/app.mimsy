@@ -69,7 +69,15 @@ IgnoredPath: */Xcode.app/*
 
 #### Extension Settings ###############################################
 ShowControlChars: true
+ShowLeadingSpaces: true
+ShowLeadingTabs: false
+ShowLongLines: false
+ShowNonLeadingTabs: false
 ShowTrailingWhiteSpace: true
+
+TabWidth: 4
+MaxLineWidth: 80
+LongLineIncludesTabWidth: true
 
 #### Misc Settings ####################################################
 # This is added to the PATH enviroment variable used by executable extensions

@@ -69,6 +69,8 @@ static void registerAppSettings()
 	[AppSettings registerSetting:@"FindAllIncludes"];
 	[AppSettings registerSetting:@"FindWraps"];
 	[AppSettings registerSetting:@"IgnoredPath"];
+    [AppSettings registerSetting:@"LongLineIncludesTabWidth"];
+    [AppSettings registerSetting:@"MaxLineWidth"];
 	[AppSettings registerSetting:@"NumFindItems"];
 	[AppSettings registerSetting:@"PasteCopiesBackColor"];
 	[AppSettings registerSetting:@"PreferredPath"];
@@ -76,7 +78,12 @@ static void registerAppSettings()
 	[AppSettings registerSetting:@"SearchIn"];
     [AppSettings registerSetting:@"SearchWithin"];
     [AppSettings registerSetting:@"ShowControlChars"];
-	[AppSettings registerSetting:@"ShowTrailingWhiteSpace"];
+    [AppSettings registerSetting:@"ShowLeadingSpaces"];
+    [AppSettings registerSetting:@"ShowLeadingTabs"];
+    [AppSettings registerSetting:@"ShowLongLines"];
+    [AppSettings registerSetting:@"ShowNonLeadingTabs"];
+    [AppSettings registerSetting:@"ShowTrailingWhiteSpace"];
+    [AppSettings registerSetting:@"TabWidth"];
 	[AppSettings registerSetting:@"WarnWindowDelay"];
 }
 

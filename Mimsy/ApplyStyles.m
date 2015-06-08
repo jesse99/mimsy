@@ -1,5 +1,6 @@
 #import "ApplyStyles.h"
 
+#import "AppSettings.h"
 #import "AsyncStyler.h"
 #import "GlyphsAttribute.h"
 #import "Logger.h"
@@ -307,11 +308,17 @@
         
         // These are very awkward to handle via a regex so instead of using an extension we simply
         // hard-code them.
-        if (false)
+        if ([AppSettings boolValue:@"ShowLeadingTabs" missing:false])
             [self _applyLeadingTabGlyphsAt:location length:length controller:tmp];
-        [self _applyNonLeadingTabGlyphsAt:location length:length controller:tmp];
-        [self _applyLeadingSpaceGlyphsAt:location length:length controller:tmp];
-        [self _applyLongLineStyleAt:location length:length controller:tmp];
+
+        if ([AppSettings boolValue:@"ShowNonLeadingTabs" missing:false])
+            [self _applyNonLeadingTabGlyphsAt:location length:length controller:tmp];
+        
+        if ([AppSettings boolValue:@"ShowLeadingSpaces" missing:false])
+            [self _applyLeadingSpaceGlyphsAt:location length:length controller:tmp];
+        
+        if ([AppSettings boolValue:@"ShowLongLines" missing:false])
+            [self _applyLongLineStyleAt:location length:length controller:tmp];
     }
 }
 
@@ -462,6 +469,10 @@
 
 - (void)_applyLongLineStyleAt:(NSUInteger)location length:(NSUInteger)length controller:(TextController*)controller
 {
+    unsigned int tabWidth = (unsigned int) [AppSettings intValue:@"TabWidth" missing:4];
+    int maxWidth = [AppSettings intValue:@"MaxLineWidth" missing:80];
+    bool useTabWidth = [AppSettings boolValue:@"LongLineIncludesTabWidth" missing:false];
+    
     NSUInteger offset = 0;
     while (offset < length)
     {
@@ -481,12 +492,12 @@
                 }
                 else
                 {
-                    if (ch == '\t')
-                        length += 8;    // TODO: use a setting
+                    if (ch == '\t' && useTabWidth)
+                        length += tabWidth;
                     else
                         length += 1;
                     
-                    if (length > 80 && longStart == 0)    // TODO: use a setting
+                    if (length > maxWidth && longStart == 0)
                         longStart = location + offset - 1;
                 }
             }

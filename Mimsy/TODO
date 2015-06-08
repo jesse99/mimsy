@@ -6,13 +6,19 @@ install http://osxfuse.github.io/
 
 http://www.learnswift.tips/
 
-177.2
+
+
+ShowLeadingSpaces: true
+ShowLeadingTabs: false
+ShowLongLines: false
+ShowNonLeadingTabs: false
+
+
 
 
 * Hard code show leading tabs:
     - add a menu item to toggle it on and off
     - add a setting to enable it
-* Special case leading tab with multi-line comment
 * Work on text view stuff:
     - 80 char line limit
         ideally using a setting
@@ -34,6 +40,7 @@ http://www.learnswift.tips/
 * Seems like we could get goto definition working with just the styler
     - maybe use a special regex for files that are not open
 * Editor features: http://texteditors.org/cgi-bin/wiki.pl?HomePage
+* Settings added by extensions should be automatically registered
 * Get remote builds working:
     remote-test:
     ssh jjones@10.4.0.128 'make package/coco-mesh-minder/{compile,install} V=1 && scp bin/rb433-chaos/packages/coco/coco-mesh-minder_1_ar71xx.ipk root@192.168.6.11:/tmp && ssh root@192.168.6.11 "opkg install /tmp/coco-mesh-minder_1_ar71xx.ipk"'
