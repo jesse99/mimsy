@@ -8,9 +8,6 @@ http://www.learnswift.tips/
 
 
 
-* Local search should try all open projects before doing a global search.
-* Work on tab handling.
-    - maybe could use glyphs to render tabs
 * Should support per-project keywords.
 * Seems like we could get goto definition working with just the styler
     - maybe use a special regex for files that are not open
@@ -54,6 +51,7 @@ http://www.learnswift.tips/
     - and can embed UI widgets using text attachments
     - see http://asciiwwdc.com/2010/sessions/114
     - and Downloads/WWDC_2010_114
+* Local search should try all open projects before doing a global search.
 * NSString adds an API that can be used to detect the string encoding of an array of bytes
 * Need an extension (or an option) to show a line at N characters.
 * Tab handling is sketchy.

@@ -520,20 +520,20 @@ static TextDocumentFiles* _files;
 	// It's a little goofy to support the font menu items for files with a
 	// language, but it can be kind of nice to support at least some of them.
 	// For example, making some text temporarily larger or what have you.
+    NSDictionary* attrs = [_styles attributesForElement:@"normal"];
 	NSRange range = self.textView.selectedRange;
-	NSDictionary* attrs = [_styles attributesForElement:@"normal"];
 	if (range.length > 0)
 	{
 		if ([self.textView shouldChangeTextInRange:range replacementString:nil])
 		{
 			NSTextStorage* storage = self.textView.textStorage;
-			[storage setAttributes:attrs range:range];
+            [storage setAttributes:attrs range:range];
 			[self.textView didChangeText];
 		}
 	}
 	else
 	{
-		[self.textView setTypingAttributes:attrs];
+        [self.textView setTypingAttributes:attrs];
 	}
 }
 
@@ -724,8 +724,6 @@ static TextDocumentFiles* _files;
 		if (_applier)
 			[_applier addDirtyLocation:0 reason:@"set language"];
 		
-		NSDictionary* attrs = [_styles attributesForElement:@"normal"];
-		[self.textView setTypingAttributes:attrs];
 		[self _resetAutomaticSubstitutions];
 	}
 }
@@ -769,7 +767,10 @@ static TextDocumentFiles* _files;
 {
 	UNUSED(notification);
 	
+    [self resetAttributes];
 	[self _resetAutomaticSubstitutions];
+    if (_applier)
+        [_applier addDirtyLocation:0 reason:@"settings changed"];
 }
 
 - (void)changeStyle:(NSString*)path
@@ -835,12 +836,14 @@ static TextDocumentFiles* _files;
 		}
 	}
 
-	NSDictionary* attrs = [_styles attributesForElement:@"normal"];
-	[self.textView setTypingAttributes:attrs];
+    [self resetAttributes];
 	if (!_language)
 	{
 		if ([doc.fileType contains:@"Plain Text"] || [doc.fileType isEqualToString:@"binary"])
+        {
+            NSDictionary* attrs = [_styles attributesForElement:@"normal"];
 			[self.textView.textStorage setAttributes:attrs range:NSMakeRange(0, self.textView.textStorage.length)];
+        }
 	}
 
 	[self _resetAutomaticSubstitutions];
@@ -853,7 +856,31 @@ static TextDocumentFiles* _files;
 	// using alone (i.e. we only set styles for a document without
 	// a language when we first open it).
 	if (_language)
-		[self.textView setTypingAttributes:[_styles attributesForElement:@"normal"]];
+    {
+        // Create paragraph attributes for the tab width.
+        NSDictionary* attrs = [_styles attributesForElement:@"normal"];
+        NSAttributedString* str = [[NSAttributedString alloc] initWithString:@" " attributes:attrs];
+        double charWidth = str.size.width;
+        int tabWidth = [AppSettings intValue:@"TabWidth" missing:4];
+        
+        NSMutableParagraphStyle* paragraphStyle = [[self.textView defaultParagraphStyle] mutableCopy];
+        if (!paragraphStyle)
+            paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        [paragraphStyle setDefaultTabInterval:tabWidth*charWidth];
+        [paragraphStyle setTabStops:[NSArray array]];
+        [self.textView setDefaultParagraphStyle:paragraphStyle];
+        
+        // Set the typing style to the normal style plus the paragraph attributes from above.
+        NSMutableDictionary* typingAttributes = [attrs mutableCopy];
+        [typingAttributes setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
+        [self.textView setTypingAttributes:typingAttributes];
+        
+        // Do the same for any existing text we have.
+        NSRange range = NSMakeRange(0, self.textView.string.length);
+        [self.textView shouldChangeTextInRange:range replacementString:nil];
+        [[self.textView textStorage] setAttributes:typingAttributes range:range];
+        [self.textView didChangeText];
+    }
 }
 
 - (void)toggleComment:(id)sender
