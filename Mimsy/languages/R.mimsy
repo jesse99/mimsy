@@ -8,6 +8,7 @@ ContextHelp: {R}[R FAQ]http://cran.r-project.org/doc/manuals/R-FAQ.html
 SearchIn: [r-project]https://www.google.com/search?q=${TEXT}&domains=r-project.org&sitesearch=r-project.org&btnG=Google+Search&gws_rd=ssl
 
 Comment: \x23 .* $
+Error: // .* $
 String: " (?: [^"\r\n\\] | \\.)* "
 String: ' (?: [^'\r\n\\] | \\.)* '
 

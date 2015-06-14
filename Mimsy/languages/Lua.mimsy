@@ -8,6 +8,8 @@ ContextHelp: {lua}[Lua Reference Manual]http://www.lua.org/manual/5.1/
 SearchIn: [lua.org]https://www.google.com/search?q=${TEXT}&sitesearch=lua.org
 
 Comment: -- .* $
+Error: // .* $
+Error: \x23 .* $
 String: " (?: [^"\r\n\\] | \\.)* "
 String: ' (?: [^'\r\n\\] | \\.)* '
 String: \[=*\[ (?: . | \r | \n)*? \]=*\]

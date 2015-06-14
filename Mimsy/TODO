@@ -8,21 +8,12 @@ http://www.learnswift.tips/
 
 
 
-* Work on text view stuff:
-    - maybe some common errors (like using the wrong comment characters)
-    - TODO, FIXME, HACK
-    - view menu items should be sorted
-* Strings in comments suck
-    - match the longest regex?
-    - but that has problems with things like function declarations
-    - maybe just switch comments and strings (should be fewer foul ups)
-    - special case strings and comments?
 * Local search should try all open projects before doing a global search.
 * Work on tab handling.
     - maybe could use glyphs to render tabs
 * Should support per-project keywords.
 * Seems like we could get goto definition working with just the styler
-- maybe use a special regex for files that are not open
+    - maybe use a special regex for files that are not open
 * Need to get rid of startup scripts
 * Editor features: http://texteditors.org/cgi-bin/wiki.pl?HomePage
 * Settings added by extensions should be automatically registered
@@ -361,6 +352,10 @@ http://www.learnswift.tips/
 	  would preserve line numbers and make it simple to do things like search or process the text
 	- show range (eg for find) would need to auto-unfold
 * Do something with the About box.
+* Language matching isn't quite right:
+    - using first regex fails for stuff like // some "code" goes here
+    - using longest match fail for stuff like "a //string with a comment", followed by lot's of text
+also had issues with matching functions
 * The suggestions that XCode provides when there are errors are pretty cool.
 * Extensions should be able to add a menu item before or after a named item.
 * Might want to cache styles:
@@ -405,139 +400,3 @@ http://www.learnswift.tips/
 	- make sure that the binary works on someone elses mac
 	- increment support files version number, also build scripts version numbers
 	- ship the release version
-	
-------------------------------------------------------------------------------------------------------------------------
-#import "RegexStyler.h"
-
-#import "Logger.h"
-#import "StyleRuns.h"
-
-@implementation RegexStyler
-{
-NSArray* _regexen;
-NSArray* _names;
-}
-
-- (id)initWithRegexen:(NSArray*)regexen elementNames:(NSArray*)names
-{
-ASSERT(regexen.count >= names.count - 1);
-
-_regexen = regexen;
-_names = names;
-
-return self;
-}
-
-// threaded
-static int compareRun(const struct StyleRun* lhs, const struct StyleRun* rhs)
-{
-if (lhs->range.location < rhs->range.location)
-return -1;
-else if (lhs->range.location > rhs->range.location)
-return -1;
-
-if (lhs->range.length < rhs->range.length)
-return -1;
-else if (lhs->range.length > rhs->range.length)
-return -1;
-
-return 0;
-}
-
-// threaded
-// Sets foundIndex if the run was found.
-// Otherwise sets notFoundIndex to an index such that if the run was inserted there the runs will still be sorted.
-// Adapted from http://rosettacode.org/wiki/Binary_search#C
-static void findIntersectedRun(const struct StyleRunVector* runs, const struct StyleRun* run, NSUInteger* foundIndex, NSUInteger* notFoundIndex)
-{
-if (runs->count == 0) {
-*notFoundIndex = 0;
-return;
-}
-
-NSUInteger left = 1, right = runs->count; // `unsigned' to avoid overflow in `(left + right)/2'
-while (left < right)
-{
-// invariant: a[left] <= *run <= a[right] or *run not in runs
-NSUInteger m = (left  +  right) / 2; //NOTE: *intentionally* truncate for odd sum
-
-if (compareRun(runs->data + m, run) < 0)
-left = m + 1;       // a[m] < *run <= a[right] or *run not in runs
-else
-// assert(right != m) or infinite loop possible
-right = m;          // a[left] <= *run <= a[m] or *run not in runs
-}
-// assert(left == right)
-if (compareRun(runs->data + right, run) == 0)
-*foundIndex = right;
-else
-*notFoundIndex = right;
-}
-
-static bool intersects(const struct StyleRun* lhs, const struct StyleRun* rhs)
-{
-
-}
-
-// threaded
-- (StyleRuns*)computeStyles:(NSString*)text editCount:(NSUInteger)count
-{
-__block struct StyleRunVector runs = newStyleRunVector();
-reserveStyleRunVector(&runs, 2*text.length/40);	// this is how many runs I had in a screen of random rust code (x2 because of Normal runs)
-
-for (NSUInteger i = 0; i < _regexen.count; ++i)
-{
-NSRegularExpression* re = _regexen[i];
-[self _matchRegex:re runs:&runs index:i text:text];
-}
-
-[self _insertNormalStyles:&runs];
-
-return [[StyleRuns alloc] initWithElementNames:_names runs:runs editCount:count];
-}
-
-// threaded
-- (void) _matchRegex:(NSRegularExpression*)re runs:(struct StyleRunVector*)runs index:(NSUInteger)index text:(NSString*)text
-{
-[re enumerateMatchesInString:text options:0 range:NSMakeRange(0, text.length) usingBlock:
-^(NSTextCheckingResult* match, NSMatchingFlags flags, BOOL* stop)
-{
-(void) flags;
-(void) stop;
-
-// TODO: do nothing if the range intersects an existing run
-NSRange range = re.numberOfCaptureGroups == 0 ? [match rangeAtIndex:0] : [match rangeAtIndex:1];
-struct StyleRun run = {.elementIndex = index+1, .range = range};
-
-NSUInteger foundIndex = INT_MAX;
-NSUInteger notFoundIndex = INT_MAX;
-findIntersectedRun(runs, &run, &foundIndex, &notFoundIndex);
-if (foundIndex != INT_MAX && !intersects(&runs->data[foundIndex], &run))
-pushStyleRunVector(runs, run);
-else if (notFoundIndex != INT_MAX && !intersects(&runs->data[notFoundIndex - 1], &run))
-pushStyleRunVector(runs, run);
-}
-];
-}
-
-// threaded
-- (void) _insertNormalStyles:(struct StyleRunVector*)runs
-{
-
-
-
-
-
-if (index < NSIntegerMax)
-{
-if (range.location > lastMatch)
-pushStyleRunVector(&runs, (struct StyleRun) {.elementIndex = 0, .range = NSMakeRange(lastMatch, range.location - lastMatch)});
-
-pushStyleRunVector(&runs, (struct StyleRun) {.elementIndex = index, .range = range});
-lastMatch = range.location + range.length;
-}
-}
-}
-
-@end
-
