@@ -308,16 +308,16 @@
         
         // These are very awkward to handle via a regex so instead of using an extension we simply
         // hard-code them.
-        if ([AppSettings boolValue:@"ShowLeadingTabs" missing:false])
+        if (tmp.showingLeadingTabs)
             [self _applyLeadingTabGlyphsAt:location length:length controller:tmp];
 
-        if ([AppSettings boolValue:@"ShowNonLeadingTabs" missing:false])
+        if (tmp.showingNonLeadingTabs)
             [self _applyNonLeadingTabGlyphsAt:location length:length controller:tmp];
         
-        if ([AppSettings boolValue:@"ShowLeadingSpaces" missing:false])
+        if (tmp.showingLeadingSpaces)
             [self _applyLeadingSpaceGlyphsAt:location length:length controller:tmp];
         
-        if ([AppSettings boolValue:@"ShowLongLines" missing:false])
+        if (tmp.showingLongLines)
             [self _applyLongLineStyleAt:location length:length controller:tmp];
     }
 }

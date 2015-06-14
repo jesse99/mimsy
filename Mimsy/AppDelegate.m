@@ -18,6 +18,7 @@
 #import "Languages.h"
 #import "LocalSettings.h"
 #import "Logger.h"
+#import "MenuCategory.h"
 #import "OpenSelection.h"
 #import "Paths.h"
 #import "ProcFileSystem.h"
@@ -362,7 +363,8 @@ void initLogGlobs()
     _addMenuItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/add-menu-item";}
          handler:^NSArray *(NSArray *args) {
              NSString* location = args[0];
-             NSString* path     = args[1];
+             NSString* title    = args[1];
+             NSString* path     = args[2];
              
              if ([location isEqualToString:@"text view"])
              {
@@ -372,7 +374,7 @@ void initLogGlobs()
                  dispatch_queue_t main = dispatch_get_main_queue();
                  dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_MSEC);
                  dispatch_after(delay, main, ^{
-                     [self _addTextViewItem:ID path:path];
+                     [self _addTextViewItem:ID title:title path:path];
                  });
                  return @[ID];
              }
@@ -448,16 +450,16 @@ void initLogGlobs()
 	[Extensions setup];
 }
 
-- (void) _addTextViewItem:(NSString*)ID path:(NSString*)path
+- (void) _addTextViewItem:(NSString*)ID title:(NSString*)title path:(NSString*)path
 {
     NSMenu* menu = self.textMenu;
     if (menu)
     {
         NSInteger index = [menu indexOfItemWithTag:1];
         
-        NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:@"" action:@selector(_onSelectExtensionMenuItem:) keyEquivalent:@""];
+        NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(_onSelectExtensionMenuItem:) keyEquivalent:@""];
         [item setRepresentedObject:path];
-        [menu insertItem:item atIndex:index+1];
+        [menu insertSortedItem:item atIndex:index+1];
         
         [_items setObject:item forKey:ID];
     }

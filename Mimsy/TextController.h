@@ -63,6 +63,11 @@ typedef void (^LayoutCallback)(TextController* controller);
 - (void)removeMapping:(NSString*)key;
 - (NSArray*) charMappings;
 
+- (bool)showingLeadingSpaces;
+- (bool)showingLeadingTabs;
+- (bool)showingLongLines;
+- (bool)showingNonLeadingTabs;
+
 @property IBOutlet TextView* textView;
 @property IBOutlet __weak NSScrollView* scrollView;
 @property NSAttributedString* attributedText;

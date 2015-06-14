@@ -14,9 +14,8 @@ function init(script_dir)
 
     local installedID = read_proc_file("key-values/show-control-chars-id")
     if #installedID == 0 then
-        id = perform_action("add-menu-item", "text view", "toggle-control-chars")[1]
+        id = perform_action("add-menu-item", "text view", "Show Control Characters", "toggle-control-chars")[1]
         write_proc_file("key-values/show-control-chars-id", id)
-        perform_action("set-menu-item-title", id, "Show Control Characters")
     else
         id = installedID
     end

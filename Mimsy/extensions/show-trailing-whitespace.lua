@@ -14,9 +14,8 @@ function init(script_dir)
 
     local installedID = read_proc_file("key-values/show-trailing-whitespace-id")
     if #installedID == 0 then
-        id = perform_action("add-menu-item", "text view", "toggle-trailing-whitespace")[1]
+        id = perform_action("add-menu-item", "text view", "Show Trailing Whitespace", "toggle-trailing-whitespace")[1]
         write_proc_file("key-values/show-trailing-whitespace-id", id)
-        perform_action("set-menu-item-title", id, "Show Trailing Whitespace")
     else
         id = installedID
     end

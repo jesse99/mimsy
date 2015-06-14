@@ -11,6 +11,7 @@
 #import "IntegerDialogController.h"
 #import "Language.h"
 #import "Languages.h"
+#import "MenuCategory.h"
 #import "Paths.h"
 #import "RangeVector.h"
 #import "RestoreView.h"
@@ -95,12 +96,133 @@ static TextDocumentFiles* _files;
 	NSMutableArray* _layoutBlocks;
 	struct UIntVector _lineStarts;	// first index is at zero, other indexes are one past new-lines
     NSMutableArray* _mappings;
+    
+    int _showLeadingSpaces; // -1 == use app settings, 0 == off, 1 == on
+    int _showLeadingTabs;
+    int _showLongLines;
+    int _showNonLeadingTabs;
 }
 
 + (void)startup
 {
     if (!_files)
+    {
         _files = [TextDocumentFiles new];
+        
+        [self _addTextViewItem:@"Show Leading Spaces" selector:@selector(_toggleLeadingSpaces:)];
+        [self _addTextViewItem:@"Show Leading Tabs" selector:@selector(_toggleLeadingTabs:)];
+        [self _addTextViewItem:@"Show Long Lines" selector:@selector(_toggleLongLines:)];
+        [self _addTextViewItem:@"Show Non-Leading Tabs" selector:@selector(_toggleNonLeadingTabs:)];
+    }
+}
+
++ (void)_addTextViewItem:(NSString*)title selector:(SEL)selector
+{
+    AppDelegate* app = [NSApp delegate];
+    NSMenu* menu = app.textMenu;
+    if (menu)
+    {
+        NSInteger index = [menu indexOfItemWithTag:1];
+        
+        NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:selector keyEquivalent:@""];
+        [menu insertSortedItem:item atIndex:index+1];
+    }
+}
+
+- (void)_toggleLeadingSpaces:(id)sender
+{
+    UNUSED(sender);
+    
+    if (_showLeadingSpaces < 1)
+        _showLeadingSpaces = 1;
+    else
+        _showLeadingSpaces = 0;
+    
+    if (_applier)
+        [_applier addDirtyLocation:0 reason:@"show leading spaces changed"];
+}
+
+- (void)_toggleLeadingTabs:(id)sender
+{
+    UNUSED(sender);
+    
+    if (_showLeadingTabs < 1)
+        _showLeadingTabs = 1;
+    else
+        _showLeadingTabs = 0;
+    
+    if (_applier)
+        [_applier addDirtyLocation:0 reason:@"show leading tabs changed"];
+}
+
+- (void)_toggleLongLines:(id)sender
+{
+    UNUSED(sender);
+    
+    if (_showLongLines < 1)
+        _showLongLines = 1;
+    else
+        _showLongLines = 0;
+    
+    if (_applier)
+        [_applier addDirtyLocation:0 reason:@"show long lines changed"];
+}
+
+- (void)_toggleNonLeadingTabs:(id)sender
+{
+    UNUSED(sender);
+    
+    if (_showNonLeadingTabs < 1)
+        _showNonLeadingTabs = 1;
+    else
+        _showNonLeadingTabs = 0;
+
+    if (_applier)
+        [_applier addDirtyLocation:0 reason:@"show non-leading tabs changed"];
+}
+
+- (bool)showingLeadingSpaces
+{
+    if (_applier)
+        if (_showLeadingSpaces == -1)
+            return [AppSettings boolValue:@"ShowLeadingSpaces" missing:false];
+        else
+            return _showLeadingSpaces;
+    else
+        return false;
+}
+
+- (bool)showingLeadingTabs
+{
+    if (_applier)
+        if (_showLeadingTabs == -1)
+            return [AppSettings boolValue:@"ShowLeadingTabs" missing:false];
+        else
+            return _showLeadingTabs;
+    else
+        return false;
+}
+
+- (bool)showingLongLines
+{
+    if (_applier)
+        if (_showLongLines == -1)
+            return [AppSettings boolValue:@"ShowLongLines" missing:false];
+        else
+            return _showLongLines;
+    else
+        return false;
+}
+
+- (bool)showingNonLeadingTabs
+{
+    if (_applier)
+        if (_showNonLeadingTabs == -1)
+            return [AppSettings boolValue:@"ShowNonLeadingTabs" missing:false];
+        else
+            return _showNonLeadingTabs;
+    else
+        return false;
 }
 
 - (id)init
@@ -117,6 +239,11 @@ static TextDocumentFiles* _files;
 		_layoutBlocks = [NSMutableArray new];
 		_lineStarts = newUIntVector();
         _mappings = [NSMutableArray new];
+        
+        _showLeadingSpaces = -1; // -1 == use app settings, 0 == off, 1 == on
+        _showLeadingTabs = -1;
+        _showLongLines = -1;
+        _showNonLeadingTabs = -1;
 		
  		updateInstanceCount(@"TextController", +1);
 		updateInstanceCount(@"TextWindow", +1);
@@ -350,9 +477,29 @@ static TextDocumentFiles* _files;
 		NSRange range = self.textView.selectedRange;
 		enabled = range.length > 0 && self.textView.isEditable;
 	}
-	else if (sel == @selector(toggleComment:))
+    else if (sel == @selector(toggleComment:))
+    {
+        enabled = _language != nil && _language.lineComment != nil;
+    }
+    else if (sel == @selector(_toggleLeadingSpaces:))
+    {
+        [item setTitle:self.showingLeadingSpaces ? @"Hide Leading Spaces" : @"Show Leading Spaces"];
+        enabled = _applier != nil;
+    }
+    else if (sel == @selector(_toggleLeadingTabs:))
+    {
+        [item setTitle:self.showingLeadingTabs ? @"Hide Leading Tabs" : @"Show Leading Tabs"];
+        enabled = _applier != nil;
+    }
+    else if (sel == @selector(_toggleLongLines:))
+    {
+        [item setTitle:self.showingLongLines ? @"Hide Long Lines" : @"Show Long Lines"];
+        enabled = _applier != nil;
+    }
+    else if (sel == @selector(_toggleNonLeadingTabs:))
 	{
-		enabled = _language != nil && _language.lineComment != nil;
+        [item setTitle:self.showingNonLeadingTabs ? @"Hide Non-leading Spaces" : @"Show Non-leading Spaces"];
+        enabled = _applier != nil;
 	}
 	else if ([self respondsToSelector:sel])
 	{

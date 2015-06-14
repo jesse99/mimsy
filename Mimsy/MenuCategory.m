@@ -17,4 +17,20 @@
     return [self addItemWithTitle:title action:selector keyEquivalent:charCode];
 }
 
+- (void) insertSortedItem:(NSMenuItem *)newItem atIndex:(NSInteger)index
+{
+    for (NSInteger i = index; i < self.numberOfItems; ++i)
+    {
+        NSMenuItem* item = [self itemAtIndex:i];
+        if (item.isSeparatorItem || [item.title compare:newItem.title] != NSOrderedAscending)
+        {
+            [self insertItem:newItem atIndex:i];
+            return;
+        }
+    }
+    
+    [self insertItem:newItem atIndex:self.numberOfItems];
+}
+
+
 @end
