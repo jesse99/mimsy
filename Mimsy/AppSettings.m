@@ -27,7 +27,7 @@ static LocalSettings* _cachedLangSettings;
 		_cachedLangSettings = nil;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowOrderChanged:) name:@"SettingsChanged" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowOrderChanged:) name:@"DirectoryChanged" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowOrderChanged:) name:@"DirectorySettingsChanged" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowOrderChanged:) name:@"LanguagesChanged" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowOrderChanged:) name:NSWindowDidResignMainNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowOrderChanged:) name:NSWindowDidBecomeMainNotification object:nil];

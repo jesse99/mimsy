@@ -993,7 +993,7 @@ static DirectoryController* _lastBuilt;
 	_targetGlobs = targets;
 	_flags = flags;
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"DirectoryChanged" object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"DirectorySettingsChanged" object:self];
 }
 
 - (NSAttributedString*)_loadPrefFile:(NSString*)path
