@@ -250,7 +250,8 @@ static TextDocumentFiles* _files;
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(languagesChanged:) name:@"LanguagesChanged" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stylesChanged:) name:@"StylesChanged" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"DirectorySettingsChanged" object:nil];
 	}
     
 	return self;
@@ -657,7 +658,7 @@ static TextDocumentFiles* _files;
 {
 	_editCount++;
 	[self.textView.textStorage setAttributedString:text];
-	[self resetAttributes];
+	[self resetTextAttributes];
 	if (_applier)
 		[_applier addDirtyLocation:0 reason:@"set text"];
 }
@@ -720,7 +721,7 @@ static TextDocumentFiles* _files;
 		else if (!_language && _applier)
 			_applier = nil;
 		
-		[self resetAttributes];
+		[self resetTextAttributes];
 		if (_applier)
 			[_applier addDirtyLocation:0 reason:@"set language"];
 		
@@ -767,7 +768,7 @@ static TextDocumentFiles* _files;
 {
 	UNUSED(notification);
 	
-    [self resetAttributes];
+    [self resetTextAttributes];
 	[self _resetAutomaticSubstitutions];
     if (_applier)
         [_applier addDirtyLocation:0 reason:@"settings changed"];
@@ -836,7 +837,7 @@ static TextDocumentFiles* _files;
 		}
 	}
 
-    [self resetAttributes];
+    [self resetTextAttributes];
 	if (!_language)
 	{
 		if ([doc.fileType contains:@"Plain Text"] || [doc.fileType isEqualToString:@"binary"])
@@ -850,18 +851,21 @@ static TextDocumentFiles* _files;
 }
 
 // Should be called after anything that might change attributes.
-- (void)resetAttributes
+- (NSDictionary*)resetTypingAttributes
 {
-	// if we don't have a language we'll leave whatever the user is
-	// using alone (i.e. we only set styles for a document without
-	// a language when we first open it).
-	if (_language)
+    NSMutableDictionary* typingAttributes = nil;
+
+    // If we don't have a language we'll leave whatever the user is
+    // using alone (i.e. we only set styles for a document without
+    // a language when we first open it).
+    if (_language)
     {
         // Create paragraph attributes for the tab width.
         NSDictionary* attrs = [_styles attributesForElement:@"normal"];
         NSAttributedString* str = [[NSAttributedString alloc] initWithString:@" " attributes:attrs];
         double charWidth = str.size.width;
         int tabWidth = [AppSettings intValue:@"TabWidth" missing:4];
+        tabWidth = [AppSettings intValue:@"DisplayTabWidth" missing:tabWidth];
         
         NSMutableParagraphStyle* paragraphStyle = [[self.textView defaultParagraphStyle] mutableCopy];
         if (!paragraphStyle)
@@ -871,15 +875,24 @@ static TextDocumentFiles* _files;
         [self.textView setDefaultParagraphStyle:paragraphStyle];
         
         // Set the typing style to the normal style plus the paragraph attributes from above.
-        NSMutableDictionary* typingAttributes = [attrs mutableCopy];
+        typingAttributes = [attrs mutableCopy];
         [typingAttributes setObject:paragraphStyle forKey:NSParagraphStyleAttributeName];
         [self.textView setTypingAttributes:typingAttributes];
-        
-        // Do the same for any existing text we have.
+    }
+    
+    return typingAttributes;
+}
+
+- (void)resetTextAttributes
+{
+	if (_language)
+    {
+        NSDictionary* typingAttributes = [self resetTypingAttributes];
+
         NSRange range = NSMakeRange(0, self.textView.string.length);
-        [self.textView shouldChangeTextInRange:range replacementString:nil];
-        [[self.textView textStorage] setAttributes:typingAttributes range:range];
-        [self.textView didChangeText];
+//        [self.textView shouldChangeTextInRange:range replacementString:nil];
+        [[self.textView textStorage] addAttributes:typingAttributes range:range];
+//       [self.textView didChangeText];
     }
 }
 

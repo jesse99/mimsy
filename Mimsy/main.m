@@ -61,6 +61,7 @@ static void registerAppSettings()
 	[AppSettings registerSetting:@"BuildError"];
 	[AppSettings registerSetting:@"ContextHelp"];
 	[AppSettings registerSetting:@"DefaultFindAllDirectory"];
+    [AppSettings registerSetting:@"DisplayTabWidth"];
 	[AppSettings registerSetting:@"DontOpenWithMimsy"];
 	[AppSettings registerSetting:@"EnableSubstitutions"];
     [AppSettings registerSetting:@"FileDual"];

@@ -32,7 +32,7 @@ typedef void (^LayoutCallback)(TextController* controller);
 - (void)onPathChanged;
 - (bool)isWordWrapping;
 - (void)toggleWordWrap;
-- (void)resetAttributes;
+- (NSDictionary*)resetTypingAttributes;
 - (void)changeStyle:(NSString*)path;
 - (void)resetStyles;
 - (void)showLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width;

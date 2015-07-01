@@ -768,7 +768,7 @@ static NSString* getKey(NSEvent* event)
     
     TextController* controller = _controller;
     if (controller)
-        [controller resetAttributes];
+        [controller resetTypingAttributes];
     
     if (![AppSettings boolValue:@"PasteCopiesBackColor" missing:false])
     {

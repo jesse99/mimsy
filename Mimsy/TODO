@@ -7,8 +7,31 @@ install http://osxfuse.github.io/
 http://www.learnswift.tips/
 
 
+Type
+Macro
+Keyword
+UserType
 
-* Should support per-project keywords.
+CustomStyle: C UserType spin_lock | spin_unlock
+
+
+* Work on settings:
+    - settings object should have a back pointer to SettingsContxt
+    - SettingsContext should have parent context and pointer to Settings
+    - when settings change need to broadcast SettingsContext
+    - SettingsContext needssome sort of context_applies method
+    - context includes language file, directory, and app
+* work.rtf was using a tab width of 8.
+* Files keep getting marked as edited too.
+    didChangeText
+    resetAttributes
+    addDirtyLoc
+* Projects should be able to add elements to languages:
+    - add a commented out CustomStyle setting to default project settings
+    - is CustomStyle actually a good name?
+    - add something nice to mac80211
+    - directory needs to store these keyed by language
+    - when applying the regex need to query the directory for custom styles
 * Seems like we could get goto definition working with just the styler
     - maybe use a special regex for files that are not open
 * Need to get rid of startup scripts
