@@ -12,7 +12,8 @@ var _instance: BuildErrors = BuildErrors()
     func appSettingsChanged()
     {
         _patterns = [Pattern]()
-        AppSettings.enumerate("BuildError", with: self.parseSetting)
+        var app = NSApplication.sharedApplication().delegate as! AppDelegate;
+        app.settings().enumerate("BuildError", with: self.parseSetting)
         
         // We want to use the regexen that are able to pick out more information
         // first because the regexen can match the same messages.

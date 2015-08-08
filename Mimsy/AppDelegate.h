@@ -1,11 +1,12 @@
-@class LocalSettings;
+#import "Settings.h"
+
 @class ProcFileSystem;
 
 typedef void (^NullaryBlock)();
 
 void initLogGlobs(void);
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate, NSWindowRestoration>
+@interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate, NSWindowRestoration, SettingsContext>
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
 + (void)restoreWindowWithIdentifier:(NSString*)identifier state:(NSCoder*)state completionHandler:(void (^)(NSWindow*, NSError*))handler;
@@ -33,9 +34,11 @@ void initLogGlobs(void);
 - (void)runFTest:(id)sender;
 - (void)runFTests:(id)sender;
 
+- (id<SettingsContext>)parent;
+- (Settings*)settings;
+
 @property (readonly) bool inited;
 @property (readonly) ProcFileSystem *procFileSystem;
-@property (readonly) LocalSettings *settings;
 @property (weak) IBOutlet NSMenu *searchMenu;
 @property (weak) IBOutlet NSMenu *textMenu;
 

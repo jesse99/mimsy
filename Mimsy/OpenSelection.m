@@ -1,6 +1,6 @@
 #import "OpenSelection.h"
 
-#import "AppSettings.h"
+#import "AppDelegate.h"
 #import "DirectoryController.h"
 #import "Glob.h"
 #import "OpenFile.h"
@@ -215,7 +215,8 @@ static bool _selectLocatedFiles(NSArray* files, int line, int col)
 	__block bool opened = false;
 
 	NSArray* reversed = files;
-	if ([AppSettings boolValue:@"ReversePaths" missing:true])
+    AppDelegate* app = [NSApp delegate];
+	if ([app.settings boolValue:@"ReversePaths" missing:true])
 	{
 		reversed = [files map:
 					 ^id(id element)

@@ -1,6 +1,7 @@
 #import <Cocoa/Cocoa.h>
 
 #import "BaseTextController.h"
+#import "Settings.h"
 
 @class DeclarationsPopup, GlyphsAttribute, Language, TextController, TextStyles, TextView;
 
@@ -20,7 +21,7 @@ typedef void (^LayoutCallback)(TextController* controller);
 @end
 
 // Contoller used to mediate between text documents and the NSTextView in the associated window.
-@interface TextController : BaseTextController
+@interface TextController : BaseTextController<SettingsContext>
 
 + (void)startup;
 
@@ -67,6 +68,9 @@ typedef void (^LayoutCallback)(TextController* controller);
 - (bool)showingLeadingTabs;
 - (bool)showingLongLines;
 - (bool)showingNonLeadingTabs;
+
+- (id<SettingsContext>)parent;
+- (Settings*)settings;
 
 @property IBOutlet TextView* textView;
 @property IBOutlet __weak NSScrollView* scrollView;

@@ -1,6 +1,6 @@
 #import "FindInFiles.h"
 
-#import "AppSettings.h"
+#import "AppDelegate.h"
 #import "AttributedStringCategory.h"
 #import "FindInFilesController.h"
 #import "FindResultsController.h"
@@ -35,7 +35,8 @@
 		_findText = controller.findText;
 		_resultsController = [[FindResultsController alloc] initWith:self];
 		
-		_reversePaths = [AppSettings boolValue:@"ReversePaths" missing:true];
+        AppDelegate* app = [NSApp delegate];
+		_reversePaths = [app.settings boolValue:@"ReversePaths" missing:true];
 				
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
 		[self _loadPrefs];

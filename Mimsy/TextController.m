@@ -2,9 +2,9 @@
 
 #import "AppDelegate.h"
 #import "ApplyStyles.h"
-#import "AppSettings.h"
 #import "Balance.h"
 #import "ConfigParser.h"
+#import "DirectoryController.h"
 #import "Extensions.h"
 #import "FunctionalTest.h"
 #import "GlyphsAttribute.h"
@@ -96,6 +96,7 @@ static TextDocumentFiles* _files;
 	NSMutableArray* _layoutBlocks;
 	struct UIntVector _lineStarts;	// first index is at zero, other indexes are one past new-lines
     NSMutableArray* _mappings;
+    Settings* _settings;
     
     int _showLeadingSpaces; // -1 == use app settings, 0 == off, 1 == on
     int _showLeadingTabs;
@@ -185,7 +186,7 @@ static TextDocumentFiles* _files;
 {
     if (_applier)
         if (_showLeadingSpaces == -1)
-            return [AppSettings boolValue:@"ShowLeadingSpaces" missing:false];
+            return [_settings boolValue:@"ShowLeadingSpaces" missing:false];
         else
             return _showLeadingSpaces;
     else
@@ -196,7 +197,7 @@ static TextDocumentFiles* _files;
 {
     if (_applier)
         if (_showLeadingTabs == -1)
-            return [AppSettings boolValue:@"ShowLeadingTabs" missing:false];
+            return [_settings boolValue:@"ShowLeadingTabs" missing:false];
         else
             return _showLeadingTabs;
     else
@@ -207,7 +208,7 @@ static TextDocumentFiles* _files;
 {
     if (_applier)
         if (_showLongLines == -1)
-            return [AppSettings boolValue:@"ShowLongLines" missing:false];
+            return [_settings boolValue:@"ShowLongLines" missing:false];
         else
             return _showLongLines;
     else
@@ -218,7 +219,7 @@ static TextDocumentFiles* _files;
 {
     if (_applier)
         if (_showNonLeadingTabs == -1)
-            return [AppSettings boolValue:@"ShowNonLeadingTabs" missing:false];
+            return [_settings boolValue:@"ShowNonLeadingTabs" missing:false];
         else
             return _showNonLeadingTabs;
     else
@@ -244,6 +245,7 @@ static TextDocumentFiles* _files;
         _showLeadingTabs = -1;
         _showLongLines = -1;
         _showNonLeadingTabs = -1;
+        _settings = [[Settings alloc] init:@"untitled" context:self];
 		
  		updateInstanceCount(@"TextController", +1);
 		updateInstanceCount(@"TextWindow", +1);
@@ -284,6 +286,21 @@ static TextDocumentFiles* _files;
 	}
     
     [_files opened:self];
+}
+
+- (id<SettingsContext>)parent
+{
+    DirectoryController* controller = [DirectoryController getController:self.path];
+    if (controller)
+        return controller;
+    
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
+    return app;
+}
+
+- (Settings*)settings
+{
+    return _settings;
 }
 
 - (void)registerBlockWhenLayoutCompletes:(LayoutCallback)block
@@ -710,9 +727,17 @@ static TextDocumentFiles* _files;
 	{
 		_language = lang;
 		LOG("Text:Verbose", "Set language for %s to %s", STR([self.path lastPathComponent]), STR(lang));
-		
+        
+        // TODO: Might want to support per-file settings (though that doesn't seem terribly useful).
+        _settings = [[Settings alloc] init:self.path.lastPathComponent context:self];
 		if (_language)
+        {
+            for (NSString* key in _language.settings)
+            {
+                [_settings addKey:key value:_language.settings[key]];
+            }
 			_styles = [self _createTextStyles];
+        }
 		else
 			_styles = [self _createDefaultTextStyles];
 
@@ -733,7 +758,7 @@ static TextDocumentFiles* _files;
 {
 	NSDocument* doc = self.document;
 	NSString* type = doc.fileType;
-	bool enable = _language == nil && ![type contains:@"Plain Text"] && ![type isEqualToString:@"binary"] && [AppSettings boolValue:@"EnableSubstitutions" missing:true];
+	bool enable = _language == nil && ![type contains:@"Plain Text"] && ![type isEqualToString:@"binary"] && [_settings boolValue:@"EnableSubstitutions" missing:true];
 	[self.textView setAutomaticQuoteSubstitutionEnabled:enable];
 	[self.textView setAutomaticDashSubstitutionEnabled:enable];
 	[self.textView setAutomaticTextReplacementEnabled:enable];
@@ -743,8 +768,11 @@ static TextDocumentFiles* _files;
 {
 	UNUSED(notification);
 	
-	if (_language)
+    if (_language)
+    {
+        _settings = [[Settings alloc] init:self.path.lastPathComponent context:self];
 		[self setLanguage:[Languages findWithlangName:_language.name]];
+    }
 }
 
 - (void)stylesChanged:(NSNotification*)notification
@@ -813,6 +841,7 @@ static TextDocumentFiles* _files;
 	if (path)
 	{
 		[self _positionWindow:path];
+        _settings = [[Settings alloc] init:path.lastPathComponent context:self];
 		
 		NSString* name = [path lastPathComponent];
         if ([doc.fileType isEqualToString:@"binary"])
@@ -864,8 +893,8 @@ static TextDocumentFiles* _files;
         NSDictionary* attrs = [_styles attributesForElement:@"normal"];
         NSAttributedString* str = [[NSAttributedString alloc] initWithString:@" " attributes:attrs];
         double charWidth = str.size.width;
-        int tabWidth = [AppSettings intValue:@"TabWidth" missing:4];
-        tabWidth = [AppSettings intValue:@"DisplayTabWidth" missing:tabWidth];
+        int tabWidth = [_settings intValue:@"TabWidth" missing:4];
+        tabWidth = [_settings intValue:@"DisplayTabWidth" missing:tabWidth];
         
         NSMutableParagraphStyle* paragraphStyle = [[self.textView defaultParagraphStyle] mutableCopy];
         if (!paragraphStyle)

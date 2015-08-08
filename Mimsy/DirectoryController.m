@@ -1,7 +1,6 @@
 #import "DirectoryController.h"
 
 #import "AppDelegate.h"
-#import "AppSettings.h"
 #import "Builders.h"
 #import "BuildOptionsController.h"
 #import "ConditionalGlob.h"
@@ -10,7 +9,6 @@
 #import "FileItem.h"
 #import "FolderItem.h"
 #import "FunctionalTest.h"
-#import "LocalSettings.h"
 #import "Logger.h"
 #import "OpenFile.h"
 #import "Paths.h"
@@ -41,6 +39,7 @@ static DirectoryController* _lastBuilt;
 	BuildOptionsController* _optionsController;
 	NSMutableArray* _targets;
 	NSMutableArray* _flags;
+    Settings* _settings;
 }
 
 + (DirectoryController*)getCurrentController
@@ -132,7 +131,7 @@ static DirectoryController* _lastBuilt;
 		self.flags = [NSMutableArray new];
 		self.preferredPaths = [[Glob alloc] initWithGlobs:@[]];
 		self.ignoredPaths = [[Glob alloc] initWithGlobs:@[]];
-		_settings = [[LocalSettings alloc] initWithFileName:@".mimsy.rtf"];
+		_settings = [[Settings alloc] init:@".mimsy.rtf" context:self];
 		
 		if (!_controllers)
 			_controllers = [NSMutableArray new];
@@ -206,6 +205,17 @@ static DirectoryController* _lastBuilt;
 	}
 	
 	return false;
+}
+
+- (id<SettingsContext>)parent
+{
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
+    return app;
+}
+
+- (Settings*)settings
+{
+    return _settings;
 }
 
 - (void)doubleClicked:(id)sender
@@ -825,10 +835,10 @@ static DirectoryController* _lastBuilt;
 
 	if (self.path)
 	{
-		NSArray* globs = [AppSettings stringValues:@"IgnoredPath"];
+		NSArray* globs = [_settings stringValues:@"IgnoredPath"];
 		_ignoredPaths = [[Glob alloc] initWithGlobs:globs];
 
-		globs = [[AppSettings stringValues:@"PreferredPath"] map:
+		globs = [[_settings stringValues:@"PreferredPath"] map:
 			^id (NSString* glob)
 			{
 				if ([glob isEqualToString:@"."])
@@ -883,7 +893,7 @@ static DirectoryController* _lastBuilt;
 			return;
 		}
 		
-		_settings = [[LocalSettings alloc] initWithFileName:@".mimsy.rtf"];
+		_settings = [[Settings alloc] init:@".mimsy.rtf" context:self];
 
 		NSMutableArray* ignores = [NSMutableArray new];
 		NSMutableArray* dontIgnores = [NSMutableArray new];

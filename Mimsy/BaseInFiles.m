@@ -1,6 +1,6 @@
 #import "BaseInFiles.h"
 
-#import "AppSettings.h"
+#import "AppDelegate.h"
 #import "Decode.h"
 #import "FindInFilesController.h"
 #import "Language.h"
@@ -32,7 +32,8 @@
 		globs = [controller.excludedGlobsComboBox.stringValue splitByString:@" "];
 		_excludeGlobs = [[Glob alloc] initWithGlobs:globs];
 		
-		globs = [[AppSettings stringValue:@"FindAllAlwaysExclude" missing:@""] splitByString:@" "];
+        AppDelegate* app = [NSApp delegate];
+		globs = [[app.settings stringValue:@"FindAllAlwaysExclude" missing:@""] splitByString:@" "];
 		_excludeAllGlobs = [[Glob alloc] initWithGlobs:globs];
 	}
 	

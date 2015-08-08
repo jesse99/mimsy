@@ -1,7 +1,6 @@
 #import "SearchSite.h"
 
 #import "AppDelegate.h"
-#import "AppSettings.h"
 #import "Language.h"
 #import "TranscriptController.h"
 
@@ -29,7 +28,8 @@
 // sources is used when reporting errors within the search URL
 + (void)_findSearchers:(NSMutableArray*)searchers sources:(NSMutableArray*)sources
 {
-	[AppSettings enumerate:@"SearchIn" with:
+    AppDelegate* app = [NSApp delegate];
+	[app.settings enumerate:@"SearchIn" with:
 		 ^(NSString *fileName, NSString *value)
 		 {
 			 [sources addObject:fileName];

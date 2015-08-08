@@ -1,7 +1,6 @@
 #import <Cocoa/Cocoa.h>
 
 #import "AppDelegate.h"
-#import "AppSettings.h"
 #import "ConfigParser.h"
 #import "convertVIMFiles.h"
 #import "Paths.h"
@@ -52,40 +51,6 @@ static void setupInfrastructure(void)
 	// Unfortunately this only works for the main thread.
 	NSAssertionHandler* handler = [AssertHandler new];
 	[[[NSThread currentThread] threadDictionary] setValue:handler forKey:NSAssertionHandlerKey];
-}
-
-// These need to be registered rather early so, for the sake of convenience we do them all here.
-static void registerAppSettings()
-{
-    [AppSettings registerSetting:@"AppendPath"];
-	[AppSettings registerSetting:@"BuildError"];
-	[AppSettings registerSetting:@"ContextHelp"];
-	[AppSettings registerSetting:@"DefaultFindAllDirectory"];
-    [AppSettings registerSetting:@"DisplayTabWidth"];
-	[AppSettings registerSetting:@"DontOpenWithMimsy"];
-	[AppSettings registerSetting:@"EnableSubstitutions"];
-    [AppSettings registerSetting:@"FileDual"];
-	[AppSettings registerSetting:@"FindAllAlwaysExclude"];
-	[AppSettings registerSetting:@"FindAllExcludes"];
-	[AppSettings registerSetting:@"FindAllIncludes"];
-	[AppSettings registerSetting:@"FindWraps"];
-	[AppSettings registerSetting:@"IgnoredPath"];
-    [AppSettings registerSetting:@"LongLineIncludesTabWidth"];
-    [AppSettings registerSetting:@"MaxLineWidth"];
-	[AppSettings registerSetting:@"NumFindItems"];
-	[AppSettings registerSetting:@"PasteCopiesBackColor"];
-	[AppSettings registerSetting:@"PreferredPath"];
-	[AppSettings registerSetting:@"ReversePaths"];
-	[AppSettings registerSetting:@"SearchIn"];
-    [AppSettings registerSetting:@"SearchWithin"];
-    [AppSettings registerSetting:@"ShowControlChars"];
-    [AppSettings registerSetting:@"ShowLeadingSpaces"];
-    [AppSettings registerSetting:@"ShowLeadingTabs"];
-    [AppSettings registerSetting:@"ShowLongLines"];
-    [AppSettings registerSetting:@"ShowNonLeadingTabs"];
-    [AppSettings registerSetting:@"ShowTrailingWhiteSpace"];
-    [AppSettings registerSetting:@"TabWidth"];
-	[AppSettings registerSetting:@"WarnWindowDelay"];
 }
 
 struct Options
@@ -166,7 +131,6 @@ int main(int argc, char* argv[])
 	int result = 0;
 	
 	setupInfrastructure();
-	registerAppSettings();
 	
 	struct Options options = parseArgs(argc, argv);
 	validateOptions(&options);

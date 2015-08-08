@@ -1,6 +1,6 @@
 #import "OpenFile.h"
 
-#import "AppSettings.h"
+#import "AppDelegate.h"
 #import "Decode.h"
 #import "DirectoryController.h"
 #import "Glob.h"
@@ -213,8 +213,9 @@
     if ([[NSWorkspace sharedWorkspace] isFilePackageAtPath:path])
         return true;
     
+    AppDelegate* app = [NSApp delegate];
     NSString* fileName = [path lastPathComponent];
-    NSString* setting = [AppSettings stringValue:@"DontOpenWithMimsy" missing:nil];
+    NSString* setting = [app.settings stringValue:@"DontOpenWithMimsy" missing:nil];
 	if (setting)
 	{
 		NSArray* patterns = [setting splitByString:@" "];

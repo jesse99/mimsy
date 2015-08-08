@@ -1,7 +1,7 @@
 #import "FindController.h"
 
+#import "AppDelegate.h"
 #import "BaseTextController.h"
-#import "AppSettings.h"
 
 static FindController* _findController = nil;
 
@@ -70,7 +70,9 @@ typedef void (^FindBlock)(BaseTextController* controller, NSRegularExpression* r
 		__block NSRange searchRange = NSMakeRange(searchFrom, _text.length - searchFrom);
 		NSString* findText = [self.findText copy];
 		_finding = true;
-		bool wrap = [AppSettings boolValue:@"FindWraps" missing:true];
+
+        AppDelegate* app = [NSApp delegate];
+        bool wrap = [app.settings boolValue:@"FindWraps" missing:true];
 		
 		[self _updateComboBox:self.findComboBox with:findText];
 		

@@ -1,7 +1,6 @@
 #import "TextView.h"
 
 #import "AppDelegate.h"
-#import "AppSettings.h"
 #import "Balance.h"
 #import "Constants.h"
 #import "Extensions.h"
@@ -770,7 +769,7 @@ static NSString* getKey(NSEvent* event)
     if (controller)
         [controller resetTypingAttributes];
     
-    if (![AppSettings boolValue:@"PasteCopiesBackColor" missing:false])
+    if (![controller.settings boolValue:@"PasteCopiesBackColor" missing:false])
     {
         NSPasteboard* pb = [NSPasteboard generalPasteboard];
         NSString* str = [pb stringForType:NSStringPboardType];

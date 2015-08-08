@@ -1,6 +1,5 @@
 #import "ApplyStyles.h"
 
-#import "AppSettings.h"
 #import "AsyncStyler.h"
 #import "GlyphsAttribute.h"
 #import "Logger.h"
@@ -469,9 +468,9 @@
 
 - (void)_applyLongLineStyleAt:(NSUInteger)location length:(NSUInteger)length controller:(TextController*)controller
 {
-    unsigned int tabWidth = (unsigned int) [AppSettings intValue:@"TabWidth" missing:4];
-    int maxWidth = [AppSettings intValue:@"MaxLineWidth" missing:80];
-    bool useTabWidth = [AppSettings boolValue:@"LongLineIncludesTabWidth" missing:false];
+    unsigned int tabWidth = (unsigned int) [controller.settings intValue:@"TabWidth" missing:4];
+    int maxWidth = [controller.settings intValue:@"MaxLineWidth" missing:80];
+    bool useTabWidth = [controller.settings boolValue:@"LongLineIncludesTabWidth" missing:false];
     
     NSUInteger offset = 0;
     while (offset < length)

@@ -1,10 +1,10 @@
 #import "BaseFindController.h"
 
+#import "AppDelegate.h"
 #import "Constants.h"
 #import "Language.h"
 #import "Languages.h"
 #import "RegexStyler.h"
-#import "AppSettings.h"
 #import "StyleRuns.h"
 #import "TextController.h"
 #import "TranscriptController.h"
@@ -83,7 +83,8 @@ NSUInteger replaceAll(BaseFindController* findController, BaseTextController* te
 	{
 		[box insertItemWithObjectValue:text atIndex:0];
 		
-		NSInteger max = [AppSettings intValue:@"NumFindItems" missing:8];
+        AppDelegate* app = [NSApp delegate];
+		NSInteger max = [app.settings intValue:@"NumFindItems" missing:8];
 		while (box.numberOfItems > max)
 		{
 			[box removeItemAtIndex:box.numberOfItems-1];
@@ -133,6 +134,7 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 {
 	UNUSED(notification);
 
+    AppDelegate* app = [NSApp delegate];
 	NSString* oldSelection = [_searchWithinComboBox stringValue];
 	
 	NSArray* patterns;
@@ -145,7 +147,7 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 			// our search to only the language elements supported by
 			// that file.
 			NSArray* elements = controller.language.styler.names;
-			patterns = [AppSettings stringValues:@"SearchWithin"];
+			patterns = [app.settings stringValues:@"SearchWithin"];
 			patterns = intersectElements(patterns, elements);
 		}
 		else
@@ -159,7 +161,7 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	{
 		// If we're searching multiple files then we don't care
 		// about the frontmost document.
-		patterns = [AppSettings stringValues:@"SearchWithin"];
+		patterns = [app.settings stringValues:@"SearchWithin"];
 	}
 	[_searchWithinComboBox removeAllItems];
 	[_searchWithinComboBox addItemsWithObjectValues:patterns];

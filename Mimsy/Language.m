@@ -1,13 +1,14 @@
 #import "Language.h"
 
-#import "AppSettings.h"
 #import "ConditionalGlob.h"
 #import "ConfigParser.h"
-#import "LocalSettings.h"
 #import "RegexStyler.h"
 #import "Utils.h"
 
 @implementation Language
+{
+    NSMutableDictionary* _settings;
+}
 
 - (id)initWithParser:(ConfigParser*)parser outError:(NSError**)error
 {
@@ -23,8 +24,6 @@
 		NSMutableArray* conditionals = [NSMutableArray new];
 		NSMutableArray* errors = [NSMutableArray new];
 		
-		NSMutableArray* settingNames = [NSMutableArray new];
-		NSMutableArray* settingValues = [NSMutableArray new];
 		NSMutableArray* names = [NSMutableArray new];
 		NSMutableArray* patterns = [NSMutableArray new];
 		NSMutableArray* lines = [NSMutableArray new];
@@ -95,20 +94,17 @@
 						[errors addObject:[NSString stringWithFormat:@"expected space separating a glob from a regex on line %ld", entry.line]];
 					}
 				}
-				else if (![AppSettings isSetting:entry.key])
+				else
 				{
-					// Note that it is OK to use the same element name multiple times.
+                    // Note that it is OK to use the same element name multiple times.
                     if ([key isEqualToString:@"number"] || [key isEqualToString:@"float"])
                         [numbers addObject:entry.value];
                     
-					[names addObject:key];
-					[patterns addObject:entry.value];
-					[lines addObject:[NSNumber numberWithUnsignedLong:entry.line]];
-				}
-				else
-				{
-					[settingNames addObject:entry.key];
-					[settingValues addObject:entry.value];
+                    [names addObject:key];
+                    [patterns addObject:entry.value];
+                    [lines addObject:[NSNumber numberWithUnsignedLong:entry.line]];
+                    
+                    [_settings setObject:entry.value forKey:key];
 				}
 			}
 		];
@@ -141,20 +137,6 @@
 		_shebangs = shebangs;
 		_styler = [self _createStyler:names patterns:patterns lines:lines errors:errors];
 		
-		if (_name)
-		{
-			_settings = [[LocalSettings alloc] initWithFileName:[NSString stringWithFormat:@"%@ language file", _name]];
-			
-			for (NSUInteger i = 0; i < settingNames.count; ++i)
-			{
-				[_settings addKey:settingNames[i] value:settingValues[i]];
-			}
-		}
-		else
-		{
-			_settings = [[LocalSettings alloc] initWithFileName:@"language file"];
-		}
-
 		if (errors.count > 0)
 		{
 			NSString* mesg = [[errors componentsJoinedByString:@", "] titleCase];
@@ -171,6 +153,11 @@
 - (NSString*)description
 {
 	return _name;
+}
+
+- (NSDictionary*)settings
+{
+    return _settings;
 }
 
 // value is formatted as: [C Library]http://www.cplusplus.com/reference/clibrary/

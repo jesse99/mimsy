@@ -7,25 +7,30 @@ install http://osxfuse.github.io/
 http://www.learnswift.tips/
 
 
-Type
-Macro
-Keyword
-UserType
 
 CustomStyle: C UserType spin_lock | spin_unlock
 
+prefs come from
+    app
+    current directory
+    language file
+
+
 
 * Work on settings:
-    - settings object should have a back pointer to SettingsContxt
-    - SettingsContext should have parent context and pointer to Settings
     - when settings change need to broadcast SettingsContext
-    - SettingsContext needssome sort of context_applies method
-    - context includes language file, directory, and app
+        also add a comment to the header
+    - SettingsContext needs some sort of context_applies method
 * work.rtf was using a tab width of 8.
 * Files keep getting marked as edited too.
     didChangeText
     resetAttributes
     addDirtyLoc
+* Add recent directories menu:
+    - use a setting to control how many
+    - can we use a setting for docs to?
+* Think non-language docs should also use four spaces.
+* TODO lua had a bunch of doc was NULL errors in override comment style.
 * Projects should be able to add elements to languages:
     - add a commented out CustomStyle setting to default project settings
     - is CustomStyle actually a good name?
@@ -35,6 +40,9 @@ CustomStyle: C UserType spin_lock | spin_unlock
 * Seems like we could get goto definition working with just the styler
     - maybe use a special regex for files that are not open
 * Need to get rid of startup scripts
+* Would be great to have an option to show the log file.
+* WOuld be cool to leverage tags files
+    - e.g. `make tags` on the linux kernal will generate a TAGS file
 * Editor features: http://texteditors.org/cgi-bin/wiki.pl?HomePage
 * Settings added by extensions should be automatically registered
 * Get remote builds working:
@@ -63,6 +71,9 @@ CustomStyle: C UserType spin_lock | spin_unlock
     - 89 char lines (or use a setting for the limit)
     - pjlib types
 * May want to add a command line helper
+* SHould be able to exclude files and directories from directory windows
+    - maybe draw them dimmes
+    - find in files should ignore them
 * Modern objc: https://developer.apple.com/library/Mac/releasenotes/ObjectiveC/ModernizationObjC/AdoptingModernObjective-C/AdoptingModernObjective-C.html#//apple_ref/doc/uid/TP40014150
 * OSXFUSE is releasing version 3.0 soon (can update via system preferences).
 * Should be able to double click in find in time machine.

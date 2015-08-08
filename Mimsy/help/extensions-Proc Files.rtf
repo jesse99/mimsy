@@ -116,7 +116,7 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \b \
 \pard\tx626\pardeftab626\pardirnatural
 
-\fs48 \cf0 /Volumes/Mimsy/app-setting/<name>\
+\fs48 \cf0 /Volumes/Mimsy/setting/<name>\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
 \b0\fs36 \cf0 	Returns the value of the named setting or an empty string. The value is taken from the first of the language file of the current text document, the .mimsy.rtf file in the current directory, or the app.mimsy file.\
@@ -125,7 +125,7 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \b \cf0 \
 \pard\tx626\pardeftab626\pardirnatural
 
-\fs48 \cf0 /Volumes/Mimsy/app-settings/<name>\
+\fs48 \cf0 /Volumes/Mimsy/settings/<name>\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
 \b0\fs36 \cf0 	Returns all the values of the named setting. The values are taken from the language file of the current text document, the .mimsy.rtf file in the current directory, and the app.mimsy file. The values are form-feed separated.\
@@ -471,7 +471,23 @@ If the extension supports multiple contexts then it should do multiple writes.\
 	"true" or "false".\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \
-\
+\pard\tx626\pardeftab626\pardirnatural
+
+\b\fs48 \cf0 \CocoaLigature1 /Volumes/Mimsy/text-document/setting/<name>\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b0\fs36 \cf0 	Returns the value of the named setting or an empty string. The value is taken from the first of the language file of the current text document, the .mimsy.rtf file in the current directory, or the app.mimsy file.\
+\pard\tx626\pardeftab626\pardirnatural
+
+\b \cf0 \
+\pard\tx626\pardeftab626\pardirnatural
+
+\fs48 \cf0 /Volumes/Mimsy/text-document/settings/<name>\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b0\fs36 \cf0 	Returns all the values of the named setting. The values are taken from the language file of the current text document, the .mimsy.rtf file in the current directory, and the app.mimsy file. The values are form-feed separated.\
+\pard\tx626\pardeftab626\pardirnatural
+\cf0 \CocoaLigature0 \
 \pard\pardeftab480\pardirnatural
 \cf0 \CocoaLigature1 And here are some proc files which haven't been implemented yet:\
 \

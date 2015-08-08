@@ -9,8 +9,6 @@
 
 + (bool)parseHelp:(NSString*)value help:(NSMutableArray*)help;
 
-@property (readonly) LocalSettings *settings;
-
 // ---- Required Elements -----------------------------------------
 
 // The name of the language, e.g. "c", "python", etc.
@@ -34,5 +32,8 @@
 // Used to match words when double clicking.
 @property (readonly) NSRegularExpression* word;
 @property (readonly) NSRegularExpression* number;
+
+// ---- Settings ---------------------------------------------------
+- (NSDictionary*)settings;
 
 @end

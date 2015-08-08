@@ -27,7 +27,7 @@ function init(script_dir)
 end
 
 function findNewExtensions(oldExt)
-    local settings = read_proc_file("app-settings/FileDual")
+    local settings = read_proc_file("text-document/settings/FileDual")
     settings = split(settings, "\f")
     for i, entry in ipairs(settings) do
         local extensions = split(entry, " +")

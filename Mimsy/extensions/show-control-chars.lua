@@ -37,7 +37,7 @@ function hide()
 end
 
 function enabled()
-    return #read_proc_file("text-document/language") > 0 and read_proc_file("app-settings/ShowControlChars") == "true"
+    return #read_proc_file("text-document/language") > 0 and read_proc_file("text-document/setting/ShowControlChars") == "true"
 end
 
 function onToggleDisplay()

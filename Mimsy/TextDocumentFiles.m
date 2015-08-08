@@ -37,6 +37,8 @@
 	ProcFileReadWrite* _textFile;
 	ProcFileReader* _titleFile;
 	ProcFileReadWrite* _wordWrapFile;
+    ProcFileKeyStoreR* _appSetting;
+    ProcFileKeyStoreR* _appSettings;
 }
 
 - (id)init
@@ -182,7 +184,7 @@
 		_elementNamesFile = [self _createReader:@"element-names"
 			readBlock:^NSString* (TextController* controller) {return [controller getElementNames];}];
 		
-		_keyStoreFile = [self _createKeyStore:@"key-values"];
+		_keyStoreFile = [self _createKeyStoreRW:@"key-values"];
 		
         _languageFile = [self _createReader:@"language"
                                   readBlock:^NSString* (TextController* controller) {return controller.language ? controller.language.name : @"";}];
@@ -475,8 +477,44 @@
 					[controller toggleWordWrap];
 				}
 			}];
-
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_mainChanged:) name:NSWindowDidBecomeMainNotification object:nil];
+        
+        _appSetting = [self _createKeyStoreR:@"setting"
+               keys:^NSArray *
+               {
+                   TextController* controller = _frontmost;
+                   if (controller)
+                       return [controller.settings getKeys];
+                   else
+                       return @[];
+               }
+               values:^NSString *(NSString *key)
+               {
+                   TextController* controller = _frontmost;
+                   if (controller)
+                       return [controller.settings stringValue:key missing:@""];
+                   else
+                       return @"";
+               }];
+        
+        _appSettings = [self _createKeyStoreR:@"settings"
+            keys:^NSArray *
+            {
+                TextController* controller = _frontmost;
+                if (controller)
+                    return [controller.settings getKeys];
+                else
+                    return @[];
+            }
+            values:^NSString *(NSString *key)
+            {
+                NSArray* values = @[];
+                TextController* controller = _frontmost;
+                if (controller)
+                    values = [controller.settings stringValues:key];
+                return [values componentsJoinedByString:@"\f"];
+            }];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_mainChanged:) name:NSWindowDidBecomeMainNotification object:nil];
 	}
 	return self;
 }
@@ -576,7 +614,25 @@
 	return file;
 }
 
-- (ProcFileKeyStoreRW*)_createKeyStore:(NSString*)name
+- (ProcFileKeyStoreR*)_createKeyStoreR:(NSString*)name keys:(KeysBlock)keys values:(ValueBlock)values
+    {
+        ProcFileKeyStoreR* file = nil;
+        
+        AppDelegate* app = (AppDelegate*) [NSApp delegate];
+        ProcFileSystem* fs = app.procFileSystem;
+        if (fs)
+        {
+            file = [[ProcFileKeyStoreR alloc] initWithDir:^NSString*
+                    {
+                        return [NSString stringWithFormat:@"/text-document/%@", name];
+                    } keys:keys values:values];
+            [fs addReader:file];
+        }
+        
+        return file;
+    }
+                       
+- (ProcFileKeyStoreRW*)_createKeyStoreRW:(NSString*)name
 {
 	ProcFileKeyStoreRW* file = nil;
 	

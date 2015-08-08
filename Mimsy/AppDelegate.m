@@ -2,7 +2,6 @@
 
 #import <OSXFUSE/OSXFUSE.h>
 
-#import "AppSettings.h"
 #import "ConfigParser.h"
 #import "Constants.h"
 #import "DirectoryController.h"
@@ -16,7 +15,6 @@
 #import "InstallFiles.h"
 #import "Language.h"
 #import "Languages.h"
-#import "LocalSettings.h"
 #import "Logger.h"
 #import "MenuCategory.h"
 #import "OpenSelection.h"
@@ -110,6 +108,7 @@ void initLogGlobs()
     NSString* _mountPath;
     bool _launched;
     NSMutableDictionary* _items;
+    Settings* _settings;
 }
 
 - (id)init
@@ -120,7 +119,7 @@ void initLogGlobs()
 	{
 //		ASSERT([NSThread isMultiThreaded]);
 		
-		_settings = [[LocalSettings alloc] initWithFileName:@"app.mimsy"];
+        _settings = [[Settings alloc] init:@"app.mimsy" context:self];
 		_pendingBlocks = [NSMutableDictionary new];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appSettingsChanged:) name:@"AppSettingsChanged" object:nil];
@@ -183,18 +182,18 @@ void initLogGlobs()
              NSBeep();
          }];
     
-    _appSetting = [[ProcFileKeyStoreR alloc] initWithDir:^NSString *{return @"/app-setting";}
+    _appSetting = [[ProcFileKeyStoreR alloc] initWithDir:^NSString *{return @"/setting";}
         keys:^NSArray *{
-            return [AppSettings getKeys];
+            return [_settings getKeys];
         } values:^NSString *(NSString *key) {
-            return [AppSettings stringValue:key missing:@""];
+            return [_settings stringValue:key missing:@""];
         }];
     
-    _appSettings = [[ProcFileKeyStoreR alloc] initWithDir:^NSString *{return @"/app-settings";}
+    _appSettings = [[ProcFileKeyStoreR alloc] initWithDir:^NSString *{return @"/settings";}
         keys:^NSArray *{
-            return [AppSettings getKeys];
+            return [_settings getKeys];
         } values:^NSString *(NSString *key) {
-            NSArray* values = [AppSettings stringValues:key];
+            NSArray* values = [_settings stringValues:key];
             return [values componentsJoinedByString:@"\f"];
         }];
     
@@ -448,6 +447,16 @@ void initLogGlobs()
 
 	[SpecialKeys setup];
 	[Extensions setup];
+}
+
+- (id<SettingsContext>)parent
+{
+    return nil;
+}
+
+- (Settings*)settings
+{
+    return _settings;
 }
 
 - (void) _addTextViewItem:(NSString*)ID title:(NSString*)title path:(NSString*)path
@@ -704,7 +713,7 @@ void initLogGlobs()
     [BuildErrors.instance appSettingsChanged];
 	
 	NSMutableArray* helps = [NSMutableArray new];
-	[AppSettings enumerate:@"ContextHelp" with:
+	[_settings enumerate:@"ContextHelp" with:
 		^(NSString *fileName, NSString *value)
 		{
 			NSError* error = nil;
@@ -1269,7 +1278,7 @@ void initLogGlobs()
 
 - (void)_loadSettings
 {
-	_settings = [[LocalSettings alloc] initWithFileName:@"app.mimsy"];
+    _settings = [[Settings alloc] init:@"app.mimsy" context:self];
 	
 	NSString* path = [Paths installedDir:@"settings"];
 	path = [path stringByAppendingPathComponent:@"app.mimsy"];

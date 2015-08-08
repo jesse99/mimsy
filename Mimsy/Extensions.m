@@ -3,7 +3,7 @@
 #import <lualib.h>
 #import <lauxlib.h>
 
-#import "AppSettings.h"
+#import "AppDelegate.h"
 #import "FileHandleCategory.h"
 #import "Glob.h"
 #import "Paths.h"
@@ -247,7 +247,8 @@ static bool block_timed_out(void (^block)())
     NSMutableDictionary* env = [NSMutableDictionary new];
     [env addEntriesFromDictionary:[[NSProcessInfo processInfo] environment]];
     
-    NSArray* newPaths = [AppSettings stringValues:@"AppendPath"];
+    AppDelegate* app = [NSApp delegate];
+    NSArray* newPaths = [app.settings stringValues:@"AppendPath"];
     if (newPaths && newPaths.count > 0)
     {
         NSString* suffix = [newPaths componentsJoinedByString:@":"];

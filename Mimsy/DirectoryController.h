@@ -1,11 +1,11 @@
 #import <Cocoa/Cocoa.h>
+#import "Settings.h"
 
 @class Glob;
-@class LocalSettings;
 
 // This is the controller for the windows which display the contents of a directory.
 // These windows work a bit like project windows in IDEs.
-@interface DirectoryController : NSWindowController
+@interface DirectoryController : NSWindowController<SettingsContext>
 
 + (DirectoryController*)getCurrentController;
 + (DirectoryController*)getController:(NSString*)path;
@@ -25,6 +25,9 @@
 - (NSDictionary*)getFileAttrs:(NSString*)path;
 - (NSDictionary*)getSizeAttrs;
 
+- (id<SettingsContext>)parent;
+- (Settings*)settings;
+
 @property NSString* path;
 @property Glob* ignores;
 @property Glob* dontIgnores;
@@ -32,7 +35,6 @@
 @property NSMutableArray* flags;
 @property Glob* preferredPaths;
 @property Glob* ignoredPaths;
-@property (readonly) LocalSettings *settings;
 
 @property (weak) IBOutlet NSOutlineView* table;
 @property (weak) IBOutlet NSPopUpButton* targetsMenu;
