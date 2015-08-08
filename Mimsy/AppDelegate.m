@@ -122,7 +122,7 @@ void initLogGlobs()
         _settings = [[Settings alloc] init:@"app.mimsy" context:self];
 		_pendingBlocks = [NSMutableDictionary new];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appSettingsChanged:) name:@"AppSettingsChanged" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
 		
 		NSNotificationCenter* center = [NSNotificationCenter defaultCenter];
 		[center addObserver:self selector:@selector(_didMount:)
@@ -705,7 +705,7 @@ void initLogGlobs()
 	[self reloadIfChanged];
 }
 
-- (void)appSettingsChanged:(NSNotification*)notification
+- (void)settingsChanged:(NSNotification*)notification
 {
 	UNUSED(notification);
 	

@@ -86,7 +86,7 @@
 						}
 						else
 						{
-							[errors addObject:[NSString stringWithFormat:@"regex on line %ld failed to parse: %@", entry.line, error.localizedFailureReason]];
+							[errors addObject:[NSString stringWithFormat:@"glob on line %ld failed to compile as a regex: %@", entry.line, error.localizedFailureReason]];
 						}
 					}
 					else
@@ -94,6 +94,11 @@
 						[errors addObject:[NSString stringWithFormat:@"expected space separating a glob from a regex on line %ld", entry.line]];
 					}
 				}
+                else if ([key isEqualToString:@"contexthelp"] || [key isEqualToString:@"searchin"])
+                {
+                    // Lame special case for some settings that tend not to compile as regexen.
+                    [_settings setObject:entry.value forKey:key];
+                }
 				else
 				{
                     // Note that it is OK to use the same element name multiple times.
@@ -117,7 +122,7 @@
 		_word = [[NSRegularExpression alloc] initWithPattern:word options:options error:&e];
 		if (!_word)
 		{
-			[errors addObject:[NSString stringWithFormat:@"regex on line %ld failed to parse: %@", wordLine, e.localizedFailureReason]];
+			[errors addObject:[NSString stringWithFormat:@"regex on line %ld failed to compile: %@", wordLine, e.localizedFailureReason]];
 		}
         
         numbers = [numbers map:^id(NSString* element) {

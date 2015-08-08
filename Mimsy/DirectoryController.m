@@ -147,7 +147,7 @@ static DirectoryController* _lastBuilt;
 		if (![path isEqualToString:@":restoring:"])
 			[self _loadPath:path];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appSettingsChanged:) name:@"AppSettingsChanged" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"OpenedDirectory" object:self];
 
 		updateInstanceCount(@"DirectoryController", +1);
@@ -784,7 +784,7 @@ static DirectoryController* _lastBuilt;
 {
 	_path = path;
 	[self _loadPrefs];
-	[self appSettingsChanged:nil];
+	[self settingsChanged:nil];
 	
 	_root = [[FolderItem alloc] initWithPath:path controller:self];
 	NSOutlineView* table = self.table;
@@ -829,7 +829,7 @@ static DirectoryController* _lastBuilt;
 	}
 }
 
-- (void)appSettingsChanged:(NSNotification*)notification
+- (void)settingsChanged:(NSNotification*)notification
 {
 	UNUSED(notification);
 
@@ -1003,7 +1003,7 @@ static DirectoryController* _lastBuilt;
 	_targetGlobs = targets;
 	_flags = flags;
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"DirectorySettingsChanged" object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
 }
 
 - (NSAttributedString*)_loadPrefFile:(NSString*)path

@@ -57,7 +57,7 @@ NSUInteger replaceAll(BaseFindController* findController, BaseTextController* te
 	self = [super initWithWindowNibName:name];
     if (self)
 	{
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_settingsChanged:) name:@"AppSettingsChanged" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_settingsChanged:) name:@"SettingsChanged" object:nil];
     }
     
     return self;

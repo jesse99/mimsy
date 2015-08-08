@@ -10,17 +10,7 @@ http://www.learnswift.tips/
 
 CustomStyle: C UserType spin_lock | spin_unlock
 
-prefs come from
-    app
-    current directory
-    language file
 
-
-
-* Work on settings:
-    - when settings change need to broadcast SettingsContext
-        also add a comment to the header
-    - SettingsContext needs some sort of context_applies method
 * work.rtf was using a tab width of 8.
 * Files keep getting marked as edited too.
     didChangeText

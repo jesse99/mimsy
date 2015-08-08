@@ -253,7 +253,6 @@ static TextDocumentFiles* _files;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(languagesChanged:) name:@"LanguagesChanged" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stylesChanged:) name:@"StylesChanged" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"DirectorySettingsChanged" object:nil];
 	}
     
 	return self;
@@ -740,6 +739,7 @@ static TextDocumentFiles* _files;
         }
 		else
 			_styles = [self _createDefaultTextStyles];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
 
 		if (_language && !_applier)
 			_applier = [[ApplyStyles alloc] init:self];
