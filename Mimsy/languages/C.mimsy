@@ -11,7 +11,7 @@ String: " (?: [^"\r\n\\] | \\.)* "
 String: (?<= \x23 include) \s+ (< (?: [^>\r\n\\] | \\.)* >)
 
 Structure: ^[ \t]* struct \s+ ([\w_]+) \s+ \{
-Function: ^\w+ [\w\s_*]+? ([\w_]+) \s* \( [^()]* \) \s* \{
+Function: ^\w+ [\w\s_*]+? ([\w_]+) \s* \( [^()]* \) \s* [{;]
 
 PreProc: \x23 \s* (?: define | undef)
 PreProc: \x23 \s* (?: warning | error | line | pragma)
