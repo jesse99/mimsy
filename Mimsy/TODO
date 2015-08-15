@@ -11,27 +11,39 @@ http://www.learnswift.tips/
 CustomStyle: C UserType spin_lock | spin_unlock
 
 
-* work.rtf was using a tab width of 8.
+* Add an opened directory proc file.
+* Add closing directory and text document prov files.
+* Add menu-action, menu-content, and menu-selection prov files to text-document.
+* Seems like we could get goto definition working with just the styler
+    - use a go extension
+    - listen for open and close directory events
+    - add a setting for globs to parse
+    - use function regex from language files
+    - also use type
+    - probably want to special case C declarations
+    - add a setting for extra directories to parse
+* Support ctags
+    - probably another go extension
+    - write a setting to prevent default goto definition from using c files
+* Get remote builds working
+* Add recent directories menu:
+    - use a setting to control how many
+    - can we use a setting for docs to?
 * Files keep getting marked as edited too.
     didChangeText
     resetAttributes
     addDirtyLoc
-* Add recent directories menu:
-    - use a setting to control how many
-    - can we use a setting for docs to?
 * Think non-language docs should also use four spaces.
-* TODO lua had a bunch of doc was NULL errors in override comment style.
 * Projects should be able to add elements to languages:
     - add a commented out CustomStyle setting to default project settings
     - is CustomStyle actually a good name?
     - add something nice to mac80211
     - directory needs to store these keyed by language
     - when applying the regex need to query the directory for custom styles
-* Seems like we could get goto definition working with just the styler
-    - maybe use a special regex for files that are not open
+* Look into using ctags.
 * Need to get rid of startup scripts
 * Would be great to have an option to show the log file.
-* WOuld be cool to leverage tags files
+* Would be cool to leverage tags files
     - e.g. `make tags` on the linux kernal will generate a TAGS file
 * Editor features: http://texteditors.org/cgi-bin/wiki.pl?HomePage
 * Settings added by extensions should be automatically registered

@@ -117,6 +117,11 @@ static TextDocumentFiles* _files;
     }
 }
 
+- (bool)closed
+{
+    return _closed;
+}
+
 + (void)_addTextViewItem:(NSString*)title selector:(SEL)selector
 {
     AppDelegate* app = [NSApp delegate];

@@ -30,6 +30,7 @@ typedef void (^LayoutCallback)(TextController* controller);
 + (TextController*)find:(NSString*)path;
 
 - (void)open;
+- (bool)closed;
 - (void)onPathChanged;
 - (bool)isWordWrapping;
 - (void)toggleWordWrap;

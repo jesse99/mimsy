@@ -67,7 +67,7 @@
 - (void)addDirtyLocation:(NSUInteger)loc reason:(NSString*)reason
 {
 	TextController* tmp = _controller;
-	if (tmp && !_queued)
+	if (tmp && !_queued && !tmp.closed)     // called from an async thread so we can be closed
 	{
 		// If nothing is queued then we can apply all the runs.
 		_firstDirtyLoc = NSNotFound;
@@ -195,7 +195,10 @@
 					
 					NSString* elementName = [runs indexToName:elementIndex];
 					[self _applyStyle:style index:elementIndex range:range storage:storage];
-					[StartupScripts invokeOverrideStyle:tmp.document location:range.location length:range.length element:elementName];
+                    if (tmp.document)
+                        [StartupScripts invokeOverrideStyle:tmp.document location:range.location length:range.length element:elementName];
+                    else
+                        LOG("Text", "doc was NULL");
 					endLoc = range.location + range.length;
 					
 					if (++count % 1000 == 0 && (getTime() - startTime) > MaxProcessTime)
@@ -213,7 +216,10 @@
         {
             [self _applyBraceStylesAt:beginLoc length:endLoc-beginLoc storage:storage];
             [self _applyGlyphStylesAt:beginLoc length:endLoc-beginLoc storage:storage];
-            [StartupScripts invokeApplyStyles:tmp.document location:beginLoc length:endLoc-beginLoc];
+            if (tmp.document)
+                [StartupScripts invokeApplyStyles:tmp.document location:beginLoc length:endLoc-beginLoc];
+            else
+                LOG("Text", "doc was NULL");
         }
 		[storage endEditing];
 		
