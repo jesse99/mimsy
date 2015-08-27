@@ -6,6 +6,7 @@
 #import "Extensions.h"
 #import "GlyphGenerator.h"
 #import "Language.h"
+#import "MenuCategory.h"
 #import "SearchSite.h"
 #import "TextController.h"
 #import "TimeMachine.h"
@@ -534,6 +535,10 @@ static NSString* getKey(NSEvent* event)
         if (self.selectedRange.length < 1000)
             [self _addSiteSearchContextItem:menu];		// 0.11
         
+        NSString* selection = [self.textStorage.string substringWithRange:self.selectedRange];
+        [menu addItem:[NSMenuItem separatorItem]];
+        [menu addExtensionItems:@"/text-document" contents:selection];
+        
         if (self.isEditable)
         {
             [self _addTransformsContextMenu:menu];		// 0.8
@@ -551,6 +556,8 @@ static NSString* getKey(NSEvent* event)
         [self _addCopyPathContextMenu:menu];			// 0.891
         
         [menu addItem:[NSMenuItem separatorItem]];
+        [menu addExtensionItems:@"/text-document" contents:@""];
+        
         [self _addTimeMachineContextMenu:menu];			// 0.9
     }
     

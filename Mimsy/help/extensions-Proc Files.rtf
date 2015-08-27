@@ -211,9 +211,16 @@ If the extension supports multiple contexts then it should do multiple writes.\
 \fs48 \cf0 /Volumes/Mimsy/directory/\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
 
-\b0\fs36 \cf0 This is for the frontmost directory window.\
+\b0\fs36 \cf0 This is for the frontmost directory window.
+\b\fs48 \
 
-\b \
+\fs36 	closing
+\b0  (r)\
+\pard\tx626\pardeftab626\pardirnatural
+\cf0 \CocoaLigature0 	This is intended to be watched: reads will error out. Watchers will be invoked just before the directory window closes.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b \cf0 \CocoaLigature1 \
 \pard\tx626\pardeftab626\pardirnatural
 
 \b0 \cf0 \CocoaLigature0 	
@@ -315,14 +322,26 @@ If the extension supports multiple contexts then it should do multiple writes.\
 
 \b \CocoaLigature1 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
-\cf0 	column-number
+\cf0 	closing
+\b0  (r)\
+\pard\tx626\pardeftab626\pardirnatural
+\cf0 \CocoaLigature0 	This is intended to be watched: reads will error out. Watchers will be invoked just before the text window closes.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\b \cf0 \CocoaLigature1 \
+	column-number
 \b0  (rw)\
 	1-based integer for the start of the current selection. On writes the insertion point will move. If the value is too large the insertion point will move to the end of the line.\CocoaLigature0 \
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab626\pardirnatural
 
-\b \cf0 \CocoaLigature1 	element-name
+\b \cf0 \CocoaLigature1 	editable
+\b0  (r)\
+	Contains "true" if the text can be changed.\CocoaLigature0 \
+
+\b \CocoaLigature1 \
+	element-name
 \b0  (r)\
 	Lower case version of a name from the language file that the selection is within, e.g. "string", "comment", "identifier", "normal". Empty if there is no language or the selection crosses multiple elements.\CocoaLigature0 \
 
@@ -398,7 +417,28 @@ If the extension supports multiple contexts then it should do multiple writes.\
 	Also see unmap-characters.\CocoaLigature0 \
 
 \b \CocoaLigature1 \
-	opened
+\pard\tx626\pardeftab626\pardirnatural
+
+\b0 \cf0 \CocoaLigature0 	
+\b \CocoaLigature1 menu-action
+\b0 \CocoaLigature0  (r)\
+	Written to if the user selects an item from a text window contextual menu item. First line is an action string (generated using the menu-context file), remaining lines are the selection (which may be empty).\
+\
+	
+\b \CocoaLigature1 menu-content
+\b0 \CocoaLigature0  (w)\
+	Extensions that wish to populate a text window contextual menu should write to this file. The first line should be the title of the menu item and the second line should be an action string (Mimsy uses this when writing to the menu-action file). Extensions should only write to this file if the action is useable with each item the user selected.\
+\
+	
+\b \CocoaLigature1 menu-selection
+\b0 \CocoaLigature0  (r)\
+	Written to when the user right clicks in a text window to display a contextual menu. Contents are the selection (which may be empty). Extensions which will attempt to modify the document should only write items to menu-content if the editable file contains "true".\
+\pard\tx626\pardeftab626\pardirnatural
+
+\b\fs48 \cf0 \CocoaLigature1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural
+
+\fs36 \cf0 	opened
 \b0  (r)\
 \pard\tx626\pardeftab626\pardirnatural
 \cf0 \CocoaLigature0 	This is intended to be watched: reads will error out. Watchers will be invoked after the document is loaded from disk.\

@@ -70,53 +70,12 @@
     // Populate the menu.
     _contextMenu = [[NSMenu alloc] initWithTitle:@""];
     
-    ProcFileReader* menuSelection = [self _createReader:@"menu-selection" readBlock:^NSString *() {
-        NSString* result = [NSString stringWithFormat:@"%@\n%@",
-                            [_files componentsJoinedByString:@"\f"],
-                            [_dirs componentsJoinedByString:@"\f"]];
-        return result;
-    }];
-    ProcFileReadWrite* menuContent = [self _createWriter:@"menu-content" readBlock:^(NSString *text) {
-        NSArray* lines = [text componentsSeparatedByString:@"\n"];
-        if (lines.count == 2)
-        {
-            NSMenuItem* item = [_contextMenu addSortedItemWithTitle:lines[0] action:@selector(contextMenuClicked:) keyEquivalent:@""];
-            [item setTarget:self];
-            [item setRepresentedObject:lines[1]];
-        }
-        else
-        {
-            LOG("Extensions", "malformed menu-content write: %s", STR(text));
-        }
-    }];
-    
-    [menuSelection notifyIfChangedBlocking];
-    [menuContent close];
-    [menuSelection close];
-    
-    AppDelegate* app = (AppDelegate*) [NSApp delegate];
-    ProcFileSystem* fs = app.procFileSystem;
-    [fs removeWriter:menuContent];
-    [fs removeReader:menuSelection];
+    NSString* contents = [NSString stringWithFormat:@"%@\n%@",
+                         [_files componentsJoinedByString:@"\f"],
+                          [_dirs componentsJoinedByString:@"\f"]];
+    [_contextMenu addExtensionItems:@"/directory" contents:contents];
     
     return _contextMenu;
-}
-
-- (void)contextMenuClicked:(NSMenuItem*)item
-{
-    ProcFileReader* menuAction = [self _createReader:@"menu-action" readBlock:^NSString *() {
-        NSString* result = [NSString stringWithFormat:@"%@\n%@\n%@",
-                            [item.representedObject description],
-                            [_files componentsJoinedByString:@"\f"],
-                            [_dirs componentsJoinedByString:@"\f"]];
-        return result;
-    }];
-    [menuAction notifyIfChangedBlocking];    // TODO: bit safer to use notifyIfChangedNonBlocking but we'd need to somehow ensure that we kept only one menuAction alive at any one time
-    [menuAction close];
-    
-    AppDelegate* app = (AppDelegate*) [NSApp delegate];
-    ProcFileSystem* fs = app.procFileSystem;
-    [fs removeReader:menuAction];
 }
 
 - (void)keyDown:(NSEvent*)event
@@ -139,47 +98,6 @@
 		LOG("Mimsy:Verbose", "keyCode = %u, flags = %lX", event.keyCode, event.modifierFlags);
 		[super keyDown:event];
 	}
-}
-
-- (ProcFileReader*)_createReader:(NSString*)name readBlock:(NSString* (^)())readBlock
-{
-    ProcFileReader* file = nil;
-    
-    AppDelegate* app = (AppDelegate*) [NSApp delegate];
-    ProcFileSystem* fs = app.procFileSystem;
-    if (fs)
-    {
-        file = [[ProcFileReader alloc]
-                initWithDir:^NSString *{return @"/directory";}
-                fileName:name
-                readStr:readBlock];
-        [fs addReader:file];
-    }
-    
-    return file;
-}
-
-- (ProcFileReadWrite*)_createWriter:(NSString*)name readBlock:(void (^)(NSString* text))writeBlock
-{
-    ProcFileReadWrite* file = nil;
-    
-    AppDelegate* app = (AppDelegate*) [NSApp delegate];
-    ProcFileSystem* fs = app.procFileSystem;
-    if (fs)
-    {
-        file = [[ProcFileReadWrite alloc]
-                initWithDir:^NSString *{return @"/directory";}
-                fileName:name
-                readStr:^NSString*
-                {
-                    return @"";
-                }
-                writeStr:writeBlock];
-        //[fs addReader:file];
-        [fs addWriter:file];
-    }
-    
-    return file;
 }
 
 @end
