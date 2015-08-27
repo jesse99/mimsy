@@ -58,6 +58,7 @@ end
 function onOpened()
     if enabled() then
         write_proc_file("text-document/key-values/show-control-chars", "true")
+        show()
     end
 end
 
@@ -70,10 +71,8 @@ function onMainChanged()
             perform_action("set-menu-item-title", id, "Show Control Characters")
         end
         perform_action("enable-menu-item", id)
-        show()
     else
         perform_action("set-menu-item-title", id, "Show Control Characters")
         perform_action("disable-menu-item", id)
-        hide()
     end
 end

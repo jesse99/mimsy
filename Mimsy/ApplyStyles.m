@@ -72,7 +72,7 @@
 		// If nothing is queued then we can apply all the runs.
 		_firstDirtyLoc = NSNotFound;
 		_queued = true;
-		LOG("Text:Styler:Verbose", "Starting up AsyncStyler for %.1f KiB (%s)", tmp.text.length/1024.0, STR(reason));
+        LOG("Text:Styler:Verbose", "Starting up AsyncStyler for %.1f KiB (%s)", tmp.text.length/1024.0, STR(reason));
 		
 		[AsyncStyler computeStylesFor:tmp.language withText:tmp.text editCount:tmp.editCount completion:
 			^(StyleRuns* runs)

@@ -10,12 +10,8 @@ http://www.learnswift.tips/
 
 
 
-
-
-* Add menu-action, menu-content, and menu-selection prov files to text-document:
-    - add the new copntext menu support to text documents
-* Why does editing a document cause other documents to be re-styled?
-    - switching windows too
+* bad_file.c has control chars
+    - shouldn't Show Control Characters have shown them?
 * Seems like we could get goto definition working with just the styler
     - use a go extension
     - listen for open and close directory events
@@ -24,7 +20,6 @@ http://www.learnswift.tips/
     - also use type
     - probably want to special case C declarations
     - add a setting for extra directories to parse
-* bad_file.c has control chars
 * Might want a json validator
 * Support ctags
     - probably another go extension

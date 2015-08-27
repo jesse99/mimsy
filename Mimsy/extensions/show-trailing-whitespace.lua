@@ -57,6 +57,7 @@ end
 function onOpened()
     if enabled() then
         write_proc_file("text-document/key-values/show-trailing-whitespace", "true")
+        show()
     end
 end
 
@@ -69,10 +70,8 @@ function onMainChanged()
             perform_action("set-menu-item-title", id, "Show Trailing Whitespace")
         end
         perform_action("enable-menu-item", id)
-        show()
     else
         perform_action("set-menu-item-title", id, "Show Trailing Whitespace")
         perform_action("disable-menu-item", id)
-        hide()
     end
 end
