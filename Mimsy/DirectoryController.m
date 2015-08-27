@@ -6,6 +6,7 @@
 #import "ConditionalGlob.h"
 #import "ConfigParser.h"
 #import "DirectoryWatcher.h"
+#import "Extensions.h"
 #import "FileItem.h"
 #import "FolderItem.h"
 #import "FunctionalTest.h"
@@ -149,6 +150,7 @@ static DirectoryController* _lastBuilt;
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"OpenedDirectory" object:self];
+        [Extensions invokeBlocking:@"/directory/opened"];
 
 		updateInstanceCount(@"DirectoryController", +1);
 		updateInstanceCount(@"DirectoryWindow", +1);
@@ -165,7 +167,9 @@ static DirectoryController* _lastBuilt;
 {
 	UNUSED(notification);
 	
-	// It would be better to track DirectoryView, but it deallocates at a weird
+    [Extensions invokeBlocking:@"/directory/closing"];
+
+    // It would be better to track DirectoryView, but it deallocates at a weird
 	// time (and sleeping for long periods in the functional test doesn't suffice).
 	updateInstanceCount(@"DirectoryWindow", -1);
 	

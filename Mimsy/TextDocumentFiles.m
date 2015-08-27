@@ -24,7 +24,8 @@
 	ProcFileReader* _languageFile;
     ProcFileReader* _lengthFile;
 	ProcFileReadWrite* _lineNumFile;
-	ProcFileReader* _lineSelectionFile;
+    ProcFileReader* _lineSelectionFile;
+	ProcFileReader* _editableFile;
     ProcFileReadWrite* _mapCharacters;
     ProcFileReadWrite* _unmapCharacters;
 	ProcFileReader* _pathFile;
@@ -240,12 +241,18 @@
 				[controller.textView showFindIndicatorForRange:range];
 			}];
 
-		_lineSelectionFile = [self _createReader:@"line-selection"
+        _lineSelectionFile = [self _createReader:@"line-selection"
+                                       readBlock:^NSString* (TextController* controller)
+                              {
+                                  NSUInteger start, end;
+                                  [controller.text getLineStart:&start end:&end contentsEnd:NULL forRange:controller.textView.selectedRange];
+                                  return [NSString stringWithFormat:@"%lu\f%lu", (unsigned long)start, (unsigned long)(end-start)];
+                              }];
+        
+		_editableFile = [self _createReader:@"editable"
 			readBlock:^NSString* (TextController* controller)
 			{
-				NSUInteger start, end;
-				[controller.text getLineStart:&start end:&end contentsEnd:NULL forRange:controller.textView.selectedRange];
-				return [NSString stringWithFormat:@"%lu\f%lu", (unsigned long)start, (unsigned long)(end-start)];
+                return controller.textView.isEditable ? @"true" : @"false";
 			}];
 		
         _mapCharacters = [self _createReadWriter:@"map-characters"

@@ -316,6 +316,7 @@ static TextDocumentFiles* _files;
 {
 	UNUSED(notification);
 	
+    [Extensions invokeBlocking:@"/text-document/closing"];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowClosing" object:self];
 	
 	_closed = true;
