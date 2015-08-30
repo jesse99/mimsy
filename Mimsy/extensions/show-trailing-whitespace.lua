@@ -45,7 +45,7 @@ function onToggleDisplay()
 
     if showing then
         write_proc_file("text-document/key-values/show-trailing-whitespace", "true")
-        perform_action("set-menu-item-title", "Hide Trailing Whitespace", title)
+        perform_action("set-menu-item-title", id, "Hide Trailing Whitespace")
         show()
     else
         write_proc_file("text-document/key-values/show-trailing-whitespace", "false")

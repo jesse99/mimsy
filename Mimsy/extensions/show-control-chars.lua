@@ -24,7 +24,7 @@ end
 -- Special case all control characters but CR, LF, and HT.
 function show()
     local key = "show-control-chars"
-    local pattern = "[\\x00-\\x08\\x0b\\x0c\\x0e-\\x1f\\x7f]"
+    local pattern = "[\\x00-\\x08\\x0b\\x0c\\x0e-\\x1f\\x7f\\u2028]"
     local style = "Error"
     local chars = "?"
     local repeated = "true"
@@ -46,7 +46,7 @@ function onToggleDisplay()
 
     if showing then
         write_proc_file("text-document/key-values/show-control-chars", "true")
-        perform_action("set-menu-item-title", "Hide Control Characters", title)
+        perform_action("set-menu-item-title", id, "Hide Control Characters")
         show()
     else
         write_proc_file("text-document/key-values/show-control-chars", "false")
