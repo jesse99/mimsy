@@ -3,6 +3,8 @@
 #import "AppDelegate.h"
 #import "FunctionalTest.h"
 #import "Paths.h"
+#import "ProcFileSystem.h"
+#import "ProcFiles.h"
 #import "TextStyles.h"
 
 static TranscriptController* controller;
@@ -29,6 +31,19 @@ static NSMutableArray* startupErrors;
         }
         startupErrors = nil;
     }
+
+    ProcFileReadWrite* writeInfo = [[ProcFileReadWrite alloc]
+                      initWithDir:^NSString *{return @"/transcript";}
+                      fileName:@"write-info"
+                      readStr:^NSString* {return @"";}
+                      writeStr:^(NSString* str)
+                      {
+                          str = [str stringByAppendingString:@"\n"];
+                          [TranscriptController writeInfo:str];
+                      }];
+    
+    AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
+    [delegate.procFileSystem addWriter:writeInfo];
 }
 
 - (id)init
@@ -38,7 +53,7 @@ static NSMutableArray* startupErrors;
 	{
 		_maxChars = INFINITY;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
-	}
+    }
     
     return self;
 }
@@ -185,7 +200,8 @@ static NSMutableArray* startupErrors;
     
     if (text.length > 0)
     {
-        [self showWindow:nil];
+        if (!self.window.isVisible)
+            [self showWindow:nil];
         
         NSMutableAttributedString* str = [[NSMutableAttributedString alloc] initWithString:text];
         [str setAttributes:attrs range:NSMakeRange(0, text.length)];

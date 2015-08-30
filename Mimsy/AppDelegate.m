@@ -73,7 +73,10 @@ void initLogGlobs()
     ProcFileReadWrite* _beepFile;
     ProcFileKeyStoreR* _appSetting;
     ProcFileKeyStoreR* _appSettings;
-    ProcFileReader* _extensionSettings;
+    ProcFileReader* _cachesPath;
+    ProcFileReader* _installedFilesPath;
+    ProcFileReader* _resourcesPath;
+    ProcFileReader* _extensionSettingsPath;
     ProcFileReadWrite* _logFile;
     ProcFileReadWrite* _pasteBoardText;
 	ProcFileSystem* _procFileSystem;
@@ -197,9 +200,34 @@ void initLogGlobs()
             return [values componentsJoinedByString:@"\f"];
         }];
     
-    _extensionSettings = [[ProcFileReader alloc]
+    _cachesPath = [[ProcFileReader alloc]
+          initWithDir:^NSString *{return @"/";}
+          fileName:@"caches-path"
+          readStr:^NSString*
+          {
+              return [Paths caches];
+          }];
+    
+    _installedFilesPath = [[ProcFileReader alloc]
+          initWithDir:^NSString *{return @"/";}
+          fileName:@"installed-files-path"
+          readStr:^NSString*
+          {
+              return [Paths installedDir:nil];
+          }];
+    
+    _resourcesPath = [[ProcFileReader alloc]
+          initWithDir:^NSString *{return @"/";}
+          fileName:@"resources-path"
+          readStr:^NSString*
+          {
+              NSString* path = [[[NSBundle mainBundle] resourceURL] path];
+              return path;
+          }];
+    
+    _extensionSettingsPath = [[ProcFileReader alloc]
         initWithDir:^NSString *{return @"/";}
-        fileName:@"extension-settings"
+        fileName:@"extension-settings-path"
         readStr:^NSString*
         {
             if (![[NSFileManager defaultManager] fileExistsAtPath:esPath isDirectory:NULL])
@@ -365,7 +393,7 @@ void initLogGlobs()
              NSString* title    = args[1];
              NSString* path     = args[2];
              
-             if ([location isEqualToString:@"text view"])
+             if ([location isEqualToString:@"text view"] || [location isEqualToString:@"find"])
              {
                  static int next_id = 1;
                  NSString* ID = [NSString stringWithFormat:@"item %d", next_id++];
@@ -373,7 +401,10 @@ void initLogGlobs()
                  dispatch_queue_t main = dispatch_get_main_queue();
                  dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_MSEC);
                  dispatch_after(delay, main, ^{
-                     [self _addTextViewItem:ID title:title path:path];
+                     if ([location isEqualToString:@"text view"])
+                         [self _addTextViewItem:ID title:title path:path];
+                     else
+                         [self _addFindItem:ID title:title path:path];
                  });
                  return @[ID];
              }
@@ -426,7 +457,10 @@ void initLogGlobs()
     [_procFileSystem addWriter:_beepFile];
     [_procFileSystem addReader:_appSetting];
     [_procFileSystem addReader:_appSettings];
-    [_procFileSystem addReader:_extensionSettings];
+    [_procFileSystem addReader:_cachesPath];
+    [_procFileSystem addReader:_installedFilesPath];
+    [_procFileSystem addReader:_resourcesPath];
+    [_procFileSystem addReader:_extensionSettingsPath];
     [_procFileSystem addWriter:_logFile];
     [_procFileSystem addWriter:_pasteBoardText];
     [_procFileSystem addReader:_versionFile];
@@ -469,6 +503,21 @@ void initLogGlobs()
         NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(_onSelectExtensionMenuItem:) keyEquivalent:@""];
         [item setRepresentedObject:path];
         [menu insertSortedItem:item atIndex:index+1];
+        
+        [_items setObject:item forKey:ID];
+    }
+}
+
+- (void) _addFindItem:(NSString*)ID title:(NSString*)title path:(NSString*)path
+{
+    NSMenu* menu = self.searchMenu;
+    if (menu)
+    {
+        NSInteger index = [menu indexOfItemWithTag:3];
+        
+        NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(_onSelectExtensionMenuItem:) keyEquivalent:@""];
+        [item setRepresentedObject:path];
+        [menu insertItem:item atIndex:index+1];
         
         [_items setObject:item forKey:ID];
     }

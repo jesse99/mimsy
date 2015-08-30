@@ -9,9 +9,13 @@ http://www.learnswift.tips/
 
 
 
-
-* bad_file.c has control chars
-    - shouldn't Show Control Characters have shown them?
+* Add show gremlins extension:
+    - remove show-control-chars extension
+* Are SearchIn and ContextHelp in language files broken now?
+* Get remote builds working
+* Add recent directories menu:
+    - use a setting to control how many
+    - can we use a setting for docs to?
 * Seems like we could get goto definition working with just the styler
     - use a go extension
     - listen for open and close directory events
@@ -24,10 +28,6 @@ http://www.learnswift.tips/
 * Support ctags
     - probably another go extension
     - write a setting to prevent default goto definition from using c files
-* Get remote builds working
-* Add recent directories menu:
-    - use a setting to control how many
-    - can we use a setting for docs to?
 * Files keep getting marked as edited too.
     didChangeText
     resetAttributes

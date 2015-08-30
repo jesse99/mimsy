@@ -10,7 +10,7 @@ function load_prefs_helper(file_name, defaults)
 		io.close(file)
 	end
 
-	local settings = read_proc_file("extension-settings")
+	local settings = read_proc_file("extension-settings-path")
 	if settings then
 		local path = settings .. "/" .. file_name
 		local file, _ = io.open(path, "r")
