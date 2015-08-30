@@ -112,7 +112,7 @@ func findName(n uint16) string {
 		}
 	}
 
-	return fmt.Sprintf("%04X %s", n, name)
+	return fmt.Sprintf("0x%04X %s", n, name)
 }
 
 func main() {
@@ -155,7 +155,7 @@ func main() {
 					code_points = loadNames()
 				}
 
-				mesg = fmt.Sprintf("Found %s", findName(units[i]))
+				mesg = fmt.Sprintf("Found %s.", findName(units[i]))
 				writeSelectionRange(i, 1)
 			} else {
 				// We could support wrapping around (if the FindWraps setting is set)
