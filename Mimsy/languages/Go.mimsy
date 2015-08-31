@@ -1,9 +1,9 @@
 Language: go
 Globs: *.go
 LineComment: //
-ContextHelp: {c}[Go Docs]http://golang.org/doc/
-ContextHelp: {c}[Go Spec]http://golang.org/ref/spec
-ContextHelp: {c}[Go Packages]http://golang.org/pkg/
+ContextHelp: {go}[Go Docs]http://golang.org/doc/
+ContextHelp: {go}[Go Spec]http://golang.org/ref/spec
+ContextHelp: {go}[Go Packages]http://golang.org/pkg/
 SearchIn: [golang]http://golang.org/search?q=${TEXT}
 
 Comment: // .* $

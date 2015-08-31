@@ -15,6 +15,8 @@
 
 @end
 
+extern id<SettingsContext> activeContext;
+
 // Preferences loaded from a SettingsContext.
 @interface Settings : NSObject
 

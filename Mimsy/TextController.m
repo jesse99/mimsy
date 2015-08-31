@@ -737,9 +737,9 @@ static TextDocumentFiles* _files;
         _settings = [[Settings alloc] init:self.path.lastPathComponent context:self];
 		if (_language)
         {
-            for (NSString* key in _language.settings)
+            for (NSUInteger i = 0; i < _language.settingKeys.count; i++)
             {
-                [_settings addKey:key value:_language.settings[key]];
+                [_settings addKey:_language.settingKeys[i] value:_language.settingValues[i]];
             }
 			_styles = [self _createTextStyles];
         }
@@ -1298,6 +1298,7 @@ static TextDocumentFiles* _files;
         if (!_applier)
             [AppDelegate execute:@"apply styles" withSelector:@selector(onAppliedStyles) withObject:self deferBy:0.333];
         
+        // TODO: we should probably have a proc file to allow extensions to receive notifications
 		[_files onTextChanged:self];
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowEdited" object:self];
 	}

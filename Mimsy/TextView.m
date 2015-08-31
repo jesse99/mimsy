@@ -676,7 +676,9 @@ static NSString* getKey(NSEvent* event)
 
 - (void)_addSiteSearchContextItem:(NSMenu*)menu
 {
-    [SearchSite appendContextMenu:menu];
+    TextController* controller = _controller;
+    if (controller)
+        [SearchSite appendContextMenu:menu context:controller];
 }
 
 - (void)_addDictContextItem:(NSMenu*)menu

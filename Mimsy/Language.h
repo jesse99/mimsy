@@ -34,6 +34,7 @@
 @property (readonly) NSRegularExpression* number;
 
 // ---- Settings ---------------------------------------------------
-- (NSDictionary*)settings;
+- (NSArray*)settingKeys;
+- (NSArray*)settingValues;
 
 @end

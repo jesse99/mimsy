@@ -7,7 +7,8 @@
 
 @implementation Language
 {
-    NSMutableDictionary* _settings;
+    NSMutableArray* _settingKeys;
+    NSMutableArray* _settingValues;
 }
 
 - (id)initWithParser:(ConfigParser*)parser outError:(NSError**)error
@@ -33,6 +34,8 @@
 		
 		[names addObject:@"normal"];
 		
+        _settingKeys = [NSMutableArray new];
+        _settingValues = [NSMutableArray new];
 		[parser enumerate:
 			^(ConfigParserEntry* entry)
 			{
@@ -97,7 +100,8 @@
                 else if ([key isEqualToString:@"contexthelp"] || [key isEqualToString:@"searchin"])
                 {
                     // Lame special case for some settings that tend not to compile as regexen.
-                    [_settings setObject:entry.value forKey:key];
+                    [_settingKeys addObject:entry.key];
+                    [_settingValues addObject:entry.value];
                 }
 				else
 				{
@@ -109,7 +113,8 @@
                     [patterns addObject:entry.value];
                     [lines addObject:[NSNumber numberWithUnsignedLong:entry.line]];
                     
-                    [_settings setObject:entry.value forKey:key];
+                    [_settingKeys addObject:entry.key];
+                    [_settingValues addObject:entry.value];
 				}
 			}
 		];
@@ -160,9 +165,14 @@
 	return _name;
 }
 
-- (NSDictionary*)settings
+- (NSArray*)settingKeys
 {
-    return _settings;
+    return _settingKeys;
+}
+
+- (NSArray*)settingValues
+{
+    return _settingValues;
 }
 
 // value is formatted as: [C Library]http://www.cplusplus.com/reference/clibrary/

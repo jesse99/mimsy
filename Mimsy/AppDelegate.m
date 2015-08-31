@@ -762,7 +762,7 @@ void initLogGlobs()
     [BuildErrors.instance appSettingsChanged];
 	
 	NSMutableArray* helps = [NSMutableArray new];
-	[_settings enumerate:@"ContextHelp" with:
+	[activeContext.settings enumerate:@"ContextHelp" with:
 		^(NSString *fileName, NSString *value)
 		{
 			NSError* error = nil;

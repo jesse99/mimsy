@@ -11,25 +11,24 @@
 	NSMutableArray* sources = [NSMutableArray new];
 	NSMutableArray* searchers = [NSMutableArray new];
 	
-	[SearchSite _findSearchers:searchers sources:sources];
+    [SearchSite _findSearchers:searchers sources:sources context:activeContext];
 	[SearchSite _clearSearchers:searchMenu];
 	[SearchSite _addSearchers:searchers sources:sources to:searchMenu];
 }
 
-+(void)appendContextMenu:(NSMenu*)menu
++(void)appendContextMenu:(NSMenu*)menu context:(id<SettingsContext>)context
 {
 	NSMutableArray* sources = [NSMutableArray new];
 	NSMutableArray* searchers = [NSMutableArray new];
 	
-	[SearchSite _findSearchers:searchers sources:sources];
+    [SearchSite _findSearchers:searchers sources:sources context:context];
 	[SearchSite _addSearchers:searchers sources:sources to:menu];
 }
 
 // sources is used when reporting errors within the search URL
-+ (void)_findSearchers:(NSMutableArray*)searchers sources:(NSMutableArray*)sources
++ (void)_findSearchers:(NSMutableArray*)searchers sources:(NSMutableArray*)sources context:(id<SettingsContext>)context
 {
-    AppDelegate* app = [NSApp delegate];
-	[app.settings enumerate:@"SearchIn" with:
+	[context.settings enumerate:@"SearchIn" with:
 		 ^(NSString *fileName, NSString *value)
 		 {
 			 [sources addObject:fileName];

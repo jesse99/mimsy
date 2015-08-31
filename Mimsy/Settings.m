@@ -1,6 +1,12 @@
 #import "Settings.h"
 
+#import "AppDelegate.h"
+#import "DirectoryController.h"
+#import "TextController.h"
 #import "TranscriptController.h"
+
+static bool inited;
+id<SettingsContext> activeContext;
 
 @implementation Settings
 {
@@ -23,8 +29,52 @@
     _values = [NSMutableArray new];
     _dupes  = [NSMutableArray new];
     
+    if (!inited)
+    {
+        [Settings registerNotifications];
+        inited = true;
+    }
+    
     return self;
 }
+
++ (void)registerNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowOrderChanged:) name:NSWindowDidBecomeMainNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowOrderChanged:) name:
+     NSWindowDidResignMainNotification object:nil];
+}
+
++ (void)windowOrderChanged:(NSNotification*)notification
+{
+    UNUSED(notification);
+    
+    // Become main and resign main are normally paired so we'll defer tbhe enumeration to
+    // avoid doing it twice.
+    [AppDelegate execute:@"update settings context" deferBy:0.2 withBlock:^{
+        id<SettingsContext> oldContext = activeContext;
+
+        activeContext = [NSApp delegate];
+        for (NSWindow* window in [NSApp orderedWindows])
+        {
+            if (window.isVisible && window.windowController)
+                if ([window.windowController isKindOfClass:[TextController class]])
+                {
+                    activeContext = window.windowController;
+                    break;
+                }
+                else if ([window.windowController isKindOfClass:[DirectoryController class]])
+                {
+                    activeContext = window.windowController;
+                    break;
+                }
+        }
+        
+        if (oldContext != activeContext)
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
+    }];
+}
+
 
 - (id<SettingsContext>)context
 {

@@ -8,10 +8,6 @@ http://www.learnswift.tips/
 
 
 
-
-* Add show gremlins extension:
-    - remove show-control-chars extension
-* Are SearchIn and ContextHelp in language files broken now?
 * Get remote builds working
 * Add recent directories menu:
     - use a setting to control how many
