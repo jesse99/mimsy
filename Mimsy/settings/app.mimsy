@@ -76,7 +76,7 @@ ShowNonLeadingTabs: false
 ShowTrailingWhiteSpace: true
 
 TabWidth: 4
-MaxLineWidth: 80
+MaxLineWidth: 200
 LongLineIncludesTabWidth: true
 
 #### Misc Settings ####################################################
