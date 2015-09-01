@@ -112,7 +112,7 @@ func findName(n uint16) string {
 		}
 	}
 
-	return fmt.Sprintf("0x%04X %s", n, name)
+	return fmt.Sprintf("\\u%04X %s", n, name)
 }
 
 func main() {
