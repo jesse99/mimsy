@@ -10,7 +10,7 @@
 + (NSDictionary*)builderInfo:(NSString*)dir;
 
 // Returns an array of strings for each target in the build file.
-// Info should be the result from findBuilder. Returns nil on failure.
+// Info should be the result from builderInfo. Returns nil on failure.
 + (NSArray*)getTargets:(NSDictionary*)info env:(NSDictionary*)vars;
 
 // Returns a dictionary with:
