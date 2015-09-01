@@ -41,6 +41,7 @@ static DirectoryController* _lastBuilt;
 	NSMutableArray* _targets;
 	NSMutableArray* _flags;
     Settings* _settings;
+    NSMutableDictionary* _buildItems;
 }
 
 + (DirectoryController*)getCurrentController
@@ -133,6 +134,7 @@ static DirectoryController* _lastBuilt;
 		self.preferredPaths = [[Glob alloc] initWithGlobs:@[]];
 		self.ignoredPaths = [[Glob alloc] initWithGlobs:@[]];
 		_settings = [[Settings alloc] init:@".mimsy.rtf" context:self];
+        _buildItems = [NSMutableDictionary new];
 		
 		if (!_controllers)
 			_controllers = [NSMutableArray new];
@@ -380,7 +382,9 @@ static DirectoryController* _lastBuilt;
             _lastBuilt = self;
 
 			NSString* flags = [self _findBuildFlags:target];
-			NSDictionary* info = [Builders build:_builderInfo target:target flags:flags env:_buildVars];
+            NSDictionary* info = [_buildItems objectForKey:target];
+            if (!info)
+                info = [Builders build:_builderInfo target:target flags:flags env:_buildVars];
 			[self _doBuild:info];
 		}
 		else
@@ -558,14 +562,14 @@ static DirectoryController* _lastBuilt;
 	if (![TranscriptController empty])
 		[TranscriptController writeCommand:@"\n"];
 	[TranscriptController writeCommand:command];
-	
+    
 	_buildTask = [NSTask new];
 	[_buildTask setLaunchPath:info[@"tool"]];
 	[_buildTask setCurrentDirectoryPath:info[@"cwd"]];
 	[_buildTask setArguments:info[@"args"]];
 	[_buildTask setEnvironment:_buildVars];
-	[_buildTask setStandardOutput:[NSPipe new]];
-	[_buildTask setStandardError:[NSPipe new]];
+    [_buildTask setStandardOutput:[NSPipe new]];
+    [_buildTask setStandardError:[NSPipe new]];
 	[self _updateBuildButtons];
 	
 	__block NSString* stdout = nil;
@@ -799,8 +803,7 @@ static DirectoryController* _lastBuilt;
 				^(NSString* path, FSEventStreamEventFlags flags) {[self _dirChanged:path flags:flags];}];
 	
 	_builderInfo = [Builders builderInfo:path];
-	if (_builderInfo)
-		[self _loadTargets];
+    [self _loadTargets];
 	
 	[self.window setTitle:[path lastPathComponent]];
 	[self.window makeKeyAndOrderFront:self];
@@ -808,8 +811,6 @@ static DirectoryController* _lastBuilt;
 
 - (void)_loadTargets
 {
-	ASSERT(_builderInfo);
-	
 	LOG("Mimsy", "Building targets menu");
 	NSPopUpButton* menu = _targetsMenu;
 	if (menu)
@@ -818,7 +819,8 @@ static DirectoryController* _lastBuilt;
 		if (!oldSelection)
 			oldSelection = _defaultTarget;
 		
-		NSArray* targets = [Builders getTargets:_builderInfo env:_buildVars];
+        NSArray* targets = [Builders getTargets:_builderInfo env:_buildVars];
+        targets = [targets arrayByAddingObjectsFromArray:_buildItems.allKeys];
 		[menu removeAllItems];
 		
 		for (NSString* target in targets)
@@ -859,7 +861,27 @@ static DirectoryController* _lastBuilt;
 				}
 			}];
 		_preferredPaths = [[Glob alloc] initWithGlobs:globs];
-	}
+        
+        _buildItems = [NSMutableDictionary new];
+        for (NSString* value in [_settings stringValues:@"BuildItem"])
+        {
+            NSArray* fields = [value componentsSeparatedByString:@"\u00A7"];
+            if (fields.count >= 2)
+            {
+                NSDictionary* dict;
+                if (fields.count > 2)
+                    dict = @{@"tool": fields[1], @"args": [fields subarrayWithRange:NSMakeRange(2, fields.count - 2)], @"cwd": @"/tmp"};
+                else
+                    dict = @{@"tool": fields[1], @"args": @[], @"cwd": @"/tmp"};
+                [_buildItems setObject:dict forKey:fields[0]];
+            }
+            else
+            {
+                NSString* mesg = [[NSString alloc] initWithFormat:@"Expected at least two fields in BuildItem '%@'.", value];
+                [TranscriptController writeError:mesg];
+            }
+        }
+    }
 }
 
 - (void)_loadPrefs
@@ -997,6 +1019,10 @@ static DirectoryController* _lastBuilt;
 		_ignores = [[ConditionalGlob alloc] initWithGlobs:ignores];
 		_dontIgnores = [[ConditionalGlob alloc] initWithGlobs:dontIgnores];
 	}
+    
+    // When we build via MImsy we don't have a terminal so there's no display either. Lieing about
+    // that can cause problems, e.g. ssh won't exit properly.
+    [buildVars removeObjectForKey:@"DISPLAY"];
 	
 	_dirAttrs = dirAttrs;
 	_fileAttrs = fileAttrs;
@@ -1056,8 +1082,7 @@ static DirectoryController* _lastBuilt;
 	if (item == _root)
 	{
 		[self _loadPrefs];
-		if (_builderInfo)
-			[self _loadTargets];
+        [self _loadTargets];
 	}
 	
 	NSOutlineView* table = self.table;

@@ -1,6 +1,6 @@
 {\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
 {\fonttbl\f0\fnil\fcharset0 Verdana;\f1\froman\fcharset0 Times-Roman;\f2\fswiss\fcharset0 Helvetica;
-}
+\f3\fnil\fcharset0 Menlo-Regular;}
 {\colortbl;\red255\green255\blue255;\red240\green0\blue31;\red32\green78\blue51;\red106\green11\blue19;
 \red65\green51\blue255;\red22\green118\blue20;\red46\green58\blue181;}
 \viewkind0
@@ -46,6 +46,17 @@
 \b0 \cf0  4\
 
 \i \cf2 \
+# You can add one or more BuildItems to append build menu targets to those extracted from build\
+# files (e.g. make files). The format is menu item title, full path to an executable, executable arguments\
+# all separated with section signs (usually produced via option-6).
+\i0 \cf0 \
+\pard\tx626\pardeftab626\pardirnatural
+
+\i \cf2 #BuildItem: Make mac80211\'a7/usr/bin/ssh\'a7jjones@10.8.0.2\'a7cd vendor/openwrt && make package/mac80211/\{compile,install\} V=1 -j7
+\f3\i0\fs26 \cf0 \CocoaLigature0 \
+\pard\pardeftab480\pardirnatural
+
+\f0\i\fs28 \cf2 \CocoaLigature1 \
 # These are globs for files and directories that are not shown in the directory window.
 \i0 \cf0 \
 
@@ -106,7 +117,8 @@
 \pard\pardeftab480\pardirnatural
 
 \f0\i\fs28 \cf2 # The entries below are used to style items in directory windows. DirectoryStyle and \
-# FileStyle are used if none of the GlobStyles match.
+# FileStyle are used if none of the GlobStyles match. Note that these are the only\
+# directory settings where the font styles are significant.
 \i0 \cf0 \
 \pard\pardeftab480\pardirnatural
 
