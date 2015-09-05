@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 
 // Simple wrapper around sqlite. Note that the underlying sqlite database
-// is thread safe but Database instances should not be shared across
+// is thread safe but instances of this class should not be shared across
 // threads.
 @interface Database : NSObject
 
