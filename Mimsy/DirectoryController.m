@@ -819,7 +819,9 @@ static DirectoryController* _lastBuilt;
 		if (!oldSelection)
 			oldSelection = _defaultTarget;
 		
-        NSArray* targets = [Builders getTargets:_builderInfo env:_buildVars];
+        NSArray* targets = @[];
+        if (_builderInfo)
+            targets = [targets arrayByAddingObjectsFromArray:[Builders getTargets:_builderInfo env:_buildVars]];
         targets = [targets arrayByAddingObjectsFromArray:_buildItems.allKeys];
 		[menu removeAllItems];
 		
