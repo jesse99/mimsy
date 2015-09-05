@@ -8,12 +8,8 @@ http://www.learnswift.tips/
 
 
 
-
 * Get remote builds working
     - didn't get a decent error when cd'ing to a bad directory
-* Add recent directories menu:
-    - use a setting to control how many
-    - can we use a setting for docs to?
 * Seems like we could get goto definition working with just the styler
     - use a go extension
     - listen for open and close directory events

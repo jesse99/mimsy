@@ -90,6 +90,10 @@
                                     <action selector="openDocument:" target="-1" id="372"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Open Recent Directories" id="PnN-BX-L96">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Open Recent Directories" id="34h-MN-5AT"/>
+                            </menuItem>
                             <menuItem title="Open Directory…" keyEquivalent="o" id="621">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
@@ -663,9 +667,23 @@
         <customObject id="419" customClass="NSFontManager"/>
         <customObject id="534" customClass="AppDelegate">
             <connections>
+                <outlet property="recentDirectoriesMenu" destination="34h-MN-5AT" id="RYX-8u-r1W"/>
                 <outlet property="searchMenu" destination="670" id="684"/>
                 <outlet property="textMenu" destination="691" id="756"/>
             </connections>
         </customObject>
+        <menu id="6fk-Bq-SpY">
+            <items>
+                <menuItem title="Item 1" id="SuI-eI-h1U">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem title="Item 2" id="rJE-1C-1ed">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem title="Item 3" id="b5y-OC-c7E">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+            </items>
+        </menu>
     </objects>
 </document>

@@ -106,6 +106,7 @@ void initLogGlobs()
 	NSMutableDictionary* _pendingBlocks;
 	NSArray* _helpFileItems;
 	NSArray* _helpSettingsItems;
+    NSMutableArray* _recentDirectories; // array [timestamp, path]
     
     bool _mounted;
     NSString* _mountPath;
@@ -126,6 +127,7 @@ void initLogGlobs()
 		_pendingBlocks = [NSMutableDictionary new];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newMainWindow:) name:NSWindowDidBecomeMainNotification object:nil];
 		
 		NSNotificationCenter* center = [NSNotificationCenter defaultCenter];
 		[center addObserver:self selector:@selector(_didMount:)
@@ -134,9 +136,13 @@ void initLogGlobs()
 					   name:kGMUserFileSystemMountFailed object:nil];
 		_procFileSystem = [ProcFileSystem new];
         _items = [NSMutableDictionary new];
-        _inited = true;
+        
+        NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+        _recentDirectories = [NSMutableArray new];
+        [_recentDirectories addObjectsFromArray:[defaults arrayForKey:@"recent-directories"]];
 
-		initFunctionalTests();
+        _inited = true;
+        initFunctionalTests();
 	}
 	
 	return self;
@@ -580,6 +586,7 @@ void initLogGlobs()
     [self _installFiles];
     [self _loadSettings];
     [self _loadHelpFiles];
+    [self _updateDirectoriesMenu];
     [self _watchInstalledFiles];
     [TranscriptController writeInfo:@""];   // make sure we create this within the main thread
     [StartupScripts setup];
@@ -595,6 +602,9 @@ void initLogGlobs()
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
 	UNUSED(notification);
+    
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    [defaults registerDefaults:@{@"recent-directories": @[]}];
 	
     _launched = true;
     
@@ -754,6 +764,44 @@ void initLogGlobs()
 	[self reloadIfChanged];
 }
 
+- (NSUInteger)_findDirectoryWindow:(NSString*)path
+{
+    for (NSUInteger i = 0; i < _recentDirectories.count; ++i)
+    {
+        NSArray* elements = _recentDirectories[i];
+        NSString* candidate = elements[1];
+        if ([path compare:candidate] == NSOrderedSame)
+            return i;
+    }
+    
+    return NSUIntegerMax;
+}
+
+- (void)newMainWindow:(NSNotification*)notification
+{
+    NSWindow* window = notification.object;
+    if ([window.windowController isKindOfClass:[DirectoryController class]])
+    {
+        DirectoryController* controller = window.windowController;
+        NSArray* elements = @[[NSDate date], controller.path];
+        
+        NSUInteger index = [self _findDirectoryWindow:controller.path];
+        if (index < _recentDirectories.count)
+            [_recentDirectories removeObjectAtIndex:(NSUInteger)index];
+        [_recentDirectories insertObject:elements atIndex:0];
+        
+        // maximumRecentDocumentCount can change at any time so we'll always do this.
+        while (_recentDirectories.count > [[NSDocumentController sharedDocumentController] maximumRecentDocumentCount])
+            [_recentDirectories removeLastObject];
+        
+        NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:_recentDirectories forKey:@"recent-directories"];
+        
+        if (_launched)
+            [self _updateDirectoriesMenu];
+    }
+}
+
 - (void)settingsChanged:(NSNotification*)notification
 {
 	UNUSED(notification);
@@ -879,8 +927,47 @@ void initLogGlobs()
 
 - (void)openHelpFile:(id)sender
 {
-	NSURL* url = [sender representedObject];
-	[self openWithMimsy:url];
+    NSURL* url = [sender representedObject];
+    [self openWithMimsy:url];
+}
+
+- (void)openRecentDir:(id)sender
+{
+	NSString* path = [sender representedObject];
+    [DirectoryController open:path];
+}
+
+- (bool)_directoryWindowHasDupes:(NSString*)path
+{
+    int count = 0;
+    
+    for (NSUInteger i = 0; i < _recentDirectories.count && count < 2; ++i)
+    {
+        NSArray* elements = _recentDirectories[i];
+        NSString* candidate = elements[1];
+        if ([path compare:candidate] == NSOrderedSame)
+            ++count;
+    }
+    
+    return count == 2;
+}
+
+- (void)_updateDirectoriesMenu
+{
+    [self.recentDirectoriesMenu removeAllItems];
+    
+    for (NSArray* elements in _recentDirectories)
+    {
+        if (elements.count == 2)
+        {
+            NSString* path = elements[1];
+            NSString* title = [self _directoryWindowHasDupes:path] ? path.reversePath : path.lastPathComponent;
+
+            NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(openRecentDir:) keyEquivalent:@""];
+            [item setRepresentedObject:path];
+            [self.recentDirectoriesMenu addItem:item];
+        }
+    }
 }
 
 - (NSArray*)_createHelpMenuItems:(NSArray*)helps

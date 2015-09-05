@@ -41,5 +41,6 @@ void initLogGlobs(void);
 @property (readonly) ProcFileSystem *procFileSystem;
 @property (weak) IBOutlet NSMenu *searchMenu;
 @property (weak) IBOutlet NSMenu *textMenu;
+@property (strong) IBOutlet NSMenu *recentDirectoriesMenu;
 
 @end
