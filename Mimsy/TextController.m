@@ -800,12 +800,15 @@ static TextDocumentFiles* _files;
 
 - (void)settingsChanged:(NSNotification*)notification
 {
-	UNUSED(notification);
+    id object = notification.object;
 	
-    [self resetTextAttributes];
-	[self _resetAutomaticSubstitutions];
-    if (_applier)
-        [_applier addDirtyLocation:0 reason:@"settings changed"];
+    if (object != [Settings class]) // don't do anything if only the window order has changed
+    {
+        [self resetTextAttributes];
+        [self _resetAutomaticSubstitutions];
+        if (_applier)
+            [_applier addDirtyLocation:0 reason:@"settings changed"];
+    }
 }
 
 - (void)changeStyle:(NSString*)path
