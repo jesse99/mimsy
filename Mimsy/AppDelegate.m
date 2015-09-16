@@ -1169,6 +1169,12 @@ void initLogGlobs()
 		[item setTitle:@"Open Directory Settings"];
 		enabled = NO;
 	}
+    else if (sel == @selector(openRecentDir:))
+    {
+        // Directory could be on a remote file system that isn't mounted or on a removable drive.
+        NSString* path = item.representedObject;
+        enabled = [[NSFileManager defaultManager] fileExistsAtPath:path];
+    }
 	else if (sel == @selector(build:))
 	{
 		DirectoryController* controller = [DirectoryController getCurrentController];

@@ -8,8 +8,13 @@ http://www.learnswift.tips/
 
 
 
-* Get remote builds working
-    - didn't get a decent error when cd'ing to a bad directory
+* Why are we deciding that linux files are windows line endian?
+* up_edges1 didn't style right in R.
+* 100:1 doesn't style right in R.
+* Add declarations proc files
+    - write extension name, file path, [name, offset, length, is_declaration]
+    - might want a date too, could use the most up to date info for a file
+    - probably want to persist this info in caches directory or in the db
 * Seems like we could get goto definition working with just the styler
     - use a go extension
     - listen for open and close directory events
@@ -18,6 +23,8 @@ http://www.learnswift.tips/
     - also use type
     - probably want to special case C declarations
     - add a setting for extra directories to parse
+* Get remote builds working
+    - didn't get a decent error when cd'ing to a bad directory
 * Might want a json validator
 * Support ctags
     - probably another go extension
