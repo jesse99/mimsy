@@ -12,9 +12,8 @@ pthread_t pthread_self(void);
 int pthread_equal(pthread_t t1, pthread_t t2);  // non-zero => equal
 
 
-* Getting access violations posting SettingsChanged
-    - happened when closing find in files window while it was gathering paths and then clicking a window
 * Make the default text window a bit larger
+* Would be nice to do something with default font too.
 * Getting unhandled exceptions (see below):
     ProcFileReadWrite write blocks are being called from a thread
     - assert that threads are legit

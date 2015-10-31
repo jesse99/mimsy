@@ -277,6 +277,16 @@ static TextDocumentFiles* _files;
     [self.textView.layoutManager setDelegate:this];
     [self.textView.layoutManager setBackgroundLayoutEnabled:YES];
     
+    NSRect frame = self.window.frame;
+    int width = [_settings intValue:@"DefaultWindowWidth" missing:0];
+    int height = [_settings intValue:@"DefaultWindowHeight" missing:0];
+    if (width)
+        frame.size.width = width;
+    if (height)
+        frame.size.height = height;
+    if (width || height)
+        [[self window] setFrame:frame display:true];
+    
     [super windowDidLoad];
 	[self.document controllerDidLoad];
 	[self.textView onOpened:self];

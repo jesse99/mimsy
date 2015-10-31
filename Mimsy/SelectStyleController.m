@@ -75,6 +75,7 @@ static SelectStyleController* _controller;
 
 - (void)windowWillClose:(NSNotification*)notification
 {
+    UNUSED(notification);
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

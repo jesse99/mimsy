@@ -79,6 +79,11 @@ TabWidth: 4
 MaxLineWidth: 200
 LongLineIncludesTabWidth: true
 
+#### Text Window Settings #############################################
+# These will be used for windows opened for the first time.
+DefaultWindowWidth: 600
+DefaultWindowHeight: 800
+
 #### Misc Settings ####################################################
 # This is added to the PATH enviroment variable used by executable extensions
 # (this is useful because extensions inherit Mimsy's environment variables and
@@ -133,4 +138,3 @@ FileDual: c h
 FileDual: cpp h hpp h++
 FileDual: c++ h hpp h++
 FileDual: m h
-
