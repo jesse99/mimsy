@@ -893,6 +893,7 @@ static TextDocumentFiles* _files;
         {
             NSDictionary* attrs = [_styles attributesForElement:@"normal"];
 			[self.textView.textStorage setAttributes:attrs range:NSMakeRange(0, self.textView.textStorage.length)];
+            [self.textView setTypingAttributes:attrs];
         }
 	}
 
