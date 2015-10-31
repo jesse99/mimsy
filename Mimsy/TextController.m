@@ -267,7 +267,6 @@ static TextDocumentFiles* _files;
 {
 	updateInstanceCount(@"TextController", -1);
 	freeUIntVector(&_lineStarts);
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)windowDidLoad
@@ -316,6 +315,8 @@ static TextDocumentFiles* _files;
 {
 	UNUSED(notification);
 	
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
     [Extensions invokeBlocking:@"/text-document/closing"];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowClosing" object:self];
 	

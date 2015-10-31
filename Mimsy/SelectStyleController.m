@@ -73,6 +73,11 @@ static SelectStyleController* _controller;
 	}
 }
 
+- (void)windowWillClose:(NSNotification*)notification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)stylesChanged:(NSNotification*)notification
 {
 	(void) notification;

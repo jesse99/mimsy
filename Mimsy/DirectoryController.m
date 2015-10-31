@@ -168,6 +168,8 @@ static DirectoryController* _lastBuilt;
 - (void)windowWillClose:(NSNotification*)notification
 {
 	UNUSED(notification);
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 	
     [Extensions invokeBlocking:@"/directory/closing"];
 
@@ -598,6 +600,8 @@ static DirectoryController* _lastBuilt;
               NSAttributedString* text = [TranscriptController getString];
 			  [TranscriptController writeStderr:@"\n"];
 
+              ASSERT(range.location >= 0);
+              ASSERT(range.location + range.length <= text.length);
               [BuildErrors.instance parseErrors:text.string range:range];
               if (BuildErrors.instance.canGotoNextError)
                   [BuildErrors.instance gotoNextError];

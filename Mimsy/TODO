@@ -8,6 +8,20 @@ http://www.learnswift.tips/
 
 
 
+pthread_t pthread_self(void);
+int pthread_equal(pthread_t t1, pthread_t t2);  // non-zero => equal
+
+
+* Getting access violations posting SettingsChanged
+    - happened when closing find in files window while it was gathering paths and then clicking a window
+* Make the default text window a bit larger
+* Getting unhandled exceptions (see below):
+    ProcFileReadWrite write blocks are being called from a thread
+    - assert that threads are legit
+* Do we need to tweak styling for large files?
+* Errors in the mac aren't recognized.
+* go should be one of the standard find in file globs.
+* Make the function popup a bit wider.
 * Why are we deciding that linux files are windows line endian?
 * up_edges1 didn't style right in R.
 * 100:1 doesn't style right in R.
@@ -435,3 +449,31 @@ also had issues with matching functions
 	- make sure that the binary works on someone elses mac
 	- increment support files version number, also build scripts version numbers
 	- ship the release version
+
+
+
+
+2015-09-20 19:29:52.560 Mimsy[2096:422527] This application is modifying the autolayout engine from a background thread, which can lead to engine corruption and weird crashes.  This will cause an exception in a future release.
+Stack:(
+21  UIFoundation                        0x00007fff9746fb54 -[NSLayoutManager(NSPrivate) _resizeTextViewForTextContainer:] + 1058
+22  UIFoundation                        0x00007fff9746f5ee -[NSLayoutManager(NSPrivate) _recalculateUsageForTextContainerAtIndex:] + 2745
+23  UIFoundation                        0x00007fff973c33a9 -[NSLayoutManager textContainerForGlyphAtIndex:effectiveRange:] + 652
+24  AppKit                              0x00007fff8868ff3c -[NSTextView(NSSharing) didChangeText] + 215
+25  Mimsy                               0x00000001000b9921 __25-[TextDocumentFiles init]_block_invoke_4250 + 769
+26  Mimsy                               0x00000001000baf1a __60-[TextDocumentFiles _createReadWriter:readBlock:writeBlock:]_block_invoke352 + 122
+27  Mimsy                               0x000000010001c9ce -[ProcFileReadWrite close] + 270
+28  Mimsy                               0x0000000100094721 -[ProcFileSystem releaseFileAtPath:userData:] + 129
+29  OSXFUSE                             0x0000000100230b36 OSXFUSE + 39734
+30  libosxfuse_i64.2.dylib              0x0000000100737a7d fuse_fs_release + 70
+31  libosxfuse_i64.2.dylib              0x0000000100749231 volicon_release + 63
+32  libosxfuse_i64.2.dylib              0x0000000100737a7d fuse_fs_release + 70
+33  libosxfuse_i64.2.dylib              0x0000000100738924 fuse_do_release + 62
+34  libosxfuse_i64.2.dylib              0x000000010073a49a fuse_lib_release + 258
+35  libosxfuse_i64.2.dylib              0x000000010073f86a do_release + 115
+36  libosxfuse_i64.2.dylib              0x000000010073f05f fuse_ll_process + 634
+37  libosxfuse_i64.2.dylib              0x00000001007411a8 fuse_session_process + 13
+38  libosxfuse_i64.2.dylib              0x000000010073e1f8 fuse_do_work + 210
+39  libsystem_pthread.dylib             0x00007fff8baaa268 _pthread_body + 131
+40  libsystem_pthread.dylib             0x00007fff8baaa1e5 _pthread_body + 0
+41  libsystem_pthread.dylib             0x00007fff8baa841d thread_start + 13
+)
