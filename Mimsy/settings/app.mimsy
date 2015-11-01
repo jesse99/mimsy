@@ -25,7 +25,7 @@ SearchWithin: Type
 # first is a good canidate for overriding in your project's .mimsy.rtf
 # setting file. Note that there is no UI for the last one; set it in
 # a settings file and then press the Reset button in the Find All window.
-FindAllIncludes: *.c *.cpp *.c++ *.cs *.h *.hpp *.m *.rs *.js
+FindAllIncludes: *.c *.cpp *.c++ *.cs *.h *.hpp *.m *.rs *.js *.go
 FindAllExcludes:
 FindAllAlwaysExclude: .* *.app Backups.backupdb bin *.dll *.dylib *.exe *.gif *.icns *.jpeg *.jpg *.mdb *.nib *.pdb *.X11 *.xib
 
