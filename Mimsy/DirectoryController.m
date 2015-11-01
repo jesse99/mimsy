@@ -42,6 +42,8 @@ static DirectoryController* _lastBuilt;
 	NSMutableArray* _flags;
     Settings* _settings;
     NSMutableDictionary* _buildItems;
+    NSDate* _prefModTime;
+    NSDate* _builderModTime;
 }
 
 + (DirectoryController*)getCurrentController
@@ -803,12 +805,12 @@ static DirectoryController* _lastBuilt;
 	if (table)
 		[table reloadData];
 	
-	_watcher = [[DirectoryWatcher alloc] initWithPath:path latency:1.0 block:
+	_watcher = [[DirectoryWatcher alloc] initWithPath:path latency:3.0 block:
 				^(NSString* path, FSEventStreamEventFlags flags) {[self _dirChanged:path flags:flags];}];
 	
 	_builderInfo = [Builders builderInfo:path];
     [self _loadTargets];
-	
+    
 	[self.window setTitle:[path lastPathComponent]];
 	[self.window makeKeyAndOrderFront:self];
 }
@@ -890,12 +892,32 @@ static DirectoryController* _lastBuilt;
     }
 }
 
+- (bool)_prefsChanged:(NSString*)path
+{
+    bool changed = false;
+    
+    NSError* error = nil;
+    NSDictionary* attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error];
+    if (attrs)
+    {
+        NSDate* fileTime = attrs[NSFileModificationDate];
+        changed = fileTime != nil && (_prefModTime == nil || ![fileTime isEqualToDate:_prefModTime]);
+        
+        _prefModTime = fileTime;
+    }
+    
+    return changed;
+}
+
 - (void)_loadPrefs
 {
+    NSString* path = [_path stringByAppendingPathComponent:@".mimsy.rtf"];
+    if (![self _prefsChanged:path])
+        return;
+    
 	_ignores = nil;
 	_dontIgnores = nil;
 	
-	NSString* path = [_path stringByAppendingPathComponent:@".mimsy.rtf"];
 	NSFileManager* fm = [NSFileManager defaultManager];
 	if (![fm fileExistsAtPath:path])
 		path = [self _installPrefFile:path];
@@ -1079,16 +1101,111 @@ static DirectoryController* _lastBuilt;
 	return dst;
 }
 
+- (bool)_builderChanged:(NSString*)path
+{
+    bool changed = false;
+    
+    NSError* error = nil;
+    NSDictionary* attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error];
+    if (attrs)
+    {
+        NSDate* fileTime = attrs[NSFileModificationDate];
+        changed = fileTime != nil && (_builderModTime == nil || ![fileTime isEqualToDate:_builderModTime]);
+        
+        _builderModTime = fileTime;
+    }
+    
+    return changed;
+}
+
+static NSString* flagsToStr(FSEventStreamEventFlags flags)
+{
+    NSString* result = @"";
+    
+    if (flags & kFSEventStreamEventFlagMustScanSubDirs)
+        result = [result stringByAppendingString:@"MustScanSubDirs "];
+    
+    if (flags & kFSEventStreamEventFlagUserDropped)
+        result = [result stringByAppendingString:@"UserDropped "];
+    
+    if (flags & kFSEventStreamEventFlagKernelDropped)
+        result = [result stringByAppendingString:@"KernelDropped "];
+    
+    if (flags & kFSEventStreamEventFlagEventIdsWrapped)
+        result = [result stringByAppendingString:@"EventIdsWrapped "];
+    
+    if (flags & kFSEventStreamEventFlagHistoryDone)
+        result = [result stringByAppendingString:@"HistoryDone "];
+    
+    if (flags & kFSEventStreamEventFlagRootChanged)
+        result = [result stringByAppendingString:@"RootChanged "];
+    
+    if (flags & kFSEventStreamEventFlagMount)
+        result = [result stringByAppendingString:@"Mount "];
+    
+    if (flags & kFSEventStreamEventFlagUnmount)
+        result = [result stringByAppendingString:@"Unmount "];
+    
+    if (flags & kFSEventStreamEventFlagItemCreated)
+        result = [result stringByAppendingString:@"ItemCreated "];
+    
+    if (flags & kFSEventStreamEventFlagItemRemoved)
+        result = [result stringByAppendingString:@"ItemRemoved "];
+    
+    if (flags & kFSEventStreamEventFlagItemInodeMetaMod)
+        result = [result stringByAppendingString:@"ItemInodeMetaMod "];
+    
+    if (flags & kFSEventStreamEventFlagItemRenamed)
+        result = [result stringByAppendingString:@"ItemRenamed "];
+    
+    if (flags & kFSEventStreamEventFlagItemModified)
+        result = [result stringByAppendingString:@"ItemModified "];
+    
+    if (flags & kFSEventStreamEventFlagItemFinderInfoMod)
+        result = [result stringByAppendingString:@"ItemFinderInfoMod "];
+    
+    if (flags & kFSEventStreamEventFlagItemChangeOwner)
+        result = [result stringByAppendingString:@"ItemChangeOwner "];
+    
+    if (flags & kFSEventStreamEventFlagItemXattrMod)
+        result = [result stringByAppendingString:@"ItemXattrMod "];
+    
+   if (flags & kFSEventStreamEventFlagItemIsFile)
+        result = [result stringByAppendingString:@"ItemIsFile "];
+    
+    if (flags & kFSEventStreamEventFlagItemIsDir)
+        result = [result stringByAppendingString:@"ItemIsDir "];
+    
+    if (flags & kFSEventStreamEventFlagItemIsSymlink)
+        result = [result stringByAppendingString:@"ItemIsSymlink "];
+    
+    if (flags & kFSEventStreamEventFlagOwnEvent)
+        result = [result stringByAppendingString:@"OwnEvent "];
+    
+    if (flags & kFSEventStreamEventFlagItemIsHardlink)
+        result = [result stringByAppendingString:@"ItemIsHardlink "];
+    
+    if (flags & kFSEventStreamEventFlagItemIsLastHardlink)
+        result = [result stringByAppendingString:@"ItemIsLastHardlink "];
+    
+    return result;
+}
+
 - (void)_dirChanged:(NSString*)path flags:(FSEventStreamEventFlags)flags
 {
-	UNUSED(flags);
+    FSEventStreamEventFlags wanted = kFSEventStreamEventFlagUserDropped | kFSEventStreamEventFlagKernelDropped | kFSEventStreamEventFlagItemCreated | kFSEventStreamEventFlagItemRemoved | kFSEventStreamEventFlagItemRenamed | kFSEventStreamEventFlagItemModified;
+    if ((flags & wanted) == 0)
+        return;
+    
+    LOG("Mimsy", "%s dir changed %s", STR(_path), STR(flagsToStr(flags)));
 	
 	// Update which ever items were opened.
 	FileSystemItem* item = [_root find:path];
 	if (item == _root)
 	{
 		[self _loadPrefs];
-        [self _loadTargets];
+        if (_builderInfo && _builderInfo[@"path"] && [self _builderChanged:_builderInfo[@"path"]])
+            [self _loadTargets];
 	}
 	
 	NSOutlineView* table = self.table;

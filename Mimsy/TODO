@@ -12,12 +12,13 @@ pthread_t pthread_self(void);
 int pthread_equal(pthread_t t1, pthread_t t2);  // non-zero => equal
 
 
+
+
+
+* Do we need to tweak styling for large files?
 * Getting unhandled exceptions (see below):
     ProcFileReadWrite write blocks are being called from a thread
     - assert that threads are legit
-* go should be one of the standard find in file globs.
-* Make the function popup a bit wider.
-* Do we need to tweak styling for large files?
 * Errors in the mac aren't recognized.
 * up_edges1 didn't style right in R.
 * 100:1 doesn't style right in R.
