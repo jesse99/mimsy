@@ -24,7 +24,6 @@ int pthread_equal(pthread_t t1, pthread_t t2);  // non-zero => equal
 
 
 
-* Try to get styling working again (probably disabled loading language files).
 * Try and fix that layout warning.
 * Use sockets and go instead of proc files and arbitrary scripts:
     - disable plugins and extensions

@@ -627,7 +627,9 @@ void initLogGlobs()
 	
     _launched = true;
     
+#if OLD_EXTENSIONS
     if (_mounted)
+#endif
         [self _postInit];
 }
 
