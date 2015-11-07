@@ -70,6 +70,7 @@ void initLogGlobs()
 
 @implementation AppDelegate
 {
+#if OLD_EXTENSIONS
     ProcFileReadWrite* _beepFile;
     ProcFileKeyStoreR* _appSetting;
     ProcFileKeyStoreR* _appSettings;
@@ -92,7 +93,8 @@ void initLogGlobs()
     ProcFileAction* _setMenuItemTitle;
     ProcFileAction* _disableMenuItem;
     ProcFileAction* _enableMenuItem;
-
+#endif
+    
 	DirectoryWatcher* _languagesWatcher;
     DirectoryWatcher* _settingsWatcher;
 	DirectoryWatcher* _extensionSettingsWatcher;
@@ -101,8 +103,10 @@ void initLogGlobs()
 	DirectoryWatcher* _extensionsWatcher;
 	DirectoryWatcher* _transformsWatcher;
 	DirectoryWatcher* _helpWatcher;
+#if OLD_EXTENSIONS
     ProcFileKeyStoreRW* _keyStoreFile;
-	
+#endif
+    
 	NSMutableDictionary* _pendingBlocks;
 	NSArray* _helpFileItems;
 	NSArray* _helpSettingsItems;
@@ -129,12 +133,15 @@ void initLogGlobs()
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newMainWindow:) name:NSWindowDidBecomeMainNotification object:nil];
 		
+#if OLD_EXTENSIONS
 		NSNotificationCenter* center = [NSNotificationCenter defaultCenter];
 		[center addObserver:self selector:@selector(_didMount:)
 					   name:kGMUserFileSystemDidMount object:nil];
 		[center addObserver:self selector:@selector(_mountFailed:)
 					   name:kGMUserFileSystemMountFailed object:nil];
-		_procFileSystem = [ProcFileSystem new];
+
+        _procFileSystem = [ProcFileSystem new];
+#endif
         _items = [NSMutableDictionary new];
         
         NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
@@ -142,12 +149,15 @@ void initLogGlobs()
         [_recentDirectories addObjectsFromArray:[defaults arrayForKey:@"recent-directories"]];
 
         _inited = true;
+#if OLD_EXTENSIONS
         initFunctionalTests();
+#endif
 	}
 	
 	return self;
 }
 
+#if OLD_EXTENSIONS
 - (void)_didMount:(NSNotification*)notification
 {
     NSDictionary* userInfo = [notification userInfo];
@@ -488,6 +498,7 @@ void initLogGlobs()
 	[SpecialKeys setup];
 	[Extensions setup];
 }
+#endif
 
 - (id<SettingsContext>)parent
 {
@@ -499,6 +510,7 @@ void initLogGlobs()
     return _settings;
 }
 
+#if OLD_EXTENSIONS
 - (void) _addTextViewItem:(NSString*)ID title:(NSString*)title path:(NSString*)path
 {
     NSMenu* menu = self.textMenu;
@@ -536,6 +548,7 @@ void initLogGlobs()
     NSString* path = sender.representedObject;
     [Extensions invokeBlocking:path];
 }
+#endif
 
 - (void) _setMenuItemTitle:(NSString*)ID title:(NSString*)title
 {
@@ -563,6 +576,7 @@ void initLogGlobs()
     }
 }
 
+#if OLD_EXTENSIONS
 - (void)_mountFailed:(NSNotification*)notification
 {
 	[SpecialKeys setup];	// needs the proc file system so we do it here
@@ -576,6 +590,7 @@ void initLogGlobs()
     if (_launched)
         [self _postInit];
 }
+#endif
 
 - (void)_postInit
 {
@@ -589,14 +604,18 @@ void initLogGlobs()
     [self _updateDirectoriesMenu];
     [self _watchInstalledFiles];
     [TranscriptController writeInfo:@""];   // make sure we create this within the main thread
+#if OLD_EXTENSIONS
     [StartupScripts setup];
+#endif
     [WindowsDatabase setup];
     [Languages setup];
     
     [self _addTransformItems];
     
+#if OLD_EXTENSIONS
     if (_mountPath)
         [self _handleMount];
+#endif
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
@@ -618,7 +637,9 @@ void initLogGlobs()
 	UNUSED(notification);
 	LOG("App", "Terminating");
 	
+#if OLD_EXTENSIONS
 	[_procFileSystem teardown];
+#endif
 }
 
 - (void)_executeSelector:(NSString*)name
@@ -999,11 +1020,13 @@ void initLogGlobs()
 	}
 }
 
+#if OLD_EXTENSIONS
 - (void)runFTests:(id)sender
 {
 	UNUSED(sender);
 	runFunctionalTests();
 }
+#endif
 
 // This isn't terribly useful with auto-saving on, but it will help make old-school
 // uses more comfortable. There's also a save all method on NSDocumentController but
@@ -1019,10 +1042,12 @@ void initLogGlobs()
 	}
 }
 
+#if OLD_EXTENSIONS
 - (void)runFTest:(id)sender
 {
 	runFunctionalTest([sender representedObject]);
 }
+#endif
 
 - (void)openWithMimsy:(NSURL*)url
 {
@@ -1234,11 +1259,13 @@ void initLogGlobs()
 			}
 		}
 	}
+#if OLD_EXTENSIONS
     else if (sel == @selector(_onSelectExtensionMenuItem:))
     {
         enabled = item.enabled;
     }
-	else if ([self respondsToSelector:sel])
+#endif
+    else if ([self respondsToSelector:sel])
 	{
 		enabled = YES;
 	}
@@ -1462,11 +1489,14 @@ void initLogGlobs()
 		  ^(NSString* path, FSEventStreamEventFlags flags)
 		  {
 			  UNUSED(path, flags);
+#if OLD_EXTENSIONS
 			  [Extensions setup];
+#endif
 			  [[NSNotificationCenter defaultCenter] postNotificationName:@"ExtensionsChanged" object:self];
 		  }
 		  ];
 	
+#if OLD_EXTENSIONS
 	dir = [Paths installedDir:@"scripts/startup"];
 	_scriptsStartupWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		  ^(NSString* path, FSEventStreamEventFlags flags)
@@ -1476,7 +1506,8 @@ void initLogGlobs()
 			  [[NSNotificationCenter defaultCenter] postNotificationName:@"StartupScriptsChanged" object:self];
 		  }
 		  ];
-	
+#endif
+    
 	dir = [Paths installedDir:@"transforms"];
 	_transformsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		^(NSString* path, FSEventStreamEventFlags flags)
@@ -1508,7 +1539,9 @@ void initLogGlobs()
 		}
 	];
 	
+#if OLD_EXTENSIONS
     _keyStoreFile = [self _createKeyStore:@"key-values"];
+#endif
     
     dir = [Paths installedDir:@"styles"];
 	_stylesWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
@@ -1529,6 +1562,7 @@ void initLogGlobs()
 	];
 }
 
+#if OLD_EXTENSIONS
 - (ProcFileKeyStoreRW*)_createKeyStore:(NSString*)name
 {
     ProcFileKeyStoreRW* file = nil;
@@ -1545,5 +1579,6 @@ void initLogGlobs()
     
     return file;
 }
+#endif
 
 @end

@@ -1,3 +1,4 @@
+#if OLD_EXTENSIONS
 #import "LuaSupport.h"
 
 #import <lauxlib.h>
@@ -702,3 +703,4 @@ int textdoc_settooltip(struct lua_State* state)
 	
 	return 0;
 }
+#endif

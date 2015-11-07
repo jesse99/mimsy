@@ -1,3 +1,4 @@
+#if OLD_EXTENSIONS
 #import "ProcFiles.h"
 
 #import "Extensions.h"
@@ -818,3 +819,4 @@ static NSArray* directChildren2(NSString* path, NSString* directory)
 }
 
 @end
+#endif

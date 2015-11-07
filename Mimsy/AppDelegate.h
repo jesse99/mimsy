@@ -31,8 +31,10 @@ void initLogGlobs(void);
 + (void)execute:(NSString*)key withSelector:(SEL)selector withObject:(id)object deferBy:(NSTimeInterval)delay;
 + (void)execute:(NSString*)key deferBy:(NSTimeInterval)delay withBlock:(NullaryBlock)block;
 
+#if OLD_EXTENSIONS
 - (void)runFTest:(id)sender;
 - (void)runFTests:(id)sender;
+#endif
 
 - (id<SettingsContext>)parent;
 - (Settings*)settings;

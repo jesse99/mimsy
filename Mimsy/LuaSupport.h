@@ -1,3 +1,4 @@
+#if OLD_EXTENSIONS
 #import <Foundation/Foundation.h>
 
 struct lua_State;
@@ -45,3 +46,4 @@ int textdoc_setstrikethrough(struct lua_State* state);
 int textdoc_setstrokewidth(struct lua_State* state);
 int textdoc_settooltip(struct lua_State* state);
 int textdoc_setunderline(struct lua_State* state);
+#endif

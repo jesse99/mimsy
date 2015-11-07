@@ -1,3 +1,4 @@
+#if OLD_EXTENSIONS
 #import "ProcFileSystem.h"
 
 #import <OSXFUSE/OSXFUSE.h>
@@ -283,3 +284,4 @@
 }
 
 @end
+#endif

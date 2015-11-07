@@ -1,3 +1,4 @@
+#if OLD_EXTENSIONS
 #import "FunctionalTest.h"
 
 #include <lualib.h>
@@ -339,3 +340,4 @@ void updateInstanceCount(NSString* name, NSInteger delta)
 	_instanceCounts[name] = [NSNumber numberWithInteger:newValue];
 }
 
+#endif

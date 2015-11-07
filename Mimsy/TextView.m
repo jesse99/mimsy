@@ -161,6 +161,7 @@
     while (false);
 }
 
+#if OLD_EXTENSIONS
 static NSString* keyToFileName(NSEvent* event, NSString* key)
 {
     NSMutableArray* labels = [NSMutableArray new];
@@ -290,11 +291,14 @@ static NSString* getKey(NSEvent* event)
     
     return nil;
 }
+#endif
 
 - (bool)_invokeExtensions:(NSEvent*)event
 {
+    UNUSED(event);
     bool handled = false;
     
+#if OLD_EXTENSIONS
     NSString* key = getKey(event);
     if (key)
     {
@@ -302,6 +306,7 @@ static NSString* getKey(NSEvent* event)
         NSString* path = [NSString stringWithFormat:@"/keydown/text-editor/%@/pressed", fn];
         handled = [Extensions invokeBlocking:path];
     }
+#endif
     
     return handled;
 }
@@ -535,10 +540,11 @@ static NSString* getKey(NSEvent* event)
         if (self.selectedRange.length < 1000)
             [self _addSiteSearchContextItem:menu];		// 0.11
         
+#if OLD_EXTENSIONS
         NSString* selection = [self.textStorage.string substringWithRange:self.selectedRange];
         [menu addItem:[NSMenuItem separatorItem]];
         [menu addExtensionItems:@"/text-document" contents:selection];
-        
+#endif
         if (self.isEditable)
         {
             [self _addTransformsContextMenu:menu];		// 0.8
@@ -555,8 +561,10 @@ static NSString* getKey(NSEvent* event)
         [self _addWordWrapContextMenu:menu];			// 0.853
         [self _addCopyPathContextMenu:menu];			// 0.891
         
+#if OLD_EXTENSIONS
         [menu addItem:[NSMenuItem separatorItem]];
         [menu addExtensionItems:@"/text-document" contents:@""];
+#endif
         
         [self _addTimeMachineContextMenu:menu];			// 0.9
     }

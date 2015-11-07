@@ -1,3 +1,4 @@
+#if OLD_EXTENSIONS
 #import "TextDocumentFiles.h"
 
 #import "AppDelegate.h"
@@ -688,3 +689,4 @@
 @end
 
 
+#endif

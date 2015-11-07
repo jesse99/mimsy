@@ -1,3 +1,4 @@
+#if OLD_EXTENSIONS
 #import <Foundation/Foundation.h>
 
 @class TextDocument;
@@ -19,3 +20,4 @@
 + (void)invokeTextSelectionChanged:(NSDocument*)doc slocation:(NSUInteger)loc slength:(NSUInteger)len;
 
 @end
+#endif

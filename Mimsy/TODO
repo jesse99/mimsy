@@ -24,9 +24,9 @@ int pthread_equal(pthread_t t1, pthread_t t2);  // non-zero => equal
 
 
 
+* Try to get styling working again (probably disabled loading language files).
+* Try and fix that layout warning.
 * Use sockets and go instead of proc files and arbitrary scripts:
-    - make sure everything is checked in
-    - get on a branch
     - disable plugins and extensions
     - use CFNetwork
     - and unix domain sockets?
@@ -37,10 +37,14 @@ int pthread_equal(pthread_t t1, pthread_t t2);  // non-zero => equal
     - maybe register for these
     - could have a lib with helper goo
     - could have functions to encapsulate standard messages
+    - add support for text menu hook
+        ` maybe options for text document only, not adding to main menu, selection ok, no selection ok
     - can we have multiple plugins with one exe?
     - maybe go routines
     - would be nice to allow plugins to be overridden
     - maybe alpha sorting?
+    - make sure that all the OLD_EXTENSIONS code is gone
+    - merge into master
 * Getting unhandled exceptions (see below):
     ProcFileReadWrite write blocks are being called from a thread
     - assert that threads are legit

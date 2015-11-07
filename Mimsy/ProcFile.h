@@ -1,3 +1,5 @@
+#if OLD_EXTENSIONS
+
 // Encapsulates a proc file under the Mimsy mount. Paths are things like "/version".
 // Note that the path can be dynamic, e.g. paths associated with text editor proc
 // files change with the window ordering.
@@ -17,3 +19,4 @@
 - (int)write:(const char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error;
 
 @end
+#endif

@@ -1,3 +1,4 @@
+#if OLD_EXTENSIONS
 #import <Foundation/Foundation.h>
 
 struct lua_State;
@@ -16,3 +17,4 @@ void recordFunctionalError(NSString* mesg);
 int ftest_failed(struct lua_State* state);
 
 void updateInstanceCount(NSString* name, NSInteger delta);
+#endif

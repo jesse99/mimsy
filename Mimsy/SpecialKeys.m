@@ -9,7 +9,9 @@
 static NSDictionary* _keyNameAttrs;
 static NSDictionary* _keyTextAttrs;
 static NSDictionary* _keySrcAttrs;
+#if OLD_EXTENSIONS
 static ProcFileReadWrite* _extensionKeys;
+#endif
 
 static NSDictionary* _json;
 
@@ -26,6 +28,7 @@ static NSDictionary* _json;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_loadingExtensions:) name:@"LoadingExtensions" object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_loadedExtensions:) name:@"LoadedExtensions" object:nil];
 
+#if OLD_EXTENSIONS
 	_extensionKeys = [[ProcFileReadWrite alloc]
 		  initWithDir:^NSString *{return @"/";}
 		  fileName:@"special-keys"
@@ -36,6 +39,7 @@ static NSDictionary* _json;
 	ProcFileSystem* fs = app.procFileSystem;
 	if (fs)
 		[fs addWriter:_extensionKeys];
+#endif
 }
 
 + (void)_loadingExtensions:(NSNotification*)notification

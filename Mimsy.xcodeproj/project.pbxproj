@@ -37,7 +37,6 @@
 		373B97281942BC110084CCC1 /* AttributedStringCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B97271942BC100084CCC1 /* AttributedStringCategory.m */; };
 		373B972C194374FA0084CCC1 /* PersistentRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B972B194374F90084CCC1 /* PersistentRange.m */; };
 		373B972F1945570F0084CCC1 /* ReplaceInFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B972E1945570D0084CCC1 /* ReplaceInFiles.m */; };
-		37431FCE19AA3ED500A1B30E /* OSXFUSE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37431FCD19AA3ED500A1B30E /* OSXFUSE.framework */; };
 		37431FD119AA80DC00A1B30E /* ProcFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 37431FD019AA80DC00A1B30E /* ProcFileSystem.m */; };
 		37431FD719AAA7FF00A1B30E /* ProcFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 37431FD619AAA7FF00A1B30E /* ProcFiles.m */; };
 		375140D416800FFD00C329AF /* ConfigParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D316800FFD00C329AF /* ConfigParser.m */; };
@@ -202,7 +201,6 @@
 		373B972B194374F90084CCC1 /* PersistentRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersistentRange.m; sourceTree = "<group>"; };
 		373B972D1945570D0084CCC1 /* ReplaceInFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplaceInFiles.h; sourceTree = "<group>"; };
 		373B972E1945570D0084CCC1 /* ReplaceInFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplaceInFiles.m; sourceTree = "<group>"; };
-		37431FCD19AA3ED500A1B30E /* OSXFUSE.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OSXFUSE.framework; path = /Library/Frameworks/OSXFUSE.framework; sourceTree = "<absolute>"; };
 		37431FCF19AA80DC00A1B30E /* ProcFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcFileSystem.h; sourceTree = "<group>"; };
 		37431FD019AA80DC00A1B30E /* ProcFileSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProcFileSystem.m; sourceTree = "<group>"; };
 		37431FD219AA9AA200A1B30E /* ProcFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProcFile.h; sourceTree = "<group>"; };
@@ -401,7 +399,6 @@
 			files = (
 				37979FEA16A999E0009D9944 /* liblua.a in Frameworks */,
 				37A8C69716758FF400D4DB13 /* Cocoa.framework in Frameworks */,
-				37431FCE19AA3ED500A1B30E /* OSXFUSE.framework in Frameworks */,
 				3712632516B5A431007AF3BF /* libcrypto.0.9.8.dylib in Frameworks */,
 				377BDE6E16CDACD1008DADA5 /* libsqlite3.0.dylib in Frameworks */,
 			);
@@ -688,7 +685,6 @@
 		37A8C69516758FF400D4DB13 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				37431FCD19AA3ED500A1B30E /* OSXFUSE.framework */,
 				37A8C69616758FF400D4DB13 /* Cocoa.framework */,
 				37A8C6B716758FF400D4DB13 /* SenTestingKit.framework */,
 				37A8C69816758FF400D4DB13 /* Other Frameworks */,

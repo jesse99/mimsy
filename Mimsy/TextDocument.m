@@ -156,14 +156,18 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
     if (self)
 	{
 		_endian = UnixEndian;
+#if OLD_EXTENSIONS
 		updateInstanceCount(@"TextDocument", +1);
+#endif
     }
     return self;
 }
 
 - (void)dealloc
 {
+#if OLD_EXTENSIONS
 	updateInstanceCount(@"TextDocument", -1);
+#endif
 }
 
 - (void)makeWindowControllers
@@ -397,9 +401,11 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 
 - (void)saveDocument:(id)sender
 {
+#if OLD_EXTENSIONS
 	if (_controller == [TextController frontmost])
 		[Extensions invokeNonBlocking:@"/text-document/user-saving"];
-	
+#endif
+    
 	[super saveDocument:sender];
 }
 
@@ -549,9 +555,11 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	NSTextView* textv = _controller.textView;
 	if (textv)
 	{
+#if OLD_EXTENSIONS
 		if (_controller == [TextController frontmost])
 			[Extensions invokeNonBlocking:@"/text-document/saving"];
-		
+#endif
+        
 		NSTextStorage* storage = [textv textStorage];
 		NSMutableString* str = [storage mutableString];
 		LOG("Text", "Saving document to %s", STR(self.fileURL));

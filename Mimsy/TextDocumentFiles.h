@@ -1,3 +1,4 @@
+#if OLD_EXTENSIONS
 @class TextController;
 
 // These are the proc files associated with the frontmost text document.
@@ -15,3 +16,4 @@
 - (void)onAppliedStyles:(TextController*)controller;
 
 @end
+#endif

@@ -1,3 +1,4 @@
+#if OLD_EXTENSIONS
 #import "Extensions.h"
 
 #import <lualib.h>
@@ -638,3 +639,4 @@ static void initMimsyMethods(struct lua_State* state, LuaExtension* extension)
 }
 
 @end
+#endif

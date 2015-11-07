@@ -32,6 +32,8 @@ static NSMutableArray* startupErrors;
         startupErrors = nil;
     }
 
+#if OLD_EXTENSIONS
+    NSString* elementName = [runs indexToName:elementIndex];
     ProcFileReadWrite* writeInfo = [[ProcFileReadWrite alloc]
                       initWithDir:^NSString *{return @"/transcript";}
                       fileName:@"write-info"
@@ -44,6 +46,7 @@ static NSMutableArray* startupErrors;
     
     AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
     [delegate.procFileSystem addWriter:writeInfo];
+#endif
 }
 
 - (id)init
@@ -150,8 +153,10 @@ static NSMutableArray* startupErrors;
 {
     LOG("Error", "%s", STR(text));
     
+#if OLD_EXTENSIONS
     if (!functionalTestsAreRunning())
     {
+#endif
         AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
         if (!delegate || delegate.inited)
         {
@@ -164,12 +169,14 @@ static NSMutableArray* startupErrors;
 
         TranscriptController* instance = [TranscriptController getInstance];
         [instance _write:[text stringByAppendingString:@"\n"] withAttrs:instance->_stderrAttrs];
+#if OLD_EXTENSIONS
     }
     else
     {
         NSString* str = [[NSString alloc] initWithString:[text stringByAppendingString:@"\n"]];
         recordFunctionalError(str);
     }
+#endif
 }
 
 + (NSMutableAttributedString*)getString

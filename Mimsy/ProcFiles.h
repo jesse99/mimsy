@@ -1,3 +1,5 @@
+#if OLD_EXTENSIONS
+
 #import "ProcFile.h"
 
 // Proc file for use by read-only files that will not be very large.
@@ -111,3 +113,4 @@ typedef NSArray* (^ProcAction)(NSArray* args);
 - (int)write:(const char*)buffer size:(size_t)size offset:(off_t)offset error:(NSError**)error;
 
 @end
+#endif

@@ -28,7 +28,9 @@
 #import "WindowsDatabase.h"
 #import "Mimsy-Swift.h"
 
+#if OLD_EXTENSIONS
 static TextDocumentFiles* _files;
+#endif
 
 @implementation CharacterMapping
 {
@@ -104,8 +106,11 @@ static TextDocumentFiles* _files;
     int _showNonLeadingTabs;
 }
 
+static __weak TextController* _frontmost;
+
 + (void)startup
 {
+#if OLD_EXTENSIONS
     if (!_files)
     {
         _files = [TextDocumentFiles new];
@@ -115,6 +120,7 @@ static TextDocumentFiles* _files;
         [self _addTextViewItem:@"Show Long Lines" selector:@selector(_toggleLongLines:)];
         [self _addTextViewItem:@"Show Non-Leading Tabs" selector:@selector(_toggleNonLeadingTabs:)];
     }
+#endif
 }
 
 - (bool)closed
@@ -252,12 +258,15 @@ static TextDocumentFiles* _files;
         _showNonLeadingTabs = -1;
         _settings = [[Settings alloc] init:@"untitled" context:self];
 		
+#if OLD_EXTENSIONS
  		updateInstanceCount(@"TextController", +1);
 		updateInstanceCount(@"TextWindow", +1);
-		
+#endif
+        
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(languagesChanged:) name:@"LanguagesChanged" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stylesChanged:) name:@"StylesChanged" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_mainChanged:) name:NSWindowDidBecomeMainNotification object:nil];
 	}
     
 	return self;
@@ -265,7 +274,9 @@ static TextDocumentFiles* _files;
 
 - (void)dealloc
 {
+#if OLD_EXTENSIONS
 	updateInstanceCount(@"TextController", -1);
+#endif
 	freeUIntVector(&_lineStarts);
 }
 
@@ -298,7 +309,9 @@ static TextDocumentFiles* _files;
 			[self.textView setBackgroundColor:_styles.backColor];
 	}
     
+#if OLD_EXTENSIONS
     [_files opened:self];
+#endif
 }
 
 - (id<SettingsContext>)parent
@@ -327,12 +340,16 @@ static TextDocumentFiles* _files;
 	
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
+#if OLD_EXTENSIONS
     [Extensions invokeBlocking:@"/text-document/closing"];
+#endif
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowClosing" object:self];
 	
 	_closed = true;
+#if OLD_EXTENSIONS
 	updateInstanceCount(@"TextWindow", -1);
-
+#endif
+    
 	NSString* path = [self path];
 	if (path)
 	{
@@ -573,7 +590,8 @@ static TextDocumentFiles* _files;
 
 + (TextController*)frontmost
 {
-	return [_files frontmost];
+    TextController* controller = _frontmost;
+    return controller;
 }
 
 + (void)enumerate:(void (^)(TextController*, bool*))block
@@ -624,7 +642,9 @@ static TextDocumentFiles* _files;
 	if (path)
 	{
 		[self _addInstalledContexts:result forPath:path];
+#if OLD_EXTENSIONS
 		addFunctionalTestHelpContext(result, path);
+#endif
 	}
 	
 	[result addObject:@"text editor"];
@@ -1189,12 +1209,16 @@ static TextDocumentFiles* _files;
 	_wordWrap = !_wordWrap;
 	[self doResetWordWrap];
 	
+#if OLD_EXTENSIONS
 	[_files onWordWrapChanged:self];
+#endif
 }
 
 - (void)onAppliedStyles
 {
+#if OLD_EXTENSIONS
     [_files onAppliedStyles:self];
+#endif
     [self.declarationsPopup onAppliedStyles:self.textView];
 }
 
@@ -1244,10 +1268,14 @@ static TextDocumentFiles* _files;
 	}
 	
     [self _updateLineNumberButton];
+#if OLD_EXTENSIONS
 	[_files onSelectionChanged:self];
+#endif
     [_declarationsPopup onSelectionChanged:self.textView];
 
+#if OLD_EXTENSIONS
 	[StartupScripts invokeTextSelectionChanged:self.document slocation:range.location slength:range.length];
+#endif
 }
 
 // editedRange is the range of the new text. For example if a character
@@ -1313,8 +1341,10 @@ static TextDocumentFiles* _files;
         if (!_applier)
             [AppDelegate execute:@"apply styles" withSelector:@selector(onAppliedStyles) withObject:self deferBy:0.333];
         
+#if OLD_EXTENSIONS
         // TODO: we should probably have a proc file to allow extensions to receive notifications
 		[_files onTextChanged:self];
+#endif
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowEdited" object:self];
 	}
 }
@@ -1468,6 +1498,28 @@ static TextDocumentFiles* _files;
 	NSString* dir = [Paths installedDir:@"settings"];
 	NSString* path = [dir stringByAppendingPathComponent:@"default-text.rtf"];
 	return [[TextStyles alloc] initWithPath:path expectBackColor:true];
+}
+
+
+- (void)_mainChanged:(NSNotification*)notification
+{
+    // Couple points:
+    // 1) We don't use NSApp orderedWindows because it was a major bottleneck.
+    // 2) We don't reset _frontmost because we want the frontmost text document,
+    // not the main window.
+#if OLD_EXTENSIONS
+    TextController* oldFront = _frontmost;
+#endif
+    
+    NSWindow* window = notification.object;
+    if (window.windowController)
+        if ([window.windowController isKindOfClass:[TextController class]])
+            _frontmost = window.windowController;
+    
+#if OLD_EXTENSIONS
+    if (_frontmost && _frontmost != oldFront)
+        [Extensions invokeNonBlocking:@"/text-document/main-changed"];
+#endif
 }
 
 @end

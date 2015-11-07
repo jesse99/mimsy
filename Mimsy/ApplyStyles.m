@@ -193,12 +193,14 @@
 					[storage removeAttribute:NSLinkAttributeName range:range];
 					[storage removeAttribute:NSToolTipAttributeName range:range];
 					
-					NSString* elementName = [runs indexToName:elementIndex];
 					[self _applyStyle:style index:elementIndex range:range storage:storage];
+#if OLD_EXTENSIONS
+                    NSString* elementName = [runs indexToName:elementIndex];
                     if (tmp.document)
                         [StartupScripts invokeOverrideStyle:tmp.document location:range.location length:range.length element:elementName];
                     else
                         LOG("Text", "doc was NULL");
+#endif
 					endLoc = range.location + range.length;
 					
 					if (++count % 1000 == 0 && (getTime() - startTime) > MaxProcessTime)
@@ -216,10 +218,12 @@
         {
             [self _applyBraceStylesAt:beginLoc length:endLoc-beginLoc storage:storage];
             [self _applyGlyphStylesAt:beginLoc length:endLoc-beginLoc storage:storage];
+#if OLD_EXTENSIONS
             if (tmp.document)
                 [StartupScripts invokeApplyStyles:tmp.document location:beginLoc length:endLoc-beginLoc];
             else
                 LOG("Text", "doc was NULL");
+#endif
         }
 		[storage endEditing];
 		

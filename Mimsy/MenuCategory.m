@@ -37,6 +37,7 @@
 }
 
 
+#if OLD_EXTENSIONS
 - (void)addExtensionItems:(NSString*)root contents:(NSString*)contents
 {
     ProcFileReader* menuSelection = _createReader(@"menu-selection", root, ^NSString *() {
@@ -122,5 +123,6 @@ static ProcFileReadWrite* _createWriter(NSString* name, NSString* root, void (^w
     
     return file;
 }
+#endif
 
 @end

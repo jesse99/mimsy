@@ -1,3 +1,4 @@
+#if OLD_EXTENSIONS
 @class BaseExtension;
 
 // Used to manage lua scripts and executables that interact with Mimsy via
@@ -24,3 +25,4 @@
 + (void)watch:(NSString*)path extension:(BaseExtension*)extension;
 
 @end
+#endif

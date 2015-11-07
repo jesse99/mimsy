@@ -1,3 +1,4 @@
+#if OLD_EXTENSIONS
 #import "StartupScripts.h"
 
 #import <lualib.h>
@@ -152,3 +153,4 @@ static NSArray* _valid;
 }
 
 @end
+#endif

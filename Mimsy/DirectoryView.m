@@ -70,10 +70,12 @@
     // Populate the menu.
     _contextMenu = [[NSMenu alloc] initWithTitle:@""];
     
+#if OLD_EXTENSIONS
     NSString* contents = [NSString stringWithFormat:@"%@\n%@",
                          [_files componentsJoinedByString:@"\f"],
                           [_dirs componentsJoinedByString:@"\f"]];
     [_contextMenu addExtensionItems:@"/directory" contents:contents];
+#endif
     
     return _contextMenu;
 }

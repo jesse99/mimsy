@@ -1,3 +1,4 @@
+#if OLD_EXTENSIONS
 @protocol ProcFile;
 
 // Used to respond to read/write requests from extensions (and the Finder).
@@ -14,3 +15,4 @@
 - (void)removeWriter:(id<ProcFile>)file;
 
 @end
+#endif
