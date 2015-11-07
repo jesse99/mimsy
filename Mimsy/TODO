@@ -12,10 +12,35 @@ pthread_t pthread_self(void);
 int pthread_equal(pthread_t t1, pthread_t t2);  // non-zero => equal
 
 
++ not threaded
++ quite a bit simpler
++ handles structured data better
++ allows plugins to poke mimnsy at arbitrary times
++ can better define control flow from mimsy to extensions
++ fewer dependencies
+
+- harder to support plugins in other languages
+- simple plugins require a separate exe
 
 
 
-* Do we need to tweak styling for large files?
+* Use sockets and go instead of proc files and arbitrary scripts:
+    - make sure everything is checked in
+    - get on a branch
+    - disable plugins and extensions
+    - use CFNetwork
+    - and unix domain sockets?
+    - json transport
+    - mimsy targeted messages should include plugin's name
+    - one socket for messages targeting mimsy
+    - another for messages targeting plugins
+    - maybe register for these
+    - could have a lib with helper goo
+    - could have functions to encapsulate standard messages
+    - can we have multiple plugins with one exe?
+    - maybe go routines
+    - would be nice to allow plugins to be overridden
+    - maybe alpha sorting?
 * Getting unhandled exceptions (see below):
     ProcFileReadWrite write blocks are being called from a thread
     - assert that threads are legit
