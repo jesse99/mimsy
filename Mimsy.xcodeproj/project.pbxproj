@@ -137,6 +137,7 @@
 		37ECF06C193024B800061C0A /* FindInFilesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ECF06B193024B800061C0A /* FindInFilesController.m */; };
 		37EECF4D16A64A9E00BEB493 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 37EECF4C16A64A9E00BEB493 /* help */; };
 		37F2C58B169E7B92009C5355 /* ArrayCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 37F2C58A169E7B92009C5355 /* ArrayCategory.m */; };
+		37F389881BEEB1A400A92488 /* MimsyEndpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 37F389871BEEB1A400A92488 /* MimsyEndpoint.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -390,6 +391,8 @@
 		37EECF4C16A64A9E00BEB493 /* help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = help; sourceTree = "<group>"; };
 		37F2C589169E7B92009C5355 /* ArrayCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArrayCategory.h; sourceTree = "<group>"; };
 		37F2C58A169E7B92009C5355 /* ArrayCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArrayCategory.m; sourceTree = "<group>"; };
+		37F389861BEEB1A400A92488 /* MimsyEndpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MimsyEndpoint.h; sourceTree = "<group>"; };
+		37F389871BEEB1A400A92488 /* MimsyEndpoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MimsyEndpoint.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -615,6 +618,8 @@
 				37CF062516AB998A00069A20 /* LuaSupport.m */,
 				37A8C6A216758FF400D4DB13 /* main.m */,
 				37A8C6AE16758FF400D4DB13 /* MainMenu.xib */,
+				37F389861BEEB1A400A92488 /* MimsyEndpoint.h */,
+				37F389871BEEB1A400A92488 /* MimsyEndpoint.m */,
 				3768CCD916E0F54900D5CB57 /* OpenFile.h */,
 				3768CCDA16E0F54900D5CB57 /* OpenFile.m */,
 				37431FD219AA9AA200A1B30E /* ProcFile.h */,
@@ -987,6 +992,7 @@
 				377BDE6916CDA8F3008DADA5 /* Database.m in Sources */,
 				3768CCCC16CDDCB000D5CB57 /* DirectoryController.m in Sources */,
 				3768CCD116CFFFEE00D5CB57 /* FileSystemItem.m in Sources */,
+				37F389881BEEB1A400A92488 /* MimsyEndpoint.m in Sources */,
 				3768CCD516D052D400D5CB57 /* FileItem.m in Sources */,
 				37E7A8CD1AE1FDB800BD93B4 /* StringDialogController.m in Sources */,
 				3768CCD816D0547A00D5CB57 /* FolderItem.m in Sources */,
