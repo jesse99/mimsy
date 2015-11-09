@@ -1,6 +1,7 @@
 #import "MimsyEndpoint.h"
 
 #import <CoreFoundation/CoreFoundation.h>
+#include <sys/fcntl.h>
 #include <sys/socket.h>
 #include <netinet/tcp.h>
 #include <netinet/in.h>
@@ -32,9 +33,11 @@ static NSMutableArray* _extensions;
 {
     NSInputStream* _inputStream;
     NSOutputStream* _outputStream;
+    bool _needsReply;
+    bool _canReply;
 }
 
-- (id)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream
+- (id)initWithInputStream:(NSInputStream*)inputStream outputStream:(NSOutputStream*)outputStream
 {
     if (!_extensions)
         _extensions = [NSMutableArray new];
@@ -106,8 +109,15 @@ static NSMutableArray* _extensions;
                     else
                         LOG("App", "received '%s...%s' from %s endpoint", STR([message substringToIndex:40]), STR([message substringFromIndex:bytesToRead-40]), STR(_name));
                     
-                    const char* reply = "OK\n";
-                    [self _write:reply bytes:strlen(reply)];
+                    if (_canReply)
+                    {
+                        const char* reply = "OK\n";
+                        [self _write:reply bytes:strlen(reply)];
+                    }
+                    else
+                    {
+                        _needsReply = true;
+                    }
                 }
                 else
                 {
@@ -120,6 +130,25 @@ static NSMutableArray* _extensions;
                 LOG("Error", "Failed to allocate %d byte payload for %s extension connection", bytesToRead, STR(_name));
                 [self close];
             }
+        }
+    }
+    else if (stream == _outputStream && event == NSStreamEventHasSpaceAvailable)
+    {
+        // This is pretty dorky: we're using loopback so you'd think we could just send replies without
+        // worrying about blocking (especially if we make the socket non-blocking). But this doesn't
+        // work, probably because NSOutputStream is trying to be helpful. To make matters worse we
+        // only get the NSStreamEventHasSpaceAvailable once which means we need that lame _canReply
+        // flag.
+        if (_needsReply)
+        {
+            const char* reply = "OK\n";
+            [self _write:reply bytes:strlen(reply)];
+
+            _needsReply = false;
+        }
+        else
+        {
+            _canReply = true;
         }
     }
 }
@@ -140,6 +169,13 @@ static NSMutableArray* _extensions;
 
 - (bool)_write:(const void*)buffer bytes:(NSUInteger)bytes
 {
+    uint32_t bytesToWrite = htonl(bytes);
+    return [self _primitiveWrite:&bytesToWrite bytes:sizeof(bytesToWrite)] && [self _primitiveWrite:buffer bytes:bytes];
+}
+
+- (bool)_primitiveWrite:(const void*)buffer bytes:(NSUInteger)bytes
+{
+    LOG("App", "Sending %d bytes using %s", (int) bytes, STR(_outputStream));
     NSInteger bytesWritten = [_outputStream write:buffer maxLength:bytes];
     if (bytesWritten < 0)
     {
@@ -157,7 +193,6 @@ static NSMutableArray* _extensions;
     
     return bytesWritten == bytes;
 }
-
 @end
 
 // -----------------------------------------------------------------------------------------------------------
@@ -165,11 +200,11 @@ static void acceptCallback(CFSocketRef socket, CFSocketCallBackType callbackType
 {
     UNUSED(socket, callbackType, address, info);
     
-    CFSocketNativeHandle socketH = *(CFSocketNativeHandle *)data;
+    CFSocketNativeHandle socketH = *(CFSocketNativeHandle*)data;
     
     const int yes = 1;
     (void) setsockopt(socketH, IPPROTO_TCP, TCP_NODELAY, &yes, sizeof(yes));
-
+    
     CFReadStreamRef readStream = NULL;
     CFWriteStreamRef writeStream = NULL;
     CFStreamCreatePairWithSocket(kCFAllocatorDefault, socketH, &readStream, &writeStream);
@@ -178,7 +213,7 @@ static void acceptCallback(CFSocketRef socket, CFSocketCallBackType callbackType
         CFReadStreamSetProperty(readStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
         CFWriteStreamSetProperty(writeStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
         
-        ExtensionConnection * connection = [[ExtensionConnection alloc] initWithInputStream:(__bridge NSInputStream *)(readStream) outputStream:(__bridge NSOutputStream *)(writeStream)];
+        ExtensionConnection* connection = [[ExtensionConnection alloc] initWithInputStream:(__bridge NSInputStream*)(readStream) outputStream:(__bridge NSOutputStream*)(writeStream)];
         [connection open];
     }
     else
@@ -187,6 +222,7 @@ static void acceptCallback(CFSocketRef socket, CFSocketCallBackType callbackType
         // since we are not going to use it any more.
         (void) close(socketH);
     }
+
     if (readStream) CFRelease(readStream);
     if (writeStream) CFRelease(writeStream);
 }

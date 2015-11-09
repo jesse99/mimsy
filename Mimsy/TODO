@@ -15,24 +15,53 @@ int pthread_equal(pthread_t t1, pthread_t t2);  // non-zero => equal
 + not threaded
 + quite a bit simpler
 + handles structured data better
-+ allows plugins to poke mimnsy at arbitrary times
++ allows plugins to poke mimsy at arbitrary times
 + can better define control flow from mimsy to extensions
 + fewer dependencies
 
 - harder to support plugins in other languages
 - simple plugins require a separate exe
+- requires more sophistication from extension developers
 
 
-{"name": "foobar", "call": "beep"}      34 chars
-{"error": ""}
+{"Call": "register_extension", "Name": "goat", "Version": "1.24", "URL": "foo"}
+    {"Error": ""}
+
+{"Call": "register_on_text_context_menu_open"}
+
+{"Call": "on_text_context_menu_open"}
+    {"Items": [{"Title": "Upper Case", "ID": "upper"}, {"Title": "Lower Case", "ID": "lower"}], "Error": ""}
+
+{"Call": "on_menu_item", "ID": "upper"}
 
 
+
+getters                     get_text
+setters                     set_text            register_on_text_changed
+notifications               on_text_changed
+    execute on main thread
+    can xfer arbitrary amounts of data
+    registered
+
+hooks                       hook_text_saved
+    registered (unlike notification reply is expected)
+    execute as part of event processing
+    need some sort of waitForMessage method that dispatches until reply arrives
+        with a fairly short timeout
+
+
+
+* How would logging work?
+    - problem for hooks
+    - which are a problem anyway because event loop isnt running
+    - dedicate a thread to each connection? how is that better than proc files?
 * Add a MimsyEndpoint class
     - get this working with nc (hard code bytesToRead for now)
     - get this working with go
     - add support for registering endpoint methods
     - need some sort of register extension procedure, name, version, maybe pid
     - maybe LOG_ERROR should always go to the transcript
+    - don't allow a big extension to block forever
     - make sure that really large messages work
 * Use sockets and go instead of proc files and arbitrary scripts:
     - mimsy targeted messages should include plugin's name
@@ -49,6 +78,7 @@ int pthread_equal(pthread_t t1, pthread_t t2);  // non-zero => equal
     - maybe alpha sorting?
     - make sure that all the OLD_EXTENSIONS code is gone
     - merge into master
+    - tcp package is available for lua
 * Getting unhandled exceptions (see below):
     ProcFileReadWrite write blocks are being called from a thread
     - assert that threads are legit

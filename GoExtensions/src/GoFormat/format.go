@@ -50,6 +50,8 @@ func rewriteFile(path string) {
 }
 
 func main() {
+    os.Exit(0)
+
 	fmt.Println("name\fGoFormat")
 	fmt.Println("version\f1.0")
 	fmt.Println("watch\f1.0\f/Volumes/Mimsy/text-document/user-saving")

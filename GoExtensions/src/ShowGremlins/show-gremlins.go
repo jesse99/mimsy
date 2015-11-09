@@ -116,6 +116,7 @@ func findName(n uint16) string {
 }
 
 func main() {
+    os.Exit(0)
 	var path = "show-gremlins"
 
 	fmt.Println("name\fShowGremlins")
