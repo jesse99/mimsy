@@ -47,6 +47,10 @@ mimsy does non-blocking reads for a timeout
     resumes normal control flow when gets notification handled
 
 
+// This allows us to timeout reading replies from misbehaving extensions.
+fcntl(socketH, F_SETFL, fcntl(socketH, F_GETFL, 0) | O_NONBLOCK);
+
+
 
 * Switch to using BSD sockets
     - need to use non blocking io
