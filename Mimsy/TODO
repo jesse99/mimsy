@@ -36,25 +36,23 @@ int pthread_equal(pthread_t t1, pthread_t t2);  // non-zero => equal
 
 
 
-getters                     get_text
-setters                     set_text            register_on_text_changed
-notifications               on_text_changed
-    execute on main thread
-    can xfer arbitrary amounts of data
-    registered
+mimsy sends notification
+    extension does gets and sets
+    extension sends notification handled
+    might want to blacklist the extension if it times out
+    maybe use a setting to control timeout
 
-hooks                       hook_text_saved
-    registered (unlike notification reply is expected)
-    execute as part of event processing
-    need some sort of waitForMessage method that dispatches until reply arrives
-        with a fairly short timeout
+mimsy does non-blocking reads for a timeout
+    dispatches messages
+    resumes normal control flow when gets notification handled
 
 
 
-* How would logging work?
-    - problem for hooks
-    - which are a problem anyway because event loop isnt running
-    - dedicate a thread to each connection? how is that better than proc files?
+* Switch to using BSD sockets
+    - need to use non blocking io
+    - no need to support pokes from extensions (but document this)
+* Get register_extension working on mimsy side
+* Get register_extension working better on go side
 * Add a MimsyEndpoint class
     - get this working with nc (hard code bytesToRead for now)
     - get this working with go

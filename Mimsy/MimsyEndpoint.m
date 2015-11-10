@@ -54,7 +54,7 @@ static NSMutableArray* _extensions;
 
 - (void)open
 {
-    LOG("App", "Opened connection to extension");
+    LOG("Extensions", "Opened connection to extension");
     [_inputStream  setDelegate:self];
     [_outputStream setDelegate:self];
     [_inputStream  scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -72,7 +72,7 @@ static NSMutableArray* _extensions;
     [_outputStream close];
     [_inputStream  removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     [_outputStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    LOG("App", "Closed connection to %s extension", STR(_name));
+    LOG("Extensions", "Closed connection to %s extension", STR(_name));
     [_extensions removeObject:self];
 }
 
@@ -80,7 +80,7 @@ static NSMutableArray* _extensions;
 {
     if (event == NSStreamEventEndEncountered)
     {
-        LOG("App", "EOF for %s extension connection", STR(_name));
+        LOG("Extensions", "EOF for %s extension connection", STR(_name));
         [self close];
     }
     else if (event == NSStreamEventErrorOccurred)
@@ -91,44 +91,17 @@ static NSMutableArray* _extensions;
     }
     else if (stream == _inputStream && event == NSStreamEventHasBytesAvailable)
     {
-        uint32_t bytesToRead;
-        if ([self _read:&bytesToRead bytes:sizeof(bytesToRead)])
+        NSString* message = [self _read];
+        if (message)
         {
-            bytesToRead = ntohl(bytesToRead);
-            
-            char* payload = malloc(bytesToRead+1);
-            if (payload)
+            if (_canReply)
             {
-                if ([self _read:payload bytes:bytesToRead])
-                {
-                    payload[bytesToRead] = '\0';
-
-                    NSString* message = [NSString stringWithCString:payload encoding:NSUTF8StringEncoding];
-                    if (bytesToRead < 1024)
-                        LOG("App", "received '%s' from %s endpoint", STR(message), STR(_name));
-                    else
-                        LOG("App", "received '%s...%s' from %s endpoint", STR([message substringToIndex:40]), STR([message substringFromIndex:bytesToRead-40]), STR(_name));
-                    
-                    if (_canReply)
-                    {
-                        const char* reply = "OK\n";
-                        [self _write:reply bytes:strlen(reply)];
-                    }
-                    else
-                    {
-                        _needsReply = true;
-                    }
-                }
-                else
-                {
-                    LOG("Error", "Failed to read %d byte payload for %s extension connection", bytesToRead, STR(_name));
-                }
-                free(payload);
+                const char* reply = "OK\n";
+                [self _write:reply bytes:strlen(reply)];
             }
             else
             {
-                LOG("Error", "Failed to allocate %d byte payload for %s extension connection", bytesToRead, STR(_name));
-                [self close];
+                _needsReply = true;
             }
         }
     }
@@ -153,7 +126,55 @@ static NSMutableArray* _extensions;
     }
 }
 
-- (bool)_read:(void*)buffer bytes:(NSUInteger)bytes
+- (NSString*)_read
+{
+    NSString* message = nil;
+    
+    uint32_t bytesToRead;
+    if ([self _primitiveRead:&bytesToRead bytes:sizeof(bytesToRead)])
+    {
+        bytesToRead = ntohl(bytesToRead);
+        
+        char* payload = malloc(bytesToRead+1);
+        if (payload)
+        {
+            if ([self _primitiveRead:payload bytes:bytesToRead])
+            {
+                payload[bytesToRead] = '\0';
+                
+                message = [NSString stringWithCString:payload encoding:NSUTF8StringEncoding];
+                if (bytesToRead < 256)
+                    LOG("Extensions", "received '%s' from %s endpoint", STR(message), STR(_name));
+                else
+                    LOG("Extensions", "received '%s...%s' from %s endpoint", STR([message substringToIndex:60]), STR([message substringFromIndex:bytesToRead-60]), STR(_name));
+            }
+            else
+            {
+                LOG("Error", "Failed to read %d byte payload for %s extension connection", bytesToRead, STR(_name));
+            }
+            free(payload);
+        }
+        else
+        {
+            LOG("Error", "Failed to allocate %d byte payload for %s extension connection", bytesToRead, STR(_name));
+            [self close];
+        }
+    }
+    else
+    {
+        LOG("Error", "Failed to read payload size for %s extension connection", STR(_name));
+    }
+    
+    return message;
+}
+
+- (bool)_write:(const void*)buffer bytes:(NSUInteger)bytes
+{
+    uint32_t bytesToWrite = htonl(bytes);
+    return [self _primitiveWrite:&bytesToWrite bytes:sizeof(bytesToWrite)] && [self _primitiveWrite:buffer bytes:bytes];
+}
+
+- (bool)_primitiveRead:(void*)buffer bytes:(NSUInteger)bytes
 {
     NSInteger bytesRead = 0;
     
@@ -167,15 +188,8 @@ static NSMutableArray* _extensions;
     return bytesRead == bytes;
 }
 
-- (bool)_write:(const void*)buffer bytes:(NSUInteger)bytes
-{
-    uint32_t bytesToWrite = htonl(bytes);
-    return [self _primitiveWrite:&bytesToWrite bytes:sizeof(bytesToWrite)] && [self _primitiveWrite:buffer bytes:bytes];
-}
-
 - (bool)_primitiveWrite:(const void*)buffer bytes:(NSUInteger)bytes
 {
-    LOG("App", "Sending %d bytes using %s", (int) bytes, STR(_outputStream));
     NSInteger bytesWritten = [_outputStream write:buffer maxLength:bytes];
     if (bytesWritten < 0)
     {
