@@ -51,10 +51,6 @@ mimsy does non-blocking reads for a timeout
 fcntl(socketH, F_SETFL, fcntl(socketH, F_GETFL, 0) | O_NONBLOCK);
 
 
-
-* Switch to using BSD sockets
-    - need to use non blocking io
-    - no need to support pokes from extensions (but document this)
 * Get register_extension working on mimsy side
 * Get register_extension working better on go side
 * Add a MimsyEndpoint class

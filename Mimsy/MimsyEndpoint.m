@@ -56,11 +56,20 @@ static NSMutableArray* _extensions;
     LOG("Extensions", "Opening connection to extension");
     [_extensions addObject:self];
     
+    [self _writeMessage:@"{\"Method\": \"on_register\"}"];
+    if (_socket < 0)
+        return;
+
+    // TODO: make sure that its register_extension
     NSString* message = [self _readMessageWithTimeout];
-    if (message)
-    {
-        [self _writeMessage:@"OK"];
-    }
+    if (!message)
+        return;
+
+    // TODO: make sure that its on_register_completed
+    // TODO: read until we get on_register_completed
+    message = [self _readMessageWithTimeout];
+    if (!message)
+        return;
 }
 
 - (void)close

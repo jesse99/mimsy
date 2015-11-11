@@ -10,7 +10,13 @@ import (
 
 var connection *net.TCPConn
 
-func write(message string) {
+// Note that, for now, Mimsy only responds to extensions in the interval between Mimsy
+// sending a notification to the extension and the extension telling Mimsy that it has
+// finished processing the notification. TODO: Allowing extensions to communicate with
+// Mimsy at arbitrary times is certainly possible but it's not clear how useful that
+// would be and to support it we'd probably want to have the extension register to open
+// up a second socket so that Mimsy can do asynchronous reads using NSInputStream.
+func writeMessage(message string) {
     var size = make([]byte, 4)
     binary.BigEndian.PutUint32(size, uint32(len(message)))
 
@@ -27,7 +33,7 @@ func write(message string) {
     }
 }
 
-func read() string {
+func readMessage() string {
     var size = make([]byte, 4)
     var _, err = connection.Read(size)
     if err != nil {
@@ -47,7 +53,7 @@ func read() string {
     return string(message)
 }
 
-func main() {
+func on_register(name, version, url string) {
     var addr = "127.0.0.1:5331"
     var address, err = net.ResolveTCPAddr("tcp", addr)
     if err != nil {
@@ -57,14 +63,26 @@ func main() {
 
     connection, err = net.DialTCP("tcp", nil, address)
     if err != nil {
-        fmt.Fprintf(os.Stderr, "net.DialTCP failed: %s\n", err)
+        fmt.Fprintf(os.Stderr, "DialTCP failed: %s\n", err)
         os.Exit(1)
     }
+
+    var message = readMessage()
+    fmt.Fprintf(os.Stdout, " read %s\n", message)
+
+    // TODO: check that it is on_register
+    message = fmt.Sprintf(`{"Method": "register_extension", "Name": "%s", "Version": "%s", "URL": "%s"}`, name, version, url)
+    writeMessage(message)
+}
+
+func on_register_completed() {
+    var message = `{"Method": "on_register_completed"}`
+    writeMessage(message)
+}
+
+func main() {
+    on_register("change-case", "1.0", "https://github.com/jesse99/mimsy")
     defer connection.Close()
 
-    var message = `{"Call": "register_extension", "Name": "change-case", "Version": "1.0", "URL": "https://github.com/jesse99/mimsy"}`
-    write(message)
-
-    var reply = read()
-    fmt.Fprintf(os.Stdout, "reply from server=%s\n", string(reply))
+    on_register_completed()
 }
