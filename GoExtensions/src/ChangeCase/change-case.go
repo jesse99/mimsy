@@ -75,8 +75,8 @@ func on_register(name, version, url string) {
     writeMessage(message)
 }
 
-func on_register_completed() {
-    var message = `{"Method": "on_register_completed"}`
+func notification_completed() {
+    var message = `{"Method": "notification_completed"}`
     writeMessage(message)
 }
 
@@ -84,5 +84,5 @@ func main() {
     on_register("change-case", "1.0", "https://github.com/jesse99/mimsy")
     defer connection.Close()
 
-    on_register_completed()
+    notification_completed()
 }

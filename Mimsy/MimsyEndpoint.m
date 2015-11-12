@@ -13,6 +13,8 @@ const int port = 5331;
 static CFSocketRef _acceptSocket;
 
 // -----------------------------------------------------------------------------------------------------------
+typedef void (^ExtensionCallback)(NSDictionary* message);
+
 @interface ExtensionConnection : NSObject
 
 - (id)init:(CFSocketNativeHandle)socketH;
@@ -20,7 +22,11 @@ static CFSocketRef _acceptSocket;
 - (void)open;
 - (void)close;
 
+- (void)sendNotification:(NSString*)method;
+
 @property (readonly) NSString* name;
+@property (readonly) NSString* version;
+@property (readonly) NSString* url;
 
 @end
 
@@ -33,6 +39,7 @@ static NSMutableArray* _extensions;
 @implementation ExtensionConnection
 {
     CFSocketNativeHandle _socket;
+    NSMutableDictionary* _callbacks;
 }
 
 - (id)init:(CFSocketNativeHandle)socketH
@@ -46,9 +53,22 @@ static NSMutableArray* _extensions;
     if (self != nil)
     {
         _socket = socketH;
+        _callbacks = [NSMutableDictionary new];
         _name = @"";
+        
+        _callbacks[@"register_extension"] = ^(NSDictionary* message){_name = message[@"Name"]; _version = message[@"Version"]; _url = message[@"URL"];};
     }
     return self;
+}
+
+- (void)_onRegisterExtension
+{
+    
+}
+
+- (void)_onNotificationCompleted
+{
+    
 }
 
 - (void)open
@@ -56,20 +76,37 @@ static NSMutableArray* _extensions;
     LOG("Extensions", "Opening connection to extension");
     [_extensions addObject:self];
     
+    [self sendNotification:@"on_register"];
+    
     [self _writeMessage:@"{\"Method\": \"on_register\"}"];
     if (_socket < 0)
         return;
 
-    // TODO: make sure that its register_extension
-    NSString* message = [self _readMessageWithTimeout];
+    NSDictionary* message = [self _readMessageWithTimeout];
     if (!message)
         return;
+    
+    NSString* method = [message objectForKey:@"Method"];
+    if (![method isEqualToString:@"register_extension"])
+    {
+        LOG("Error", "Expected 'register_extension' but found '%s' from extension %s", STR(method), STR(_name));
+        [self close];
+        return;
+    }
 
-    // TODO: make sure that its on_register_completed
-    // TODO: read until we get on_register_completed
+    // TODO: read until we get notification_completed
+    // TODO: make sure that register_extension was called
     message = [self _readMessageWithTimeout];
     if (!message)
         return;
+    
+    method = [message objectForKey:@"Method"];
+    if (![method isEqualToString:@"notification_completed"])
+    {
+        LOG("Error", "Expected 'notification_completed' but found '%s' from extension %s", STR(method), STR(_name));
+        [self close];
+        return;
+    }
 }
 
 - (void)close
@@ -83,7 +120,38 @@ static NSMutableArray* _extensions;
     }
 }
 
-- (NSString*)_readMessageWithTimeout
+- (void)sendNotification:(NSString*)method
+{
+    [self _writeMessage:[NSString stringWithFormat:@"{\"Method\": \"%@\"}", method]];
+    
+    while (_socket >= 0)
+    {
+        NSDictionary* message = [self _readMessageWithTimeout];
+        if (!message)
+        {
+            LOG("Error", "Timed out waiting for notification_completed from %s extension connection", STR(_name));
+            [self close];
+            break;
+        }
+        
+        NSString* method = [message objectForKey:@"Method"];
+        if ([method isEqualToString:@"notification_completed"])
+            break;
+        
+        ExtensionCallback callback = [_callbacks objectForKey:method];
+        if (callback)
+        {
+            callback(message);
+        }
+        else
+        {
+            LOG("Error", "Bad method '%s' from extension %s", STR(method), STR(_name));
+            [self close];
+        }
+    }
+}
+
+- (NSDictionary*)_readMessageWithTimeout
 {
     double startTime = getTime();
 
@@ -98,16 +166,13 @@ static NSMutableArray* _extensions;
         
         usleep(100*1000);
     }
-    
-    LOG("Error", "Timed out reading message from %s extension connection", STR(_name));
-    [self close];
 
     return nil;
 }
 
-- (NSString*)_readMessage
+- (NSDictionary*)_readMessage
 {
-    NSString* message = nil;
+    NSDictionary* message = nil;
     
     uint32_t bytesToRead;
     if ([self _read:&bytesToRead bytes:sizeof(bytesToRead)])
@@ -120,12 +185,30 @@ static NSMutableArray* _extensions;
             if ([self _read:payload bytes:bytesToRead])
             {
                 payload[bytesToRead] = '\0';
+
+                if (_shouldLog("Extensions"))   // TODO: make this Verbose
+                {
+                    NSString* text = [NSString stringWithCString:payload encoding:NSUTF8StringEncoding];
+                    if (bytesToRead < 256)
+                        LOG("Extensions", "received '%s' from %s endpoint", STR(text), STR(_name));
+                    else
+                        LOG("Extensions", "received '%s...%s' from %s endpoint", STR([text substringToIndex:60]), STR([text substringFromIndex:bytesToRead-60]), STR(_name));
+                }
                 
-                message = [NSString stringWithCString:payload encoding:NSUTF8StringEncoding];
-                if (bytesToRead < 256)
-                    LOG("Extensions", "received '%s' from %s endpoint", STR(message), STR(_name));
-                else
-                    LOG("Extensions", "received '%s...%s' from %s endpoint", STR([message substringToIndex:60]), STR([message substringFromIndex:bytesToRead-60]), STR(_name));
+                NSError* error = nil;
+                NSData* data = [NSData dataWithBytesNoCopy:payload length:bytesToRead freeWhenDone:false];
+                message = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                if (!message)
+                {
+                    NSString* reason = [error localizedFailureReason];
+                    LOG("Error", "Failed to decode message from %s extension connection: %s", STR(_name), STR(reason));
+                    if (!_shouldLog("Extensions"))   // TODO: make this Verbose
+                    {
+                        NSString* text = [NSString stringWithCString:payload encoding:NSUTF8StringEncoding];
+                        LOG("Error", "Message was: %s", STR(text));
+                    }
+                    [self close];
+                }
             }
             else
             {
@@ -165,7 +248,10 @@ static NSMutableArray* _extensions;
         }
         else if (errno != EINTR)
         {
-            LOG("Error", "Failed to peek message for %s extension connection: %s", STR(_name), strerror(errno));
+            if (errno == ECONNRESET)
+                LOG("Extensions", "%s extension closed its connection", STR(_name));
+            else
+                LOG("Error", "Failed to peek message for %s extension connection: %s", STR(_name), strerror(errno));
             [self close];
         }
     }
@@ -184,7 +270,10 @@ static NSMutableArray* _extensions;
         {
             if (errno != EINTR)
             {
-                LOG("Error", "Failed to read %lu bytes for %s extension connection: %s", (unsigned long)bytes, STR(_name), strerror(errno));
+                if (errno == ECONNRESET)
+                    LOG("Extensions", "%s extension closed its connection", STR(_name));
+                else
+                    LOG("Error", "Failed to read %lu bytes for %s extension connection: %s", (unsigned long)bytes, STR(_name), strerror(errno));
                 [self close];
             }
         }
