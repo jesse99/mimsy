@@ -51,16 +51,12 @@ mimsy does non-blocking reads for a timeout
 fcntl(socketH, F_SETFL, fcntl(socketH, F_GETFL, 0) | O_NONBLOCK);
 
 
-* Get register_extension working on mimsy side
+* Break ExtensionConnection out into its own file
+    - maybe do some renaming too
 * Get register_extension working better on go side
-* Add a MimsyEndpoint class
-    - get this working with nc (hard code bytesToRead for now)
-    - get this working with go
-    - add support for registering endpoint methods
-    - need some sort of register extension procedure, name, version, maybe pid
-    - maybe LOG_ERROR should always go to the transcript
-    - don't allow a big extension to block forever
     - make sure that really large messages work
+* Add a MimsyEndpoint class
+    - maybe LOG_ERROR should always go to the transcript
 * Use sockets and go instead of proc files and arbitrary scripts:
     - mimsy targeted messages should include plugin's name
     - one socket for messages targeting mimsy

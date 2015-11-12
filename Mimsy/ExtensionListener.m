@@ -1,4 +1,4 @@
-#import "MimsyEndpoint.h"
+#import "ExtensionListener.h"
 
 #import <CoreFoundation/CoreFoundation.h>
 #include <fcntl.h>
@@ -335,7 +335,7 @@ static void acceptCallback(CFSocketRef socket, CFSocketCallBackType callbackType
     [connection open];
 }
 
-@implementation MimsyEndpoint
+@implementation ExtensionListener
 
 + (void) setup
 {

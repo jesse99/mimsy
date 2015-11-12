@@ -17,7 +17,7 @@
 #import "Languages.h"
 #import "Logger.h"
 #import "MenuCategory.h"
-#import "MimsyEndpoint.h"
+#import "ExtensionListener.h"
 #import "OpenSelection.h"
 #import "Paths.h"
 #import "ProcFileSystem.h"
@@ -610,7 +610,7 @@ void initLogGlobs()
 #endif
     [WindowsDatabase setup];
     [Languages setup];
-    [MimsyEndpoint setup];
+    [ExtensionListener setup];
     
     [self _addTransformItems];
     

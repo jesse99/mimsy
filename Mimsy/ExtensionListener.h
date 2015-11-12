@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 
 // UDP socket extensions use to poke Mimsy.
-@interface MimsyEndpoint : NSObject
+@interface ExtensionListener : NSObject
 
 + (void) setup;
 
