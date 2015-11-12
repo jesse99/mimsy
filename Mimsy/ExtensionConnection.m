@@ -29,16 +29,6 @@ static NSMutableArray* _extensions;
     return self;
 }
 
-- (void)_onRegisterExtension
-{
-    
-}
-
-- (void)_onNotificationCompleted
-{
-    
-}
-
 - (void)open
 {
     LOG("Extensions", "Opening connection to extension");

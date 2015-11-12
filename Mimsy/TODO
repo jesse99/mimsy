@@ -47,12 +47,8 @@ mimsy does non-blocking reads for a timeout
     resumes normal control flow when gets notification handled
 
 
-// This allows us to timeout reading replies from misbehaving extensions.
-fcntl(socketH, F_SETFL, fcntl(socketH, F_GETFL, 0) | O_NONBLOCK);
 
 
-* Break ExtensionConnection out into its own file
-    - maybe do some renaming too
 * Get register_extension working better on go side
     - make sure that really large messages work
 * Add a MimsyEndpoint class
