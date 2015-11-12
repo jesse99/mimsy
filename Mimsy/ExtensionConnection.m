@@ -24,6 +24,7 @@ static NSMutableArray* _extensions;
         _handlers = [NSMutableDictionary new];
         _name = @"";
         
+        // TODO: Should we special case extensions with the same name?
         _handlers[@"register_extension"] = ^(NSDictionary* message){_name = message[@"Name"]; _version = message[@"Version"]; _url = message[@"URL"];};
     }
     return self;
@@ -36,34 +37,10 @@ static NSMutableArray* _extensions;
     
     [self sendNotification:@"on_register"];
     
-    [self _writeMessage:@"{\"Method\": \"on_register\"}"];
-    if (_socket < 0)
-        return;
-    
-    NSDictionary* message = [self _readMessageWithTimeout];
-    if (!message)
-        return;
-    
-    NSString* method = [message objectForKey:@"Method"];
-    if (![method isEqualToString:@"register_extension"])
+    if (_socket >= 0 && _name.length == 0)
     {
-        LOG("Error", "Expected 'register_extension' but found '%s' from extension %s", STR(method), STR(_name));
+        LOG("Error", "register_extension was not called for extension %s", STR(_name));
         [self close];
-        return;
-    }
-    
-    // TODO: read until we get notification_completed
-    // TODO: make sure that register_extension was called
-    message = [self _readMessageWithTimeout];
-    if (!message)
-        return;
-    
-    method = [message objectForKey:@"Method"];
-    if (![method isEqualToString:@"notification_completed"])
-    {
-        LOG("Error", "Expected 'notification_completed' but found '%s' from extension %s", STR(method), STR(_name));
-        [self close];
-        return;
     }
 }
 
