@@ -13,7 +13,7 @@ const int port = 5331;
 static CFSocketRef _acceptSocket;
 
 // -----------------------------------------------------------------------------------------------------------
-typedef void (^ExtensionCallback)(NSDictionary* message);
+typedef void (^MessageHandler)(NSDictionary* message);
 
 @interface ExtensionConnection : NSObject
 
@@ -138,7 +138,7 @@ static NSMutableArray* _extensions;
         if ([method isEqualToString:@"notification_completed"])
             break;
         
-        ExtensionCallback callback = [_callbacks objectForKey:method];
+        MessageHandler callback = [_callbacks objectForKey:method];
         if (callback)
         {
             callback(message);
