@@ -3,6 +3,7 @@ package main
 
 import (
     "encoding/binary"
+    "encoding/json"
     "fmt"
     "net"
     "os"
@@ -16,24 +17,30 @@ var connection *net.TCPConn
 // Mimsy at arbitrary times is certainly possible but it's not clear how useful that
 // would be and to support it we'd probably want to have the extension register to open
 // up a second socket so that Mimsy can do asynchronous reads using NSInputStream.
-func writeMessage(message string) {
-    var size = make([]byte, 4)
-    binary.BigEndian.PutUint32(size, uint32(len(message)))
+func writeMessage(message interface{}) {
+    var payload, err = json.Marshal(message)
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Failed to json.Marshal %+v: %s\n", message, err)
+        os.Exit(1)
+    }
 
-    var _, err = connection.Write(size)
+    var size = make([]byte, 4)
+    binary.BigEndian.PutUint32(size, uint32(len(payload)))
+
+    _, err = connection.Write(size)
     if err != nil {
         fmt.Fprintf(os.Stderr, "Write to server failed: %s\n", err)
         os.Exit(1)
     }
 
-    _, err = connection.Write([]byte(message))
+    _, err = connection.Write(payload)
     if err != nil {
         fmt.Fprintf(os.Stderr, "Write to server failed: %s\n", err)
         os.Exit(1)
     }
 }
 
-func readMessage() string {
+func readMessage(message interface{}) {
     var size = make([]byte, 4)
     var _, err = connection.Read(size)
     if err != nil {
@@ -43,17 +50,37 @@ func readMessage() string {
 
     var bytes = binary.BigEndian.Uint32(size)
 
-    var message = make([]byte, bytes)
-    _, err = connection.Read(message)
+    var payload = make([]byte, bytes)
+    _, err = connection.Read(payload)
     if err != nil {
         fmt.Fprintf(os.Stderr, "Read from server failed: %s\n", err)
         os.Exit(1)
     }
 
-    return string(message)
+    err = json.Unmarshal(payload, message)
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "json.Unmarshal failed: %s\n", err)
+        os.Exit(1)
+    }
 }
 
-func on_register(name, version, url string) {
+type onNotificationMethod struct {
+    Method string
+}
+
+type registerExtensionMethod struct {
+    Method string
+    Name string
+    Version string
+    URL string
+}
+
+type notificationCompletedMethod struct {
+    Method string
+}
+
+/// This opens a TCP connection to Mimsy and is normally the very first thing an extension does.
+func OpenConnection() {
     var addr = "127.0.0.1:5331"
     var address, err = net.ResolveTCPAddr("tcp", addr)
     if err != nil {
@@ -67,22 +94,41 @@ func on_register(name, version, url string) {
         os.Exit(1)
     }
 
-    var message = readMessage()
-    fmt.Fprintf(os.Stdout, " read %s\n", message)
-
-    // TODO: check that it is on_register
-    message = fmt.Sprintf(`{"Method": "register_extension", "Name": "%s", "Version": "%s", "URL": "%s"}`, name, version, url)
-    writeMessage(message)
+    var message onNotificationMethod
+    readMessage(&message)
+    if message.Method != "on_register" {
+        fmt.Fprintf(os.Stderr, "Expected on_register method but received: %s\n", message.Method)
+        os.Exit(1)
+    }
+    fmt.Fprintf(os.Stdout, " read %+v\n", message)
 }
 
-func notification_completed() {
-    var message = `{"Method": "notification_completed"}`
+/// Closes down the TCP connection to Mimsy.
+func CloseConnection() {
+    connection.Close()
+}
+
+/// Called after OpenConnection to inform Mimsy of details about the extension.
+/// Omitting this call is a clean way for extensions to signal Mimsy that they
+/// don't wish to run.
+func RegisterExtension(name, version, url string) {
+    var message = registerExtensionMethod{"register_extension", name, version, url}
+    writeMessage(message)
+
+    NotificationCompleted()
+}
+
+/// Called after an extension finishes processing a notification. Extensions may do
+/// whatever they wish between the notification and NotificationCompleted but they
+/// can't wait too long in between sending Mimsy messages (where too long is on the
+/// order of a second).
+func NotificationCompleted() {
+    var message = notificationCompletedMethod{"notification_completed"}
     writeMessage(message)
 }
 
 func main() {
-    on_register("change-case", "1.0", "https://github.com/jesse99/mimsy")
-    defer connection.Close()
-
-    notification_completed()
+    OpenConnection()
+    RegisterExtension("change-case", "1.0", "https://github.com/jesse99/mimsy")
+    defer CloseConnection()
 }

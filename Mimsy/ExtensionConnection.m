@@ -39,7 +39,8 @@ static NSMutableArray* _extensions;
     
     if (_socket >= 0 && _name.length == 0)
     {
-        LOG("Error", "register_extension was not called for extension %s", STR(_name));
+        // This is not neccesarily an error but it does indicate that the extension doesn't want to run.
+        LOG("Extension", "register_extension was not called for extension %s", STR(_name));
         [self close];
     }
 }
