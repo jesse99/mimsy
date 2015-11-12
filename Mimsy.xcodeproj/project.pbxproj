@@ -929,7 +929,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export GOPATH=\"$PROJECT_DIR/GoExtensions\" && cd \"$PROJECT_DIR/GoExtensions/src\" && /usr/local/go/bin/go install * && cp -R \"../bin/\" \"$TARGET_BUILD_DIR/$CONTENTS_FOLDER_PATH/Resources/extensions\"";
+			shellScript = "export GOPATH=\"$PROJECT_DIR/GoExtensions\" && cd \"$PROJECT_DIR/GoExtensions/src\" && /usr/local/go/bin/go install Mimsy && /usr/local/go/bin/go install * && cp -R \"../bin/\" \"$TARGET_BUILD_DIR/$CONTENTS_FOLDER_PATH/Resources/extensions\"";
 		};
 		37A8C6B416758FF400D4DB13 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;

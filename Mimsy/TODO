@@ -48,8 +48,8 @@ mimsy does non-blocking reads for a timeout
 
 
 
-* make sure that register_extension was called
 * Get register_extension working better on go side
+    - add a make file
     - make sure that really large messages work
 * Add a MimsyEndpoint class
     - maybe LOG_ERROR should always go to the transcript
