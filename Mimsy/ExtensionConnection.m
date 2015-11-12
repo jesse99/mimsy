@@ -7,7 +7,7 @@ static NSMutableArray* _extensions;
 @implementation ExtensionConnection
 {
     CFSocketNativeHandle _socket;
-    NSMutableDictionary* _callbacks;
+    NSMutableDictionary* _handlers;
 }
 
 - (id)init:(CFSocketNativeHandle)socketH
@@ -21,10 +21,10 @@ static NSMutableArray* _extensions;
     if (self != nil)
     {
         _socket = socketH;
-        _callbacks = [NSMutableDictionary new];
+        _handlers = [NSMutableDictionary new];
         _name = @"";
         
-        _callbacks[@"register_extension"] = ^(NSDictionary* message){_name = message[@"Name"]; _version = message[@"Version"]; _url = message[@"URL"];};
+        _handlers[@"register_extension"] = ^(NSDictionary* message){_name = message[@"Name"]; _version = message[@"Version"]; _url = message[@"URL"];};
     }
     return self;
 }
@@ -106,10 +106,10 @@ static NSMutableArray* _extensions;
         if ([method isEqualToString:@"notification_completed"])
             break;
         
-        MessageHandler callback = [_callbacks objectForKey:method];
-        if (callback)
+        MessageHandler handler = [_handlers objectForKey:method];
+        if (handler)
         {
-            callback(message);
+            handler(message);
         }
         else
         {
