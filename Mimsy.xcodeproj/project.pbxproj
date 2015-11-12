@@ -138,6 +138,7 @@
 		37EECF4D16A64A9E00BEB493 /* help in Resources */ = {isa = PBXBuildFile; fileRef = 37EECF4C16A64A9E00BEB493 /* help */; };
 		37F2C58B169E7B92009C5355 /* ArrayCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 37F2C58A169E7B92009C5355 /* ArrayCategory.m */; };
 		37F389881BEEB1A400A92488 /* ExtensionListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 37F389871BEEB1A400A92488 /* ExtensionListener.m */; };
+		37F3898B1BF434F800A92488 /* ExtensionConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 37F3898A1BF434F800A92488 /* ExtensionConnection.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -393,6 +394,8 @@
 		37F2C58A169E7B92009C5355 /* ArrayCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArrayCategory.m; sourceTree = "<group>"; };
 		37F389861BEEB1A400A92488 /* ExtensionListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtensionListener.h; sourceTree = "<group>"; };
 		37F389871BEEB1A400A92488 /* ExtensionListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExtensionListener.m; sourceTree = "<group>"; };
+		37F389891BF434F800A92488 /* ExtensionConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtensionConnection.h; sourceTree = "<group>"; };
+		37F3898A1BF434F800A92488 /* ExtensionConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExtensionConnection.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -618,6 +621,8 @@
 				37CF062516AB998A00069A20 /* LuaSupport.m */,
 				37A8C6A216758FF400D4DB13 /* main.m */,
 				37A8C6AE16758FF400D4DB13 /* MainMenu.xib */,
+				37F389891BF434F800A92488 /* ExtensionConnection.h */,
+				37F3898A1BF434F800A92488 /* ExtensionConnection.m */,
 				37F389861BEEB1A400A92488 /* ExtensionListener.h */,
 				37F389871BEEB1A400A92488 /* ExtensionListener.m */,
 				3768CCD916E0F54900D5CB57 /* OpenFile.h */,
@@ -1030,6 +1035,7 @@
 				3717692619F00EA6007DC658 /* TextDocumentFiles.m in Sources */,
 				373B972F1945570F0084CCC1 /* ReplaceInFiles.m in Sources */,
 				37CF13D0194FC51800F35944 /* BaseInFiles.m in Sources */,
+				37F3898B1BF434F800A92488 /* ExtensionConnection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
