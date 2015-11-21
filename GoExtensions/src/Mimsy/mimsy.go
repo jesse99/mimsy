@@ -10,8 +10,70 @@ import (
     "os"
 )
 
-/// This opens a TCP connection to Mimsy and is normally the very first thing an extension does.
-func OpenConnection() {
+/// This is called after the connection to Mimsy is established but
+/// before the extension starts processing notifications. This is where
+/// you'd register callbacks to respond to notifications from Mimsy.
+/// The returned values are used notify mimsy of details about the 
+/// extension being loaded. Name and version can be arbitrary strings.
+/// Url should point to the extension's web site.
+type LoadingCallback func() (name, version, url string)
+
+// TODO: May want an UnloadingCallback. Can we make any guarantees
+// about it?
+
+/// Waits for notifications from Mimsy and dispatches to the callbacks
+/// registered by LoadingCallback.
+func DispatchEvents(loading LoadingCallback) {
+	openConnection()
+	defer closeConnection()
+		
+	methodHandlers["on_register"] = func () {
+		var name, version, url = loading()
+		var message = onRegisterReply{"register_extension", name, version, url}
+		writeMessage(message)		
+	}
+	
+	for true {
+		var message onNotificationRequest
+		readMessage(&message)
+		
+		var handler, found = methodHandlers[message.Method]
+		if found {
+			fmt.Fprintf(os.Stdout, " read %+v\n", message)
+			handler()
+			notificationCompleted()
+		} else {
+			// We shouldn't get any notifications we haven't registered for.
+			// TODO: use log?
+			fmt.Fprintf(os.Stderr, "Bad method: '%s'\n", message.Method)
+			break
+		}
+	}
+}
+
+// ---- Internal Items ----------------------------------------------------------------
+
+var connection *net.TCPConn
+
+var methodHandlers = map[string]func() {}
+
+// TODO: notifications with additional state should place it into a followup request
+type onNotificationRequest struct {
+    Method string
+}
+
+type onRegisterReply struct {
+    Method string
+    Name string
+    Version string
+    URL string
+}
+
+type notificationCompletedReply struct {
+    Method string
+}
+
+func openConnection() {
     var addr = "127.0.0.1:5331"
     var address, err = net.ResolveTCPAddr("tcp", addr)
     if err != nil {
@@ -24,57 +86,19 @@ func OpenConnection() {
         fmt.Fprintf(os.Stderr, "DialTCP failed: %s\n", err)
         os.Exit(1)
     }
-
-    var message onNotificationMethod
-    readMessage(&message)
-    if message.Method != "on_register" {
-        fmt.Fprintf(os.Stderr, "Expected on_register method but received: %s\n", message.Method)
-        os.Exit(1)
-    }
-    fmt.Fprintf(os.Stdout, " read %+v\n", message)
 }
 
-/// Closes down the TCP connection to Mimsy.
-func CloseConnection() {
+func closeConnection() {
     connection.Close()
 }
 
-/// Called after OpenConnection to inform Mimsy of details about the extension.
-/// Omitting this call is a clean way for extensions to signal Mimsy that they
-/// don't wish to run.
-func RegisterExtension(name, version, url string) {
-    var message = registerExtensionMethod{"register_extension", name, version, url}
+// Called after an extension finishes processing a notification. Extensions may do
+// whatever they wish between the notification and notificationCompleted but they
+// can't wait too long in between sending Mimsy messages (where too long is on the
+// order of a second).
+func notificationCompleted() {
+    var message = notificationCompletedReply{"notification_completed"}
     writeMessage(message)
-    
-    NotificationCompleted()
-}
-
-/// Called after an extension finishes processing a notification. Extensions may do
-/// whatever they wish between the notification and NotificationCompleted but they
-/// can't wait too long in between sending Mimsy messages (where too long is on the
-/// order of a second).
-func NotificationCompleted() {
-    var message = notificationCompletedMethod{"notification_completed"}
-    writeMessage(message)
-}
-
-// ---- Internal Items ----------------------------------------------------------------
-
-var connection *net.TCPConn
-
-type onNotificationMethod struct {
-    Method string
-}
-
-type registerExtensionMethod struct {
-    Method string
-    Name string
-    Version string
-    URL string
-}
-
-type notificationCompletedMethod struct {
-    Method string
 }
 
 // Note that, for now, Mimsy only responds to extensions in the interval between Mimsy
