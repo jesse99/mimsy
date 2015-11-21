@@ -900,7 +900,7 @@ static DirectoryController* _lastBuilt;
 
 - (bool)_prefsChanged:(NSString*)path
 {
-    bool changed = false;
+    bool changed = true;
     
     NSError* error = nil;
     NSDictionary* attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error];
