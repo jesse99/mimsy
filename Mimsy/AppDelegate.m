@@ -6,6 +6,7 @@
 #import "Constants.h"
 #import "DirectoryController.h"
 #import "DirectoryWatcher.h"
+#import "ExtensionListener.h"
 #import "Extensions.h"
 #import "FindInFilesController.h"
 #import "FindResultsController.h"
@@ -17,7 +18,7 @@
 #import "Languages.h"
 #import "Logger.h"
 #import "MenuCategory.h"
-#import "ExtensionListener.h"
+#import "MimsyHandlers.h"
 #import "OpenSelection.h"
 #import "Paths.h"
 #import "ProcFileSystem.h"
@@ -153,6 +154,7 @@ void initLogGlobs()
 #if OLD_EXTENSIONS
         initFunctionalTests();
 #endif
+        registerMimsyHandlers();
 	}
 	
 	return self;

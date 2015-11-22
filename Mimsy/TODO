@@ -47,8 +47,14 @@ mimsy does non-blocking reads for a timeout
     resumes normal control flow when gets notification handled
 
 
+log
+    topic
+    text
+
+
 * Get register_extension working better on go side
-    - use callbacks as in the mimsy side
+    - add log support
+    - make sure extensions reload when changed (or maybe when they re-register)
     - probably want files for different mimsy subsystems
     - make sure that really large messages work
 * Add a MimsyEndpoint class

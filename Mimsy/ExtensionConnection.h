@@ -11,6 +11,8 @@ typedef void (^MessageHandler)(NSDictionary* message);
 
 - (void)sendNotification:(NSString*)method;
 
++ (void)registerHandler:(NSString*)name handler:(MessageHandler)handler;
+
 @property (readonly) NSString* name;
 @property (readonly) NSString* version;
 @property (readonly) NSString* url;

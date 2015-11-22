@@ -129,6 +129,7 @@
 		37CF13D0194FC51800F35944 /* BaseInFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF13CF194FC51800F35944 /* BaseInFiles.m */; };
 		37E165C51B439C17005FECA9 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 37E165C41B439C17005FECA9 /* Settings.m */; };
 		37E1CA9E1B924A5600893991 /* UnicodeNames.zip in Resources */ = {isa = PBXBuildFile; fileRef = 37E1CA9D1B924A5600893991 /* UnicodeNames.zip */; };
+		37E6AA6F1C026C2200F0D770 /* MimsyHandlers.m in Sources */ = {isa = PBXBuildFile; fileRef = 37E6AA6E1C026C2200F0D770 /* MimsyHandlers.m */; };
 		37E7A8CA1AE1FD7700BD93B4 /* StringDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37E7A8C91AE1FD7700BD93B4 /* StringDialog.xib */; };
 		37E7A8CD1AE1FDB800BD93B4 /* StringDialogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37E7A8CC1AE1FDB800BD93B4 /* StringDialogController.m */; };
 		37ECF06419296C7A00061C0A /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ECF06319296C7A00061C0A /* Constants.m */; };
@@ -379,6 +380,8 @@
 		37E165C31B439C17005FECA9 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
 		37E165C41B439C17005FECA9 /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
 		37E1CA9D1B924A5600893991 /* UnicodeNames.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = UnicodeNames.zip; sourceTree = "<group>"; };
+		37E6AA6D1C026C2200F0D770 /* MimsyHandlers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MimsyHandlers.h; sourceTree = "<group>"; };
+		37E6AA6E1C026C2200F0D770 /* MimsyHandlers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MimsyHandlers.m; sourceTree = "<group>"; };
 		37E7A8C91AE1FD7700BD93B4 /* StringDialog.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StringDialog.xib; sourceTree = "<group>"; };
 		37E7A8CB1AE1FDB800BD93B4 /* StringDialogController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringDialogController.h; sourceTree = "<group>"; };
 		37E7A8CC1AE1FDB800BD93B4 /* StringDialogController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringDialogController.m; sourceTree = "<group>"; };
@@ -625,6 +628,8 @@
 				37F3898A1BF434F800A92488 /* ExtensionConnection.m */,
 				37F389861BEEB1A400A92488 /* ExtensionListener.h */,
 				37F389871BEEB1A400A92488 /* ExtensionListener.m */,
+				37E6AA6D1C026C2200F0D770 /* MimsyHandlers.h */,
+				37E6AA6E1C026C2200F0D770 /* MimsyHandlers.m */,
 				3768CCD916E0F54900D5CB57 /* OpenFile.h */,
 				3768CCDA16E0F54900D5CB57 /* OpenFile.m */,
 				37431FD219AA9AA200A1B30E /* ProcFile.h */,
@@ -1007,6 +1012,7 @@
 				37AD7570171B95460054A75F /* UpdateConfig.m in Sources */,
 				377C2CAB17650650008E383E /* BuildOptionsController.m in Sources */,
 				379CEFA51A19340100BC2090 /* App.m in Sources */,
+				37E6AA6F1C026C2200F0D770 /* MimsyHandlers.m in Sources */,
 				3751BCFC18445CCD00DD2C8A /* OpenSelection.m in Sources */,
 				3751BCFF1846E69000DD2C8A /* ScannerCategory.m in Sources */,
 				37431FD119AA80DC00A1B30E /* ProcFileSystem.m in Sources */,

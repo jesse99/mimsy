@@ -3,11 +3,17 @@
 #include <sys/socket.h>
 
 static NSMutableArray* _extensions;
+static NSMutableDictionary* _handlers;
 
 @implementation ExtensionConnection
 {
     CFSocketNativeHandle _socket;
-    NSMutableDictionary* _handlers;
+}
+
++ (void)registerHandler:(NSString*)name handler:(MessageHandler)handler
+{
+    ASSERT(!_handlers[name]);
+    _handlers[name] = handler;
 }
 
 - (id)init:(CFSocketNativeHandle)socketH
@@ -15,13 +21,15 @@ static NSMutableArray* _extensions;
     ASSERT(socketH >= 0);
     
     if (!_extensions)
+    {
         _extensions = [NSMutableArray new];
+        _handlers = [NSMutableDictionary new];
+    }
     
     self = [super init];
     if (self != nil)
     {
         _socket = socketH;
-        _handlers = [NSMutableDictionary new];
         _name = @"";
         
         // TODO: Should we special case extensions with the same name?
