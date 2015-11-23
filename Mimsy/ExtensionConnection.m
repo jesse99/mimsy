@@ -12,6 +12,9 @@ static NSMutableDictionary* _handlers;
 
 + (void)registerHandler:(NSString*)name handler:(MessageHandler)handler
 {
+    if (!_handlers)
+        _handlers = [NSMutableDictionary new];
+
     ASSERT(!_handlers[name]);
     _handlers[name] = handler;
 }
@@ -21,10 +24,7 @@ static NSMutableDictionary* _handlers;
     ASSERT(socketH >= 0);
     
     if (!_extensions)
-    {
         _extensions = [NSMutableArray new];
-        _handlers = [NSMutableDictionary new];
-    }
     
     self = [super init];
     if (self != nil)

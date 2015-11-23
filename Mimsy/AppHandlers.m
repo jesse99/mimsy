@@ -1,13 +1,13 @@
-#import "MimsyHandlers.h"
+#import "AppHandlers.h"
 
 #import "ExtensionConnection.h"
 #import "Logger.h"
 
-void registerMimsyHandlers(void)
+void registerAppHandlers(void)
 {
     [ExtensionConnection registerHandler:@"log" handler:^(NSDictionary *message) {
-        NSString* topic = message[@"topic"];
-        NSString* text = message[@"text"];
+        NSString* topic = message[@"Topic"];
+        NSString* text = message[@"Text"];
         LOG(STR(topic), "%s", STR(text));
     }];
 }

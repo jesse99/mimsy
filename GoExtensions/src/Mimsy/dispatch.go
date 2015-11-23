@@ -1,4 +1,4 @@
-/// Library used to communicate with Mimsy.
+/// Handles the IPC between Mimsy and extensions.
 // TODO: probably want example usage here
 package mimsy
 
@@ -27,7 +27,7 @@ func DispatchEvents(loading LoadingCallback) {
 	openConnection()
 	defer closeConnection()
 		
-	methodHandlers["on_register"] = func () {
+	notificationHandlers["on_register"] = func () {
 		var name, version, url = loading()
 		var message = onRegisterReply{"register_extension", name, version, url}
 		writeMessage(message)		
@@ -37,25 +37,25 @@ func DispatchEvents(loading LoadingCallback) {
 		var message onNotificationRequest
 		readMessage(&message)
 		
-		var handler, found = methodHandlers[message.Method]
+		var handler, found = notificationHandlers[message.Method]
 		if found {
-			fmt.Fprintf(os.Stdout, " read %+v\n", message)
+			Log("Extensions", "read %+v", message)
 			handler()
 			notificationCompleted()
 		} else {
 			// We shouldn't get any notifications we haven't registered for.
-			// TODO: use log?
-			fmt.Fprintf(os.Stderr, "Bad method: '%s'\n", message.Method)
+			Log("Error", "%s received a bad method: '%s'", extensionName, message.Method)
 			break
 		}
 	}
 }
 
 // ---- Internal Items ----------------------------------------------------------------
-
 var connection *net.TCPConn
 
-var methodHandlers = map[string]func() {}
+var extensionName = ""
+
+var notificationHandlers = map[string]func() {}
 
 // TODO: notifications with additional state should place it into a followup request
 type onNotificationRequest struct {
@@ -77,7 +77,7 @@ func openConnection() {
     var addr = "127.0.0.1:5331"
     var address, err = net.ResolveTCPAddr("tcp", addr)
     if err != nil {
-        fmt.Fprintf(os.Stderr, "ResolveTCPAddr failed:\n", err)
+        fmt.Fprintf(os.Stderr, "ResolveTCPAddr failed:\n", err) // can't use log if we don't have a connectionn...
         os.Exit(1)
     }
 

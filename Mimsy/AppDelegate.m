@@ -1,7 +1,8 @@
 #import "AppDelegate.h"
 
-#import <OSXFUSE/OSXFUSE.h>
+//#import <OSXFUSE/OSXFUSE.h>
 
+#import "AppHandlers.h"
 #import "ConfigParser.h"
 #import "Constants.h"
 #import "DirectoryController.h"
@@ -18,7 +19,6 @@
 #import "Languages.h"
 #import "Logger.h"
 #import "MenuCategory.h"
-#import "MimsyHandlers.h"
 #import "OpenSelection.h"
 #import "Paths.h"
 #import "ProcFileSystem.h"
@@ -154,7 +154,7 @@ void initLogGlobs()
 #if OLD_EXTENSIONS
         initFunctionalTests();
 #endif
-        registerMimsyHandlers();
+        registerAppHandlers();
 	}
 	
 	return self;

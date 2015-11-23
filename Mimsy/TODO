@@ -47,21 +47,12 @@ mimsy does non-blocking reads for a timeout
     resumes normal control flow when gets notification handled
 
 
-log
-    topic
-    text
 
-
-* Get register_extension working better on go side
-    - add log support
-    - make sure extensions reload when changed (or maybe when they re-register)
-    - probably want files for different mimsy subsystems
-    - make sure that really large messages work
-* Add a MimsyEndpoint class
-    - maybe LOG_ERROR should always go to the transcript
 * Use sockets and go instead of proc files and arbitrary scripts:
     - add support for text menu hook
         ` maybe options for text document only, not adding to main menu, selection ok, no selection ok
+    - are extensions closed down on the mimsy side as soon as the process terminates?
+    - make sure that when an extension is closed anything it registered for is removed
     - can we have multiple plugins with one exe?
     - maybe go routines
     - would be nice to allow plugins to be overridden
@@ -71,6 +62,7 @@ log
     - tcp package is available for lua
 * Why couldn't we use open selection for:
     src/mesh-tests/manual-test/manual-test.go:5: imported and not used: "bufio"
+* Maybe LOG_ERROR should always go to the transcript
 * Getting unhandled exceptions (see below):
     ProcFileReadWrite write blocks are being called from a thread
     - assert that threads are legit
