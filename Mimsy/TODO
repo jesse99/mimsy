@@ -67,6 +67,7 @@ mimsy does non-blocking reads for a timeout
     - merge into master
     - tcp package is available for lua
     - probably want a note about extension development workflow
+* NSStringTransformToUnicodeName looks interesting
 * Why couldn't we use open selection for:
     src/mesh-tests/manual-test/manual-test.go:5: imported and not used: "bufio"
 * Maybe LOG_ERROR should always go to the transcript
