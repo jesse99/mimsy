@@ -513,6 +513,16 @@ void initLogGlobs()
     return _settings;
 }
 
+- (IBAction)showPlaceholder:(id)sender
+{
+    UNUSED(sender);
+}
+
+- (IBAction)transformPlaceholder:(id)sender
+{
+    UNUSED(sender);
+}
+
 #if OLD_EXTENSIONS
 - (void) _addTextViewItem:(NSString*)ID title:(NSString*)title path:(NSString*)path
 {
@@ -682,7 +692,8 @@ void initLogGlobs()
             #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
             
             id result = [object performSelector:selector];
-            ASSERT(result == nil);
+            UNUSED(result);
+            //ASSERT(result == nil);        // getting garbage(?) NSNumber results when calling void methods with 10.11
             
             #pragma clang diagnostic pop
         };

@@ -2,12 +2,12 @@ import Foundation
 
 extension Array
 {
-    func mapi<U>(transform: (Int, T) -> U) -> [U]
+    func mapi<U>(transform: (Int, Element) -> U) -> [U]
     {
         var result = [U]()
         result.reserveCapacity(self.count)
         
-        for (i, e) in enumerate(self)
+        for (i, e) in self.enumerate()
         {
             result.append(transform(i, e))
         }

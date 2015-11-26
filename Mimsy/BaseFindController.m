@@ -227,7 +227,7 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 
 - (NSString*)searchWithinText
 {
-	return [self.searchWithinComboBox.value description];
+	return [self.searchWithinComboBox stringValue];
 }
 
 - (void)setSearchWithinText:(NSString*)text

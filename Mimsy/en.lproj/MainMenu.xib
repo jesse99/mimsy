@@ -364,8 +364,20 @@
                             <menuItem isSeparatorItem="YES" tag="1" id="699">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
+                            <menuItem title="Show Placeholder" hidden="YES" id="QLO-vp-abG">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="showPlaceholder:" target="534" id="QY3-hv-VIs"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="dIT-eP-WB8">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Transform Placeholder" hidden="YES" id="YOQ-h2-lat">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="transformPlaceholder:" target="534" id="rxL-zI-M3Z"/>
+                                </connections>
                             </menuItem>
                         </items>
                     </menu>

@@ -852,6 +852,8 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = MIM;
+				LastSwiftMigration = 0710;
+				LastSwiftUpdateCheck = 0710;
 				LastTestingUpgradeCheck = 0630;
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Jesse Jones";

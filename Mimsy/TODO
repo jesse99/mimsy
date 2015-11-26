@@ -47,7 +47,13 @@ mimsy does non-blocking reads for a timeout
     resumes normal control flow when gets notification handled
 
 
+(void) addMenuItemAfter:"showPlaceholder:" title:"Foo" keyEquivalent:"" onSelected:xxx onEnabled:xxx
+         addMenuItemBefore ...
+         addSortedMenuItemAt ...
 
+* Add support for addiing menu items:
+    - use hidden items as placeholders for text show and transforms
+    - need add and addSorted, add should take a selector name to add after or before
 * Use sockets and go instead of proc files and arbitrary scripts:
     - add support for text menu hook
         ` maybe options for text document only, not adding to main menu, selection ok, no selection ok
@@ -60,6 +66,7 @@ mimsy does non-blocking reads for a timeout
     - make sure that all the OLD_EXTENSIONS code is gone
     - merge into master
     - tcp package is available for lua
+    - probably want a note about extension development workflow
 * Why couldn't we use open selection for:
     src/mesh-tests/manual-test/manual-test.go:5: imported and not used: "bufio"
 * Maybe LOG_ERROR should always go to the transcript

@@ -30,7 +30,7 @@ class DeclarationsPopup : NSPopUpButton
         
         let str = view.textStorage
         let text: NSString = str!.string
-        str?.enumerateAttribute("element name", inRange: NSMakeRange(0, str!.length), options: nil, usingBlock: { (value, range, stop) -> Void in
+        str?.enumerateAttribute("element name", inRange: NSMakeRange(0, str!.length), options: [], usingBlock: { (value, range, stop) -> Void in
             if let name = value as? NSString
             {
                 let prefix = self.findIndent(text, range: range)
@@ -55,7 +55,7 @@ class DeclarationsPopup : NSPopUpButton
     {
        let range = view.selectedRange()
         
-        for (i, dec) in enumerate(self._decs)
+        for (i, dec) in self._decs.enumerate()
         {
             if range.location >= dec.range.location && (i+1 == self._decs.count || range.location < self._decs[i+1].range.location)
             {
@@ -109,7 +109,7 @@ class DeclarationsPopup : NSPopUpButton
     
     private func sortItems(by: (lhs: Declaration, rhs: Declaration) -> Bool)
     {
-        let decs1 = sorted(_decs, by)
+        let decs1 = _decs.sort(by)
         self.resetItems(decs1)
    }
     
@@ -128,14 +128,14 @@ class DeclarationsPopup : NSPopUpButton
         {
             self.addItemWithTitle(dec.name)
 
-            var attrs = [NSString: NSObject]()
+            var attrs = [String: AnyObject]()
             attrs[NSFontAttributeName] = NSFont.systemFontOfSize(NSFont.smallSystemFontSize())
             if dec.isType
             {
                 attrs[NSStrokeWidthAttributeName] = -4.0
             }
             
-            var item = self.lastItem
+            let item = self.lastItem
             item!.attributedTitle = NSAttributedString(string: dec.name, attributes: attrs)
             item!.representedObject = dec.range
             item!.target = self

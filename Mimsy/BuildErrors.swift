@@ -4,20 +4,20 @@ import Foundation
 // XCode 6.1.
 var _instance: BuildErrors = BuildErrors()
 
-// Used to parse and display build errors.
-@objc class BuildErrors
+// Used to parse and display build errors.  
+public class BuildErrors : NSObject
 {    
     class var instance: BuildErrors {return _instance}
     
     func appSettingsChanged()
     {
         _patterns = [Pattern]()
-        var app = NSApplication.sharedApplication().delegate as! AppDelegate;
+        let app = NSApplication.sharedApplication().delegate as! AppDelegate;
         app.settings().enumerate("BuildError", with: self.parseSetting)
         
         // We want to use the regexen that are able to pick out more information
         // first because the regexen can match the same messages.
-        _patterns = sorted(_patterns) {$0.fields.count > $1.fields.count}
+        _patterns = _patterns.sort {$0.fields.count > $1.fields.count}
     }
     
     func parseErrors(text: NSString, range: NSRange)
@@ -29,19 +29,19 @@ var _instance: BuildErrors = BuildErrors()
 
         for pattern in _patterns
         {
-            pattern.regex.enumerateMatchesInString(text as String, options: nil, range: range, usingBlock:
+            pattern.regex.enumerateMatchesInString(text as String, options: [], range: range, usingBlock:
             {
             (match, flags, stop) -> Void in
-                if matches[match.range.location] == nil
+                if matches[match!.range.location] == nil
                 {
-                    let error = Error(text: text, pattern: pattern, match: match)
-                    matches[match.range.location] = true
+                    let error = Error(text: text, pattern: pattern, match: match!)
+                    matches[match!.range.location] = true
                     self._errors.append(error)
                 }
             })
         }
 
-        _errors = sorted(_errors) {$0.transcriptRange.range.location < $1.transcriptRange.range.location}
+        _errors = _errors.sort {$0.transcriptRange.range.location < $1.transcriptRange.range.location}
     }
     
     func canGotoNextError() -> Bool
@@ -84,7 +84,7 @@ var _instance: BuildErrors = BuildErrors()
         let range = error.transcriptRange.range
         if range.location != NSNotFound
         {
-            let attrs = [NSUnderlineStyleAttributeName: NSUnderlineStyleSingle]
+            let attrs = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue]
             view.textStorage!.addAttributes(attrs, range: range)
 
             // Typically we'd call showFindIndicatorForRange but that seems a bit
@@ -95,7 +95,7 @@ var _instance: BuildErrors = BuildErrors()
     
     private func showErrorInFile()
     {
-        var error = _errors[_index]
+        let error = _errors[_index]
         if error.path != nil && error.fileRange != nil  // this code would be simplier by matching on a tuple but that doesn't work with Xcode 6.1
         {
             let range = error.fileRange!.range.location != NSNotFound ? error.fileRange!.range : NSMakeRange(0, 0)  // NSNotFound means that the range was deleted
@@ -137,7 +137,7 @@ var _instance: BuildErrors = BuildErrors()
             var result = [Character: Int]()
             
             var index = 1
-            for char in tags
+            for char in tags.characters
             {
                 switch char
                 {
@@ -154,7 +154,13 @@ var _instance: BuildErrors = BuildErrors()
         func createRegex(pattern: String) -> NSRegularExpression?
         {
             var error: NSError?
-            let regex = NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.AnchorsMatchLines, error: &error)
+            let regex: NSRegularExpression?
+            do {
+                regex = try NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.AnchorsMatchLines)
+            } catch let error1 as NSError {
+                error = error1
+                regex = nil
+            }
             if let error = error
             {
                 TranscriptController.writeError("BuildError in \(fileName) regex '\(pattern)' is malformed: \(error.localizedFailureReason)")
@@ -197,7 +203,7 @@ var _instance: BuildErrors = BuildErrors()
             
             if let i = pattern.fields["L"]
             {
-                line = text.substringWithRange(match.rangeAtIndex(i)).toInt()!
+                line = Int(text.substringWithRange(match.rangeAtIndex(i)))!
             }
             else
             {
@@ -206,7 +212,7 @@ var _instance: BuildErrors = BuildErrors()
             
             if let i = pattern.fields["C"]
             {
-                column = text.substringWithRange(match.rangeAtIndex(i)).toInt()!
+                column = Int(text.substringWithRange(match.rangeAtIndex(i)))!
             }
             else
             {
