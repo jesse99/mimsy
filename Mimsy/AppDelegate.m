@@ -158,9 +158,15 @@ void initLogGlobs()
 #endif
         registerAppHandlers();
 	}
-
-    MimsyPlugin* plugin = [MimsyPlugin new];
-    [plugin loading];
+    
+    // https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/LoadingBundles.html
+    NSBundle* bundle = [NSBundle bundleWithPath:@"/Users/jessejones/Library/Developer/Xcode/DerivedData/Mimsy-hixfuuxbxxwelwbdoztuzvglwlhy/Build/Products/Debug/ChangeCase.plugin"];
+    [bundle load];
+    
+    Class principal = [bundle principalClass];
+    MimsyPlugin* instance = [[principal alloc] init];
+    [instance loading];
+    [instance unloading];
 	
 	return self;
 }

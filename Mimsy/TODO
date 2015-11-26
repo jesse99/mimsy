@@ -15,10 +15,10 @@ http://www.learnswift.tips/
          addSortedMenuItemAt ...
 
 
-* Try creating a framework
-    - probably using objc
 * Create a simple swift plugin
-    - maybe to change case
+    - should build and install when building mimsy
+    - add support for inserting menu items, disabling, and selecting
+    - figure out how to install this somewhere sensible
 * Need to disable go stuff.
 
 plugins
