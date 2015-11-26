@@ -8,50 +8,61 @@ http://www.learnswift.tips/
 
 
 
-pthread_t pthread_self(void);
-int pthread_equal(pthread_t t1, pthread_t t2);  // non-zero => equal
-
-
-+ not threaded
-+ quite a bit simpler
-+ handles structured data better
-+ allows plugins to poke mimsy at arbitrary times
-+ can better define control flow from mimsy to extensions
-+ fewer dependencies
-
-- harder to support plugins in other languages
-- simple plugins require a separate exe
-- requires more sophistication from extension developers
-
-
-{"Call": "register_extension", "Name": "goat", "Version": "1.24", "URL": "foo"}
-    {"Error": ""}
-
-{"Call": "register_on_text_context_menu_open"}
-
-{"Call": "on_text_context_menu_open"}
-    {"Items": [{"Title": "Upper Case", "ID": "upper"}, {"Title": "Lower Case", "ID": "lower"}], "Error": ""}
-
-{"Call": "on_menu_item", "ID": "upper"}
-
-
-
-mimsy sends notification
-    extension does gets and sets
-    extension sends notification handled
-    might want to blacklist the extension if it times out
-    maybe use a setting to control timeout
-
-mimsy does non-blocking reads for a timeout
-    dispatches messages
-    resumes normal control flow when gets notification handled
 
 
 (void) addMenuItemAfter:"showPlaceholder:" title:"Foo" keyEquivalent:"" onSelected:xxx onEnabled:xxx
          addMenuItemBefore ...
          addSortedMenuItemAt ...
 
-* Add support for addiing menu items:
+
+* Try creating a framework
+    - probably using objc
+* Create a simple swift plugin
+    - maybe to change case
+* Need to disable go stuff.
+
+plugins
+    read up on xcode
+    may want to see if there is an example xcode project using plugins
+creating loadable bundles: https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/CreatingBundles.html#//apple_ref/doc/uid/20001274-CJBDDCAB
+loading plugins:https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/UsingPlugins.html#//apple_ref/doc/uid/20001276-100982
+avoiding class name collisions: https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/NameConflicts.html#//apple_ref/doc/uid/20001277-CJBFGCGG
+directory should have a .plugin extension (xcode should do this for us)
+think we'd create a new target
+should we install plugins into Application Support directory?
+    ~/Library/Application Support/<app-name>/PlugIns
+should have an Info.plist file
+may want to allow subdirectories in the plugins directory
+    would help with organization
+plugins need a well known entry point function for the app to call
+    maybe we could return an NSError
+    typically used if the plugin can't or doesn't want to run
+    either an entry point or a principal class
+maybe the bundle identifier could be used for the name
+could probably get version and even url from Info.plist
+do we even need a framework?
+    For mimsy → plugin could just rely on introspection and
+    some well know functions
+    For plugin → mimsy cocoa probably suffices
+    but probably do want to parametrize behavior on stuff like language
+may want to provide a README doc (or about.rtf)
+
+* When creating new plugins be sure to review error and warning settings.
+* Plugins need an email address.
+* Would be really cool if plugins could include screen shots.
+* Need a plugin manager:
+    - should be able to search descriptions
+    - people can submit plugins, vet them, add built versions to repo
+    - should be a way to see which plugins are installed and read their descriptions
+    - also a link to send feedback
+    - also a link to go to plugin's web site
+    - should be a simple way to see what is installed, eg to read descriptions and instructions
+    - should be a way to disable plugins
+    - rating scheme would be cool
+* Should add copy rights everywhere.
+
+
+* Add support for adding menu items:
     - use hidden items as placeholders for text show and transforms
     - need add and addSorted, add should take a selector name to add after or before
 * Use sockets and go instead of proc files and arbitrary scripts:

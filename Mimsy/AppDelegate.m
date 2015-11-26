@@ -34,6 +34,8 @@
 #import "WindowsDatabase.h"
 #import "Mimsy-Swift.h"
 
+#import "MimsyPlugins.h"
+
 void initLogGlobs()
 {
 	NSString* path = [Paths installedDir:@"settings"];
@@ -156,6 +158,9 @@ void initLogGlobs()
 #endif
         registerAppHandlers();
 	}
+
+    MimsyPlugin* plugin = [MimsyPlugin new];
+    [plugin loading];
 	
 	return self;
 }

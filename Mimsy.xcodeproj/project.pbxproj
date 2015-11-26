@@ -123,6 +123,9 @@
 		37C1D1A91A5232210031B90F /* MenuCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 37C1D1A81A5232210031B90F /* MenuCategory.m */; };
 		37CCD5B11AB1491400C01C2E /* GlyphGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CCD5B01AB1491400C01C2E /* GlyphGenerator.m */; };
 		37CCD5B41ABB713100C01C2E /* GlyphsAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CCD5B31ABB713100C01C2E /* GlyphsAttribute.m */; };
+		37CDF39E1C07BF9E009E48B4 /* MimsyPlugins.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37CDF3971C07BF9E009E48B4 /* MimsyPlugins.framework */; };
+		37CDF39F1C07BF9E009E48B4 /* MimsyPlugins.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 37CDF3971C07BF9E009E48B4 /* MimsyPlugins.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		37CDF3A61C07C2C7009E48B4 /* MimsyPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37CDF3A51C07C2C7009E48B4 /* MimsyPlugin.swift */; };
 		37CE3E6F19A967B8000AEA3C /* extensions in Resources */ = {isa = PBXBuildFile; fileRef = 37CE3E6E19A967B8000AEA3C /* extensions */; };
 		37CE3E7219A980A7000AEA3C /* Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CE3E7119A980A7000AEA3C /* Extensions.m */; };
 		37CF062616AB998A00069A20 /* LuaSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF062516AB998A00069A20 /* LuaSupport.m */; };
@@ -150,7 +153,28 @@
 			remoteGlobalIDString = 37A8C69116758FF400D4DB13;
 			remoteInfo = Mimsy;
 		};
+		37CDF39C1C07BF9E009E48B4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37CDF3961C07BF9E009E48B4;
+			remoteInfo = MimsyPlugins;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		37CDF38F1C07B9C9009E48B4 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				37CDF39F1C07BF9E009E48B4 /* MimsyPlugins.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		370040351676C89C0009907A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../../mimsy/README.md; sourceTree = "<group>"; };
@@ -368,6 +392,10 @@
 		37CCD5B01AB1491400C01C2E /* GlyphGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlyphGenerator.m; sourceTree = "<group>"; };
 		37CCD5B21ABB713100C01C2E /* GlyphsAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlyphsAttribute.h; sourceTree = "<group>"; };
 		37CCD5B31ABB713100C01C2E /* GlyphsAttribute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlyphsAttribute.m; sourceTree = "<group>"; };
+		37CDF3971C07BF9E009E48B4 /* MimsyPlugins.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MimsyPlugins.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		37CDF3991C07BF9E009E48B4 /* MimsyPlugins.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MimsyPlugins.h; sourceTree = "<group>"; };
+		37CDF39B1C07BF9E009E48B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		37CDF3A51C07C2C7009E48B4 /* MimsyPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimsyPlugin.swift; sourceTree = "<group>"; };
 		37CE3E6E19A967B8000AEA3C /* extensions */ = {isa = PBXFileReference; lastKnownFileType = folder; path = extensions; sourceTree = "<group>"; };
 		37CE3E7019A980A7000AEA3C /* Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Extensions.h; sourceTree = "<group>"; };
 		37CE3E7119A980A7000AEA3C /* Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Extensions.m; sourceTree = "<group>"; };
@@ -410,6 +438,7 @@
 				37A8C69716758FF400D4DB13 /* Cocoa.framework in Frameworks */,
 				3712632516B5A431007AF3BF /* libcrypto.0.9.8.dylib in Frameworks */,
 				377BDE6E16CDACD1008DADA5 /* libsqlite3.0.dylib in Frameworks */,
+				37CDF39E1C07BF9E009E48B4 /* MimsyPlugins.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,6 +448,13 @@
 			files = (
 				37A8C6B816758FF400D4DB13 /* SenTestingKit.framework in Frameworks */,
 				37A8C6B916758FF400D4DB13 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37CDF3931C07BF9E009E48B4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -682,6 +718,7 @@
 			children = (
 				37A8C69C16758FF400D4DB13 /* Mimsy */,
 				37A8C6BC16758FF400D4DB13 /* MimsyTests */,
+				37CDF3981C07BF9E009E48B4 /* MimsyPlugins */,
 				37A8C69516758FF400D4DB13 /* Frameworks */,
 				372293D419CD30880024426C /* GoExtensions */,
 				37A8C69316758FF400D4DB13 /* Products */,
@@ -693,6 +730,7 @@
 			children = (
 				37A8C69216758FF400D4DB13 /* Mimsy.app */,
 				37A8C6B616758FF400D4DB13 /* MimsyTests.octest */,
+				37CDF3971C07BF9E009E48B4 /* MimsyPlugins.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -805,7 +843,27 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		37CDF3981C07BF9E009E48B4 /* MimsyPlugins */ = {
+			isa = PBXGroup;
+			children = (
+				37CDF3991C07BF9E009E48B4 /* MimsyPlugins.h */,
+				37CDF39B1C07BF9E009E48B4 /* Info.plist */,
+				37CDF3A51C07C2C7009E48B4 /* MimsyPlugin.swift */,
+			);
+			path = MimsyPlugins;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		37CDF3941C07BF9E009E48B4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		37A8C69116758FF400D4DB13 /* Mimsy */ = {
@@ -816,10 +874,12 @@
 				37A8C68F16758FF400D4DB13 /* Frameworks */,
 				37A8C69016758FF400D4DB13 /* Resources */,
 				376E62C819CFB40E006A9C2D /* ShellScript */,
+				37CDF38F1C07B9C9009E48B4 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				37CDF39D1C07BF9E009E48B4 /* PBXTargetDependency */,
 			);
 			name = Mimsy;
 			productName = Mimsy;
@@ -845,6 +905,24 @@
 			productReference = 37A8C6B616758FF400D4DB13 /* MimsyTests.octest */;
 			productType = "com.apple.product-type.bundle.ocunit-test";
 		};
+		37CDF3961C07BF9E009E48B4 /* MimsyPlugins */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 37CDF3A01C07BF9E009E48B4 /* Build configuration list for PBXNativeTarget "MimsyPlugins" */;
+			buildPhases = (
+				37CDF3921C07BF9E009E48B4 /* Sources */,
+				37CDF3931C07BF9E009E48B4 /* Frameworks */,
+				37CDF3941C07BF9E009E48B4 /* Headers */,
+				37CDF3951C07BF9E009E48B4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MimsyPlugins;
+			productName = MimsyPlugins;
+			productReference = 37CDF3971C07BF9E009E48B4 /* MimsyPlugins.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -854,9 +932,14 @@
 				CLASSPREFIX = MIM;
 				LastSwiftMigration = 0710;
 				LastSwiftUpdateCheck = 0710;
-				LastTestingUpgradeCheck = 0630;
-				LastUpgradeCheck = 0510;
+				LastTestingUpgradeCheck = 0710;
+				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Jesse Jones";
+				TargetAttributes = {
+					37CDF3961C07BF9E009E48B4 = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
+				};
 			};
 			buildConfigurationList = 37A8C68C16758FF400D4DB13 /* Build configuration list for PBXProject "Mimsy" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -872,6 +955,7 @@
 			targets = (
 				37A8C69116758FF400D4DB13 /* Mimsy */,
 				37A8C6B516758FF400D4DB13 /* MimsyTests */,
+				37CDF3961C07BF9E009E48B4 /* MimsyPlugins */,
 			);
 		};
 /* End PBXProject section */
@@ -919,6 +1003,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				37A8C6C116758FF400D4DB13 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37CDF3951C07BF9E009E48B4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1064,6 +1155,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		37CDF3921C07BF9E009E48B4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37CDF3A61C07C2C7009E48B4 /* MimsyPlugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1071,6 +1170,11 @@
 			isa = PBXTargetDependency;
 			target = 37A8C69116758FF400D4DB13 /* Mimsy */;
 			targetProxy = 37A8C6BA16758FF400D4DB13 /* PBXContainerItemProxy */;
+		};
+		37CDF39D1C07BF9E009E48B4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37CDF3961C07BF9E009E48B4 /* MimsyPlugins */;
+			targetProxy = 37CDF39C1C07BF9E009E48B4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1129,6 +1233,7 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -1183,8 +1288,10 @@
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPYING_PRESERVES_HFS_DATA = NO;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
@@ -1212,6 +1319,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "JDJ.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mimsy/Mimsy-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1228,8 +1336,10 @@
 				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPYING_PRESERVES_HFS_DATA = NO;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
@@ -1257,6 +1367,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "JDJ.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mimsy/Mimsy-Bridging-Header.h";
 				WRAPPER_EXTENSION = app;
@@ -1273,6 +1384,7 @@
 				GCC_PREFIX_HEADER = "Mimsy/Mimsy-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = "MimsyTests/MimsyTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "JDJ.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_AFTER_BUILD = NO;
 				TEST_HOST = "$(BUNDLE_LOADER)";
@@ -1289,10 +1401,90 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Mimsy/Mimsy-Prefix.pch";
 				INFOPLIST_FILE = "MimsyTests/MimsyTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "JDJ.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_AFTER_BUILD = NO;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+		37CDF3A11C07BF9E009E48B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_VERSION = A;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = MimsyPlugins/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.MimsyPlugins;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		37CDF3A21C07BF9E009E48B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_VERSION = A;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = MimsyPlugins/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.MimsyPlugins;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
@@ -1325,6 +1517,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		37CDF3A01C07BF9E009E48B4 /* Build configuration list for PBXNativeTarget "MimsyPlugins" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37CDF3A11C07BF9E009E48B4 /* Debug */,
+				37CDF3A21C07BF9E009E48B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
