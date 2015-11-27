@@ -5,7 +5,7 @@ NSString* GlyphsAttributeName = @"mimsy-glyphs";
 @implementation GlyphsAttribute
 {
     NSUInteger _count;
-    NSGlyph* _glyphs;
+    CGGlyph* _glyphs;
     bool _repeat;
 }
 
@@ -19,9 +19,9 @@ NSString* GlyphsAttributeName = @"mimsy-glyphs";
     [storage addAttributes:style range:NSMakeRange(0, text.length)];
     
     NSUInteger capacity = 10*text.length;       // can be more glyphs than chars so we'll allocate way more than we need
-    _glyphs = malloc(capacity*sizeof(NSGlyph));
+    _glyphs = malloc(capacity*sizeof(CGGlyph));
     
-    _count = [layout getGlyphs:_glyphs range:NSMakeRange(0, capacity)];
+    _count = [layout getGlyphsInRange:NSMakeRange(0, capacity) glyphs:_glyphs properties:nil characterIndexes:NULL bidiLevels:NULL];
     _repeat = repeat;
     
     return self;
@@ -37,7 +37,7 @@ NSString* GlyphsAttributeName = @"mimsy-glyphs";
     return _count;
 }
 
-- (NSGlyph*)glyphs
+- (CGGlyph*)glyphs
 {
     return _glyphs;
 }

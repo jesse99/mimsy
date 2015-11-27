@@ -67,6 +67,8 @@ static NSMutableArray* startupErrors;
 
 	__weak id this = self;
 	[self.view.textStorage setDelegate:this];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processedEditing:) name:NSTextStorageDidProcessEditingNotification object:self.view.textStorage];
 }
 
 + (TranscriptController*)getInstance
@@ -95,7 +97,7 @@ static NSMutableArray* startupErrors;
 	return @[@"transcript"];
 }
 
-- (void)textStorageDidProcessEditing:(NSNotification*)notification
+- (void)processedEditing:(NSNotification*)notification
 {
 	UNUSED(notification);
 	

@@ -22,8 +22,9 @@ Creating plugins
          addSortedMenuItemAt ...
 
 
-* Create a simple swift plugin
+* Create a simple swift plugin:
     - add support for inserting menu items, disabling, and selecting
+    - can we use blocks when registering hooks?
 * Need to disable go stuff.
 
 loading plugins:https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/UsingPlugins.html#//apple_ref/doc/uid/20001276-100982

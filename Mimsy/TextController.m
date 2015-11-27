@@ -312,6 +312,8 @@ static __weak TextController* _frontmost;
 #if OLD_EXTENSIONS
     [_files opened:self];
 #endif
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processedEditing:) name:NSTextStorageDidProcessEditingNotification object:self.textView.textStorage];
 }
 
 - (id<SettingsContext>)parent
@@ -1289,7 +1291,7 @@ static __weak TextController* _frontmost;
 // isn't a very reliable way to determine the number of characters edited
 // (often attribute edits are merged in, not sure from where and it's not
 // via the _applier but they seem to extend to the end of the line).
-- (void)textStorageDidProcessEditing:(NSNotification*)notification
+- (void)processedEditing:(NSNotification*)notification
 {
 	UNUSED(notification);
     	
@@ -1328,7 +1330,9 @@ static __weak TextController* _frontmost;
 				
 				dispatch_queue_t main = dispatch_get_main_queue();
 				dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 50*NSEC_PER_MSEC);
-				dispatch_after(delay, main, ^{[_textView insertText:padding];});
+				dispatch_after(delay, main, ^{
+                    [_textView insertText:padding replacementRange:NSMakeRange(range.location, 0)];
+                });
 			}
         }
         

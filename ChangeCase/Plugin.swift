@@ -6,9 +6,17 @@
 //  Copyright © 2015 Jesse Jones. All rights reserved.
 //
 
-import Foundation
+import Cocoa
 import MimsyPlugins
 
-public class ChangeCase: MimsyPlugin {
-    public override func loading() {LOG("App", format: "loading change case!!")}
+class ChangeCase: MimsyPlugin {
+    override func onLoad(stage: Int) -> String?
+    {
+        if stage == 1
+        {
+            log("App", format: "loading change case (stage 1)")
+        }
+        
+        return nil
+    }
 }

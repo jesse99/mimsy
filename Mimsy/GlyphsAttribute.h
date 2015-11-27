@@ -10,7 +10,7 @@ extern NSString* GlyphsAttributeName;
 
 - (NSUInteger)numGlyphs;
 
-- (NSGlyph*)glyphs;
+- (CGGlyph*)glyphs;
 
 - (bool)repeat;
 

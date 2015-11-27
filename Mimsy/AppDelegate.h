@@ -1,3 +1,4 @@
+#import "MimsyPlugins.h"
 #import "Settings.h"
 
 @class ProcFileSystem;
@@ -6,7 +7,7 @@ typedef void (^NullaryBlock)();
 
 void initLogGlobs(void);
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate, NSWindowRestoration, SettingsContext>
+@interface AppDelegate : NSObject <NSApplicationDelegate, NSMenuDelegate, NSWindowRestoration, MimsyApp, SettingsContext>
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
 + (void)restoreWindowWithIdentifier:(NSString*)identifier state:(NSCoder*)state completionHandler:(void (^)(NSWindow*, NSError*))handler;

@@ -21,6 +21,7 @@
 #import "MenuCategory.h"
 #import "OpenSelection.h"
 #import "Paths.h"
+#import "Plugins.h"
 #import "ProcFileSystem.h"
 #import "ProcFiles.h"
 #import "SearchSite.h"
@@ -34,7 +35,6 @@
 #import "WindowsDatabase.h"
 #import "Mimsy-Swift.h"
 
-#import "MimsyPlugins.h"
 
 void initLogGlobs()
 {
@@ -162,7 +162,7 @@ void initLogGlobs()
 	return self;
 }
 
-- (void)pluginLog:(NSString*)topic text:(NSString*)text
+- (void)logLine:(NSString*)topic text:(NSString*)text
 {
     LOG(STR(topic), "%s", STR(text));
 }
@@ -638,16 +638,7 @@ void initLogGlobs()
         [self _handleMount];
 #endif
     
-    // https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/LoadingBundles.html
-    NSString* plugins = [Paths installedDir:@"plugins"];
-    NSString* path = [plugins stringByAppendingPathComponent:@"ChangeCase.plugin"];
-    NSBundle* bundle = [NSBundle bundleWithPath:path];
-    [bundle load];
-    
-    Class principal = [bundle principalClass];
-    MimsyPlugin* instance = [[principal alloc] init];
-    [instance loading];
-    [instance unloading];
+    [Plugins startup];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
@@ -674,6 +665,7 @@ void initLogGlobs()
 #if OLD_EXTENSIONS
 	[_procFileSystem teardown];
 #endif
+    [Plugins teardown];
 }
 
 - (void)_executeSelector:(NSString*)name
