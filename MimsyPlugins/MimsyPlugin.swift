@@ -9,7 +9,7 @@
 import Cocoa
 
 public class MimsyPlugin: NSObject {
-    public func loading() {NSLog("loading swift!")}
+    public func loading() {NSLog("loading swift")}
     
-    public func unloading() {NSLog("unloading swift")}
+    public func unloading() {NSLog("unloading swift!")}
 }

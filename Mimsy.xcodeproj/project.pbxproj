@@ -161,6 +161,13 @@
 			remoteGlobalIDString = 37CDF3961C07BF9E009E48B4;
 			remoteInfo = MimsyPlugins;
 		};
+		37CDF3B71C07F339009E48B4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37CDF3AC1C07CC3A009E48B4;
+			remoteInfo = ChangeCase;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -909,6 +916,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				37CDF3B81C07F339009E48B4 /* PBXTargetDependency */,
 				37CDF39D1C07BF9E009E48B4 /* PBXTargetDependency */,
 			);
 			name = Mimsy;
@@ -1076,7 +1084,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		376E62C819CFB40E006A9C2D /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -1085,7 +1093,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export GOPATH=\"$PROJECT_DIR/GoExtensions\" && cd \"$PROJECT_DIR/GoExtensions/src\" && /usr/local/go/bin/go install * && cp -R \"../bin/\" \"$TARGET_BUILD_DIR/$CONTENTS_FOLDER_PATH/Resources/extensions\"";
+			shellScript = "# Note that we use a loop instead of directly using glob expansion with ditto\n# because of the lame way that ditto copies directory contents instead of\n# directories. (Ditto will handle this a bit better when --keepParent works\n# without -c).\nfor file in $(ls \"$TARGET_BUILD_DIR\"); do\n    if [[ \"$file\" = *?.plugin ]]; then\n        ditto \"$TARGET_BUILD_DIR/$file\" \"/Users/$USER/Library/Application Support/Mimsy/plugins/$file\"\n    fi\ndone\n";
+			showEnvVarsInLog = 0;
 		};
 		37A8C6B416758FF400D4DB13 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1241,6 +1250,11 @@
 			isa = PBXTargetDependency;
 			target = 37CDF3961C07BF9E009E48B4 /* MimsyPlugins */;
 			targetProxy = 37CDF39C1C07BF9E009E48B4 /* PBXContainerItemProxy */;
+		};
+		37CDF3B81C07F339009E48B4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37CDF3AC1C07CC3A009E48B4 /* ChangeCase */;
+			targetProxy = 37CDF3B71C07F339009E48B4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1580,7 +1594,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.ChangeCase;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				WRAPPER_EXTENSION = plugin;
 			};
@@ -1613,7 +1627,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.ChangeCase;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -1655,6 +1669,7 @@
 				37CDF3A21C07BF9E009E48B4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		37CDF3B01C07CC3A009E48B4 /* Build configuration list for PBXNativeTarget "ChangeCase" */ = {
 			isa = XCConfigurationList;
@@ -1663,6 +1678,7 @@
 				37CDF3B21C07CC3A009E48B4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

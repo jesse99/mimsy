@@ -7,6 +7,12 @@ install http://osxfuse.github.io/
 http://www.learnswift.tips/
 
 
+Creating plugins
+    - inherit from MimsyPlugin and use a unique class name
+    - add the class name to Principal class in Info.plist
+    - add plugin to Target Dependencies in Mimsy's Build Phases panel
+
+
 
 
 
@@ -16,9 +22,8 @@ http://www.learnswift.tips/
 
 
 * Create a simple swift plugin
-    - should build and install when building mimsy
+    - get plugins talking to mimsy, maybe a log function
     - add support for inserting menu items, disabling, and selecting
-    - figure out how to install this somewhere sensible
 * Need to disable go stuff.
 
 plugins

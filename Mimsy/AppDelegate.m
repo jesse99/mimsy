@@ -160,7 +160,9 @@ void initLogGlobs()
 	}
     
     // https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/LoadingBundles.html
-    NSBundle* bundle = [NSBundle bundleWithPath:@"/Users/jessejones/Library/Developer/Xcode/DerivedData/Mimsy-hixfuuxbxxwelwbdoztuzvglwlhy/Build/Products/Debug/ChangeCase.plugin"];
+    NSString* plugins = [Paths installedDir:@"plugins"];
+    NSString* path = [plugins stringByAppendingPathComponent:@"ChangeCase.plugin"];
+    NSBundle* bundle = [NSBundle bundleWithPath:path];
     [bundle load];
     
     Class principal = [bundle principalClass];
