@@ -154,6 +154,13 @@
 			remoteGlobalIDString = 37A8C69116758FF400D4DB13;
 			remoteInfo = Mimsy;
 		};
+		37BABAC91C080D2600B9B5AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37CDF3961C07BF9E009E48B4;
+			remoteInfo = MimsyPlugins;
+		};
 		37CDF39C1C07BF9E009E48B4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
@@ -972,6 +979,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				37BABACA1C080D2600B9B5AB /* PBXTargetDependency */,
 			);
 			name = ChangeCase;
 			productName = ChangeCase;
@@ -1093,7 +1101,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Note that we use a loop instead of directly using glob expansion with ditto\n# because of the lame way that ditto copies directory contents instead of\n# directories. (Ditto will handle this a bit better when --keepParent works\n# without -c).\nfor file in $(ls \"$TARGET_BUILD_DIR\"); do\n    if [[ \"$file\" = *?.plugin ]]; then\n        ditto \"$TARGET_BUILD_DIR/$file\" \"/Users/$USER/Library/Application Support/Mimsy/plugins/$file\"\n    fi\ndone\n";
+			shellScript = "# Note that we use a loop instead of directly using glob expansion with ditto\n# because of the lame way that ditto copies directory contents instead of\n# directories. (Ditto will handle this a bit better when --keepParent works\n# without -c). Also noaes3 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,3ctvjkcvw2q5te that cp -pR doesn't preserve enough attributes for\n# bundles.\nfor file in $(ls \"$TARGET_BUILD_DIR\"); do\n    if [[ \"$file\" = *?.plugin ]]; then\n        ditto \"$TARGET_BUILD_DIR/$file\" \"/Users/$USER/Library/Application Support/Mimsy/plugins/$file\"\n    fi\ndone\n";
 			showEnvVarsInLog = 0;
 		};
 		37A8C6B416758FF400D4DB13 /* ShellScript */ = {
@@ -1245,6 +1253,11 @@
 			isa = PBXTargetDependency;
 			target = 37A8C69116758FF400D4DB13 /* Mimsy */;
 			targetProxy = 37A8C6BA16758FF400D4DB13 /* PBXContainerItemProxy */;
+		};
+		37BABACA1C080D2600B9B5AB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37CDF3961C07BF9E009E48B4 /* MimsyPlugins */;
+			targetProxy = 37BABAC91C080D2600B9B5AB /* PBXContainerItemProxy */;
 		};
 		37CDF39D1C07BF9E009E48B4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

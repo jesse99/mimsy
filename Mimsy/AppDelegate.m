@@ -158,19 +158,13 @@ void initLogGlobs()
 #endif
         registerAppHandlers();
 	}
-    
-    // https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/LoadingBundles.html
-    NSString* plugins = [Paths installedDir:@"plugins"];
-    NSString* path = [plugins stringByAppendingPathComponent:@"ChangeCase.plugin"];
-    NSBundle* bundle = [NSBundle bundleWithPath:path];
-    [bundle load];
-    
-    Class principal = [bundle principalClass];
-    MimsyPlugin* instance = [[principal alloc] init];
-    [instance loading];
-    [instance unloading];
 	
 	return self;
+}
+
+- (void)pluginLog:(NSString*)topic text:(NSString*)text
+{
+    LOG(STR(topic), "%s", STR(text));
 }
 
 #if OLD_EXTENSIONS
@@ -643,6 +637,17 @@ void initLogGlobs()
     if (_mountPath)
         [self _handleMount];
 #endif
+    
+    // https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/LoadingBundles.html
+    NSString* plugins = [Paths installedDir:@"plugins"];
+    NSString* path = [plugins stringByAppendingPathComponent:@"ChangeCase.plugin"];
+    NSBundle* bundle = [NSBundle bundleWithPath:path];
+    [bundle load];
+    
+    Class principal = [bundle principalClass];
+    MimsyPlugin* instance = [[principal alloc] init];
+    [instance loading];
+    [instance unloading];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification

@@ -11,6 +11,7 @@ Creating plugins
     - inherit from MimsyPlugin and use a unique class name
     - add the class name to Principal class in Info.plist
     - add plugin to Target Dependencies in Mimsy's Build Phases panel
+    - add MimsyPlugins to Target Dependencies for the plugin
 
 
 
@@ -22,21 +23,11 @@ Creating plugins
 
 
 * Create a simple swift plugin
-    - get plugins talking to mimsy, maybe a log function
     - add support for inserting menu items, disabling, and selecting
 * Need to disable go stuff.
 
-plugins
-    read up on xcode
-    may want to see if there is an example xcode project using plugins
-creating loadable bundles: https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/CreatingBundles.html#//apple_ref/doc/uid/20001274-CJBDDCAB
 loading plugins:https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/UsingPlugins.html#//apple_ref/doc/uid/20001276-100982
 avoiding class name collisions: https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/NameConflicts.html#//apple_ref/doc/uid/20001277-CJBFGCGG
-directory should have a .plugin extension (xcode should do this for us)
-think we'd create a new target
-should we install plugins into Application Support directory?
-    ~/Library/Application Support/<app-name>/PlugIns
-should have an Info.plist file
 may want to allow subdirectories in the plugins directory
     would help with organization
 plugins need a well known entry point function for the app to call
@@ -45,14 +36,8 @@ plugins need a well known entry point function for the app to call
     either an entry point or a principal class
 maybe the bundle identifier could be used for the name
 could probably get version and even url from Info.plist
-do we even need a framework?
-    For mimsy → plugin could just rely on introspection and
-    some well know functions
-    For plugin → mimsy cocoa probably suffices
-    but probably do want to parametrize behavior on stuff like language
 may want to provide a README doc (or about.rtf)
 
-* When creating new plugins be sure to review error and warning settings.
 * Plugins need an email address.
 * Would be really cool if plugins could include screen shots.
 * Need a plugin manager:

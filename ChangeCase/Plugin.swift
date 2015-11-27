@@ -10,5 +10,5 @@ import Foundation
 import MimsyPlugins
 
 public class ChangeCase: MimsyPlugin {
-    public override func loading() {NSLog("loading change case!!")}
+    public override func loading() {LOG("App", format: "loading change case!!")}
 }

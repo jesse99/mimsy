@@ -13,3 +13,11 @@ public class MimsyPlugin: NSObject {
     
     public func unloading() {NSLog("unloading swift!")}
 }
+
+public func LOG(topic: String, format: String, args: CVarArgType...)
+{
+    let text = String(format: format, arguments: args)
+    
+    let app = NSApp.delegate
+    app?.performSelector("pluginLog:text:", withObject: topic, withObject: text)
+}
