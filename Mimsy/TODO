@@ -24,6 +24,9 @@ Creating plugins
 
 * Create a simple swift plugin:
     - add support for inserting menu items, disabling, and selecting
+    - can a plugin pass 1 into loc?
+    - get enabling working
+    - probably want an addMenuTitle helper, but what about help?
     - can we use blocks when registering hooks?
 * Need to disable go stuff.
 

@@ -35,6 +35,35 @@
 #import "WindowsDatabase.h"
 #import "Mimsy-Swift.h"
 
+typedef BOOL (^MenuEnabledBlock)(NSMenuItem* _Nonnull);
+typedef void (^MenuInvokeBlock)(void);
+
+@interface PluginMenuItem : NSObject
+
+- (id)initFromEnabled:(MenuEnabledBlock)enabled invoke:(MenuInvokeBlock)invoke;
+
+@property (readonly) MenuEnabledBlock enabled;
+@property (readonly) MenuInvokeBlock invoke;
+
+@end
+
+@implementation PluginMenuItem
+
+- (id)initFromEnabled:(MenuEnabledBlock)enabled invoke:(MenuInvokeBlock)invoke
+{
+    self = [super init];
+    
+    if (self)
+    {
+        _enabled = enabled;
+        _invoke = invoke;
+    }
+    
+    return self;
+}
+
+@end
+
 
 void initLogGlobs()
 {
@@ -105,7 +134,9 @@ void initLogGlobs()
 	DirectoryWatcher* _stylesWatcher;
 	DirectoryWatcher* _scriptsStartupWatcher;
 	DirectoryWatcher* _extensionsWatcher;
+#if OLD_EXTENSIONS
 	DirectoryWatcher* _transformsWatcher;
+#endif
 	DirectoryWatcher* _helpWatcher;
 #if OLD_EXTENSIONS
     ProcFileKeyStoreRW* _keyStoreFile;
@@ -165,6 +196,70 @@ void initLogGlobs()
 - (void)logLine:(NSString*)topic text:(NSString*)text
 {
     LOG(STR(topic), "%s", STR(text));
+}
+
+-(BOOL)addMenuItem:(NSMenuItem *)item loc:(enum MenuItemLoc)loc sel:(NSString *)sel enabled:(MenuEnabledBlock)enabled invoke:(MenuInvokeBlock)invoke
+{
+    NSMenu* menu = nil;
+    NSInteger at = 0;
+    
+    if ([self _findSelector:NSSelectorFromString(sel) menu:&menu at:&at])
+    {
+        if (loc == MenuItemLocBefore)
+            [menu insertItem:item atIndex:at];
+        
+        else if (loc == MenuItemLocAfter)
+            [menu insertItem:item atIndex:at+1];
+        
+        else if (loc == MenuItemLocSorted)
+            [menu insertSortedItem:item atIndex:at];
+        
+        PluginMenuItem* pi = [[PluginMenuItem alloc] initFromEnabled:enabled invoke:invoke];
+        [item setRepresentedObject:pi];
+        
+        [item setTarget:self];
+        [item setAction:@selector(_invokePluginMenuItem:)];
+    }
+    
+    return false;
+}
+
+-(void)_invokePluginMenuItem:(NSMenuItem*)item
+{
+    PluginMenuItem* pi = [item representedObject];
+    (pi.invoke)();
+}
+
+-(bool)_findSelector:(SEL)sel menu:(NSMenu**)menu at:(NSInteger*)at
+{
+    NSMutableArray* menus = [NSMutableArray new];
+    [menus addObject:[NSApp mainMenu]];
+    
+    while (menus.count > 0)
+    {
+        NSMenu* candidate = [menus objectAtIndex:0];
+        [menus removeObjectAtIndex:0];
+        
+        for (NSInteger i = 0; i < candidate.numberOfItems; ++i)
+        {
+            NSMenuItem* item = [candidate itemAtIndex:i];
+            if (item.hasSubmenu)
+            {
+                [menus addObject:item.submenu];
+            }
+            else
+            {
+                if (item.action == sel)
+                {
+                    *menu = candidate;
+                    *at = i;
+                    return true;
+                }
+            }
+        }
+    }
+    
+    return false;
 }
 
 #if OLD_EXTENSIONS
@@ -520,12 +615,14 @@ void initLogGlobs()
     return _settings;
 }
 
-- (IBAction)showPlaceholder:(id)sender
+// Selector attached to a hidden menu item giving plugins a place to add menu items to.
+- (IBAction)showItems:(id)sender
 {
     UNUSED(sender);
 }
 
-- (IBAction)transformPlaceholder:(id)sender
+// Selector attached to a hidden menu item giving plugins a place to add menu items to.
+- (IBAction)transformItems:(id)sender
 {
     UNUSED(sender);
 }
@@ -631,7 +728,9 @@ void initLogGlobs()
     [Languages setup];
     [ExtensionListener setup];
     
+#if OLD_EXTENSIONS
     [self _addTransformItems];
+#endif
     
 #if OLD_EXTENSIONS
     if (_mountPath)
@@ -1272,6 +1371,7 @@ void initLogGlobs()
 			}
 		}
 	}
+#if OLD_EXTENSIONS
 	else if (sel == @selector(_runTransformFile:))
 	{
 		NSWindow* window = [NSApp mainWindow];
@@ -1286,12 +1386,25 @@ void initLogGlobs()
 			}
 		}
 	}
+#endif
 #if OLD_EXTENSIONS
     else if (sel == @selector(_onSelectExtensionMenuItem:))
     {
         enabled = item.enabled;
     }
 #endif
+    else if (sel == @selector(_invokePluginMenuItem:))
+    {
+        PluginMenuItem* pi = [item representedObject];
+        if (pi.enabled)
+        {
+            enabled = (pi.enabled)(item);
+        }
+        else
+        {
+            enabled = true;
+        }
+    }
     else if ([self respondsToSelector:sel])
 	{
 		enabled = YES;
@@ -1304,6 +1417,7 @@ void initLogGlobs()
 	return enabled;
 }
 
+#if OLD_EXTENSIONS
 - (void)_runTransformFile:(id)sender
 {
 	TextController* controller = [TextController frontmost];
@@ -1403,11 +1517,14 @@ void initLogGlobs()
 	if (menu)
 		[AppDelegate _addTransformItemsToMenu:menu];
 }
+#endif
 
 + (void)appendContextMenu:(NSMenu*)menu
 {
 	[menu addItem:[NSMenuItem separatorItem]];
+#if OLD_EXTENSIONS
 	[AppDelegate _addTransformItemsToMenu:menu];
+#endif
 }
 
 - (void)_installFiles
@@ -1535,6 +1652,7 @@ void initLogGlobs()
 		  ];
 #endif
     
+#if OLD_EXTENSIONS
 	dir = [Paths installedDir:@"transforms"];
 	_transformsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		^(NSString* path, FSEventStreamEventFlags flags)
@@ -1545,7 +1663,8 @@ void initLogGlobs()
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"TransformsChanged" object:self];
 		}
 	];
-	
+#endif
+    
 	dir = [Paths installedDir:@"settings"];
 	_settingsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		^(NSString* path, FSEventStreamEventFlags flags)
