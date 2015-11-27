@@ -6,6 +6,8 @@
 #import "Paths.h"
 #import "Utils.h"
 
+#include <objc/runtime.h>
+
 static NSMutableArray* _plugins;
 
 @implementation Plugins
@@ -13,6 +15,7 @@ static NSMutableArray* _plugins;
 static void doStage(int stage)
 {
     NSMutableArray* newPlugins = [NSMutableArray new];
+    LOG("Plugins:Verbose", "Stage %d", stage);
 
     for (MimsyPlugin* plugin in _plugins)
     {
@@ -36,8 +39,10 @@ static void doStage(int stage)
     
     AppDelegate* app = [NSApp delegate];
     
-    NSError* err = nil;
     NSString* plugins = [Paths installedDir:@"plugins"];
+    LOG("Plugins:Verbose", "Loading plugins from %s", STR(plugins));
+
+    NSError* err = nil;
     Glob* glob = [[Glob alloc] initWithGlob:@"*.plugin"];
     [Utils enumerateDir:plugins glob:glob error:&err block:^(NSString *path) {
         NSBundle* bundle = [NSBundle bundleWithPath:path];
@@ -46,6 +51,8 @@ static void doStage(int stage)
             if ([bundle load])
             {
                 Class principal = [bundle principalClass];
+                LOG("Plugins:Verbose", "Instantiating %s", class_getName(principal));
+
                 MimsyPlugin* plugin = [principal alloc];
                 plugin = [plugin initFromApp:app bundle:bundle];
                 NSString* err = [plugin onLoad:0];
@@ -72,10 +79,16 @@ static void doStage(int stage)
     doStage(1);
     doStage(2);
     doStage(3);
+
+    for (MimsyPlugin* plugin in _plugins)
+    {
+        LOG("Plugins", "Loaded %s", STR(plugin.bundle.bundlePath.lastPathComponent));
+    }
 }
 
 + (void)teardown
 {
+    LOG("Plugins:Verbose", "Unloading plugins");
     for (MimsyPlugin* plugin in _plugins)
     {
         [plugin onUnload];
