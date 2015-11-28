@@ -1,4 +1,3 @@
-// Adds menu items to upper and lower case the current selection.
 import Cocoa
 import MimsyPlugins
 
@@ -7,14 +6,28 @@ class StdChangeCase: MimsyPlugin {
     {
         if stage == 1
         {
-            var item = NSMenuItem(title: "Upper Case", action: "", keyEquivalent: "")
-            app.addMenuItem(item, loc: MenuItemLoc.Sorted, sel: "transformItems:", enabled: enabled, invoke: upperCase)
-
-            item = NSMenuItem(title: "Lower Case", action: "", keyEquivalent: "")
-            app.addMenuItem(item, loc: MenuItemLoc.Sorted, sel: "transformItems:", enabled: enabled, invoke: lowerCase)
+            app.addMenuItemTitled("Upper Case", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: upperCase)
+            app.addMenuItemTitled("Lower Case", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: lowerCase)
+            
+            app.registerWithSelectionTextContextMenu(.Transform, title: {_ in
+                "Upper Case"}, invoke: { _ in self.upperCase()})
+            app.registerWithSelectionTextContextMenu(.Transform, title: {_ in
+                "Lower Case"}, invoke: { _ in self.lowerCase()})
         }
         
         return nil
+    }
+    
+    func enabled(item: NSMenuItem) -> Bool
+    {
+        var enabled = false
+        
+        if let view = app.frontTextView()
+        {
+            enabled = view.selectionRange.length > 0
+        }
+        
+        return enabled
     }
     
     func upperCase()
@@ -35,17 +48,5 @@ class StdChangeCase: MimsyPlugin {
             text = text.lowercaseString;
             view.replaceText(text, undoText: "Lower Case")
         }
-    }
-    
-    func enabled(item: NSMenuItem) -> Bool
-    {
-        var enabled = false
-        
-        if let view = app.frontTextView()
-        {
-            enabled = view.selectionRange.length > 0
-        }
-        
-        return enabled
     }
 }

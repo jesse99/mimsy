@@ -527,49 +527,91 @@ static NSString* getKey(NSEvent* event)
 
 - (NSMenu*)menuForEvent:(NSEvent*)event
 {
+    AppDelegate* app = [NSApp delegate];
+    
     NSMenu* menu = [[NSMenu alloc] initWithTitle:@""];
     
     [self _extendSelection:event];
     [self.window makeKeyAndOrderFront:self];
     
+    NSArray* items;
     if (self.selectedRange.length > 0)
     {
         if (self.selectedRange.length < 100)
             [self _addDictContextItem:menu];			// 0.11
-        
         if (self.selectedRange.length < 1000)
             [self _addSiteSearchContextItem:menu];		// 0.11
         
-#if OLD_EXTENSIONS
-        NSString* selection = [self.textStorage.string substringWithRange:self.selectedRange];
-        [menu addItem:[NSMenuItem separatorItem]];
-        [menu addExtensionItems:@"/text-document" contents:selection];
-#endif
-        if (self.isEditable)
-        {
-            [self _addTransformsContextMenu:menu];		// 0.8
-        }
+        items = [app withSelectionItems:WithTextSelectionPosLookup];
+        [self _addItems:menu items:items];
+        
+        items = [app withSelectionItems:WithTextSelectionPosTransform];
+        [self _addItems:menu items:items];
+
+        items = [app withSelectionItems:WithTextSelectionPosSearch];
+        [self _addItems:menu items:items];
         
         if (self.isEditable)
         {
             if ([self _needsSpellCheck])
                 [self _addSpellCheckContextItem:menu];	// 0.9
         }
+
+        items = [app withSelectionItems:WithTextSelectionPosAdd];
+        [self _addItems:menu items:items];
     }
     else
     {
+        items = [app noSelectionItems:NoTextSelectionPosStart];
+        [self _addItems:menu items:items];
         [self _addWordWrapContextMenu:menu];			// 0.853
         [self _addCopyPathContextMenu:menu];			// 0.891
         
-#if OLD_EXTENSIONS
-        [menu addItem:[NSMenuItem separatorItem]];
-        [menu addExtensionItems:@"/text-document" contents:@""];
-#endif
+        items = [app noSelectionItems:NoTextSelectionPosMiddle];
+        [self _addItems:menu items:items];
         
+        items = [app noSelectionItems:NoTextSelectionPosEnd];
+        [self _addItems:menu items:items];
         [self _addTimeMachineContextMenu:menu];			// 0.9
     }
     
     return menu;
+}
+
+- (void)_addItems:(NSMenu*)menu items:(NSArray*)items
+{
+    TextController* controller = _controller;
+    if (controller)
+    {
+        bool addedSep = false;
+        for (TextContextItem* citem in items)
+        {
+            NSString* title = citem.title(controller);
+            if (title)
+            {
+                if (!addedSep)
+                {
+                    if (menu.numberOfItems > 0)
+                        [menu addItem:[NSMenuItem separatorItem]];
+                    addedSep = true;
+                }
+
+                NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(_processTextContextItem:) keyEquivalent:@""];
+                [item setRepresentedObject:citem.invoke];
+                [menu appendSortedItem:item];
+            }
+        }
+    }
+}
+
+- (void)_processTextContextItem:(NSMenuItem*)sender
+{
+    TextController* controller = _controller;
+    if (controller)
+    {
+        InvokeTextCommandBlock invoke = sender.representedObject;
+        invoke(controller);
+    }
 }
 
 - (bool)_needsSpellCheck
@@ -626,10 +668,12 @@ static NSString* getKey(NSEvent* event)
     [self.textStorage replaceCharactersInRange:self.selectedRange withString:[sender representedObject]];
 }
 
+#if OLD_EXTENSIONS
 - (void)_addTransformsContextMenu:(NSMenu*)menu
 {
     [AppDelegate appendContextMenu:menu];
 }
+#endif
 
 - (void)_addWordWrapContextMenu:(NSMenu*)menu
 {

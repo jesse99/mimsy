@@ -37,8 +37,9 @@
 
 typedef BOOL (^MenuEnabledBlock)(NSMenuItem* _Nonnull);
 typedef void (^MenuInvokeBlock)(void);
-typedef void (^OnSavingBlock)(id<MimsyTextView> _Nonnull);
+typedef void (^SavingBlock)(id<MimsyTextView> _Nonnull);
 
+// ------------------------------------------------------------------------------------
 @interface PluginMenuItem : NSObject
 
 - (id)initFromEnabled:(MenuEnabledBlock)enabled invoke:(MenuInvokeBlock)invoke;
@@ -65,7 +66,12 @@ typedef void (^OnSavingBlock)(id<MimsyTextView> _Nonnull);
 
 @end
 
+// ------------------------------------------------------------------------------------
+@implementation TextContextItem
 
+@end
+
+// ------------------------------------------------------------------------------------
 void initLogGlobs()
 {
 	NSString* path = [Paths installedDir:@"settings"];
@@ -102,6 +108,7 @@ void initLogGlobs()
 	setForceLogGlob(glob);
 }
 
+// ------------------------------------------------------------------------------------
 @implementation AppDelegate
 {
 #if OLD_EXTENSIONS
@@ -148,6 +155,8 @@ void initLogGlobs()
 	NSArray* _helpFileItems;
 	NSArray* _helpSettingsItems;
     NSMutableArray* _recentDirectories; // array [timestamp, path]
+    NSMutableDictionary* _noSelectionItems;
+    NSMutableDictionary* _withSelectionItems;
     
     bool _mounted;
     NSString* _mountPath;
@@ -181,6 +190,8 @@ void initLogGlobs()
 #endif
         _items = [NSMutableDictionary new];
         _onSaving = [NSMutableArray new];
+        _noSelectionItems = [NSMutableDictionary new];
+        _withSelectionItems = [NSMutableDictionary new];
         
         NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
         _recentDirectories = [NSMutableArray new];
@@ -201,12 +212,16 @@ void initLogGlobs()
     LOG(STR(topic), "%s", STR(text));
 }
 
--(BOOL)addMenuItem:(NSMenuItem *)item loc:(enum MenuItemLoc)loc sel:(NSString *)sel enabled:(MenuEnabledBlock)enabled invoke:(MenuInvokeBlock)invoke
+-(BOOL)addMenuItem:(NSMenuItem*)item loc:(enum MenuItemLoc)loc sel:(NSString*)sel enabled:(MenuEnabledBlock)enabled invoke:(MenuInvokeBlock)invoke
 {
     NSMenu* menu = nil;
     NSInteger at = 0;
     
-    if ([self _findSelector:NSSelectorFromString(sel) menu:&menu at:&at])
+    SEL selector = NSSelectorFromString(sel);
+    if (!selector)
+        LOG("Error", "Couldn't find a selector for %s", STR(sel));
+    
+    if (selector && [self _findSelector:selector menu:&menu at:&at])
     {
         if (loc == MenuItemLocBefore)
             [menu insertItem:item atIndex:at];
@@ -227,20 +242,72 @@ void initLogGlobs()
     return false;
 }
 
+- (BOOL)addMenuItemTitled:(NSString*)title loc:(enum MenuItemLoc)loc sel:(NSString *)sel enabled:(MenuEnabledBlock)enabled invoke:(MenuInvokeBlock)invoke
+{
+    NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:NULL keyEquivalent:@""];
+    return [self addMenuItem:item loc:loc sel:sel enabled:enabled invoke:invoke];
+}
+
+- (void)registerNoSelectionTextContextMenu:(enum NoTextSelectionPos)pos title:(TextContextMenuItemTitleBlock)title invoke:(InvokeTextCommandBlock)invoke
+{
+    TextContextItem* item = [TextContextItem new];
+    item.title = title;
+    item.invoke = invoke;
+    
+    NSValue* key = @((int) pos);
+    NSMutableArray* items = [_noSelectionItems objectForKey:key];
+    if (!items)
+    {
+        items = [NSMutableArray new];
+        _noSelectionItems[key] = items;
+    }
+
+    [items addObject:item];
+}
+
+- (void)registerWithSelectionTextContextMenu:(enum WithTextSelectionPos)pos title:(TextContextMenuItemTitleBlock)title invoke:(InvokeTextCommandBlock)invoke
+{
+    TextContextItem* item = [TextContextItem new];
+    item.title = title;
+    item.invoke = invoke;
+    
+    NSValue* key = @((int) pos);
+    NSMutableArray* items = [_withSelectionItems objectForKey:key];
+    if (!items)
+    {
+        items = [NSMutableArray new];
+        _withSelectionItems[key] = items;
+    }
+    
+    [items addObject:item];
+}
+
+- (NSArray* _Nullable)noSelectionItems:(enum NoTextSelectionPos)pos
+{
+    NSValue* key = @((int) pos);
+    return [_noSelectionItems objectForKey:key];
+}
+
+- (NSArray* _Nullable)withSelectionItems:(enum WithTextSelectionPos)pos
+{
+    NSValue* key = @((int) pos);
+    return [_withSelectionItems objectForKey:key];
+}
+
 - (id<MimsyTextView>)frontTextView
 {
     TextController* controller = [TextController frontmost];
     return controller;
 }
 
-- (void)registerOnSaving:(OnSavingBlock)hook
+- (void)registerOnSaving:(SavingBlock)hook
 {
     [_onSaving addObject:hook];
 }
 
 - (void)invokeOnSaving:(id<MimsyTextView>)view
 {
-    for (OnSavingBlock block in _onSaving)
+    for (SavingBlock block in _onSaving)
     {
         block(view);
     }
@@ -1541,13 +1608,13 @@ void initLogGlobs()
 }
 #endif
 
+#if OLD_EXTENSIONS
 + (void)appendContextMenu:(NSMenu*)menu
 {
 	[menu addItem:[NSMenuItem separatorItem]];
-#if OLD_EXTENSIONS
 	[AppDelegate _addTransformItemsToMenu:menu];
-#endif
 }
+#endif
 
 - (void)_installFiles
 {

@@ -36,7 +36,7 @@ public class MimsyPlugin: NSObject {
     /// - Parameter topic: Typically "Plugins", "Plugins:Verbose", or a custom topic name.
     /// - Parameter format: NSString style [format string](https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Strings/Articles/formatSpecifiers.html).
     /// - Parameter args: Optional arguments to feed into the format string.
-    public func log(topic: String, format: String, args: CVarArgType...)
+    public func log(topic: String, _ format: String, _ args: CVarArgType...)
     {
         let text = String(format: format, arguments: args)
         app.logLine(topic, text: text)

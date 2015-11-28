@@ -36,6 +36,32 @@
     [self insertItem:newItem atIndex:self.numberOfItems];
 }
 
+- (void) appendSortedItem:(NSMenuItem *)newItem
+{
+    if (self.numberOfItems == 0)
+    {
+        [self addItem:newItem];
+    }
+    else
+    {
+        NSInteger i = self.numberOfItems - 1;
+        while (true)
+        {
+            NSMenuItem* item = [self itemAtIndex:i];
+            if (item.isSeparatorItem)
+            {
+                [self insertItem:newItem atIndex:i+1];
+                break;
+            }
+            else if (i == 0 || [item.title compare:newItem.title] != NSOrderedAscending)
+            {
+                [self insertItem:newItem atIndex:i];
+                break;
+            }
+            i -= 1;
+        }
+    }
+}
 
 #if OLD_EXTENSIONS
 - (void)addExtensionItems:(NSString*)root contents:(NSString*)contents

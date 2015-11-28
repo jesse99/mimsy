@@ -1,12 +1,24 @@
 import Cocoa
 
-public typealias InvokeMenuItem = () -> ()
 public typealias EnabledMenuItem = (NSMenuItem) -> Bool
-public typealias OnSaving = (MimsyTextView) -> ()
+public typealias InvokeMenuItem = () -> ()
+public typealias InvokeTextCommand = (MimsyTextView) -> ()
+public typealias SavingTextDoc = (MimsyTextView) -> ()
+public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
 
 @objc public enum MenuItemLoc: Int
 {
     case Before = 1, After, Sorted
+}
+
+@objc public enum NoTextSelectionPos: Int
+{
+    case Start = 1, Middle, End
+}
+
+@objc public enum WithTextSelectionPos: Int
+{
+    case Lookup = 1, Transform, Search, Add
 }
 
 /// This is used by plugins to communicate with the top level of Mimsy.
@@ -38,12 +50,29 @@ public typealias OnSaving = (MimsyTextView) -> ()
     ///
     /// - Returns: True if menu item was added. False if sel could not be found.
     func addMenuItem(item: NSMenuItem, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem?, invoke: InvokeMenuItem) -> Bool
+
+    /// Like addMenuItem except that it takes the title of the new menu item instead of a menu item.
+    func addMenuItemTitled(title: String, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem?, invoke: InvokeMenuItem) -> Bool
     
     /// - Returns: The text view for the frontmost document window.
     func frontTextView() -> MimsyTextView?
     
     /// Registers a function that will be called just before text documents are saved.
-    func registerOnSaving(hook: OnSaving)
+    func registerOnSaving(hook: SavingTextDoc)
+    
+    /// Used to add a custom menu item to text contextual menus when there is no selection.
+    ///
+    /// - Parameter pos: Pre-defined location at which to insert the new sorted menu item.
+    /// - Parameter name: Returns the name of the new menu item, or nil if an item should not be added.
+    /// - Parameter invoke: Called when the user selects the new menu item.
+    func registerNoSelectionTextContextMenu(pos: NoTextSelectionPos, title: TextContextMenuItemTitle, invoke: InvokeTextCommand)
+    
+    /// Used to add a custom menu item to text contextual menus when is a selection.
+    ///
+    /// - Parameter pos: Pre-defined location at which to insert the new sorted menu item.
+    /// - Parameter name: Returns the name of the new menu item, or nil if an item should not be added.
+    /// - Parameter invoke: Called when the user selects the new menu item.
+    func registerWithSelectionTextContextMenu(pos: WithTextSelectionPos, title: TextContextMenuItemTitle, invoke: InvokeTextCommand)
     
     /// Normally plugins will use the MimsyPlugin log method instead of this.
     func logLine(topic: String, text: String)

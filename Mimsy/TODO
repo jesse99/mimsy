@@ -18,6 +18,7 @@ Creating plugins
 
 
 
+* Check for isEditable
 * Add a language getter:
     - probably want a MimsyLanguage protocol
 * Replace the go extensions:
@@ -28,12 +29,19 @@ Creating plugins
 * Remove the go stuff.
 * Replace the old transforms.
 * Remove the old transforms.
+* Add snippets support:
+    - snippets/<language> directories
+    - snippets are just language files
+    - can have INPUT-NAME text which prompts user for NAME's value
+    - probably should adjust indentation level to match current selection
 * Replace the old extensions.
 * Remove the old extensions.
 * Replace the old builders?
 * Remove the old builders?
 * Make sure that all the OLD_EXTENSIONS code is gone
 * Do something with functional tests?
+* Do we need an unload method? Maybe takes a reason?
+- or can we somehow catch bugs?
 * Remove lua code?
 * Probably want a note about extension development workflow
 * Merge into master

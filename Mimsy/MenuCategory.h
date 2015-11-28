@@ -7,6 +7,8 @@
 // separator id reached).
 - (void)insertSortedItem:(NSMenuItem *)item atIndex:(NSInteger)index;
 
+- (void)appendSortedItem:(NSMenuItem *)item;
+
 #if OLD_EXTENSIONS
 // This is normally used when building contextual menus. New items are added via addSortedItemWithTitle.
 // root is the proc file path less the /Volumes/Mimsy/ prefix.
