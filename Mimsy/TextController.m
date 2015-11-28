@@ -752,7 +752,6 @@ static __weak TextController* _frontmost;
 		[_applier addDirtyLocation:0 reason:@"set text"];
 }
 
-// TODO: scripts can call this quite a bit: might be nice to cache the value until an edit happens
 - (NSString*)text
 {
 	return [[self.textView textStorage] string];

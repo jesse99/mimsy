@@ -10,6 +10,10 @@ import Cocoa
     /// to set the text.
     var selection: String {get}
     
+    /// Returns a reference to the view's text (this doesn't use String because String
+    /// is a value type and the text may be quite large).
+    var text: NSString {get}
+    
     /// Replaces the text within the current selection.
     ///
     /// - Parameter text: The text used for the selection.

@@ -77,7 +77,6 @@ typedef void (^LayoutCallback)(TextController* controller);
 @property IBOutlet TextView* textView;
 @property IBOutlet __weak NSScrollView* scrollView;
 @property NSAttributedString* attributedText;
-@property (readonly) NSString* text;
 @property (readonly) NSUInteger editCount;
 @property (readonly) TextStyles* styles;
 @property NSString* customTitle;

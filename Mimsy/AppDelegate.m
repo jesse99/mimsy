@@ -37,6 +37,7 @@
 
 typedef BOOL (^MenuEnabledBlock)(NSMenuItem* _Nonnull);
 typedef void (^MenuInvokeBlock)(void);
+typedef void (^OnSavingBlock)(id<MimsyTextView> _Nonnull);
 
 @interface PluginMenuItem : NSObject
 
@@ -141,6 +142,7 @@ void initLogGlobs()
 #if OLD_EXTENSIONS
     ProcFileKeyStoreRW* _keyStoreFile;
 #endif
+    NSMutableArray* _onSaving;
     
 	NSMutableDictionary* _pendingBlocks;
 	NSArray* _helpFileItems;
@@ -178,6 +180,7 @@ void initLogGlobs()
         _procFileSystem = [ProcFileSystem new];
 #endif
         _items = [NSMutableDictionary new];
+        _onSaving = [NSMutableArray new];
         
         NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
         _recentDirectories = [NSMutableArray new];
@@ -228,6 +231,19 @@ void initLogGlobs()
 {
     TextController* controller = [TextController frontmost];
     return controller;
+}
+
+- (void)registerOnSaving:(OnSavingBlock)hook
+{
+    [_onSaving addObject:hook];
+}
+
+- (void)invokeOnSaving:(id<MimsyTextView>)view
+{
+    for (OnSavingBlock block in _onSaving)
+    {
+        block(view);
+    }
 }
 
 -(void)_invokePluginMenuItem:(NSMenuItem*)item

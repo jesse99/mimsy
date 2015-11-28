@@ -18,9 +18,12 @@ Creating plugins
 
 
 
-* Add a text getter (return an NSString)
+* Add a language getter:
+    - probably want a MimsyLanguage protocol
 * Replace the go extensions:
     - go format
+    - see how go format interacts with undo
+    - loading extensions
     - show gremlins
 * Remove the go stuff.
 * Replace the old transforms.
@@ -30,6 +33,8 @@ Creating plugins
 * Replace the old builders?
 * Remove the old builders?
 * Make sure that all the OLD_EXTENSIONS code is gone
+* Do something with functional tests?
+* Remove lua code?
 * Probably want a note about extension development workflow
 * Merge into master
 * Start adding extensions for core stuff.

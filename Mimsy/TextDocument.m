@@ -1,5 +1,6 @@
 #import "TextDocument.h"
 
+#import "AppDelegate.h"
 #import "Decode.h"
 #import "Extensions.h"
 #import "FunctionalTest.h"
@@ -560,6 +561,9 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 			[Extensions invokeNonBlocking:@"/text-document/saving"];
 #endif
         
+        AppDelegate* app = [NSApp delegate];
+        [app invokeOnSaving:_controller];
+        
 		NSTextStorage* storage = [textv textStorage];
 		NSMutableString* str = [storage mutableString];
 		LOG("Text", "Saving document to %s", STR(self.fileURL));
@@ -616,6 +620,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		}
 	}
 	
+    // TODO: start getting rid of these notifications
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TextDocumentSaved" object:self];
 
 	return data;

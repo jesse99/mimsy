@@ -40,6 +40,8 @@ void initLogGlobs(void);
 - (id<SettingsContext>)parent;
 - (Settings*)settings;
 
+- (void)invokeOnSaving:(id<MimsyTextView>)view;
+
 @property (readonly) bool inited;
 @property (readonly) ProcFileSystem *procFileSystem;
 @property (weak) IBOutlet NSMenu *searchMenu;

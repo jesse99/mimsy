@@ -1,8 +1,8 @@
 import Cocoa
 
 public typealias InvokeMenuItem = () -> ()
-
 public typealias EnabledMenuItem = (NSMenuItem) -> Bool
+public typealias OnSaving = (MimsyTextView) -> ()
 
 @objc public enum MenuItemLoc: Int
 {
@@ -41,6 +41,9 @@ public typealias EnabledMenuItem = (NSMenuItem) -> Bool
     
     /// - Returns: The text view for the frontmost document window.
     func frontTextView() -> MimsyTextView?
+    
+    /// Registers a function that will be called just before text documents are saved.
+    func registerOnSaving(hook: OnSaving)
     
     /// Normally plugins will use the MimsyPlugin log method instead of this.
     func logLine(topic: String, text: String)
