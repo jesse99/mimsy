@@ -123,6 +123,40 @@ static __weak TextController* _frontmost;
 #endif
 }
 
+- (NSRange)selectionRange
+{
+    return self.textView.selectedRange;
+}
+
+- (void)setSelectionRange:(NSRange)range
+{
+    [self.textView setSelectedRange:range];
+}
+
+- (NSString*)selection
+{
+    NSRange range = self.textView.selectedRange;
+    return [self.textView.string substringWithRange:range];
+}
+
+- (void)replaceText:(NSString * __nonnull)text undoText:(NSString * __nullable)undoText
+{
+    NSRange range = self.textView.selectedRange;
+    if (undoText)
+    {
+        if ([self.textView shouldChangeTextInRange:range replacementString:text])
+        {
+            [self.textView replaceCharactersInRange:range withString:text];
+            [self.textView.undoManager setActionName:undoText];
+            [self.textView didChangeText];
+        }
+    }
+    else
+    {
+        [self.textView replaceCharactersInRange:range withString:text];
+    }
+}
+
 - (bool)closed
 {
     return _closed;

@@ -1,6 +1,7 @@
 #import <Cocoa/Cocoa.h>
 
 #import "BaseTextController.h"
+#import "MimsyPlugins.h"
 #import "Settings.h"
 
 @class DeclarationsPopup, GlyphsAttribute, Language, TextController, TextStyles, TextView;
@@ -21,7 +22,7 @@ typedef void (^LayoutCallback)(TextController* controller);
 @end
 
 // Contoller used to mediate between text documents and the NSTextView in the associated window.
-@interface TextController : BaseTextController<SettingsContext>
+@interface TextController : BaseTextController<MimsyTextView, SettingsContext>
 
 + (void)startup;
 

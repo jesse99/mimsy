@@ -39,6 +39,9 @@ public typealias EnabledMenuItem = (NSMenuItem) -> Bool
     /// - Returns: True if menu item was added. False if sel could not be found.
     func addMenuItem(item: NSMenuItem, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem?, invoke: InvokeMenuItem) -> Bool
     
+    /// - Returns: The text view for the frontmost document window.
+    func frontTextView() -> MimsyTextView?
+    
     /// Normally plugins will use the MimsyPlugin log method instead of this.
     func logLine(topic: String, text: String)
 }

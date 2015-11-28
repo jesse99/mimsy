@@ -120,6 +120,7 @@
 		37AD7570171B95460054A75F /* UpdateConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AD756F171B95460054A75F /* UpdateConfig.m */; };
 		37BABACF1C08105600B9B5AB /* Plugins.m in Sources */ = {isa = PBXBuildFile; fileRef = 37BABACE1C08105600B9B5AB /* Plugins.m */; };
 		37BABAD31C08CF2400B9B5AB /* MimsyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37BABAD21C08CF2400B9B5AB /* MimsyApp.swift */; };
+		37BABAD51C091A7000B9B5AB /* MimsyTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37BABAD41C091A7000B9B5AB /* MimsyTextView.swift */; };
 		37BC76DC1A008DA30037DC6A /* BuildErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37BC76DB1A008DA30037DC6A /* BuildErrors.swift */; };
 		37BF4DFA16F56CB3008FD480 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 37BF4DF916F56CB3008FD480 /* images */; };
 		37C1D1A91A5232210031B90F /* MenuCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 37C1D1A81A5232210031B90F /* MenuCategory.m */; };
@@ -403,6 +404,7 @@
 		37BABACD1C08105600B9B5AB /* Plugins.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Plugins.h; sourceTree = "<group>"; };
 		37BABACE1C08105600B9B5AB /* Plugins.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Plugins.m; sourceTree = "<group>"; };
 		37BABAD21C08CF2400B9B5AB /* MimsyApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimsyApp.swift; sourceTree = "<group>"; };
+		37BABAD41C091A7000B9B5AB /* MimsyTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimsyTextView.swift; sourceTree = "<group>"; };
 		37BC76DA1A008DA30037DC6A /* Mimsy-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Mimsy-Bridging-Header.h"; sourceTree = "<group>"; };
 		37BC76DB1A008DA30037DC6A /* BuildErrors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildErrors.swift; sourceTree = "<group>"; };
 		37BF4DF916F56CB3008FD480 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
@@ -884,6 +886,7 @@
 				37BABAD21C08CF2400B9B5AB /* MimsyApp.swift */,
 				37CDF3A51C07C2C7009E48B4 /* MimsyPlugin.swift */,
 				37CDF3991C07BF9E009E48B4 /* MimsyPlugins.h */,
+				37BABAD41C091A7000B9B5AB /* MimsyTextView.swift */,
 			);
 			path = MimsyPlugins;
 			sourceTree = "<group>";
@@ -1244,6 +1247,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				37CDF3A61C07C2C7009E48B4 /* MimsyPlugin.swift in Sources */,
+				37BABAD51C091A7000B9B5AB /* MimsyTextView.swift in Sources */,
 				37BABAD31C08CF2400B9B5AB /* MimsyApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

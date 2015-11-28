@@ -224,6 +224,12 @@ void initLogGlobs()
     return false;
 }
 
+- (id<MimsyTextView>)frontTextView
+{
+    TextController* controller = [TextController frontmost];
+    return controller;
+}
+
 -(void)_invokePluginMenuItem:(NSMenuItem*)item
 {
     PluginMenuItem* pi = [item representedObject];
