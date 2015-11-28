@@ -10,32 +10,30 @@ http://www.learnswift.tips/
 Creating plugins
     - inherit from MimsyPlugin and use a unique class name
     - add the class name to Principal class in Info.plist
+    - add a ProjectURL and Email fields to the Info.plist
     - add plugin to Target Dependencies in Mimsy's Build Phases panel
     - add MimsyPlugins to Target Dependencies for the plugin
+    - add a Description.rtf file (may need to verify using the file inspector that it has the correct target memmbership)
 
 
 
 
-* Create a simple swift plugin:
-    - get enabling working
-    - probably want an addMenuTitle helper, but what about help?
-    - can we use blocks when registering hooks?
-* Need to disable go stuff.
+* Add a text getter (return an NSString)
+* Replace the go extensions:
+    - go format
+    - show gremlins
+* Remove the go stuff.
+* Replace the old transforms.
+* Remove the old transforms.
+* Replace the old extensions.
+* Remove the old extensions.
+* Replace the old builders?
+* Remove the old builders?
+* Make sure that all the OLD_EXTENSIONS code is gone
+* Probably want a note about extension development workflow
+* Merge into master
+* Start adding extensions for core stuff.
 
-loading plugins:https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/UsingPlugins.html#//apple_ref/doc/uid/20001276-100982
-avoiding class name collisions: https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/NameConflicts.html#//apple_ref/doc/uid/20001277-CJBFGCGG
-may want to allow subdirectories in the plugins directory
-    would help with organization
-plugins need a well known entry point function for the app to call
-    maybe we could return an NSError
-    typically used if the plugin can't or doesn't want to run
-    either an entry point or a principal class
-maybe the bundle identifier could be used for the name
-could probably get version and even url from Info.plist
-may want to provide a README doc (or about.rtf)
-
-* Plugins need an email address.
-* Would be really cool if plugins could include screen shots.
 * Need a plugin manager:
     - should be able to search descriptions
     - people can submit plugins, vet them, add built versions to repo
@@ -44,33 +42,15 @@ may want to provide a README doc (or about.rtf)
     - also a link to go to plugin's web site
     - should be a simple way to see what is installed, eg to read descriptions and instructions
     - should be a way to disable plugins
+    - screenshots would be great (embed them in the description file? screenshots directory in resources?)
     - rating scheme would be cool
 * Should add copy rights everywhere.
 
 
-* Add support for adding menu items:
-    - use hidden items as placeholders for text show and transforms
-    - need add and addSorted, add should take a selector name to add after or before
-* Use sockets and go instead of proc files and arbitrary scripts:
-    - add support for text menu hook
-        ` maybe options for text document only, not adding to main menu, selection ok, no selection ok
-    - are extensions closed down on the mimsy side as soon as the process terminates?
-    - make sure that when an extension is closed anything it registered for is removed
-    - can we have multiple plugins with one exe?
-    - maybe go routines
-    - would be nice to allow plugins to be overridden
-    - maybe alpha sorting?
-    - make sure that all the OLD_EXTENSIONS code is gone
-    - merge into master
-    - tcp package is available for lua
-    - probably want a note about extension development workflow
 * NSStringTransformToUnicodeName looks interesting
 * Why couldn't we use open selection for:
     src/mesh-tests/manual-test/manual-test.go:5: imported and not used: "bufio"
 * Maybe LOG_ERROR should always go to the transcript
-* Getting unhandled exceptions (see below):
-    ProcFileReadWrite write blocks are being called from a thread
-    - assert that threads are legit
 * Errors in the mac aren't recognized.
 * go fmt leaves documents in an edited state after saving
 * up_edges1 didn't style right in R.

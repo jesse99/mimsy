@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Email</key>
+	<string>jesse9jones@gmail.com</string>
+	<key>ProjectURL</key>
+	<string>https://github.com/jesse99/mimsy</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
@@ -23,6 +27,6 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2015 Jesse Jones. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
-	<string>ChangeCase</string>
+	<string>StdChangeCase</string>
 </dict>
 </plist>

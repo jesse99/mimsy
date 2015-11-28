@@ -2,7 +2,7 @@
 import Cocoa
 import MimsyPlugins
 
-class ChangeCase: MimsyPlugin {
+class StdChangeCase: MimsyPlugin {
     override func onLoad(stage: Int) -> String?
     {
         if stage == 1

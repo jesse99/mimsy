@@ -48,31 +48,34 @@ static void doStage(int stage)
         NSBundle* bundle = [NSBundle bundleWithPath:path];
         if (bundle)
         {
-            if ([bundle load])
+            if ([self _validBundle:bundle])
             {
-                Class principal = [bundle principalClass];
-                LOG("Plugins:Verbose", "Instantiating %s", class_getName(principal));
-
-                MimsyPlugin* plugin = [principal alloc];
-                plugin = [plugin initFromApp:app bundle:bundle];
-                NSString* err = [plugin onLoad:0];
-                if (!err)
+                if ([bundle load])
                 {
-                    [_plugins addObject:plugin];
+                    Class principal = [bundle principalClass];
+                    LOG("Plugins:Verbose", "Instantiating %s", class_getName(principal));
+
+                    MimsyPlugin* plugin = [principal alloc];
+                    plugin = [plugin initFromApp:app bundle:bundle];
+                    NSString* err = [plugin onLoad:0];
+                    if (!err)
+                    {
+                        [_plugins addObject:plugin];
+                    }
+                    else
+                    {
+                        LOG("Plugins", "Skipping %s (%s)", STR(path.lastPathComponent), STR(err));
+                    }
                 }
                 else
                 {
-                    LOG("Plugins", "Skipping %s (%s)", STR(path.lastPathComponent), STR(err));
+                    LOG("Error", "Couldn't load %s", STR(path));
                 }
-            }
-            else
-            {
-                LOG("Warn", "Couldn't load %s", STR(path));
             }
         }
         else
         {
-            LOG("Warn", "Couldn't open %s as a bundle", STR(path));
+            LOG("Error", "Couldn't open %s as a bundle", STR(path));
         }
     }];
 
@@ -84,6 +87,52 @@ static void doStage(int stage)
     {
         LOG("Plugins", "Loaded %s", STR(plugin.bundle.bundlePath.lastPathComponent));
     }
+}
+
++ (bool)_validBundle:(NSBundle*)bundle
+{
+    bool valid = true;
+    
+    // Package manager expects certain entries in the Info.plist file.
+    NSDictionary* dict = [bundle infoDictionary];
+    NSArray* required = @[@"CFBundleName", @"CFBundleVersion", @"ProjectURL", @"Email"];
+    for (NSString* name in required)
+    {
+        NSObject* value = [dict objectForKey:name];
+        if (!value)
+        {
+            LOG("Error", "%s is missing %s from its Info.plist file", STR(bundle.bundlePath.lastPathComponent), STR(name));
+            valid = false;
+        }
+    }
+    
+    // The package manager expects a Description.rtf file.
+    NSString* resources = [bundle resourcePath];
+    NSString* description = [resources stringByAppendingPathComponent:@"Description.rtf"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:description])
+    {
+        LOG("Error", "%s is missing Description.rtf from its Resources directory", STR(bundle.bundlePath.lastPathComponent));
+        valid = false;
+    }
+    
+    // The principal class should be of the right type.
+    bool found = false;
+    Class pluginClass = [MimsyPlugin class];
+    Class candidate = [bundle principalClass];
+    while (!found && candidate)
+    {
+        if (candidate == pluginClass)
+            found = true;
+        candidate = class_getSuperclass(candidate);
+    }
+    
+    if (!found)
+    {
+        LOG("Error", "%s's principalClass does not inherit from %s", STR(bundle.bundlePath.lastPathComponent), class_getName(pluginClass));
+        valid = false;
+    }
+    
+    return valid;
 }
 
 + (void)teardown
