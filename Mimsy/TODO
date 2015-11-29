@@ -20,8 +20,6 @@ Creating plugins
 
 
 
-* Add a GoFormat plugin:
-    - require undo
 * Add a show gremlines plugin
 * Remove the go stuff.
 * Replace the old transforms.
