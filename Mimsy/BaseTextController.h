@@ -14,6 +14,6 @@
 - (void)showInfo:(NSString*)text;
 - (void)showWarning:(NSString*)text;
 
-@property Language* language;
+@property Language* fullLanguage;
 
 @end

@@ -120,7 +120,7 @@
 {
 	TextDocument* doc = _doc;
 	if (doc)
-		doc.controller.language = [Languages findWithlangName:button.selectedItem.title];
+		doc.controller.fullLanguage = [Languages findWithlangName:button.selectedItem.title];
 	[self _enableButtons];
 }
 

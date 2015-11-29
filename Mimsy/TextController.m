@@ -123,6 +123,11 @@ static __weak TextController* _frontmost;
 #endif
 }
 
+- (id<MimsyLanguage>)language
+{
+    return _language;
+}
+
 - (NSRange)selectionRange
 {
     return self.textView.selectedRange;
@@ -757,7 +762,7 @@ static __weak TextController* _frontmost;
 	return [[self.textView textStorage] string];
 }
 
-- (Language*)language
+- (Language*)fullLanguage
 {
 	return _language;
 }
@@ -920,9 +925,9 @@ static __weak TextController* _frontmost;
 		
 		NSString* name = [path lastPathComponent];
         if ([doc.fileType isEqualToString:@"binary"])
-            self.language = [Languages findWithlangName:@"binary"];
+            self.fullLanguage = [Languages findWithlangName:@"binary"];
         else
-            self.language = [Languages findWithFileName:name contents:self.text];
+            self.fullLanguage = [Languages findWithFileName:name contents:self.text];
 		
 		if (_restorer)
 			[_restorer setPath:path];

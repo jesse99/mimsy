@@ -551,7 +551,7 @@ static NSString* getKey(NSEvent* event)
         items = [app withSelectionItems:WithTextSelectionPosSearch];
         [self _addItems:menu items:items];
         
-        if (self.isEditable)
+        if (self.isEditable)    // TODO: get rid of isEditable checks?
         {
             if ([self _needsSpellCheck])
                 [self _addSpellCheckContextItem:menu];	// 0.9

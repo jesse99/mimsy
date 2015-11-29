@@ -1,40 +1,41 @@
 #import <Foundation/Foundation.h>
+#import "MimsyPlugins.h"
 
 @class ConditionalGlob, ConfigParser, LocalSettings, RegexStyler;
 
 // Encapsulates the information from a language file.
-@interface Language : NSObject
+@interface Language : NSObject <MimsyLanguage>
 
-- (id)initWithParser:(ConfigParser*)parser outError:(NSError**)error;
+- (id _Nullable)initWithParser:(ConfigParser* _Nonnull)parser outError:(NSError* _Nonnull* _Nonnull)error;
 
-+ (bool)parseHelp:(NSString*)value help:(NSMutableArray*)help;
++ (bool)parseHelp:(NSString* _Nonnull)value help:(NSMutableArray* _Nonnull)help;
 
 // ---- Required Elements -----------------------------------------
 
 // The name of the language, e.g. "c", "python", etc.
-@property (readonly) NSString* name;
+@property (nonatomic, readonly, copy) NSString * __nonnull name;
 
 // The object used to associate files with this particular language.
-@property (readonly) ConditionalGlob* glob;
+@property (readonly) ConditionalGlob* _Nonnull glob;
 
 // Sequence of tool names.
-@property (readonly) NSArray* shebangs;
+@property (readonly) NSArray* _Nonnull shebangs;
 
 // The object used to compute the styles associated with a document.
-@property (readonly) RegexStyler* styler;
+@property (readonly) RegexStyler* _Nonnull styler;
 
 // ---- Optional Elements (may be nil) -----------------------------
 
 // The string indicating the start of a line comment. Used for things
 // like commenting out selections.
-@property (readonly) NSString* lineComment;
+@property (nonatomic, readonly, copy) NSString * __nullable lineComment;
 
 // Used to match words when double clicking.
-@property (readonly) NSRegularExpression* word;
-@property (readonly) NSRegularExpression* number;
+@property (nonatomic, readonly, strong) NSRegularExpression * __nullable word;
+@property (nonatomic, readonly, strong) NSRegularExpression * __nullable number;
 
 // ---- Settings ---------------------------------------------------
-- (NSArray*)settingKeys;
-- (NSArray*)settingValues;
+- (NSArray* _Nonnull)settingKeys;
+- (NSArray* _Nonnull)settingValues;
 
 @end

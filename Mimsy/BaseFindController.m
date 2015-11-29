@@ -141,12 +141,12 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 	if (self.singleFile)
 	{
 		BaseTextController* controller = [BaseTextController frontmost];
-		if (controller && controller.language)
+		if (controller && controller.fullLanguage)
 		{
 			// If we're searching a single file then we should restrict
 			// our search to only the language elements supported by
 			// that file.
-			NSArray* elements = controller.language.styler.names;
+			NSArray* elements = controller.fullLanguage.styler.names;
 			patterns = [app.settings stringValues:@"SearchWithin"];
 			patterns = intersectElements(patterns, elements);
 		}
@@ -254,7 +254,7 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 {
 	bool matches = true;
 	
-	if (controller && controller.language && [_searchWithinComboBox.stringValue compare:@"everything"] != NSOrderedSame)
+	if (controller && controller.fullLanguage && [_searchWithinComboBox.stringValue compare:@"everything"] != NSOrderedSame)
 	{
 		if ([controller respondsToSelector:@selector(getElementNameFor:)])
 		{

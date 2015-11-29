@@ -8,24 +8,29 @@ http://www.learnswift.tips/
 
 
 Creating plugins
-    - inherit from MimsyPlugin and use a unique class name
-    - add the class name to Principal class in Info.plist
+    - create a new target using the bundle template
+    - add a new file for the plugin source code, be sure to include it in the right target
+    - inherit from MimsyPlugin and give your plugin a unique name
+    - set the Principal class in Info.plist to your plugin's class name
     - add a ProjectURL and Email fields to the Info.plist
-    - add plugin to Target Dependencies in Mimsy's Build Phases panel
     - add MimsyPlugins to Target Dependencies for the plugin
+    - add plugin to Target Dependencies in Mimsy's Build Phases panel
+
+
+
     - add a Description.rtf file (may need to verify using the file inspector that it has the correct target memmbership)
 
 
 
 
-* Check for isEditable
-* Add a language getter:
-    - probably want a MimsyLanguage protocol
-* Replace the go extensions:
-    - go format
-    - see how go format interacts with undo
-    - loading extensions
-    - show gremlins
+* Add a GoFormat plugin:
+    - add all the files and change all the settings to something legit
+    - get it logging for now
+    - hook into OnSaving (replace foobar with grundle)
+    - save the text to a temp file and use go format
+    - try with and without undo support
+    - use a guard statement
+* Add a show gremlines plugin
 * Remove the go stuff.
 * Replace the old transforms.
 * Remove the old transforms.
@@ -34,6 +39,7 @@ Creating plugins
     - snippets are just language files
     - can have INPUT-NAME text which prompts user for NAME's value
     - probably should adjust indentation level to match current selection
+    - could have optional project .snippets directories
 * Replace the old extensions.
 * Remove the old extensions.
 * Replace the old builders?
