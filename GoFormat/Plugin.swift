@@ -9,7 +9,7 @@ enum TaskError: ErrorType
 
 func readToEOF(name: String, _ file: NSFileHandle) throws -> String
 {
-    let data = file.readDataToEndOfFile()   // zero bytes is not an error (e.g. for stderr)
+    let data = file.readDataToEndOfFile()
     if let result = NSString(data: data, encoding: NSUTF8StringEncoding)
     {
         return result as String
@@ -22,9 +22,19 @@ func readToEOF(name: String, _ file: NSFileHandle) throws -> String
 
 class StdGoFormat: MimsyPlugin
 {
+    var path: String? = nil
+    
     override func onLoad(stage: Int) -> String?
     {
-        if stage == 1
+        if stage == 0
+        {
+            path = findExe("gofmt")
+            if path == nil
+            {
+                return "couldn't find a path to gofmt"
+            }
+        }
+        else if stage == 1
         {
             app.registerOnSave(onSave)
         }
@@ -34,61 +44,68 @@ class StdGoFormat: MimsyPlugin
     
     func onSave(view: MimsyTextView)
     {
-        if let name = view.language?.name
+        switch view.language?.name
         {
-            if name == "go"
-            {                
-                let stdoutP = NSPipe()
-                let stderrP = NSPipe()
-                let stdinP = NSPipe()
-                
-                let task = NSTask()
-                task.launchPath = "/opt/local/bin/gofmt"
-                task.arguments = []
-                task.standardOutput = stdoutP
-                task.standardError = stderrP
-                task.standardInput = stdinP
-                
-                let data = view.text.dataUsingEncoding(NSUTF8StringEncoding)
-                stdinP.fileHandleForWriting.writeData(data!)    // should always be able to convert to UTF8
-                stdinP.fileHandleForWriting.closeFile()
-                
-                task.launch()
-                
-                do
+        case .Some(let lanuage) where lanuage == "go":
+            let stdoutP = NSPipe()
+            let stderrP = NSPipe()
+            let stdinP = NSPipe()
+            
+            let task = NSTask()
+            task.launchPath = path!
+            task.arguments = []
+            task.standardOutput = stdoutP
+            task.standardError = stderrP
+            task.standardInput = stdinP
+            
+            let data = view.text.dataUsingEncoding(NSUTF8StringEncoding)
+            stdinP.fileHandleForWriting.writeData(data!)    // should always be able to convert to UTF8
+            stdinP.fileHandleForWriting.closeFile()
+            
+            task.launch()
+            task.waitUntilExit()
+            
+            do
+            {
+                let stdout = try readToEOF("stdout", stdoutP.fileHandleForReading)
+                if task.terminationStatus != 0
                 {
-                    let stdout = try readToEOF("stdout", stdoutP.fileHandleForReading)
-                    if task.terminationStatus != 0
-                    {
-                        let stderr = try readToEOF("stderr", stderrP.fileHandleForReading)
-                        throw TaskError.ProcessError(status: task.terminationStatus, stdout: stdout, stderr: stderr)
-                    }
-
+                    let stderr = try readToEOF("stderr", stderrP.fileHandleForReading)
+                    throw TaskError.ProcessError(status: task.terminationStatus, stdout: stdout, stderr: stderr)
+                }
+                
+                // This should only be empty if the document is empty (which is certainly
+                // possible). To be safe we won't whack the document if gofmt returns nothing.
+                if !stdout.isEmpty
+                {
                     view.setText(stdout, undoText: "Format")
                 }
-                catch TaskError.GenericError(let text)
+            }
+            catch TaskError.GenericError(let text)
+            {
+                log("Error", "error running gofmt: %@", text)
+            }
+            catch TaskError.ProcessError(let status, let stdout, let stderr)
+            {
+                log("Error", "gofmt exited with code \(status)")
+                
+                if !stdout.isEmpty
                 {
-                    log("Error", "error running gofmt: %@", text)
+                    log("Error", "stdout: %@", stdout)
                 }
-                catch TaskError.ProcessError(let status, let stdout, let stderr)
+                
+                if !stderr.isEmpty
                 {
-                    log("Error", "gofmt exited with code \(status)")
-                    
-                    if !stdout.isEmpty
-                    {
-                        log("Error", "stdout: %@", stdout)
-                    }
-                    
-                    if !stderr.isEmpty
-                    {
-                        log("Error", "stderr: %@", stderr)
-                    }
-                }
-                catch
-                {
-                    log("Error", "unknown gofmt error")
+                    log("Error", "stderr: %@", stderr)
                 }
             }
+            catch
+            {
+                log("Error", "unknown gofmt error")
+            }
+            
+        default:
+            break
         }
     }
 }

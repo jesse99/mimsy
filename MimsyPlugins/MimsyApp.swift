@@ -74,6 +74,11 @@ public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
     /// - Parameter invoke: Called when the user selects the new menu item.
     func registerWithSelectionTextContextMenu(pos: WithTextSelectionPos, title: TextContextMenuItemTitle, invoke: InvokeTextCommand)
     
+    // Returns the environment variables Mimsy was launched with (which are normally a subset
+    // of the variables the shell commands receive) augmented with Mimsy settings (e.g. to append
+    // more paths onto PATH). This is the environment that should be used when using NSTask.
+    func environment() -> [String: String]
+    
     /// Normally plugins will use the MimsyPlugin log method instead of this.
     func logLine(topic: String, text: String)
 }

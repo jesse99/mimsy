@@ -248,6 +248,28 @@ void initLogGlobs()
     return [self addMenuItem:item loc:loc sel:sel enabled:enabled invoke:invoke];
 }
 
+- (NSDictionary<NSString*, NSString*>* __nonnull)environment
+{
+    NSMutableDictionary* env = [NSMutableDictionary new];
+    [env addEntriesFromDictionary:[[NSProcessInfo processInfo] environment]];
+    
+    NSArray* newPaths = [self.settings stringValues:@"AppendPath"];
+    if (newPaths && newPaths.count > 0)
+    {
+        NSString* suffix = [newPaths componentsJoinedByString:@":"];
+        
+        NSString* paths = env[@"PATH"];
+        if (paths && paths.length > 0)
+            paths = [NSString stringWithFormat:@"%@:%@", paths, suffix];
+        else
+            paths = suffix;
+        
+        env[@"PATH"] = paths;
+    }
+    
+    return env;
+}
+
 - (void)registerNoSelectionTextContextMenu:(enum NoTextSelectionPos)pos title:(TextContextMenuItemTitleBlock)title invoke:(InvokeTextCommandBlock)invoke
 {
     TextContextItem* item = [TextContextItem new];

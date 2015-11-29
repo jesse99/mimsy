@@ -42,13 +42,29 @@ public class MimsyPlugin: NSObject {
         app.logLine(topic, text: text)
     }
     
-    /// Returns a path to a unique file name within the temporary directory.
-    func tempFilePath(prefix prefix: String) -> String
+    /// Returns the full path to an executable or nil.
+    public func findExe(name: String) -> String?
     {
-        let uuid = CFUUIDCreate(nil)
-        let uuidString = CFUUIDCreateString(nil, uuid)
-        let dir: NSString = NSTemporaryDirectory()
-        return dir.stringByAppendingPathComponent("\(prefix)-\(uuidString)")
+        let pipe = NSPipe()
+        
+        let task = NSTask()
+        task.launchPath = "/bin/sh"
+        task.arguments = ["-c", "which \(name)"]
+        task.environment = app.environment()
+        task.standardOutput = pipe
+        
+        task.launch()
+        task.waitUntilExit()
+        
+        var result: String? = nil
+        if task.terminationStatus == 0
+        {
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            result = NSString(data: data, encoding: NSUTF8StringEncoding) as String?
+            result = result?.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet())
+        }
+                
+        return result
     }
     
     /// Plugins should use MimsyApp whenever they want to communicate with
