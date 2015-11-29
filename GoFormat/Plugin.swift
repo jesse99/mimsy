@@ -26,12 +26,14 @@ class StdGoFormat: MimsyPlugin
     
     override func onLoad(stage: Int) -> String?
     {
+        var err: String? = nil
+        
         if stage == 0
         {
             path = findExe("gofmt")
             if path == nil
             {
-                return "couldn't find a path to gofmt"
+                err = "couldn't find a path to gofmt"
             }
         }
         else if stage == 1
@@ -39,7 +41,7 @@ class StdGoFormat: MimsyPlugin
             app.registerOnSave(onSave)
         }
         
-        return nil
+        return err
     }
     
     func onSave(view: MimsyTextView)

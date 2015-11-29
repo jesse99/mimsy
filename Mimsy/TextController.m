@@ -144,34 +144,28 @@ static __weak TextController* _frontmost;
     return [self.textView.string substringWithRange:range];
 }
 
-- (void)setSelection:(NSString * __nonnull)text undoText:(NSString * __nullable)undoText
+- (void)setSelection:(NSString * __nonnull)text undoText:(NSString * __nonnull)undoText
 {
     NSRange range = self.textView.selectedRange;
     [self _setText:text undoText:undoText inRange:range];
 }
 
-- (void)setText:(NSString * __nonnull)text undoText:(NSString * __nullable)undoText
+- (void)setText:(NSString * __nonnull)text undoText:(NSString * __nonnull)undoText
 {
     NSRange range = NSMakeRange(0, self.text.length);
     [self _setText:text undoText:undoText inRange:range];
 }
 
-- (void)_setText:(NSString * __nonnull)text undoText:(NSString * __nullable)undoText inRange:(NSRange)range
+- (void)_setText:(NSString * __nonnull)text undoText:(NSString * __nonnull)undoText inRange:(NSRange)range
 {
-    if (undoText)
-    {
-        if ([self.textView shouldChangeTextInRange:range replacementString:text])
-        {
-            [self.textView replaceCharactersInRange:range withString:text];
-            [self.textView.undoManager setActionName:undoText];
-            [self.textView didChangeText];
-        }
-    }
-    else
+    if ([self.textView shouldChangeTextInRange:range replacementString:text])
     {
         [self.textView replaceCharactersInRange:range withString:text];
+        [self.textView.undoManager setActionName:undoText];
+        [self.textView didChangeText];
     }
 }
+
 - (bool)closed
 {
     return _closed;

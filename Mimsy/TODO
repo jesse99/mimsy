@@ -21,8 +21,6 @@ Creating plugins
 
 
 * Add a GoFormat plugin:
-    - can we not hard code the gofmt path?
-    - use a guard statement? or switch?
     - require undo
 * Add a show gremlines plugin
 * Remove the go stuff.

@@ -19,8 +19,8 @@ import Cocoa
     /// Replaces the text within the current selection.
     ///
     /// - Parameter text: The text used for the selection.
-    /// - Parameter undoText: Text added to the Undo menu item. If nil then the replacement is not undoable.
-    func setSelection(text: String, undoText: String?)
+    /// - Parameter undoText: Text added to the Undo menu item.
+    func setSelection(text: String, undoText: String)
     
     /// Returns a reference to the view's text.
     var text: String {get}
@@ -28,6 +28,6 @@ import Cocoa
     /// Replaces all of the text within the document.
     ///
     /// - Parameter text: The new text.
-    /// - Parameter undoText: Text added to the Undo menu item. If nil then the replacement is not undoable.
-    func setText(text: String, undoText: String?)
+    /// - Parameter undoText: Text added to the Undo menu item.
+    func setText(text: String, undoText: String)
 }
