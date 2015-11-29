@@ -19,8 +19,8 @@
 	pushUIntVector(&groupToName, 1);
 	pushUIntVector(&groupToName, 2);
 
-	RegexStyler* styler = [[RegexStyler alloc] initWithRegex:re elementNames:@[@"Normal", @"Keyword", @"String"] groupToName:groupToName];
-	StyleRuns* styleRuns = [styler computeStyles:@"if (blah) 'x' else 'y';" editCount:0];
+//	RegexStyler* styler = [[RegexStyler alloc] initWithRegex:re elementNames:@[@"Normal", @"Keyword", @"String"] groupToName:groupToName];
+//	StyleRuns* styleRuns = [styler computeStyles:@"if (blah) 'x' else 'y';" editCount:0];
 	
 	[styleRuns mapElementsToStyles:^id(NSString* elementName)
 	 {

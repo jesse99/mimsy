@@ -15,21 +15,14 @@ Creating plugins
     - add a ProjectURL and Email fields to the Info.plist
     - add MimsyPlugins to Target Dependencies for the plugin
     - add plugin to Target Dependencies in Mimsy's Build Phases panel
-
-
-
-    - add a Description.rtf file (may need to verify using the file inspector that it has the correct target memmbership)
+    - add a Description.rtf file, be sure to include it in the right target
 
 
 
 
 * Add a GoFormat plugin:
-    - add all the files and change all the settings to something legit
-    - get it logging for now
-    - hook into OnSaving (replace foobar with grundle)
-    - save the text to a temp file and use go format
-    - try with and without undo support
-    - use a guard statement
+    - use exceptions
+    - use a guard statement?
 * Add a show gremlines plugin
 * Remove the go stuff.
 * Replace the old transforms.

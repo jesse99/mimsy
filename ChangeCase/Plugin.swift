@@ -1,7 +1,8 @@
 import Cocoa
 import MimsyPlugins
 
-class StdChangeCase: MimsyPlugin {
+class StdChangeCase: MimsyPlugin
+{
     override func onLoad(stage: Int) -> String?
     {
         if stage == 1
@@ -36,7 +37,7 @@ class StdChangeCase: MimsyPlugin {
         {
             var text = view.selection
             text = text.uppercaseString;
-            view.replaceText(text, undoText: "Upper Case")
+            view.setSelection(text, undoText: "Upper Case")
         }
     }
     
@@ -46,7 +47,7 @@ class StdChangeCase: MimsyPlugin {
         {
             var text = view.selection
             text = text.lowercaseString;
-            view.replaceText(text, undoText: "Lower Case")
+            view.setSelection(text, undoText: "Lower Case")
         }
     }
 }

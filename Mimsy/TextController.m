@@ -86,7 +86,7 @@ static TextDocumentFiles* _files;
 
 @end
 
-@implementation TextController
+@implementation TextController 
 {
 	RestoreView* _restorer;
 	bool _closed;
@@ -144,9 +144,20 @@ static __weak TextController* _frontmost;
     return [self.textView.string substringWithRange:range];
 }
 
-- (void)replaceText:(NSString * __nonnull)text undoText:(NSString * __nullable)undoText
+- (void)setSelection:(NSString * __nonnull)text undoText:(NSString * __nullable)undoText
 {
     NSRange range = self.textView.selectedRange;
+    [self _setText:text undoText:undoText inRange:range];
+}
+
+- (void)setText:(NSString * __nonnull)text undoText:(NSString * __nullable)undoText
+{
+    NSRange range = NSMakeRange(0, self.text.length);
+    [self _setText:text undoText:undoText inRange:range];
+}
+
+- (void)_setText:(NSString * __nonnull)text undoText:(NSString * __nullable)undoText inRange:(NSRange)range
+{
     if (undoText)
     {
         if ([self.textView shouldChangeTextInRange:range replacementString:text])
@@ -161,7 +172,6 @@ static __weak TextController* _frontmost;
         [self.textView replaceCharactersInRange:range withString:text];
     }
 }
-
 - (bool)closed
 {
     return _closed;
@@ -925,9 +935,9 @@ static __weak TextController* _frontmost;
 		
 		NSString* name = [path lastPathComponent];
         if ([doc.fileType isEqualToString:@"binary"])
-            self.fullLanguage = [Languages findWithlangName:@"binary"];
+            self.language = [Languages findWithlangName:@"binary"];
         else
-            self.fullLanguage = [Languages findWithFileName:name contents:self.text];
+            self.language = [Languages findWithFileName:name contents:self.text];
 		
 		if (_restorer)
 			[_restorer setPath:path];

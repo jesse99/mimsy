@@ -57,8 +57,8 @@ public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
     /// - Returns: The text view for the frontmost document window.
     func frontTextView() -> MimsyTextView?
     
-    /// Registers a function that will be called just before text documents are saved.
-    func registerOnSaving(hook: SavingTextDoc)
+    /// Registers a function that will be called just before a save.
+    func registerOnSave(hook: SavingTextDoc)
     
     /// Used to add a custom menu item to text contextual menus when there is no selection.
     ///

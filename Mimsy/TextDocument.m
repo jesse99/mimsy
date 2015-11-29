@@ -402,11 +402,9 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 
 - (void)saveDocument:(id)sender
 {
-#if OLD_EXTENSIONS
-	if (_controller == [TextController frontmost])
-		[Extensions invokeNonBlocking:@"/text-document/user-saving"];
-#endif
-    
+    AppDelegate* app = [NSApp delegate];
+    [app invokeOnSave:_controller];
+        
 	[super saveDocument:sender];
 }
 
@@ -560,9 +558,6 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		if (_controller == [TextController frontmost])
 			[Extensions invokeNonBlocking:@"/text-document/saving"];
 #endif
-        
-        AppDelegate* app = [NSApp delegate];
-        [app invokeOnSaving:_controller];
         
 		NSTextStorage* storage = [textv textStorage];
 		NSMutableString* str = [storage mutableString];

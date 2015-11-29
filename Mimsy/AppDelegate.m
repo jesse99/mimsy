@@ -149,7 +149,7 @@ void initLogGlobs()
 #if OLD_EXTENSIONS
     ProcFileKeyStoreRW* _keyStoreFile;
 #endif
-    NSMutableArray* _onSaving;
+    NSMutableArray* _onSave;
     
 	NSMutableDictionary* _pendingBlocks;
 	NSArray* _helpFileItems;
@@ -189,7 +189,7 @@ void initLogGlobs()
         _procFileSystem = [ProcFileSystem new];
 #endif
         _items = [NSMutableDictionary new];
-        _onSaving = [NSMutableArray new];
+        _onSave = [NSMutableArray new];
         _noSelectionItems = [NSMutableDictionary new];
         _withSelectionItems = [NSMutableDictionary new];
         
@@ -300,14 +300,14 @@ void initLogGlobs()
     return controller;
 }
 
-- (void)registerOnSaving:(SavingBlock)hook
+- (void)registerOnSave:(SavingBlock)hook
 {
-    [_onSaving addObject:hook];
+    [_onSave addObject:hook];
 }
 
-- (void)invokeOnSaving:(id<MimsyTextView>)view
+- (void)invokeOnSave:(id<MimsyTextView>)view
 {
-    for (SavingBlock block in _onSaving)
+    for (SavingBlock block in _onSave)
     {
         block(view);
     }

@@ -42,6 +42,15 @@ public class MimsyPlugin: NSObject {
         app.logLine(topic, text: text)
     }
     
+    /// Returns a path to a unique file name within the temporary directory.
+    func tempFilePath(prefix prefix: String) -> String
+    {
+        let uuid = CFUUIDCreate(nil)
+        let uuidString = CFUUIDCreateString(nil, uuid)
+        let dir: NSString = NSTemporaryDirectory()
+        return dir.stringByAppendingPathComponent("\(prefix)-\(uuidString)")
+    }
+    
     /// Plugins should use MimsyApp whenever they want to communicate with
     /// Mimsy.
     public let app: MimsyApp
