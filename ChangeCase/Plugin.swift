@@ -7,8 +7,8 @@ class StdChangeCase: MimsyPlugin
     {
         if stage == 1
         {
-            app.addMenuItemTitled("Upper Case", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: upperCase)
-            app.addMenuItemTitled("Lower Case", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: lowerCase)
+            app.addMenuItem(title: "Upper Case", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: upperCase)
+            app.addMenuItem(title: "Lower Case", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: lowerCase)
             
             app.registerWithSelectionTextContextMenu(.Transform, title: {_ in
                 "Upper Case"}, invoke: { _ in self.upperCase()})

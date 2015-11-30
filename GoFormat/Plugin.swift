@@ -85,25 +85,25 @@ class StdGoFormat: MimsyPlugin
             }
             catch TaskError.GenericError(let text)
             {
-                log("Error", "error running gofmt: %@", text)
+                app.log("Error", "error running gofmt: %@", text)
             }
             catch TaskError.ProcessError(let status, let stdout, let stderr)
             {
-                log("Error", "gofmt exited with code \(status)")
+                app.log("Error", "gofmt exited with code \(status)")
                 
                 if !stdout.isEmpty
                 {
-                    log("Error", "stdout: %@", stdout)
+                    app.log("Error", "stdout: %@", stdout)
                 }
                 
                 if !stderr.isEmpty
                 {
-                    log("Error", "stderr: %@", stderr)
+                    app.log("Error", "stderr: %@", stderr)
                 }
             }
             catch
             {
-                log("Error", "unknown gofmt error")
+                app.log("Error", "unknown gofmt error")
             }
             
         default:

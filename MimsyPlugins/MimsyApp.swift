@@ -24,35 +24,8 @@ public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
 /// This is used by plugins to communicate with the top level of Mimsy.
 @objc public protocol MimsyApp
 {
-    /// Adds a new menu item to Mimsy's menubar.
-    ///
-    /// There are a few standard locations that plugins will often want to use when adding
-    /// menu items. These are often hidden menu items. Commonly used selectors include:
-    /// - **getInfo:**             File menu, used to show information about the current document.
-    /// - **showItems:**           Text menu, used to toggle showing things like whitespace.
-    /// - **transformItems:**      Text menu, used to change the current selection, e.g. to change case.
-    /// - **underline:**           Format menu, used to change text formatting.
-    /// - **find:,
-    ///     findNext:,
-    ///     findPrevious:**        Search menu, finding text within the current document.
-    /// - **findInFiles:,
-    ///     findNextInFiles:,
-    ///     findPreviousInFiles:** Search menu, finding text within a directory.
-    /// - **jumpToLine:**          Search menu, navigating within the current document.
-    /// - **build:**               Build menu, build the current target.
-    /// - **showHelp:**            Help menu, text or html files with help.
-    ///
-    /// - Parameter item: The menu item to add. Note that plugins should not use representedObject.
-    /// - Parameter loc: Controls whether the new menu item is added before sel, after sel, or so that the menu items around sel are kept sorted.
-    /// - Parameter sel: A selector from one of Mimsy's menu items (see above for more details).
-    /// - Parameter enabled: If set then this will point to a function which can be used to enable and disable the menu item (or change the title or change the state (to add checkmarks)). If not set then the item is always enabled.
-    /// - Parameter invoke: The function to invoke when the menu item is selected.
-    ///
-    /// - Returns: True if menu item was added. False if sel could not be found.
+    /// Typically the extension method will be used instead of this.
     func addMenuItem(item: NSMenuItem, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem?, invoke: InvokeMenuItem) -> Bool
-
-    /// Like addMenuItem except that it takes the title of the new menu item instead of a menu item.
-    func addMenuItemTitled(title: String, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem?, invoke: InvokeMenuItem) -> Bool
     
     /// - Returns: The text view for the frontmost document window.
     func frontTextView() -> MimsyTextView?
@@ -82,6 +55,53 @@ public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
     // more paths onto PATH). This is the environment that should be used when using NSTask.
     func environment() -> [String: String]
         
-    /// Normally plugins will use the MimsyPlugin log method instead of this.
-    func logLine(topic: String, text: String)
+    /// Typically the extension method will be used instead of this.
+    func logString(topic: String, text: String)
+}
+
+public extension MimsyApp
+{
+    /// Adds a new menu item to Mimsy's menubar.
+    ///
+    /// There are a few standard locations that plugins will often want to use when adding
+    /// menu items. These are often hidden menu items. Commonly used selectors include:
+    /// - **getInfo:**             File menu, used to show information about the current document.
+    /// - **showItems:**           Text menu, used to toggle showing things like whitespace.
+    /// - **transformItems:**      Text menu, used to change the current selection, e.g. to change case.
+    /// - **underline:**           Format menu, used to change text formatting.
+    /// - **find:,
+    ///     findNext:,
+    ///     findPrevious:**        Search menu, finding text within the current document.
+    /// - **findInFiles:,
+    ///     findNextInFiles:,
+    ///     findPreviousInFiles:** Search menu, finding text within a directory.
+    /// - **jumpToLine:**          Search menu, navigating within the current document.
+    /// - **build:**               Build menu, build the current target.
+    /// - **showHelp:**            Help menu, text or html files with help.
+    ///
+    /// - Parameter item: The menu item to add. Note that plugins should not use representedObject.
+    /// - Parameter loc: Controls whether the new menu item is added before sel, after sel, or so that the menu items around sel are kept sorted.
+    /// - Parameter sel: A selector from one of Mimsy's menu items (see above for more details).
+    /// - Parameter enabled: If set then this will point to a function which can be used to enable and disable the menu item (or change the title or change the state (to add checkmarks)). If not set then the item is always enabled.
+    /// - Parameter invoke: The function to invoke when the menu item is selected.
+    ///
+    /// - Returns: True if menu item was added. False if sel could not be found.
+    public func addMenuItem(item: NSMenuItem? = nil, title: String? = nil, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem? = nil, invoke: InvokeMenuItem) -> Bool
+    {
+        let theItem = item != nil ? item! : NSMenuItem(title: title!, action: "", keyEquivalent: "")
+        return addMenuItem(theItem, loc: loc, sel: sel, enabled: enabled, invoke: invoke)
+    }
+    
+    /// Depending upon whether the logging.mimsy settings file enables the topic
+    /// this will add a new log line to Mimsy's log. Note that the log is normally
+    /// at ~/Library/Logs/mimsy.log.
+    ///
+    /// - Parameter topic: Typically "Plugins", "Plugins:Verbose", or a custom topic name.
+    /// - Parameter format: NSString style [format string](https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Strings/Articles/formatSpecifiers.html).
+    /// - Parameter args: Optional arguments to feed into the format string.
+    public func log(topic: String, _ format: String, _ args: CVarArgType...)
+    {
+        let text = String(format: format, arguments: args)
+        logString(topic, text: text)
+    }
 }

@@ -29,19 +29,6 @@ public class MimsyPlugin: NSObject {
     {
     }
     
-    /// Depending upon whether the logging.mimsy settings file enables the topic
-    /// this will add a new log line to Mimsy's log. Note that the log is normally
-    /// at ~/Library/Logs/mimsy.log.
-    ///
-    /// - Parameter topic: Typically "Plugins", "Plugins:Verbose", or a custom topic name.
-    /// - Parameter format: NSString style [format string](https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Strings/Articles/formatSpecifiers.html).
-    /// - Parameter args: Optional arguments to feed into the format string.
-    public func log(topic: String, _ format: String, _ args: CVarArgType...)
-    {
-        let text = String(format: format, arguments: args)
-        app.logLine(topic, text: text)
-    }
-    
     /// Returns the full path to an executable or nil.
     public func findExe(name: String) -> String?
     {

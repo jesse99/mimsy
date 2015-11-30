@@ -207,7 +207,7 @@ void initLogGlobs()
 	return self;
 }
 
-- (void)logLine:(NSString*)topic text:(NSString*)text
+- (void)logString:(NSString*)topic text:(NSString*)text
 {
     LOG(STR(topic), "%s", STR(text));
 }
@@ -240,12 +240,6 @@ void initLogGlobs()
     }
     
     return false;
-}
-
-- (BOOL)addMenuItemTitled:(NSString*)title loc:(enum MenuItemLoc)loc sel:(NSString *)sel enabled:(MenuEnabledBlock)enabled invoke:(MenuInvokeBlock)invoke
-{
-    NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:NULL keyEquivalent:@""];
-    return [self addMenuItem:item loc:loc sel:sel enabled:enabled invoke:invoke];
 }
 
 - (NSDictionary<NSString*, NSString*>* __nonnull)environment

@@ -7,7 +7,7 @@ class StdFindGremlin: MimsyPlugin
     {
         if stage == 1
         {
-            app.addMenuItemTitled("Find Gremlin", loc: .After, sel: "findPrevious:", enabled: enabled, invoke: findGremlin)
+            app.addMenuItem(title: "Find Gremlin", loc: .After, sel: "findPrevious:", enabled: enabled, invoke: findGremlin)
         }
         
         return nil
@@ -27,6 +27,7 @@ class StdFindGremlin: MimsyPlugin
     
     // TODO:
     // write a better message to the transcript
+    // lazily unzip the names file
     func findGremlin()
     {
         if let view = app.frontTextView()
