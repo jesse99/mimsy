@@ -22,10 +22,6 @@ Creating plugins
 
 
 
-* Replace the old transforms:
-    - sort lines
-    - maybe From UTF8
-* Remove the old transforms.
 * Menus aren't sorted quite right
 * Reverse Lines shouldn't always be added to context menu
 * Little goofy that frontTextView returns something when a non-text window is frontmost.

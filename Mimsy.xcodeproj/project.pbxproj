@@ -119,7 +119,6 @@
 		37A8C6C116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C6BF16758FF400D4DB13 /* InfoPlist.strings */; };
 		37A8C6C416758FF400D4DB13 /* DecodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6C316758FF400D4DB13 /* DecodeTests.m */; };
 		37ABF9B318C2EA9C006AFDB7 /* SearchSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */; };
-		37ABF9B518E3C5A5006AFDB7 /* transforms in Resources */ = {isa = PBXBuildFile; fileRef = 37ABF9B418E3C5A4006AFDB7 /* transforms */; };
 		37AD7570171B95460054A75F /* UpdateConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AD756F171B95460054A75F /* UpdateConfig.m */; };
 		37B9CA011C0BC923006C479B /* MimsyTranscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B9CA001C0BC923006C479B /* MimsyTranscript.swift */; };
 		37BABACF1C08105600B9B5AB /* Plugins.m in Sources */ = {isa = PBXBuildFile; fileRef = 37BABACE1C08105600B9B5AB /* Plugins.m */; };
@@ -500,7 +499,6 @@
 		37A8C6CD167590E700D4DB13 /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		37ABF9B118C2EA9C006AFDB7 /* SearchSite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchSite.h; sourceTree = "<group>"; };
 		37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchSite.m; sourceTree = "<group>"; };
-		37ABF9B418E3C5A4006AFDB7 /* transforms */ = {isa = PBXFileReference; lastKnownFileType = folder; path = transforms; sourceTree = "<group>"; };
 		37AD756E171B95460054A75F /* UpdateConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateConfig.h; sourceTree = "<group>"; };
 		37AD756F171B95460054A75F /* UpdateConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateConfig.m; sourceTree = "<group>"; };
 		37B9CA001C0BC923006C479B /* MimsyTranscript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimsyTranscript.swift; sourceTree = "<group>"; };
@@ -1013,7 +1011,6 @@
 				377BDE6216C005C8008DADA5 /* scripts */,
 				37862C641690BC0600DB9E66 /* settings */,
 				37862C5F168FF58900DB9E66 /* styles */,
-				37ABF9B418E3C5A4006AFDB7 /* transforms */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1444,7 +1441,6 @@
 				372D8FAB16F571A500CBBC96 /* Cancel.png in Resources */,
 				377C2CA8176503B4008E383E /* BuildOptions.xib in Resources */,
 				370552A318710C27005F1438 /* SelectName.xib in Resources */,
-				37ABF9B518E3C5A5006AFDB7 /* transforms in Resources */,
 				3782A8B21916BAF1005ED276 /* create-vector.py in Resources */,
 				379A4116191FDB8B00ACEA5C /* FindWindow.xib in Resources */,
 				37ECF0691930201A00061C0A /* FindInFilesWindow.xib in Resources */,
