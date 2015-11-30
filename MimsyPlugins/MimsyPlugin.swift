@@ -29,31 +29,6 @@ public class MimsyPlugin: NSObject {
     {
     }
     
-    /// Returns the full path to an executable or nil.
-    public func findExe(name: String) -> String?
-    {
-        let pipe = NSPipe()
-        
-        let task = NSTask()
-        task.launchPath = "/bin/sh"
-        task.arguments = ["-c", "which \(name)"]
-        task.environment = app.environment()
-        task.standardOutput = pipe
-        
-        task.launch()
-        task.waitUntilExit()
-        
-        var result: String? = nil
-        if task.terminationStatus == 0
-        {
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            result = NSString(data: data, encoding: NSUTF8StringEncoding) as String?
-            result = result?.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet())
-        }
-                
-        return result
-    }
-    
     /// Plugins should use MimsyApp whenever they want to communicate with
     /// Mimsy.
     public let app: MimsyApp

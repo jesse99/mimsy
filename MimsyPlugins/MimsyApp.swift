@@ -104,4 +104,74 @@ public extension MimsyApp
         let text = String(format: format, arguments: args)
         logString(topic, text: text)
     }
+    
+    /// Returns the full path to an executable or nil.
+    public func findExe(name: String) -> String?
+    {
+        let pipe = NSPipe()
+        
+        let task = NSTask()
+        task.launchPath = "/bin/sh"
+        task.arguments = ["-c", "which \(name)"]
+        task.environment = environment()
+        task.standardOutput = pipe
+        
+        task.launch()
+        task.waitUntilExit()
+        
+        var result: String? = nil
+        if task.terminationStatus == 0
+        {
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            result = NSString(data: data, encoding: NSUTF8StringEncoding) as String?
+            result = result?.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet())
+        }
+        
+        return result
+    }
+    
+    /// Returns a list of Unicode names indexed by code point. Names are things like 
+    /// "NOT EQUAL TO" or "-" for an invalid code point.
+    public func getUnicodeNames() -> [String]
+    {
+        // Only load the names once.
+        if unicodeNames == nil
+        {
+            unicodeNames = loadUnicodeNames()
+        }
+        
+        return unicodeNames!
+    }
+    
+    func loadUnicodeNames() -> [String]
+    {
+        var names = [String]()
+        
+        var path = NSBundle.mainBundle().resourcePath as NSString?
+        path = path?.stringByAppendingPathComponent("UnicodeNames.zip")
+        if let path = path, unzip = findExe("unzip")
+        {
+            let contents = unzipFile(unzip, path)
+            names = contents.componentsSeparatedByString("\n")
+        }
+        
+        return names
+    }
+    
+    func unzipFile(tool: String, _ path: NSString) -> String
+    {
+        let pipe = NSPipe()
+        
+        let task = NSTask()
+        task.launchPath = tool
+        task.arguments = ["-p", path as String]
+        task.standardOutput = pipe
+        
+        task.launch()
+        
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        return NSString(data: data, encoding: NSUTF8StringEncoding) as String!
+    }
 }
+
+var unicodeNames: [String]?

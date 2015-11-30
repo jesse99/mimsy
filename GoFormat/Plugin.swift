@@ -30,7 +30,7 @@ class StdGoFormat: MimsyPlugin
         
         if stage == 0
         {
-            path = findExe("gofmt")
+            path = app.findExe("gofmt")
             if path == nil
             {
                 err = "couldn't find a path to gofmt"

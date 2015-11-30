@@ -25,9 +25,6 @@ class StdFindGremlin: MimsyPlugin
         return enabled
     }
     
-    // TODO:
-    // write a better message to the transcript
-    // lazily unzip the names file
     func findGremlin()
     {
         if let view = app.frontTextView()
@@ -39,15 +36,25 @@ class StdFindGremlin: MimsyPlugin
             
             for var i = index; i < text.length; ++i
             {
-                let ch = text.characterAtIndex(i)
+                let ch = Int(text.characterAtIndex(i))
                 if (ch < 32 && ch != 9 && ch != 10 && ch != 13) || ch > 126
                 {
-                    app.transcript().writeLine(.Info, "found \(ch)")
+                    let names = app.getUnicodeNames()
+                    if ch < names.count && names[ch] != "-"
+                    {
+                        app.transcript().writeLine(.Info, "found \(names[ch]) (U+%04X)", ch)
+                    }
+                    else
+                    {
+                        app.transcript().writeLine(.Info, "found invalid code point U+%04X", ch)
+                    }
                     view.selectionRange = NSMakeRange(i, 1)
                     return
                 }
             }
             
+            // We could support wrapping around (if the FindWraps setting is set)
+            // but that works best with Find and Find Again commands.
             NSBeep()
         }
     }

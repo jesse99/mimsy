@@ -64,6 +64,8 @@ func findGremlin(units []uint16, loc int) int {
 	return len(units)
 }
 
+// NSString* path = [[[NSBundle mainBundle] resourceURL] path];
+
 func loadNames() []string {
 	var names []string
 
