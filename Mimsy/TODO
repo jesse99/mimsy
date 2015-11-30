@@ -22,14 +22,14 @@ Creating plugins
 
 
 
-* Menus aren't sorted quite right
 * Replace the old transforms:
-    - reverse lines
     - sort lines
     - maybe From UTF8
+* Remove the old transforms.
+* Menus aren't sorted quite right
+* Reverse Lines shouldn't always be added to context menu
 * Little goofy that frontTextView returns something when a non-text window is frontmost.
     - maybe keep that and add a textView method
-* Remove the old transforms.
 * Replace the old extensions.
 * Remove the old extensions.
 * Remove lua support.

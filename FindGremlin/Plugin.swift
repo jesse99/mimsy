@@ -31,13 +31,13 @@ class StdFindGremlin: MimsyPlugin
         {
             // We need random access to the UTF-16 characters to ensure that our selections
             // are sensible so it's easiest to just use NSString.
-            let text = view.text as NSString
+            let text = view.string
             let index = view.selectionRange.location + 1
             
             for var i = index; i < text.length; ++i
             {
                 let ch = Int(text.characterAtIndex(i))
-                if (ch < 32 && ch != 9 && ch != 10 && ch != 13) || ch > 126
+                if (ch < 32 && ch != 9 && ch != 10) || ch > 126
                 {
                     let names = app.getUnicodeNames()
                     if ch < names.count && names[ch] != "-"

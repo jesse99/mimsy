@@ -148,6 +148,8 @@
 		37E7A8CD1AE1FDB800BD93B4 /* StringDialogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37E7A8CC1AE1FDB800BD93B4 /* StringDialogController.m */; };
 		37E8C5911C0C0E0300849644 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E8C5901C0C0E0300849644 /* File.swift */; };
 		37E8C5971C0C0E8C00849644 /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 37E8C5961C0C0E8C00849644 /* Description.rtf */; };
+		37E8C5A31C0C111F00849644 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E8C5A21C0C111F00849644 /* Plugin.swift */; };
+		37E8C5A91C0C118A00849644 /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 37E8C5A81C0C118A00849644 /* Description.rtf */; };
 		37ECF06419296C7A00061C0A /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ECF06319296C7A00061C0A /* Constants.m */; };
 		37ECF067192EFCC100061C0A /* BaseTextController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ECF066192EFCC100061C0A /* BaseTextController.m */; };
 		37ECF0691930201A00061C0A /* FindInFilesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37ECF0681930201A00061C0A /* FindInFilesWindow.xib */; };
@@ -240,6 +242,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 37E8C5891C0C0DE500849644;
 			remoteInfo = EscapeText;
+		};
+		37E8C5A41C0C116A00849644 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37CDF3961C07BF9E009E48B4;
+			remoteInfo = MimsyPlugins;
+		};
+		37E8C5A61C0C117200849644 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37E8C59B1C0C110500849644;
+			remoteInfo = ReverseLines;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -517,6 +533,10 @@
 		37E8C58C1C0C0DE500849644 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		37E8C5901C0C0E0300849644 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		37E8C5961C0C0E8C00849644 /* Description.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Description.rtf; sourceTree = "<group>"; };
+		37E8C59C1C0C110500849644 /* ReverseLines.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReverseLines.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		37E8C59E1C0C110500849644 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		37E8C5A21C0C111F00849644 /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
+		37E8C5A81C0C118A00849644 /* Description.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Description.rtf; sourceTree = "<group>"; };
 		37ECF06219296C7A00061C0A /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		37ECF06319296C7A00061C0A /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		37ECF065192EFCC000061C0A /* BaseTextController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseTextController.h; sourceTree = "<group>"; };
@@ -587,6 +607,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		37E8C5871C0C0DE500849644 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37E8C5991C0C110500849644 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -887,6 +914,7 @@
 				3775F4A81C0BBFD9001AFA06 /* FindGremlin.plugin */,
 				3756B8B21C0BF257002B0B56 /* ConvertToInt.plugin */,
 				37E8C58A1C0C0DE500849644 /* EscapeText.plugin */,
+				37E8C59C1C0C110500849644 /* ReverseLines.plugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1041,6 +1069,7 @@
 				37E8C58B1C0C0DE500849644 /* EscapeText */,
 				3775F4A91C0BBFD9001AFA06 /* FindGremlin */,
 				37BABAE01C0AB5CB00B9B5AB /* GoFormat */,
+				37E8C59D1C0C110500849644 /* ReverseLines */,
 			);
 			name = Plugins;
 			sourceTree = "<group>";
@@ -1053,6 +1082,16 @@
 				37E8C5961C0C0E8C00849644 /* Description.rtf */,
 			);
 			path = EscapeText;
+			sourceTree = "<group>";
+		};
+		37E8C59D1C0C110500849644 /* ReverseLines */ = {
+			isa = PBXGroup;
+			children = (
+				37E8C59E1C0C110500849644 /* Info.plist */,
+				37E8C5A21C0C111F00849644 /* Plugin.swift */,
+				37E8C5A81C0C118A00849644 /* Description.rtf */,
+			);
+			path = ReverseLines;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1117,6 +1156,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				37E8C5A71C0C117200849644 /* PBXTargetDependency */,
 				37E8C5951C0C0E7300849644 /* PBXTargetDependency */,
 				3756B8BD1C0BF2EB002B0B56 /* PBXTargetDependency */,
 				3775F4B41C0BC0AB001AFA06 /* PBXTargetDependency */,
@@ -1220,6 +1260,24 @@
 			productReference = 37E8C58A1C0C0DE500849644 /* EscapeText.plugin */;
 			productType = "com.apple.product-type.bundle";
 		};
+		37E8C59B1C0C110500849644 /* ReverseLines */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 37E8C59F1C0C110500849644 /* Build configuration list for PBXNativeTarget "ReverseLines" */;
+			buildPhases = (
+				37E8C5981C0C110500849644 /* Sources */,
+				37E8C5991C0C110500849644 /* Frameworks */,
+				37E8C59A1C0C110500849644 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				37E8C5A51C0C116A00849644 /* PBXTargetDependency */,
+			);
+			name = ReverseLines;
+			productName = ReverseLines;
+			productReference = 37E8C59C1C0C110500849644 /* ReverseLines.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1251,6 +1309,9 @@
 					37E8C5891C0C0DE500849644 = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
+					37E8C59B1C0C110500849644 = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
 				};
 			};
 			buildConfigurationList = 37A8C68C16758FF400D4DB13 /* Build configuration list for PBXProject "Mimsy" */;
@@ -1273,6 +1334,7 @@
 				3775F4A71C0BBFD9001AFA06 /* FindGremlin */,
 				3756B8B11C0BF257002B0B56 /* ConvertToInt */,
 				37E8C5891C0C0DE500849644 /* EscapeText */,
+				37E8C59B1C0C110500849644 /* ReverseLines */,
 			);
 		};
 /* End PBXProject section */
@@ -1366,6 +1428,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				37E8C5971C0C0E8C00849644 /* Description.rtf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37E8C59A1C0C110500849644 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37E8C5A91C0C118A00849644 /* Description.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1562,6 +1632,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		37E8C5981C0C110500849644 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37E8C5A31C0C111F00849644 /* Plugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1624,6 +1702,16 @@
 			isa = PBXTargetDependency;
 			target = 37E8C5891C0C0DE500849644 /* EscapeText */;
 			targetProxy = 37E8C5941C0C0E7300849644 /* PBXContainerItemProxy */;
+		};
+		37E8C5A51C0C116A00849644 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37CDF3961C07BF9E009E48B4 /* MimsyPlugins */;
+			targetProxy = 37E8C5A41C0C116A00849644 /* PBXContainerItemProxy */;
+		};
+		37E8C5A71C0C117200849644 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37E8C59B1C0C110500849644 /* ReverseLines */;
+			targetProxy = 37E8C5A61C0C117200849644 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2254,6 +2342,70 @@
 			};
 			name = Release;
 		};
+		37E8C5A01C0C110500849644 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = ReverseLines/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.ReverseLines;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		37E8C5A11C0C110500849644 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = ReverseLines/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.ReverseLines;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2334,6 +2486,14 @@
 			buildConfigurations = (
 				37E8C58D1C0C0DE500849644 /* Debug */,
 				37E8C58E1C0C0DE500849644 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		37E8C59F1C0C110500849644 /* Build configuration list for PBXNativeTarget "ReverseLines" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37E8C5A01C0C110500849644 /* Debug */,
+				37E8C5A11C0C110500849644 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};

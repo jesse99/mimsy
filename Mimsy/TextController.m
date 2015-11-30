@@ -128,6 +128,11 @@ static __weak TextController* _frontmost;
     return _language;
 }
 
+- (NSString* _Nonnull)string
+{
+    return self.text;
+}
+
 - (NSRange)selectionRange
 {
     return self.textView.selectedRange;
@@ -147,20 +152,20 @@ static __weak TextController* _frontmost;
 - (void)setSelection:(NSString * __nonnull)text undoText:(NSString * __nonnull)undoText
 {
     NSRange range = self.textView.selectedRange;
-    [self _setText:text undoText:undoText inRange:range];
+    [self setText:text forRange:range undoText:undoText];
 }
 
 - (void)setText:(NSString * __nonnull)text undoText:(NSString * __nonnull)undoText
 {
     NSRange range = NSMakeRange(0, self.text.length);
-    [self _setText:text undoText:undoText inRange:range];
+    [self setText:text forRange:range undoText:undoText];
 }
 
-- (void)_setText:(NSString * __nonnull)text undoText:(NSString * __nonnull)undoText inRange:(NSRange)range
+- (void)setText:(NSString *)text forRange:(NSRange)forRange undoText:(NSString *)undoText
 {
-    if ([self.textView shouldChangeTextInRange:range replacementString:text])
+    if ([self.textView shouldChangeTextInRange:forRange replacementString:text])
     {
-        [self.textView replaceCharactersInRange:range withString:text];
+        [self.textView replaceCharactersInRange:forRange withString:text];
         [self.textView.undoManager setActionName:undoText];
         [self.textView didChangeText];
     }
