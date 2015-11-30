@@ -53,6 +53,8 @@
 		3752CC1116A1F25E00B623F5 /* SelectStyleWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3752CC1016A1F25E00B623F5 /* SelectStyleWindow.xib */; };
 		3752CC1516A1F2B400B623F5 /* SelectStyleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3752CC1416A1F2B400B623F5 /* SelectStyleController.m */; };
 		3752CC1816A2F7EA00B623F5 /* StringCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3752CC1716A2F7EA00B623F5 /* StringCategory.m */; };
+		3756B8B91C0BF28A002B0B56 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3756B8B81C0BF28A002B0B56 /* Plugin.swift */; };
+		3756B8BF1C0BF305002B0B56 /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3756B8BE1C0BF305002B0B56 /* Description.rtf */; };
 		3759B6571676F01900D3F3B8 /* TextController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3759B6561676F01900D3F3B8 /* TextController.m */; };
 		3759B6601678376000D3F3B8 /* Decode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3759B65F1678376000D3F3B8 /* Decode.m */; };
 		376407E816B8CB05000B7AE3 /* tophat.icns in Resources */ = {isa = PBXBuildFile; fileRef = 376407E716B8CB05000B7AE3 /* tophat.icns */; };
@@ -153,6 +155,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3756B8BA1C0BF2DD002B0B56 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37CDF3961C07BF9E009E48B4;
+			remoteInfo = MimsyPlugins;
+		};
+		3756B8BC1C0BF2EB002B0B56 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3756B8B11C0BF257002B0B56;
+			remoteInfo = ConvertToInt;
+		};
 		3775F4B11C0BC09B001AFA06 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
@@ -311,6 +327,10 @@
 		3752CC1416A1F2B400B623F5 /* SelectStyleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectStyleController.m; sourceTree = "<group>"; };
 		3752CC1616A2F7EA00B623F5 /* StringCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringCategory.h; sourceTree = "<group>"; };
 		3752CC1716A2F7EA00B623F5 /* StringCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringCategory.m; sourceTree = "<group>"; };
+		3756B8B21C0BF257002B0B56 /* ConvertToInt.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ConvertToInt.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		3756B8B41C0BF257002B0B56 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3756B8B81C0BF28A002B0B56 /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
+		3756B8BE1C0BF305002B0B56 /* Description.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Description.rtf; sourceTree = "<group>"; };
 		3759B6551676F01900D3F3B8 /* TextController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextController.h; sourceTree = "<group>"; };
 		3759B6561676F01900D3F3B8 /* TextController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextController.m; sourceTree = "<group>"; };
 		3759B65E1678376000D3F3B8 /* Decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Decode.h; sourceTree = "<group>"; };
@@ -490,6 +510,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		3756B8AF1C0BF257002B0B56 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3775F4A51C0BBFD9001AFA06 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -652,6 +679,16 @@
 				3751410B168CE15600C329AF /* create-vector.py */,
 			);
 			name = Scripts;
+			sourceTree = "<group>";
+		};
+		3756B8B31C0BF257002B0B56 /* ConvertToInt */ = {
+			isa = PBXGroup;
+			children = (
+				3756B8B41C0BF257002B0B56 /* Info.plist */,
+				3756B8B81C0BF28A002B0B56 /* Plugin.swift */,
+				3756B8BE1C0BF305002B0B56 /* Description.rtf */,
+			);
+			path = ConvertToInt;
 			sourceTree = "<group>";
 		};
 		3759B65D1678338600D3F3B8 /* Text Editor */ = {
@@ -821,6 +858,7 @@
 				37CDF3AD1C07CC3A009E48B4 /* ChangeCase.plugin */,
 				37BABADF1C0AB5CB00B9B5AB /* GoFormat.plugin */,
 				3775F4A81C0BBFD9001AFA06 /* FindGremlin.plugin */,
+				3756B8B21C0BF257002B0B56 /* ConvertToInt.plugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -971,6 +1009,7 @@
 			isa = PBXGroup;
 			children = (
 				37CDF3AE1C07CC3A009E48B4 /* ChangeCase */,
+				3756B8B31C0BF257002B0B56 /* ConvertToInt */,
 				3775F4A91C0BBFD9001AFA06 /* FindGremlin */,
 				37BABAE01C0AB5CB00B9B5AB /* GoFormat */,
 			);
@@ -990,6 +1029,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		3756B8B11C0BF257002B0B56 /* ConvertToInt */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3756B8B71C0BF257002B0B56 /* Build configuration list for PBXNativeTarget "ConvertToInt" */;
+			buildPhases = (
+				3756B8AE1C0BF257002B0B56 /* Sources */,
+				3756B8AF1C0BF257002B0B56 /* Frameworks */,
+				3756B8B01C0BF257002B0B56 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3756B8BB1C0BF2DD002B0B56 /* PBXTargetDependency */,
+			);
+			name = ConvertToInt;
+			productName = ConvertToInt;
+			productReference = 3756B8B21C0BF257002B0B56 /* ConvertToInt.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 		3775F4A71C0BBFD9001AFA06 /* FindGremlin */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3775F4AD1C0BBFD9001AFA06 /* Build configuration list for PBXNativeTarget "FindGremlin" */;
@@ -1021,6 +1078,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				3756B8BD1C0BF2EB002B0B56 /* PBXTargetDependency */,
 				3775F4B41C0BC0AB001AFA06 /* PBXTargetDependency */,
 				37BABAEC1C0AB89700B9B5AB /* PBXTargetDependency */,
 				37CDF3B81C07F339009E48B4 /* PBXTargetDependency */,
@@ -1117,6 +1175,9 @@
 				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Jesse Jones";
 				TargetAttributes = {
+					3756B8B11C0BF257002B0B56 = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
 					3775F4A71C0BBFD9001AFA06 = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
@@ -1149,11 +1210,20 @@
 				37CDF3AC1C07CC3A009E48B4 /* ChangeCase */,
 				37BABADE1C0AB5CB00B9B5AB /* GoFormat */,
 				3775F4A71C0BBFD9001AFA06 /* FindGremlin */,
+				3756B8B11C0BF257002B0B56 /* ConvertToInt */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		3756B8B01C0BF257002B0B56 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3756B8BF1C0BF305002B0B56 /* Description.rtf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3775F4A61C0BBFD9001AFA06 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1262,6 +1332,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		3756B8AE1C0BF257002B0B56 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3756B8B91C0BF28A002B0B56 /* Plugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3775F4A41C0BBFD9001AFA06 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1409,6 +1487,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3756B8BB1C0BF2DD002B0B56 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37CDF3961C07BF9E009E48B4 /* MimsyPlugins */;
+			targetProxy = 3756B8BA1C0BF2DD002B0B56 /* PBXContainerItemProxy */;
+		};
+		3756B8BD1C0BF2EB002B0B56 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3756B8B11C0BF257002B0B56 /* ConvertToInt */;
+			targetProxy = 3756B8BC1C0BF2EB002B0B56 /* PBXContainerItemProxy */;
+		};
 		3775F4B21C0BC09B001AFA06 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 37CDF3961C07BF9E009E48B4 /* MimsyPlugins */;
@@ -1495,6 +1583,70 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		3756B8B51C0BF257002B0B56 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = ConvertToInt/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.ConvertToInt;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		3756B8B61C0BF257002B0B56 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = ConvertToInt/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.ConvertToInt;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
 		3775F4AB1C0BBFD9001AFA06 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1953,6 +2105,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3756B8B71C0BF257002B0B56 /* Build configuration list for PBXNativeTarget "ConvertToInt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3756B8B51C0BF257002B0B56 /* Debug */,
+				3756B8B61C0BF257002B0B56 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		3775F4AD1C0BBFD9001AFA06 /* Build configuration list for PBXNativeTarget "FindGremlin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

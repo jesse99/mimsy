@@ -20,20 +20,28 @@ Creating plugins
 
 
 
-* Remove the go stuff.
-* Replace the old transforms.
+* Menus aren't sorted quite right
+* Replace the old transforms:
+    - escape html
+    - escape xml
+    - reverse lines
+    - sort lines
+    - maybe From UTF8
+* Little goofy that frontTextView returns something when a non-text window is frontmost.
+    - maybe keep that and add a textView method
 * Remove the old transforms.
+* Replace the old extensions.
+* Remove the old extensions.
+* Remove lua support.
+* Replace the old builders?
+* Remove the old builders?
+* Make sure that all the OLD_EXTENSIONS code is gone
 * Add snippets support:
     - snippets/<language> directories
     - snippets are just language files
     - can have INPUT-NAME text which prompts user for NAME's value
     - probably should adjust indentation level to match current selection
     - could have optional project .snippets directories
-* Replace the old extensions.
-* Remove the old extensions.
-* Replace the old builders?
-* Remove the old builders?
-* Make sure that all the OLD_EXTENSIONS code is gone
 * Do something with functional tests?
 * Do we need an unload method? Maybe takes a reason?
 - or can we somehow catch bugs?
