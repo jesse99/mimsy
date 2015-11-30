@@ -1,16 +1,16 @@
 import Cocoa
 import MimsyPlugins
 
-class StdReverseLines: MimsyPlugin
+class StdSortLines: MimsyPlugin
 {
     override func onLoad(stage: Int) -> String?
     {
         if stage == 1
         {
-            app.addMenuItem(title: "Reverse Lines", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: reverseLines)
+            app.addMenuItem(title: "Sort Lines", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: sortLines)
             
             app.registerWithSelectionTextContextMenu(.Transform, title: {_ in
-                "Reverse Lines"}, invoke: { _ in self.reverseLines()})
+                "Sort Lines"}, invoke: { _ in self.sortLines()})
         }
         
         return nil
@@ -28,7 +28,7 @@ class StdReverseLines: MimsyPlugin
         return enabled
     }
     
-    func reverseLines()
+    func sortLines()
     {
         if let view = app.frontTextView()
         {
@@ -36,8 +36,8 @@ class StdReverseLines: MimsyPlugin
             let (text, range) = view.selectionLines()
             let oldText = text.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet())
             let lines = oldText.componentsSeparatedByString("\n")
-            let newText = lines.reverse().joinWithSeparator("\n") + "\n"
-            view.setText(newText, forRange: range, undoText: "Reverse Lines")
+            let newText = lines.sort().joinWithSeparator("\n") + "\n"
+            view.setText(newText, forRange: range, undoText: "Sort Lines")
         }
     }
 }
