@@ -2,12 +2,10 @@
 
 //#import <OSXFUSE/OSXFUSE.h>
 
-#import "AppHandlers.h"
 #import "ConfigParser.h"
 #import "Constants.h"
 #import "DirectoryController.h"
 #import "DirectoryWatcher.h"
-#import "ExtensionListener.h"
 #import "Extensions.h"
 #import "FindInFilesController.h"
 #import "FindResultsController.h"
@@ -201,7 +199,6 @@ void initLogGlobs()
 #if OLD_EXTENSIONS
         initFunctionalTests();
 #endif
-        registerAppHandlers();
 	}
 	
 	return self;
@@ -836,7 +833,6 @@ void initLogGlobs()
 #endif
     [WindowsDatabase setup];
     [Languages setup];
-    [ExtensionListener setup];
     
 #if OLD_EXTENSIONS
     [self _addTransformItems];

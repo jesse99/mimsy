@@ -20,9 +20,6 @@ Creating plugins
 
 
 
-
-* Add a show gremlines plugin
-    - look into adding an extension to MimsyTranscript with writeText and writeLine methods
 * Remove the go stuff.
 * Replace the old transforms.
 * Remove the old transforms.
