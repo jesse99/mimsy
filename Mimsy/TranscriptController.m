@@ -125,6 +125,29 @@ static NSMutableArray* startupErrors;
 	return instance.view.textStorage.length == 0;
 }
 
+- (void)write:(enum TranscriptStyle)style text:(NSString* __nonnull)text
+{
+    switch (style)
+    {
+        case TranscriptStyleInfo:
+            [self _write:text withAttrs:_infoAttrs];
+            break;
+            
+        case TranscriptStyleCommand:
+            [self _write:text withAttrs:_commandAttrs];
+            break;
+
+        case TranscriptStyleStderr:
+        case TranscriptStyleError:
+            [self _write:text withAttrs:_stderrAttrs];
+            break;
+
+        default:
+            [self _write:text withAttrs:_stdoutAttrs];
+            break;
+    }
+}
+
 + (void)writeInfo:(NSString*)text
 {
     TranscriptController* instance = [TranscriptController getInstance];

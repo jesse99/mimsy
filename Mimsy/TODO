@@ -10,6 +10,7 @@ http://www.learnswift.tips/
 Creating plugins
     - create a new target using the bundle template
     - add a new file for the plugin source code, be sure to include it in the right target
+      don't create a bridging header
     - inherit from MimsyPlugin and give your plugin a unique name
     - set the Principal class in Info.plist to your plugin's class name
     - add a ProjectURL and Email fields to the Info.plist
@@ -18,9 +19,11 @@ Creating plugins
     - add a Description.rtf file, be sure to include it in the right target
 
 
+11 and 67 had arp errors    9-12
 
 
 * Add a show gremlines plugin
+    - look into adding an extension to MimsyTranscript with writeText and writeLine methods
 * Remove the go stuff.
 * Replace the old transforms.
 * Remove the old transforms.
@@ -54,6 +57,7 @@ Creating plugins
     - screenshots would be great (embed them in the description file? screenshots directory in resources?)
     - rating scheme would be cool
 * Should add copy rights everywhere.
+* Would be nice to have a fancier sort plugin. Maybe popup a dialog to allow user to pick a column to sort and gow to sort (eg ascending or descending, alpha or numeric).
 
 
 * NSStringTransformToUnicodeName looks interesting

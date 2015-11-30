@@ -316,6 +316,11 @@ void initLogGlobs()
     return [_withSelectionItems objectForKey:key];
 }
 
+- (id<MimsyTranscript>)transcript
+{
+    return [TranscriptController getInstance];
+}
+
 - (id<MimsyTextView>)frontTextView
 {
     TextController* controller = [TextController frontmost];

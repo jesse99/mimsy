@@ -57,6 +57,9 @@ public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
     /// - Returns: The text view for the frontmost document window.
     func frontTextView() -> MimsyTextView?
     
+    /// Returns an object that can be used to display status or error messages.
+    func transcript() -> MimsyTranscript
+    
     /// Registers a function that will be called just before a save.
     func registerOnSave(hook: SavingTextDoc)
     
@@ -78,7 +81,7 @@ public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
     // of the variables the shell commands receive) augmented with Mimsy settings (e.g. to append
     // more paths onto PATH). This is the environment that should be used when using NSTask.
     func environment() -> [String: String]
-    
+        
     /// Normally plugins will use the MimsyPlugin log method instead of this.
     func logLine(topic: String, text: String)
 }
