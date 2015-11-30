@@ -14,6 +14,8 @@ Creating plugins
     - inherit from MimsyPlugin and give your plugin a unique name
     - set the Principal class in Info.plist to your plugin's class name
     - add a ProjectURL and Email fields to the Info.plist
+        https://github.com/jesse99/mimsy
+        jesse9jones@gmail.com
     - add MimsyPlugins to Target Dependencies for the plugin
     - add plugin to Target Dependencies in Mimsy's Build Phases panel
     - add a Description.rtf file, be sure to include it in the right target
@@ -22,8 +24,6 @@ Creating plugins
 
 * Menus aren't sorted quite right
 * Replace the old transforms:
-    - escape html
-    - escape xml
     - reverse lines
     - sort lines
     - maybe From UTF8

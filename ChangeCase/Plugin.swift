@@ -36,7 +36,7 @@ class StdChangeCase: MimsyPlugin
         if let view = app.frontTextView()
         {
             var text = view.selection
-            text = text.uppercaseString;
+            text = text.uppercaseString
             view.setSelection(text, undoText: "Upper Case")
         }
     }
@@ -46,7 +46,7 @@ class StdChangeCase: MimsyPlugin
         if let view = app.frontTextView()
         {
             var text = view.selection
-            text = text.lowercaseString;
+            text = text.lowercaseString
             view.setSelection(text, undoText: "Lower Case")
         }
     }
