@@ -145,7 +145,7 @@
 		37E1CA9E1B924A5600893991 /* UnicodeNames.zip in Resources */ = {isa = PBXBuildFile; fileRef = 37E1CA9D1B924A5600893991 /* UnicodeNames.zip */; };
 		37E7A8CA1AE1FD7700BD93B4 /* StringDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37E7A8C91AE1FD7700BD93B4 /* StringDialog.xib */; };
 		37E7A8CD1AE1FDB800BD93B4 /* StringDialogController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37E7A8CC1AE1FDB800BD93B4 /* StringDialogController.m */; };
-		37E8C5911C0C0E0300849644 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E8C5901C0C0E0300849644 /* File.swift */; };
+		37E8C5911C0C0E0300849644 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E8C5901C0C0E0300849644 /* Plugin.swift */; };
 		37E8C5971C0C0E8C00849644 /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 37E8C5961C0C0E8C00849644 /* Description.rtf */; };
 		37E8C5A31C0C111F00849644 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E8C5A21C0C111F00849644 /* Plugin.swift */; };
 		37E8C5A91C0C118A00849644 /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 37E8C5A81C0C118A00849644 /* Description.rtf */; };
@@ -545,7 +545,7 @@
 		37E7A8CC1AE1FDB800BD93B4 /* StringDialogController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringDialogController.m; sourceTree = "<group>"; };
 		37E8C58A1C0C0DE500849644 /* EscapeText.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EscapeText.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		37E8C58C1C0C0DE500849644 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		37E8C5901C0C0E0300849644 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		37E8C5901C0C0E0300849644 /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
 		37E8C5961C0C0E8C00849644 /* Description.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Description.rtf; sourceTree = "<group>"; };
 		37E8C59C1C0C110500849644 /* ReverseLines.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReverseLines.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		37E8C59E1C0C110500849644 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1104,7 +1104,7 @@
 			isa = PBXGroup;
 			children = (
 				37E8C58C1C0C0DE500849644 /* Info.plist */,
-				37E8C5901C0C0E0300849644 /* File.swift */,
+				37E8C5901C0C0E0300849644 /* Plugin.swift */,
 				37E8C5961C0C0E8C00849644 /* Description.rtf */,
 			);
 			path = EscapeText;
@@ -1694,7 +1694,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				37E8C5911C0C0E0300849644 /* File.swift in Sources */,
+				37E8C5911C0C0E0300849644 /* Plugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
