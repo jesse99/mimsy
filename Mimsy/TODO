@@ -21,7 +21,6 @@ Creating plugins
     - add a Description.rtf file, be sure to include it in the right target
 
 
-* Reverse and Sort lines shouldn't always be added to context menu
 * Little goofy that frontTextView returns something when a non-text window is frontmost.
     - maybe keep that and add a textView method
 * Replace the old extensions:

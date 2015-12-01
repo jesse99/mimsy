@@ -9,11 +9,15 @@ class StdReverseLines: MimsyPlugin
         {
             app.addMenuItem(title: "Reverse Lines", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: reverseLines)
             
-            app.registerWithSelectionTextContextMenu(.Transform, title: {_ in
-                "Reverse Lines"}, invoke: { _ in self.reverseLines()})
+            app.registerWithSelectionTextContextMenu(.Transform, title: title, invoke: { _ in self.reverseLines()})
         }
         
         return nil
+    }
+    
+    func title(view: MimsyTextView) -> String?
+    {
+        return view.selection.containsString("\n") ? "Reverse Lines" : nil
     }
     
     func enabled(item: NSMenuItem) -> Bool
@@ -22,7 +26,7 @@ class StdReverseLines: MimsyPlugin
         
         if let view = app.frontTextView()
         {
-            enabled = view.selectionRange.length > 0 && view.selection.containsString("\n")
+            enabled = view.selection.containsString("\n")
         }
         
         return enabled
