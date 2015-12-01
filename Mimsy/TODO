@@ -21,12 +21,21 @@ Creating plugins
     - add a Description.rtf file, be sure to include it in the right target
 
 
-
-* Menus aren't sorted quite right
-* Reverse Lines shouldn't always be added to context menu
+* Reverse and Sort lines shouldn't always be added to context menu
 * Little goofy that frontTextView returns something when a non-text window is frontmost.
     - maybe keep that and add a textView method
-* Replace the old extensions.
+* Replace the old extensions:
+    - highlight line
+    - open dual
+    - option tab
+    - show in finder
+    - show trailing whitespace
+    - copy path
+    - duplicate file
+    - new directory
+    - new file
+    - open as binary
+    - trash item
 * Remove the old extensions.
 * Remove lua support.
 * Replace the old builders?
@@ -49,6 +58,8 @@ Creating plugins
 * Need a plugin manager:
     - should be able to search descriptions
     - people can submit plugins, vet them, add built versions to repo
+        or just rely on pull requests
+        could have optional-plugins directory
     - should be a way to see which plugins are installed and read their descriptions
     - also a link to send feedback
     - also a link to go to plugin's web site

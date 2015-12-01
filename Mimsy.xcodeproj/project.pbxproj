@@ -923,7 +923,6 @@
 				37A8C6BC16758FF400D4DB13 /* MimsyTests */,
 				37CDF3981C07BF9E009E48B4 /* MimsyPlugins */,
 				37CDF3B51C07CE9D009E48B4 /* Plugins */,
-				37E8EE971C0C1F9300E1C3B9 /* SortLines */,
 				37A8C69516758FF400D4DB13 /* Frameworks */,
 				37A8C69316758FF400D4DB13 /* Products */,
 			);
@@ -1096,6 +1095,7 @@
 				3775F4A91C0BBFD9001AFA06 /* FindGremlin */,
 				37BABAE01C0AB5CB00B9B5AB /* GoFormat */,
 				37E8C59D1C0C110500849644 /* ReverseLines */,
+				37E8EE971C0C1F9300E1C3B9 /* SortLines */,
 			);
 			name = Plugins;
 			sourceTree = "<group>";

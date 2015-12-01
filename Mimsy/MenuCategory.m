@@ -6,7 +6,7 @@
 
 @implementation NSMenu (MenuCategory)
 
-- (NSMenuItem *)addSortedItemWithTitle:(NSString *)title action:(SEL)selector keyEquivalent:(NSString *)charCode
+- (NSMenuItem*)addSortedItemWithTitle:(NSString*)title action:(SEL)selector keyEquivalent:(NSString*)charCode
 {
     for (NSInteger i = 0; i < self.numberOfItems; ++i)
     {
@@ -21,22 +21,16 @@
     return [self addItemWithTitle:title action:selector keyEquivalent:charCode];
 }
 
-- (void) insertSortedItem:(NSMenuItem *)newItem atIndex:(NSInteger)index
+- (void)insertSortedItem:(NSMenuItem*)newItem atIndex:(NSInteger)index
 {
-    for (NSInteger i = index; i < self.numberOfItems; ++i)
-    {
-        NSMenuItem* item = [self itemAtIndex:i];
-        if (item.isSeparatorItem || [item.title compare:newItem.title] != NSOrderedAscending)
-        {
-            [self insertItem:newItem atIndex:i];
-            return;
-        }
-    }
-    
-    [self insertItem:newItem atIndex:self.numberOfItems];
+    NSMenuItem* item = [self itemAtIndex:index];
+    if ([item.title compare:newItem.title] == NSOrderedAscending)
+        [self _insertItemAfter:newItem at:index];
+    else
+        [self _insertItemBefore:newItem at:index];
 }
 
-- (void) appendSortedItem:(NSMenuItem *)newItem
+- (void)appendSortedItem:(NSMenuItem*)newItem
 {
     if (self.numberOfItems == 0)
     {
@@ -45,21 +39,55 @@
     else
     {
         NSInteger i = self.numberOfItems - 1;
-        while (true)
+        [self _insertItemBefore:newItem at:i];
+    }
+}
+
+- (void)_insertItemAfter:(NSMenuItem*)newItem at:(NSInteger)i
+{
+    while (true)
+    {
+        NSMenuItem* item = [self itemAtIndex:i];
+        if (item.isSeparatorItem)
         {
-            NSMenuItem* item = [self itemAtIndex:i];
-            if (item.isSeparatorItem)
-            {
-                [self insertItem:newItem atIndex:i+1];
-                break;
-            }
-            else if (i == 0 || [item.title compare:newItem.title] != NSOrderedAscending)
-            {
-                [self insertItem:newItem atIndex:i];
-                break;
-            }
-            i -= 1;
+            [self insertItem:newItem atIndex:i];
+            break;
         }
+        else if ([item.title compare:newItem.title] == NSOrderedDescending)
+        {
+            [self insertItem:newItem atIndex:i];
+            break;
+        }
+        else if (i == self.numberOfItems-1)
+        {
+            [self insertItem:newItem atIndex:i+1];
+            break;
+        }
+        i += 1;
+    }
+}
+
+- (void)_insertItemBefore:(NSMenuItem*)newItem at:(NSInteger)i
+{
+    while (true)
+    {
+        NSMenuItem* item = [self itemAtIndex:i];
+        if (item.isSeparatorItem)
+        {
+            [self insertItem:newItem atIndex:i+1];
+            break;
+        }
+        else if (i == 0)
+        {
+            [self insertItem:newItem atIndex:i];
+            break;
+        }
+        else if ([item.title compare:newItem.title] == NSOrderedAscending)
+        {
+            [self insertItem:newItem atIndex:i+1];
+            break;
+        }
+        i -= 1;
     }
 }
 
