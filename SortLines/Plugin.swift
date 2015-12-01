@@ -24,7 +24,7 @@ class StdSortLines: MimsyPlugin
     {
         var enabled = false
         
-        if let view = app.frontTextView()
+        if let view = app.textView()
         {
             enabled = view.selection.containsString("\n")
         }
@@ -34,7 +34,7 @@ class StdSortLines: MimsyPlugin
     
     func sortLines()
     {
-        if let view = app.frontTextView()
+        if let view = app.textView()
         {
             // Need to do the trim so that we don't wind up with a blank line.
             let (text, range) = view.selectionLines()

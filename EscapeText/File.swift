@@ -24,7 +24,7 @@ class StdEscapeText: MimsyPlugin
     {
         var enabled = false
         
-        if let view = app.frontTextView()
+        if let view = app.textView()
         {
             enabled = view.selectionRange.length > 0
         }
@@ -34,7 +34,7 @@ class StdEscapeText: MimsyPlugin
     
     func html()
     {
-        if let view = app.frontTextView()
+        if let view = app.textView()
         {
             var text = view.selection
             text = text.stringByReplacingOccurrencesOfString("&", withString: "&amp;")
@@ -47,7 +47,7 @@ class StdEscapeText: MimsyPlugin
     
     func xml()
     {
-        if let view = app.frontTextView()
+        if let view = app.textView()
         {
             var text = view.selection
             text = text.stringByReplacingOccurrencesOfString("&", withString: "&amp;")

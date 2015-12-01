@@ -309,10 +309,17 @@ void initLogGlobs()
     return [TranscriptController getInstance];
 }
 
-- (id<MimsyTextView>)frontTextView
+- (id<MimsyTextView>)textView
 {
-    TextController* controller = [TextController frontmost];
-    return controller;
+    for (NSWindow* window in [NSApp orderedWindows])
+    {
+        if (window.isVisible && !window.isMiniaturized)
+            if (window.windowController && [window.windowController isKindOfClass:[TextController class]])
+                return window.windowController;
+            else
+                return nil;
+    }
+    return nil;
 }
 
 - (void)registerOnSave:(SavingBlock)hook

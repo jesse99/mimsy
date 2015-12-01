@@ -27,8 +27,8 @@ public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
     /// Typically the extension method will be used instead of this.
     func addMenuItem(item: NSMenuItem, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem?, invoke: InvokeMenuItem) -> Bool
     
-    /// - Returns: The text view for the frontmost document window.
-    func frontTextView() -> MimsyTextView?
+    /// - Returns: If the frontmost window is a text document window then it is returned. Otherwise nil is returned.
+    func textView() -> MimsyTextView?
     
     /// Returns an object that can be used to display status or error messages.
     func transcript() -> MimsyTranscript

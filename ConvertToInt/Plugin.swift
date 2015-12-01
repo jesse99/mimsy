@@ -23,7 +23,7 @@ class StdConvertToInt: MimsyPlugin
     {
         var enabled = false
         
-        if let view = app.frontTextView()
+        if let view = app.textView()
         {
             enabled = view.selectionRange.length > 0
         }
@@ -33,7 +33,7 @@ class StdConvertToInt: MimsyPlugin
     
     func toDecimal()
     {
-        if let view = app.frontTextView()
+        if let view = app.textView()
         {
             let text = view.selection
 
@@ -52,7 +52,7 @@ class StdConvertToInt: MimsyPlugin
     
     func toHex()
     {
-        if let view = app.frontTextView()
+        if let view = app.textView()
         {
             let text = view.selection
             

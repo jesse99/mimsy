@@ -23,7 +23,7 @@ class StdChangeCase: MimsyPlugin
     {
         var enabled = false
         
-        if let view = app.frontTextView()
+        if let view = app.textView()
         {
             enabled = view.selectionRange.length > 0
         }
@@ -33,7 +33,7 @@ class StdChangeCase: MimsyPlugin
     
     func upperCase()
     {
-        if let view = app.frontTextView()
+        if let view = app.textView()
         {
             var text = view.selection
             text = text.uppercaseString
@@ -43,7 +43,7 @@ class StdChangeCase: MimsyPlugin
     
     func lowerCase()
     {
-        if let view = app.frontTextView()
+        if let view = app.textView()
         {
             var text = view.selection
             text = text.lowercaseString

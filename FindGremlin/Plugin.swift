@@ -17,7 +17,7 @@ class StdFindGremlin: MimsyPlugin
     {
         var enabled = false
         
-        if let view = app.frontTextView()
+        if let view = app.textView()
         {
             enabled = !view.text.isEmpty
         }
@@ -27,7 +27,7 @@ class StdFindGremlin: MimsyPlugin
     
     func findGremlin()
     {
-        if let view = app.frontTextView()
+        if let view = app.textView()
         {
             // We need random access to the UTF-16 characters to ensure that our selections
             // are sensible so it's easiest to just use NSString.
