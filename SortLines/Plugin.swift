@@ -37,7 +37,8 @@ class StdSortLines: MimsyPlugin
         if let view = app.textView()
         {
             // Need to do the trim so that we don't wind up with a blank line.
-            let (text, range) = view.selectionLines()
+            let range = view.selectedLineRange()
+            let text = view.string.substringWithRange(range)
             let oldText = text.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet())
             let lines = oldText.componentsSeparatedByString("\n")
             let newText = lines.sort().joinWithSeparator("\n") + "\n"

@@ -22,6 +22,8 @@ import Cocoa
     /// - Parameter undoText: Text added to the Undo menu item.
     func setSelection(text: String, undoText: String)
     
+    var view: NSTextView {get}
+
     /// Returns a reference to the view's text. Note that text documents are always Unix
     /// line endian while in memory.
     var text: String {get}
@@ -46,9 +48,9 @@ import Cocoa
 
 public extension MimsyTextView
 {
-    /// Returns the contents of the lines that intersect the selection along with
-    /// the range of those lines.
-    public func selectionLines() -> (String, NSRange)
+    /// Returns the range of the lines the selection is within, including the
+    /// trailing new lines.
+    public func selectedLineRange() -> NSRange
     {
         let text = string
         
@@ -78,8 +80,6 @@ public extension MimsyTextView
             end += 1
         }
         
-        let range = NSRange(location: start, length: end - start)
-        let lines = text.substringWithRange(range)
-        return (lines, range)
+        return NSRange(location: start, length: end - start)
     }
 }

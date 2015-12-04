@@ -35,7 +35,7 @@
 
 typedef BOOL (^MenuEnabledBlock)(NSMenuItem* _Nonnull);
 typedef void (^MenuInvokeBlock)(void);
-typedef void (^SavingBlock)(id<MimsyTextView> _Nonnull);
+typedef void (^TextViewBlock)(id<MimsyTextView> _Nonnull);
 
 // ------------------------------------------------------------------------------------
 @interface PluginMenuItem : NSObject
@@ -144,7 +144,7 @@ void initLogGlobs()
 #if OLD_EXTENSIONS
     ProcFileKeyStoreRW* _keyStoreFile;
 #endif
-    NSMutableArray* _onSave;
+    NSMutableDictionary* _textHooks;
     
 	NSMutableDictionary* _pendingBlocks;
 	NSArray* _helpFileItems;
@@ -184,7 +184,7 @@ void initLogGlobs()
         _procFileSystem = [ProcFileSystem new];
 #endif
         _items = [NSMutableDictionary new];
-        _onSave = [NSMutableArray new];
+        _textHooks = [NSMutableDictionary new];
         _noSelectionItems = [NSMutableDictionary new];
         _withSelectionItems = [NSMutableDictionary new];
         
@@ -322,16 +322,26 @@ void initLogGlobs()
     return nil;
 }
 
-- (void)registerOnSave:(SavingBlock)hook
+- (void)registerTextView:(enum TextViewNotification)kind :(TextViewBlock)hook
 {
-    [_onSave addObject:hook];
+    NSValue* key = @((int) kind);
+    NSMutableArray* hooks = [_textHooks objectForKey:key];
+    if (!hooks)
+    {
+        hooks = [NSMutableArray new];
+        _textHooks[key] = hooks;
+    }
+    
+    [hooks addObject:hook];
 }
 
-- (void)invokeOnSave:(id<MimsyTextView>)view
+- (void)invokeTextViewHook:(enum TextViewNotification)kind view:(id<MimsyTextView> _Nonnull)view
 {
-    for (SavingBlock block in _onSave)
+    NSValue* key = @((int) kind);
+    NSMutableArray* hooks = [_textHooks objectForKey:key];
+    for (TextViewBlock hook in hooks)
     {
-        block(view);
+        hook(view);
     }
 }
 

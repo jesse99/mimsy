@@ -403,8 +403,8 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 - (void)saveDocument:(id)sender
 {
     AppDelegate* app = [NSApp delegate];
-    [app invokeOnSave:_controller];
-        
+    [app invokeTextViewHook:TextViewNotificationSaving view:_controller];
+    
 	[super saveDocument:sender];
 }
 

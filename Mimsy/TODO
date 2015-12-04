@@ -21,10 +21,20 @@ Creating plugins
     - add a Description.rtf file, be sure to include it in the right target
 
 
-* Little goofy that frontTextView returns something when a non-text window is frontmost.
-    - maybe keep that and add a textView method
+TextViewNotificationSelectionChanged = 2,
+TextViewNotificationAppliedStyles = 3,
+
+
+
+
+* Add a highlight line plugin:
+    - probably want to do a commit
+    - color should come from setting
+    - add hook for loadedSettings
+    - description should say something about setting
+    - is there some way we can add a default setting to the file?
+    - add a screen shot to the description?
 * Replace the old extensions:
-    - highlight line
     - open dual
     - option tab
     - show in finder

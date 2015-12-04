@@ -52,7 +52,7 @@ void initLogGlobs(void);
 - (id<SettingsContext> _Nullable)parent;
 - (Settings* _Nonnull)settings;
 
-- (void)invokeOnSave:(id<MimsyTextView> _Nonnull)view;
+- (void)invokeTextViewHook:(enum TextViewNotification)kind view:(id<MimsyTextView> _Nonnull)view;
 
 - (NSArray* _Nullable)noSelectionItems:(enum NoTextSelectionPos)pos;
 - (NSArray* _Nullable)withSelectionItems:(enum WithTextSelectionPos)pos;

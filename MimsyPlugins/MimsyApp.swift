@@ -3,7 +3,7 @@ import Cocoa
 public typealias EnabledMenuItem = (NSMenuItem) -> Bool
 public typealias InvokeMenuItem = () -> ()
 public typealias InvokeTextCommand = (MimsyTextView) -> ()
-public typealias SavingTextDoc = (MimsyTextView) -> ()
+public typealias TextViewCallback = (MimsyTextView) -> ()
 public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
 
 @objc public enum MenuItemLoc: Int
@@ -21,6 +21,18 @@ public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
     case Lookup = 1, Transform, Search, Add
 }
 
+@objc public enum TextViewNotification: Int
+{
+    /// Invoked just before a text document is saved.
+    case Saving = 1
+    
+    /// Invoked after the selection has changed.
+    case SelectionChanged
+    
+    /// Invoked after language styling is applied.
+    case AppliedStyles
+}
+
 /// This is used by plugins to communicate with the top level of Mimsy.
 @objc public protocol MimsyApp
 {
@@ -34,7 +46,7 @@ public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
     func transcript() -> MimsyTranscript
     
     /// Registers a function that will be called just before a save.
-    func registerOnSave(hook: SavingTextDoc)
+    func registerTextView(kind: TextViewNotification, _ hook: TextViewCallback)
     
     /// Used to add a custom menu item to text contextual menus when there is no selection.
     ///

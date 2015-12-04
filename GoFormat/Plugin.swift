@@ -38,7 +38,7 @@ class StdGoFormat: MimsyPlugin
         }
         else if stage == 1
         {
-            app.registerOnSave(onSave)
+            app.registerTextView(.Saving, onSave)
         }
         
         return err

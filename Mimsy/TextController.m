@@ -128,6 +128,11 @@ static __weak TextController* _frontmost;
     return _language;
 }
 
+- (NSTextView* _Nonnull)view
+{
+    return self.textView;
+}
+
 - (NSString* _Nonnull)string
 {
     return self.text;
@@ -1269,6 +1274,9 @@ static __weak TextController* _frontmost;
     [_files onAppliedStyles:self];
 #endif
     [self.declarationsPopup onAppliedStyles:self.textView];
+    
+    AppDelegate* app = [NSApp delegate];
+    [app invokeTextViewHook:TextViewNotificationAppliedStyles view:self];
 }
 
 - (void)doResetWordWrap
@@ -1325,6 +1333,9 @@ static __weak TextController* _frontmost;
 #if OLD_EXTENSIONS
 	[StartupScripts invokeTextSelectionChanged:self.document slocation:range.location slength:range.length];
 #endif
+
+    AppDelegate* app = [NSApp delegate];
+    [app invokeTextViewHook:TextViewNotificationSelectionChanged view:self];
 }
 
 // editedRange is the range of the new text. For example if a character
