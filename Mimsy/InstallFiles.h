@@ -7,11 +7,14 @@
 
 // The path to install files to. Typically ~/Library/Application\ Support/Mimsy. This directory will be
 // created if it does not exist.
-- (void)initWithDstPath:(NSString*)path;
+- (id)initWithDstPath:(NSString*)path;
 
 // Files or directories in the Resources directory of the bundle which should be be installed. Note
 // that directories are recursively copied.
-- (void)addSourceItem:(NSString*)item;
+- (void)addSourceFile:(NSString*)item;
+
+// Like addSourceFile except that it takes a full path. Returns a path relative to the install directory.
+- (void)addSourcePath:(NSString*)path;
 
 // Updates the installed files (trying to be smart about not over-writing user changes).
 - (void)install;

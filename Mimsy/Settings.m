@@ -101,7 +101,7 @@ id<SettingsContext> activeContext;
     return [self _findKeys];
 }
 
-- (bool)boolValue:(NSString*)name missing:(bool)value
+- (BOOL)boolValue:(NSString*)name missing:(BOOL)value
 {
     NSString* str = [self _findValueForKey:name missing:nil];
     

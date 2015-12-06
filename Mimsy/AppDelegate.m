@@ -158,6 +158,8 @@ void initLogGlobs()
     bool _launched;
     NSMutableDictionary* _items;
     Settings* _settings;
+    
+    InstallFiles* _installer;
 }
 
 - (id)init
@@ -256,6 +258,11 @@ void initLogGlobs()
     }
     
     return env;
+}
+
+- (void)installSettingsPath:(NSString* _Nonnull)path
+{
+    [_installer addSourcePath:path];
 }
 
 - (void)registerNoSelectionTextContextMenu:(enum NoTextSelectionPos)pos title:(TextContextMenuItemTitleBlock)title invoke:(InvokeTextCommandBlock)invoke
@@ -836,7 +843,12 @@ void initLogGlobs()
     [TranscriptController startedUp];
     [[NSApp helpMenu] setDelegate:this];
     
-    [self _installFiles];
+    _installer = [self _createInstaller];
+    [Plugins startLoading];
+    [Plugins installFiles:_installer];
+    [_installer install];
+    _installer = nil;
+
     [self _loadSettings];
     [self _loadHelpFiles];
     [self _updateDirectoriesMenu];
@@ -852,8 +864,8 @@ void initLogGlobs()
     if (_mountPath)
         [self _handleMount];
 #endif
-    
-    [Plugins startup];
+
+    [Plugins finishLoading];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
@@ -1517,31 +1529,34 @@ void initLogGlobs()
 	return enabled;
 }
 
-- (void)_installFiles
+
+- (InstallFiles*)_createInstaller
 {
-	NSFileManager* fm = [NSFileManager defaultManager];
+    InstallFiles* installer = nil;
+
+    NSFileManager* fm = [NSFileManager defaultManager];
 	NSArray* urls = [fm URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask];
 	if (urls.count > 0)
 	{
 		NSString* path = [urls[0] path];
 		path = [path stringByAppendingPathComponent:@"Mimsy"];
 		
-		InstallFiles* installer = [InstallFiles new];
-		[installer initWithDstPath:path];
-		[installer addSourceItem:@"builders"];
-		[installer addSourceItem:@"extensions"];
-		[installer addSourceItem:@"help"];
-		[installer addSourceItem:@"languages"];
-		[installer addSourceItem:@"scripts"];
-		[installer addSourceItem:@"settings"];
-		[installer addSourceItem:@"styles"];
-		[installer install];
+		installer = [[InstallFiles alloc] initWithDstPath:path];
+		[installer addSourceFile:@"builders"];
+		[installer addSourceFile:@"extensions"];
+		[installer addSourceFile:@"help"];
+		[installer addSourceFile:@"languages"];
+		[installer addSourceFile:@"scripts"];
+		[installer addSourceFile:@"settings"];
+		[installer addSourceFile:@"styles"];
 	}
 	else
 	{
 		NSString* mesg = @"Failed to install support files: URLsForDirectory:NSApplicationSupportDirectory failed to find any directories.";
 		[TranscriptController writeError:mesg];
 	}
+    
+    return installer;
 }
 
 - (void)_loadHelpFiles
@@ -1648,6 +1663,7 @@ void initLogGlobs()
 			UNUSED(path, flags);
 			initLogGlobs();
 			[self _loadSettings];
+            [Plugins refreshSettings];
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
 		}
 		];

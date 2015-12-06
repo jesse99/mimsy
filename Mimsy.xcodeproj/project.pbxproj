@@ -118,6 +118,8 @@
 		37A8C6B916758FF400D4DB13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C69616758FF400D4DB13 /* Cocoa.framework */; };
 		37A8C6C116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C6BF16758FF400D4DB13 /* InfoPlist.strings */; };
 		37A8C6C416758FF400D4DB13 /* DecodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6C316758FF400D4DB13 /* DecodeTests.m */; };
+		37A93CF61C11EBAE00AFE5AC /* MimsySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A93CF51C11EBAE00AFE5AC /* MimsySettings.swift */; };
+		37A93CFA1C13969000AFE5AC /* settings in Resources */ = {isa = PBXBuildFile; fileRef = 37A93CF91C13969000AFE5AC /* settings */; };
 		37ABF9B318C2EA9C006AFDB7 /* SearchSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */; };
 		37AD7570171B95460054A75F /* UpdateConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AD756F171B95460054A75F /* UpdateConfig.m */; };
 		37B9CA011C0BC923006C479B /* MimsyTranscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B9CA001C0BC923006C479B /* MimsyTranscript.swift */; };
@@ -513,6 +515,8 @@
 		37A8C6C216758FF400D4DB13 /* DecodeTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DecodeTests.h; sourceTree = "<group>"; };
 		37A8C6C316758FF400D4DB13 /* DecodeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DecodeTests.m; sourceTree = "<group>"; };
 		37A8C6CD167590E700D4DB13 /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
+		37A93CF51C11EBAE00AFE5AC /* MimsySettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimsySettings.swift; sourceTree = "<group>"; };
+		37A93CF91C13969000AFE5AC /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = settings; sourceTree = "<group>"; };
 		37ABF9B118C2EA9C006AFDB7 /* SearchSite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchSite.h; sourceTree = "<group>"; };
 		37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchSite.m; sourceTree = "<group>"; };
 		37AD756E171B95460054A75F /* UpdateConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateConfig.h; sourceTree = "<group>"; };
@@ -1100,6 +1104,7 @@
 				37CDF3991C07BF9E009E48B4 /* MimsyPlugins.h */,
 				37BABAD41C091A7000B9B5AB /* MimsyTextView.swift */,
 				37B9CA001C0BC923006C479B /* MimsyTranscript.swift */,
+				37A93CF51C11EBAE00AFE5AC /* MimsySettings.swift */,
 			);
 			path = MimsyPlugins;
 			sourceTree = "<group>";
@@ -1165,6 +1170,7 @@
 				37E8EEAA1C0FEAF700E1C3B9 /* Info.plist */,
 				37E8EEAE1C0FEB1700E1C3B9 /* Plugin.swift */,
 				37E8EEB41C0FEB8300E1C3B9 /* Description.rtf */,
+				37A93CF91C13969000AFE5AC /* settings */,
 			);
 			path = HighlightLine;
 			sourceTree = "<group>";
@@ -1572,6 +1578,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				37E8EEB51C0FEB8300E1C3B9 /* Description.rtf in Resources */,
+				37A93CFA1C13969000AFE5AC /* settings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1748,6 +1755,7 @@
 				37BABADA1C0A99B600B9B5AB /* MimsyLanguage.swift in Sources */,
 				37B9CA011C0BC923006C479B /* MimsyTranscript.swift in Sources */,
 				37BABAD51C091A7000B9B5AB /* MimsyTextView.swift in Sources */,
+				37A93CF61C11EBAE00AFE5AC /* MimsySettings.swift in Sources */,
 				37BABAD31C08CF2400B9B5AB /* MimsyApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2806,6 +2814,7 @@
 				37E8EE9A1C0C1F9300E1C3B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		37E8EEAB1C0FEAF700E1C3B9 /* Build configuration list for PBXNativeTarget "HighlightLine" */ = {
 			isa = XCConfigurationList;
@@ -2814,6 +2823,7 @@
 				37E8EEAD1C0FEAF700E1C3B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

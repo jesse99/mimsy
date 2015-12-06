@@ -29,6 +29,11 @@ public class MimsyPlugin: NSObject {
     {
     }
     
+    /// Called between stage 0 and stage 1 and when the user edits the plugin's settings file.
+    public func onLoadSettings(settings: MimsySettings)
+    {
+    }
+    
     /// Plugins should use MimsyApp whenever they want to communicate with
     /// Mimsy.
     public let app: MimsyApp

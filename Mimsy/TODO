@@ -21,18 +21,17 @@ Creating plugins
     - add a Description.rtf file, be sure to include it in the right target
 
 
-TextViewNotificationSelectionChanged = 2,
-TextViewNotificationAppliedStyles = 3,
 
+* Plugins should have their own settings files:
+    - backup file should be .old.ext
 
-
-
+    - objc needs to call installSettingsPath for all *.mimsy files in the plugin
+    - objc needs to call onLoadSettings after stage 0
+    - objc needs to call onLoadSettings if the settings file changes
+        ideally using a saved hash, maybe can reuse installer hash
 * Add a highlight line plugin:
-    - probably want to do a commit
-    - color should come from setting
-    - add hook for loadedSettings
-    - description should say something about setting
-    - is there some way we can add a default setting to the file?
+    - may want a setting for max selection length
+    - description should say something about settings
     - add a screen shot to the description?
 * Replace the old extensions:
     - open dual
@@ -49,6 +48,7 @@ TextViewNotificationAppliedStyles = 3,
 * Remove lua support.
 * Replace the old builders?
 * Remove the old builders?
+* objc language should style readonly (and related)
 * Make sure that all the OLD_EXTENSIONS code is gone
 * Add snippets support:
     - snippets/<language> directories

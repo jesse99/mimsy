@@ -1,13 +1,52 @@
 #import "Plugins.h"
 
 #import "AppDelegate.h"
+#import "ConfigParser.h"
 #import "Glob.h"
+#import "InstallFiles.h"
 #import "MimsyPlugins.h"
 #import "Paths.h"
 #import "Utils.h"
 
 #include <objc/runtime.h>
 
+// ------------------------------------------------------------------------------------
+@interface PluginData : NSObject
+
+- (id)init:(MimsyPlugin*)plugin;
+
+@property (readonly) MimsyPlugin* plugin;
+@property (readonly) NSMutableArray* settingNames; // file names for settings
+@property (readonly) NSMutableArray* hashs;         // md5sums for the contents of those paths
+
+- (NSString*)bundleName;
+
+@end
+
+@implementation PluginData
+
+- (id)init:(MimsyPlugin*)plugin
+{
+    self = [super init];
+    
+    if (self)
+    {
+        _plugin = plugin;
+        _settingNames = [NSMutableArray new];
+        _hashs = [NSMutableArray new];
+    }
+    
+    return self;
+}
+
+- (NSString*)bundleName
+{
+    return _plugin.bundle.bundlePath.lastPathComponent;
+}
+
+@end
+
+// ------------------------------------------------------------------------------------
 static NSMutableArray* _plugins;
 
 @implementation Plugins
@@ -17,23 +56,23 @@ static void doStage(int stage)
     NSMutableArray* newPlugins = [NSMutableArray new];
     LOG("Plugins:Verbose", "Stage %d", stage);
 
-    for (MimsyPlugin* plugin in _plugins)
+    for (PluginData* data in _plugins)
     {
-        NSString* err = [plugin onLoad:stage];
+        NSString* err = [data.plugin onLoad:stage];
         if (!err)
         {
-            [newPlugins addObject:plugin];
+            [newPlugins addObject:data];
         }
         else
         {
-            LOG("Plugins", "Skipping %s (%s)", STR(plugin.bundle.bundlePath.lastPathComponent), STR(err));
+            LOG("Plugins", "Skipping %s (%s)", STR(data.bundleName), STR(err));
         }
     }
  
     _plugins = newPlugins;
 }
 
-+ (void)startup
++ (void)startLoading
 {
     _plugins = [NSMutableArray new];
     
@@ -60,7 +99,8 @@ static void doStage(int stage)
                     NSString* err = [plugin onLoad:0];
                     if (!err)
                     {
-                        [_plugins addObject:plugin];
+                        PluginData* data = [[PluginData alloc] init:plugin];
+                        [_plugins addObject:data];
                     }
                     else
                     {
@@ -78,14 +118,125 @@ static void doStage(int stage)
             LOG("Error", "Couldn't open %s as a bundle", STR(path));
         }
     }];
+    
+    if (err)
+    {
+        NSString* reason = err.localizedFailureReason;
+        LOG("Error", "Error walking '%s': %s", STR(plugins), STR(reason));
+    }
+}
+
++ (void)installFiles:(InstallFiles*)installer
+{
+    for (PluginData* data in _plugins)
+    {
+        NSString* path = data.plugin.bundle.resourcePath;
+        
+        NSError* error = nil;
+        [Utils enumerateDeepDir:path glob:nil error:&error block:^(NSString *rsrc, bool* stop) {
+            UNUSED(stop);
+            
+            NSArray* parts = [rsrc pathComponents];
+            NSString* parent = parts.count >= 2 ? parts[parts.count - 2] : nil;
+            if (![@"Resources" isEqualToString:parent])
+            {
+                // Install files from all directories under Resources, e.g.
+                // Resources/settings, Resources/help, etc.
+                [installer addSourcePath:rsrc];
+                
+                if ([parent isEqualToString:@"settings"])
+                {
+                    [data.settingNames addObject:rsrc.lastPathComponent];
+                    [data.hashs addObject:@0];
+                }
+            }
+        }];
+        
+        if (error)
+        {
+            NSString* reason = error.localizedFailureReason;
+            LOG("Error", "Error walking '%s': %s", STR(path), STR(reason));
+        }
+    }
+}
+
++ (void)finishLoading
+{
+    [self _loadSettings];
 
     doStage(1);
     doStage(2);
     doStage(3);
-
-    for (MimsyPlugin* plugin in _plugins)
+    
+    for (PluginData* data in _plugins)
     {
-        LOG("Plugins", "Loaded %s", STR(plugin.bundle.bundlePath.lastPathComponent));
+        LOG("Plugins", "Loaded %s", STR(data.bundleName));
+    }
+}
+
++ (void)_loadSettings
+{
+    AppDelegate* app = [NSApp delegate];
+    NSString* root = [Paths installedDir:@"settings"];
+    
+    for (PluginData* data in _plugins)
+    {
+        Settings* settings = [[Settings alloc] init:data.bundleName context:app];
+        
+        for (NSUInteger i = 0; i < data.settingNames.count; ++i)
+        {
+            NSError* error = nil;
+            NSString* path = [root stringByAppendingPathComponent:data.settingNames[i]];
+            ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
+            if (parser)
+            {
+                data.hashs[i] = @(parser.checksum);
+                [parser enumerate: ^(ConfigParserEntry* entry) {[settings addKey:entry.key value:entry.value];}];
+            }
+            else
+            {
+                NSString* reason = [error localizedFailureReason];
+                LOG("Error", "Couldn't load %s:\n%s.", STR(path), STR(reason));
+            }
+        }
+        
+        if (settings.getKeys.count > 0)
+            [data.plugin onLoadSettings:settings];
+    }
+}
+
++ (void)refreshSettings
+{
+    AppDelegate* app = [NSApp delegate];
+    NSString* root = [Paths installedDir:@"settings"];
+   
+    for (PluginData* data in _plugins)
+    {
+        Settings* settings = [[Settings alloc] init:data.bundleName context:app];
+        
+        for (NSUInteger i = 0; i < data.settingNames.count; ++i)
+        {
+            NSError* error = nil;
+            NSString* path = [root stringByAppendingPathComponent:data.settingNames[i]];
+            ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
+            if (parser)
+            {
+                NSValue* value = @(parser.checksum);
+                if (![value isEqualToValue:data.hashs[i]] || data.settingNames.count > 1)
+                {
+                    data.hashs[i] = value;
+                    [parser enumerate: ^(ConfigParserEntry* entry) {[settings addKey:entry.key value:entry.value];}];
+                }
+            }
+            else
+            {
+                NSString* reason = [error localizedFailureReason];
+                LOG("Error", "Couldn't load %s:\n%s.", STR(path), STR(reason));
+            }
+        }
+        
+        if (settings.getKeys.count > 0)
+            [data.plugin onLoadSettings:settings];
     }
 }
 
@@ -138,9 +289,9 @@ static void doStage(int stage)
 + (void)teardown
 {
     LOG("Plugins:Verbose", "Unloading plugins");
-    for (MimsyPlugin* plugin in _plugins)
+    for (PluginData* data in _plugins)
     {
-        [plugin onUnload];
+        [data.plugin onUnload];
     }
     [_plugins removeAllObjects];
 }

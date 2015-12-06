@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "MimsyPlugins.h"
 
 @class Settings;
 
@@ -9,44 +10,45 @@
 @protocol SettingsContext
 
 // Will be nil for the app.
-- (id<SettingsContext>)parent;
+- (id<SettingsContext> __nullable)parent;
 
-- (Settings*)settings;
+- (Settings* __nullable)settings;
 
 @end
 
-extern id<SettingsContext> activeContext;
+extern id<SettingsContext> __nullable activeContext;
 
 // Preferences loaded from a SettingsContext.
-@interface Settings : NSObject
+@interface Settings : NSObject <MimsySettings>
 
 // Name is used for error reporting.
-- (Settings*)init:(NSString*)name context:(id<SettingsContext>)context;
+- (Settings* __nonnull)init:(NSString* __nonnull)name context:(id<SettingsContext> __nonnull)context;
 
-- (id<SettingsContext>)context;
+- (id<SettingsContext> __nonnull)context;
 
-- (void)addKey:(NSString*)key value:(NSString*)value;
+- (void)addKey:(NSString* __nonnull)key value:(NSString* __nonnull)value;
 
-- (bool)hasKey:(NSString*)name;
+- (bool)hasKey:(NSString* __nonnull)name;
 
-- (NSArray*)getKeys;
+- (NSArray* __nonnull)getKeys;
 
 // These are used to access single values which may be overridden.
-- (bool)boolValue:(NSString*)name missing:(bool)value;
+- (BOOL)boolValue:(NSString* __nonnull)name missing:(BOOL)value;
 
-- (int)intValue:(NSString*)name missing:(int)value;
+- (int)intValue:(NSString* __nonnull)name missing:(int)value;
 
-- (unsigned int)uintValue:(NSString*)name missing:(unsigned int)value;
+- (unsigned int)uintValue:(NSString* __nonnull)name missing:(unsigned int)value;
 
-- (NSString*)stringValue:(NSString*)name missing:(NSString*)value;
+- (NSString* __nonnull)stringValue:(NSString* __nonnull)name missing:(NSString* __nonnull)value;
 
 // These are used to access keys which may have multiple values. Contexts
 // may extend these with new values.
-- (NSArray*)stringValues:(NSString*)name;
+- (NSArray* __nonnull)stringValues:(NSString* __nonnull)name;
 
 // This is nice to use in place of stringValues whenever parsing
 // is involved because when emitting warnings the fileName can
 // be included.
-- (void)enumerate:(NSString*) key with:(void (^)(NSString* fileName, NSString* value))block;
+- (void)enumerate:(NSString* __nonnull) key with:(void (^ __nonnull)(NSString* __nonnull fileName, NSString* __nonnull value))block;
 
 @end
+

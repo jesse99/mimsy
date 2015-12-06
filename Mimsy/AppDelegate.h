@@ -57,6 +57,8 @@ void initLogGlobs(void);
 - (NSArray* _Nullable)noSelectionItems:(enum NoTextSelectionPos)pos;
 - (NSArray* _Nullable)withSelectionItems:(enum WithTextSelectionPos)pos;
 
+- (void)installSettingsPath:(NSString* _Nonnull)path;
+
 @property (readonly) bool inited;
 @property (readonly) ProcFileSystem*_Nonnull procFileSystem;
 @property (weak) IBOutlet NSMenu *searchMenu;

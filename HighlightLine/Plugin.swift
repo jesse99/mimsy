@@ -13,6 +13,12 @@ class StdHighlightLine: MimsyPlugin
         return nil
     }
     
+    override func onLoadSettings(settings: MimsySettings)
+    {
+        let color = settings.stringValue("Color", missing: "PeachPuff")
+        app.log("Plugins", "loaded color %@", color)
+    }
+    
     // The classy way to do this is to store the state of the current line highlighting for a text
     // viewand remove the associated background color when the line changes. Unfortunately we don't 
     // always get notified sufficiently often (I think Cocoa sometimes coalesces text edited

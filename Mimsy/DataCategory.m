@@ -2,8 +2,18 @@
 
 #include <openssl/bio.h>
 #include <openssl/evp.h>
+#import <CommonCrypto/CommonDigest.h>
 
 @implementation NSData (NSDataCategory)
+
+- (NSString*)md5sum
+{
+    char buffer[CC_MD5_DIGEST_LENGTH] = {0};
+    CC_MD5(self.bytes, (CC_LONG) self.length, (unsigned char*) buffer);
+    
+    NSData* hash = [NSData dataWithBytesNoCopy:buffer length:CC_MD5_DIGEST_LENGTH freeWhenDone:NO];
+    return [hash base64EncodedString];
+}
 
 // Based on: http://www.cocoawithlove.com/2009/06/base64-encoding-options-on-mac-and.html
 - (NSString*)base64EncodedString

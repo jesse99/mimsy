@@ -215,8 +215,8 @@
     
     AppDelegate* app = [NSApp delegate];
     NSString* fileName = [path lastPathComponent];
-    NSString* setting = [app.settings stringValue:@"DontOpenWithMimsy" missing:nil];
-	if (setting)
+    NSString* setting = [app.settings stringValue:@"DontOpenWithMimsy" missing:@""];
+	if (setting.length > 0)
 	{
 		NSArray* patterns = [setting splitByString:@" "];
 		Glob* glob = [[Glob alloc] initWithGlobs:patterns];
