@@ -62,10 +62,15 @@ public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
     /// - Parameter invoke: Called when the user selects the new menu item.
     func registerWithSelectionTextContextMenu(pos: WithTextSelectionPos, title: TextContextMenuItemTitle, invoke: InvokeTextCommand)
     
-    // Returns the environment variables Mimsy was launched with (which are normally a subset
-    // of the variables the shell commands receive) augmented with Mimsy settings (e.g. to append
-    // more paths onto PATH). This is the environment that should be used when using NSTask.
+    /// Returns the environment variables Mimsy was launched with (which are normally a subset
+    /// of the variables the shell commands receive) augmented with Mimsy settings (e.g. to append
+    /// more paths onto PATH). This is the environment that should be used when using NSTask.
     func environment() -> [String: String]
+    
+    /// Returns a color from a name where the name may be a CSS3 color name ("Dark Green"), a VIM 7.3 
+    /// name ("gray50"), hex RGB or RGBA numbers ("#FF0000" or "#FF0000FF"), or decimal RGB or RGBA
+    /// tuples ("(255, 0, 0)" or "(255, 0, 0, 255)"). Names are lower cased and spaces are stripped.
+    func mimsyColor(name: String) -> NSColor?
         
     /// Typically the extension method will be used instead of this.
     func logString(topic: String, text: String)

@@ -2,6 +2,7 @@
 
 //#import <OSXFUSE/OSXFUSE.h>
 
+#import "ColorCategory.h"
 #import "ConfigParser.h"
 #import "Constants.h"
 #import "DirectoryController.h"
@@ -327,6 +328,11 @@ void initLogGlobs()
                 return nil;
     }
     return nil;
+}
+
+- (NSColor*)mimsyColor:(NSString *)name
+{
+    return [NSColor colorWithMimsyName:name];
 }
 
 - (void)registerTextView:(enum TextViewNotification)kind :(TextViewBlock)hook

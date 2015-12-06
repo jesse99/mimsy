@@ -15,8 +15,15 @@ class StdHighlightLine: MimsyPlugin
     
     override func onLoadSettings(settings: MimsySettings)
     {
-        let color = settings.stringValue("Color", missing: "PeachPuff")
-        app.log("Plugins", "loaded color %@", color)
+        let name = settings.stringValue("Color", missing: "PeachPuff")
+        if let candidate = app.mimsyColor(name)
+        {
+            color = candidate
+        }
+        else
+        {
+            app.log("Plugins", "bad highlight-line color name: '%@", name)
+        }
     }
     
     // The classy way to do this is to store the state of the current line highlighting for a text
@@ -39,8 +46,10 @@ class StdHighlightLine: MimsyPlugin
             if view.selectionRange.length < 1024 && !view.selection.containsString("\n")
             {
                 let range = view.selectedLineRange()
-                layout.addTemporaryAttribute(NSBackgroundColorAttributeName, value: NSColor.blueColor(), forCharacterRange: range)
+                layout.addTemporaryAttribute(NSBackgroundColorAttributeName, value: color, forCharacterRange: range)
             }
         }
     }
+    
+    var color: NSColor = NSColor.blueColor()
 }
