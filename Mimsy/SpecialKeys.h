@@ -3,5 +3,10 @@
 @interface SpecialKeys : NSObject
 
 + (void)setup;
++ (void)updated;
+
++ (void)addPlugin:(NSString*)plugin context:(NSString*)context key:(NSString*)name description:(NSString*)description;
+
++ (void)removePlugin:(NSString*)plugin context:(NSString*)context;
 
 @end

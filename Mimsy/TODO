@@ -23,9 +23,6 @@ Creating plugins
 
 
 * Work on open-dual plugin:
-    - do something with help
-    - put the key into a setting (will need to somehow unregister to handle settings change)
-    - need to be able to load settings from mimsy (and when they change)
     - for mac80211 could add some custom duals, e.g. to open mesh.h
 * Replace the old extensions:
     - option tab

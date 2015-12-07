@@ -10,10 +10,13 @@ class StdOpenDual: MimsyPlugin
     
     override func onLoadSettings(settings: MimsySettings)
     {
-        app.clearRegisterTextViewKey(bundle.bundleIdentifier!)        
+        app.clearRegisterTextViewKey(bundle.bundleIdentifier!)
+        app.removeKeyHelp(bundle.bundleIdentifier!, "text editor")
+        
         for key in settings.stringValues("DualKey")
         {
             app.registerTextViewKey(key, bundle.bundleIdentifier!, openDual)
+            app.addKeyHelp(bundle.bundleIdentifier!, "text editor", key, "Opens a file associated with the current file (e.g. a source file's header).")
         }
 
         mappings = []

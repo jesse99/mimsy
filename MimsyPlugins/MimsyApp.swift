@@ -62,6 +62,18 @@ public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
     /// be listed in alphabetical order, e.g. "option-shift-tab".
     /// - Parameter hook: Return true to suppress further processing of the key.
     func registerTextViewKey(key: String, _ identifier: String, _ hook: TextViewKeyCallback)
+    
+    /// Used to generate the Special Keys help file.
+    ///
+    /// - Parameter plugin: The name of the plugin, usually easiest to use bundle.bundleIdentifier!.
+    /// - Parameter context: These are documented in Help Files. Contexts most often used include "app",
+    /// "directory editor", "text editor", and language names (e.g. "python").
+    /// - Parameter key: The name of the key, e.g. "Option-Shift-Tab".
+    /// - Parameter description: What happens when the user presses the key.
+    func addKeyHelp(plugin: String, _ context: String, _ key: String, _ description: String)
+
+    /// Removes help added via addKeyHelp.
+    func removeKeyHelp(plugin: String, _ context: String)
 
     /// Removes functions registered with registerTextViewKey. This is often used when the keys
     /// plugins use change as a result of the user editing a settings file.

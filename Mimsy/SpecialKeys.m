@@ -48,6 +48,53 @@ static NSDictionary* _json;
 	[SpecialKeys _loadDefaults];
 }
 
++ (void)addPlugin:(NSString*)plugin context:(NSString*)context key:(NSString*)name description:(NSString*)description
+{
+    NSMutableDictionary* contexts = _json[@"contexts"];
+    
+    NSMutableDictionary* keys = contexts[context];
+    if (!keys)
+    {
+        keys = [NSMutableDictionary new];
+        contexts[context] = keys;
+    }
+    
+    keys[name] = description;
+    keys[[name stringByAppendingString:@"-extension"]] = plugin;
+}
+
++ (void)removePlugin:(NSString*)plugin context:(NSString*)context
+{
+    NSMutableDictionary* contexts = _json[@"contexts"];
+    
+    NSMutableDictionary* keys = contexts[context];
+    if (keys)
+    {
+        NSMutableArray* zombies = [NSMutableArray new];
+        for (NSString* extName in keys)
+        {
+            NSString* value = keys[extName];
+            if ([value isEqualToString:plugin])
+            {
+                [zombies addObject:extName];
+                
+                NSString* name = [extName stringByReplacingOccurrencesOfString:@"-extension" withString:@""];
+                [zombies addObject:name];
+            }
+        }
+        
+        for (NSString* name in zombies)
+        {
+            [keys removeObjectForKey:name];
+        }
+    }
+}
+
++ (void)updated
+{
+    [SpecialKeys _writeFiles:_json[@"contexts"] footers:_json[@"footers"]];
+}
+
 // {
 // 	"extension": "option-tab",
 // 	"context": "text editor",
@@ -69,22 +116,10 @@ static NSDictionary* _json;
 		[TranscriptController writeStdout:text];
 		return;
 	}
-	
-	NSMutableDictionary* contexts = _json[@"contexts"];
-	NSString* context = json[@"context"];
-	
-	NSMutableDictionary* keys = contexts[context];
-	if (!keys)
+    
+    for (NSString* name in json[@"keys"])
 	{
-		keys = [NSMutableDictionary new];
-		contexts[context] = keys;
-	}
-	
-	for (NSString* name in json[@"keys"])
-	{
-		NSString* description = json[@"keys"][name];
-        keys[name] = description;
-        keys[[name stringByAppendingString:@"-extension"]] = json[@"extension"];
+        [SpecialKeys addPlugin:json[@"extension"] context:json[@"context"] key:name description:json[@"keys"][name]];
 	}
 }
 
@@ -163,20 +198,23 @@ static NSDictionary* _json;
 	
 	for (NSString* name in [keys.allKeys sortedArrayUsingSelector:@selector(compare:)])
 	{
-		[SpecialKeys _appendText:text attrs:_keyNameAttrs contents:name];
-		[SpecialKeys _appendText:text attrs:_keyNameAttrs contents:@"\t\t"];
-        
-		[SpecialKeys _appendText:text attrs:_keyTextAttrs contents:keys[name]];
-        
-        NSString* extension = keys[[name stringByAppendingString:@"-extension"]];
-        if (extension)
+        if (![name hasSuffix:@"-extension"])
         {
-            [SpecialKeys _appendText:text attrs:_keyNameAttrs contents:@" "];
-            [SpecialKeys _appendText:text attrs:_keySrcAttrs contents:extension];
-        }
+            [SpecialKeys _appendText:text attrs:_keyNameAttrs contents:name];
+            [SpecialKeys _appendText:text attrs:_keyNameAttrs contents:@"\t\t"];
+            
+            [SpecialKeys _appendText:text attrs:_keyTextAttrs contents:keys[name]];
+            
+            NSString* extension = keys[[name stringByAppendingString:@"-extension"]];
+            if (extension)
+            {
+                [SpecialKeys _appendText:text attrs:_keyNameAttrs contents:@" "];
+                [SpecialKeys _appendText:text attrs:_keySrcAttrs contents:extension];
+            }
 
-        [SpecialKeys _appendText:text attrs:_keyTextAttrs contents:@"\n"];
-}
+            [SpecialKeys _appendText:text attrs:_keyTextAttrs contents:@"\n"];
+        }
+    }
 	
 	if (footer && footer.length > 0)
 	{

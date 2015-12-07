@@ -298,6 +298,22 @@ void initLogGlobs()
     [_installer addSourcePath:path];
 }
 
+- (void)addKeyHelp:(NSString * __nonnull)plugin :(NSString * __nonnull)context :(NSString * __nonnull)key :(NSString * __nonnull)description
+{
+    if ([plugin contains:@"."])
+    {
+        NSArray* parts = [plugin componentsSeparatedByString:@"."];
+        plugin = parts[parts.count - 1];
+    }
+    
+    [SpecialKeys addPlugin:plugin context:context key:key description:description];
+}
+
+- (void)removeKeyHelp:(NSString * __nonnull)plugin :(NSString * __nonnull)context
+{
+    [SpecialKeys removePlugin:plugin context:context];
+}
+
 - (void)registerTextViewKey:(NSString* __nonnull)key :(NSString* __nonnull)identifier :(TextViewKeyBlock)hook
 {
     key = [key lowercaseString];
@@ -964,6 +980,7 @@ void initLogGlobs()
 #if OLD_EXTENSIONS
     [StartupScripts setup];
 #endif
+    [SpecialKeys setup];
     [WindowsDatabase setup];
     [Languages setup];
     
@@ -973,6 +990,7 @@ void initLogGlobs()
 #endif
 
     [Plugins finishLoading];
+    [SpecialKeys updated];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
@@ -1771,6 +1789,7 @@ void initLogGlobs()
 			initLogGlobs();
 			[self _loadSettings];
             [Plugins refreshSettings];
+            [SpecialKeys updated];
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
 		}
 		];
