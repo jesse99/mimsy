@@ -228,7 +228,7 @@ public class BuildErrors : NSObject
             let current = DirectoryController.getCurrentController()
             if current != nil && file != nil
             {
-                let paths = OpenFile.resolvePath(file!, rootedAt: current!.path)
+                let paths = OpenFile.resolvePath(file!, rootedAt: current!.thePath)
                 if paths.count > 0
                 {
                     // Hopefully tools will provide more than just a file name on errors.

@@ -143,6 +143,11 @@
 		37CE3E7219A980A7000AEA3C /* Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CE3E7119A980A7000AEA3C /* Extensions.m */; };
 		37CF062616AB998A00069A20 /* LuaSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF062516AB998A00069A20 /* LuaSupport.m */; };
 		37CF13D0194FC51800F35944 /* BaseInFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF13CF194FC51800F35944 /* BaseInFiles.m */; };
+		37D0BB851C13FC890053617F /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D0BB841C13FC890053617F /* Plugin.swift */; };
+		37D0BB8B1C13FCFE0053617F /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 37D0BB8A1C13FCFE0053617F /* Description.rtf */; };
+		37D0BB8D1C13FDE60053617F /* settings in Resources */ = {isa = PBXBuildFile; fileRef = 37D0BB8C1C13FDE60053617F /* settings */; };
+		37D0BB911C14E0E60053617F /* MimsyGlob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D0BB901C14E0E60053617F /* MimsyGlob.swift */; };
+		37D0BB931C14E45F0053617F /* MimsyProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D0BB921C14E45F0053617F /* MimsyProject.swift */; };
 		37E165C51B439C17005FECA9 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 37E165C41B439C17005FECA9 /* Settings.m */; };
 		37E1CA9E1B924A5600893991 /* UnicodeNames.zip in Resources */ = {isa = PBXBuildFile; fileRef = 37E1CA9D1B924A5600893991 /* UnicodeNames.zip */; };
 		37E7A8CA1AE1FD7700BD93B4 /* StringDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37E7A8C91AE1FD7700BD93B4 /* StringDialog.xib */; };
@@ -233,6 +238,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 37CDF3AC1C07CC3A009E48B4;
 			remoteInfo = ChangeCase;
+		};
+		37D0BB861C13FCD20053617F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37CDF3961C07BF9E009E48B4;
+			remoteInfo = MimsyPlugins;
+		};
+		37D0BB881C13FCDA0053617F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37D0BB7D1C13FC620053617F;
+			remoteInfo = OpenDual;
 		};
 		37E8C5921C0C0E6B00849644 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -557,6 +576,13 @@
 		37CF13CD194E3EE000F35944 /* RangeVectorUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RangeVectorUtils.h; sourceTree = "<group>"; };
 		37CF13CE194FC51800F35944 /* BaseInFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseInFiles.h; sourceTree = "<group>"; };
 		37CF13CF194FC51800F35944 /* BaseInFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseInFiles.m; sourceTree = "<group>"; };
+		37D0BB7E1C13FC620053617F /* OpenDual.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenDual.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		37D0BB801C13FC620053617F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		37D0BB841C13FC890053617F /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
+		37D0BB8A1C13FCFE0053617F /* Description.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Description.rtf; sourceTree = "<group>"; };
+		37D0BB8C1C13FDE60053617F /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = settings; sourceTree = "<group>"; };
+		37D0BB901C14E0E60053617F /* MimsyGlob.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimsyGlob.swift; sourceTree = "<group>"; };
+		37D0BB921C14E45F0053617F /* MimsyProject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimsyProject.swift; sourceTree = "<group>"; };
 		37E165C31B439C17005FECA9 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
 		37E165C41B439C17005FECA9 /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
 		37E1CA9D1B924A5600893991 /* UnicodeNames.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = UnicodeNames.zip; sourceTree = "<group>"; };
@@ -642,6 +668,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		37CDF3AA1C07CC3A009E48B4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37D0BB7B1C13FC620053617F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -973,6 +1006,7 @@
 				37E8C59C1C0C110500849644 /* ReverseLines.plugin */,
 				37E8EE961C0C1F9300E1C3B9 /* SortLines.plugin */,
 				37E8EEA81C0FEAF600E1C3B9 /* HighlightLine.plugin */,
+				37D0BB7E1C13FC620053617F /* OpenDual.plugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1099,9 +1133,11 @@
 			children = (
 				37CDF39B1C07BF9E009E48B4 /* Info.plist */,
 				37BABAD21C08CF2400B9B5AB /* MimsyApp.swift */,
+				37D0BB901C14E0E60053617F /* MimsyGlob.swift */,
 				37BABAD91C0A99B600B9B5AB /* MimsyLanguage.swift */,
 				37CDF3A51C07C2C7009E48B4 /* MimsyPlugin.swift */,
 				37CDF3991C07BF9E009E48B4 /* MimsyPlugins.h */,
+				37D0BB921C14E45F0053617F /* MimsyProject.swift */,
 				37BABAD41C091A7000B9B5AB /* MimsyTextView.swift */,
 				37B9CA001C0BC923006C479B /* MimsyTranscript.swift */,
 				37A93CF51C11EBAE00AFE5AC /* MimsySettings.swift */,
@@ -1128,10 +1164,22 @@
 				3775F4A91C0BBFD9001AFA06 /* FindGremlin */,
 				37BABAE01C0AB5CB00B9B5AB /* GoFormat */,
 				37E8EEA91C0FEAF700E1C3B9 /* HighlightLine */,
+				37D0BB7F1C13FC620053617F /* OpenDual */,
 				37E8C59D1C0C110500849644 /* ReverseLines */,
 				37E8EE971C0C1F9300E1C3B9 /* SortLines */,
 			);
 			name = Plugins;
+			sourceTree = "<group>";
+		};
+		37D0BB7F1C13FC620053617F /* OpenDual */ = {
+			isa = PBXGroup;
+			children = (
+				37D0BB801C13FC620053617F /* Info.plist */,
+				37D0BB841C13FC890053617F /* Plugin.swift */,
+				37D0BB8A1C13FCFE0053617F /* Description.rtf */,
+				37D0BB8C1C13FDE60053617F /* settings */,
+			);
+			path = OpenDual;
 			sourceTree = "<group>";
 		};
 		37E8C58B1C0C0DE500849644 /* EscapeText */ = {
@@ -1237,6 +1285,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				37D0BB891C13FCDA0053617F /* PBXTargetDependency */,
 				37E8EEB31C0FEB6200E1C3B9 /* PBXTargetDependency */,
 				37E8EEA11C0C1FEA00E1C3B9 /* PBXTargetDependency */,
 				37E8C5A71C0C117200849644 /* PBXTargetDependency */,
@@ -1323,6 +1372,24 @@
 			name = ChangeCase;
 			productName = ChangeCase;
 			productReference = 37CDF3AD1C07CC3A009E48B4 /* ChangeCase.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+		37D0BB7D1C13FC620053617F /* OpenDual */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 37D0BB831C13FC620053617F /* Build configuration list for PBXNativeTarget "OpenDual" */;
+			buildPhases = (
+				37D0BB7A1C13FC620053617F /* Sources */,
+				37D0BB7B1C13FC620053617F /* Frameworks */,
+				37D0BB7C1C13FC620053617F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				37D0BB871C13FCD20053617F /* PBXTargetDependency */,
+			);
+			name = OpenDual;
+			productName = OpenDual;
+			productReference = 37D0BB7E1C13FC620053617F /* OpenDual.plugin */;
 			productType = "com.apple.product-type.bundle";
 		};
 		37E8C5891C0C0DE500849644 /* EscapeText */ = {
@@ -1425,6 +1492,9 @@
 					37CDF3AC1C07CC3A009E48B4 = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
+					37D0BB7D1C13FC620053617F = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
 					37E8C5891C0C0DE500849644 = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
@@ -1462,6 +1532,7 @@
 				37E8C59B1C0C110500849644 /* ReverseLines */,
 				37E8EE951C0C1F9300E1C3B9 /* SortLines */,
 				37E8EEA71C0FEAF600E1C3B9 /* HighlightLine */,
+				37D0BB7D1C13FC620053617F /* OpenDual */,
 			);
 		};
 /* End PBXProject section */
@@ -1546,6 +1617,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				37BABAD81C0937F000B9B5AB /* Description.rtf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37D0BB7C1C13FC620053617F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37D0BB8B1C13FCFE0053617F /* Description.rtf in Resources */,
+				37D0BB8D1C13FDE60053617F /* settings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1756,6 +1836,8 @@
 				37B9CA011C0BC923006C479B /* MimsyTranscript.swift in Sources */,
 				37BABAD51C091A7000B9B5AB /* MimsyTextView.swift in Sources */,
 				37A93CF61C11EBAE00AFE5AC /* MimsySettings.swift in Sources */,
+				37D0BB931C14E45F0053617F /* MimsyProject.swift in Sources */,
+				37D0BB911C14E0E60053617F /* MimsyGlob.swift in Sources */,
 				37BABAD31C08CF2400B9B5AB /* MimsyApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1765,6 +1847,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				37CDF3B41C07CC75009E48B4 /* Plugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37D0BB7A1C13FC620053617F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37D0BB851C13FC890053617F /* Plugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1852,6 +1942,16 @@
 			isa = PBXTargetDependency;
 			target = 37CDF3AC1C07CC3A009E48B4 /* ChangeCase */;
 			targetProxy = 37CDF3B71C07F339009E48B4 /* PBXContainerItemProxy */;
+		};
+		37D0BB871C13FCD20053617F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37CDF3961C07BF9E009E48B4 /* MimsyPlugins */;
+			targetProxy = 37D0BB861C13FCD20053617F /* PBXContainerItemProxy */;
+		};
+		37D0BB891C13FCDA0053617F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37D0BB7D1C13FC620053617F /* OpenDual */;
+			targetProxy = 37D0BB881C13FCDA0053617F /* PBXContainerItemProxy */;
 		};
 		37E8C5931C0C0E6B00849644 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2458,6 +2558,70 @@
 			};
 			name = Release;
 		};
+		37D0BB811C13FC620053617F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = OpenDual/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.OpenDual;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		37D0BB821C13FC620053617F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = OpenDual/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.OpenDual;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
 		37E8C58D1C0C0DE500849644 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2788,6 +2952,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		37D0BB831C13FC620053617F /* Build configuration list for PBXNativeTarget "OpenDual" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37D0BB811C13FC620053617F /* Debug */,
+				37D0BB821C13FC620053617F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		37E8C58F1C0C0DE500849644 /* Build configuration list for PBXNativeTarget "EscapeText" */ = {
 			isa = XCConfigurationList;

@@ -1,0 +1,15 @@
+# These consist of a glob that is matched against the frontmost open document window
+# and a list of either file extensions or file names. Normally the front window will
+# be something like foo.h and all files in the project that match foo.c, foo.cpp,
+# foo.cpp, foo.c++, and foo.m are opened. But if a file name instead of an extension
+# is used that file will be opened (it can be useful to add a Dual setting to a project's
+# .mimsy.rtf file for projects where one header is associated with multiple source files).
+FileDual: *.h .c .cpp .c++ .m
+FileDual: *.c .h
+FileDual: *.cpp .h .hpp .h++
+FileDual: *.c++ .h .hpp .h++
+FileDual: *.m .h
+
+# The keys used to trigger the plugin (these both do exactly the same thing).
+DualKey: Command-Control-Up-Arrow
+DualKey: Command-Control-Down-Arrow

@@ -15,7 +15,7 @@ class StdHighlightLine: MimsyPlugin
     
     override func onLoadSettings(settings: MimsySettings)
     {
-        let name = settings.stringValue("Color", missing: "PeachPuff")
+        let name = settings.stringValue("LineColor", missing: "PeachPuff")
         if let candidate = app.mimsyColor(name)
         {
             color = candidate
@@ -24,6 +24,8 @@ class StdHighlightLine: MimsyPlugin
         {
             app.log("Plugins", "bad highlight-line color name: '%@", name)
         }
+        
+        maxSelLen = settings.intValue("MaxSelLen", missing: 1024)
     }
     
     // The classy way to do this is to store the state of the current line highlighting for a text
@@ -43,7 +45,7 @@ class StdHighlightLine: MimsyPlugin
            
             // Only highlight if the selection is on a single line (and, in the interests of efficiency,
             // shortcut this process for really long selections).
-            if view.selectionRange.length < 1024 && !view.selection.containsString("\n")
+            if view.selectionRange.length < maxSelLen && !view.selection.containsString("\n")
             {
                 let range = view.selectedLineRange()
                 layout.addTemporaryAttribute(NSBackgroundColorAttributeName, value: color, forCharacterRange: range)
@@ -52,4 +54,5 @@ class StdHighlightLine: MimsyPlugin
     }
     
     var color: NSColor = NSColor.blueColor()
+    var maxSelLen = 1024
 }

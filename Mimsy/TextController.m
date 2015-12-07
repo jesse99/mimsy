@@ -128,6 +128,11 @@ static __weak TextController* _frontmost;
     return _language;
 }
 
+- (id<MimsyProject> __nullable)project
+{
+    return [DirectoryController getController:self.path];
+}
+
 - (NSTextView* _Nonnull)view
 {
     return self.textView;
@@ -904,10 +909,10 @@ static __weak TextController* _frontmost;
 		[_applier resetStyles];
 }
 
-- (NSString*)path
+- (NSString* _Nullable)path
 {
 	NSURL* url = [self.document fileURL];
-	return [url path];
+    return url ? [url path] : nil;
 }
 
 - (void)_positionWindow:(NSString*)path

@@ -11,19 +11,19 @@
 #import "FolderItem.h"
 #import "FunctionalTest.h"
 #import "Logger.h"
+#import "Mimsy-Swift.h"
 #import "OpenFile.h"
 #import "Paths.h"
 #import "TranscriptController.h"
 #import "UpdateConfig.h"
 #import "Utils.h"
-#import "Mimsy-Swift.h"
 
 static NSMutableArray* _controllers;
 static DirectoryController* _lastBuilt;
 
 @implementation DirectoryController
 {
-	NSString* _path;
+	NSString* _thePath;
 	FolderItem* _root;
 	DirectoryWatcher* _watcher;
 	NSDictionary* _dirAttrs;
@@ -89,7 +89,7 @@ static DirectoryController* _lastBuilt;
 	{
 		if (path && !controller->_closing)
 		{
-			NSString* candidate = [controller->_path stringByStandardizingPath];
+			NSString* candidate = [controller->_thePath stringByStandardizingPath];
 			if (candidate && [path rangeOfString:candidate].location == 0)
 				return controller;
 		}
@@ -171,6 +171,45 @@ static DirectoryController* _lastBuilt;
 }
 #endif
 
+- (NSString* _Nonnull)path
+{
+    return _thePath;
+}
+
+- (NSArray<NSString*>* __nonnull)resolve:(NSString* __nonnull)name
+{
+    NSMutableArray* result = [NSMutableArray new];
+    
+    NSError* error = nil;
+    if ([name hasPrefix:@"/"])
+    {
+        [Utils enumerateDeepDir:self.path glob:nil error:&error block:^(NSString* item, bool* stop) {
+            UNUSED(stop);
+            if ([item isEqualToString:name])
+                [result addObject:item];
+        }];
+    }
+    else if ([name contains:@"/"])
+    {
+        name = [NSString stringWithFormat:@"/%@", name];
+        [Utils enumerateDeepDir:self.path glob:nil error:&error block:^(NSString* item, bool* stop) {
+            UNUSED(stop);
+            if ([item hasSuffix:name])
+                [result addObject:item];
+        }];
+    }
+    else
+    {
+        [Utils enumerateDeepDir:self.path glob:nil error:&error block:^(NSString* item, bool* stop) {
+            UNUSED(stop);
+            if ([item.lastPathComponent isEqualToString:name])
+                [result addObject:item];
+        }];
+    }
+    
+    return result;
+}
+
 - (void)windowWillClose:(NSNotification*)notification
 {
 	UNUSED(notification);
@@ -197,7 +236,7 @@ static DirectoryController* _lastBuilt;
 {
 	UNUSED(window);
 	
-	[state encodeObject:_path];
+	[state encodeObject:_thePath];
 }
 
 - (void)window:(NSWindow*)window didDecodeRestorableState:(NSCoder*)state
@@ -294,7 +333,7 @@ static DirectoryController* _lastBuilt;
 		NSString* target = [menu titleOfSelectedItem];
 		
 		NSError* error = nil;
-		NSString* path = [_path stringByAppendingPathComponent:@".mimsy.rtf"];
+		NSString* path = [_thePath stringByAppendingPathComponent:@".mimsy.rtf"];
 		if (!updatePref(path, @"BuildTarget", target, &error))
 		{
 			NSString* reason = [error localizedFailureReason];
@@ -306,7 +345,7 @@ static DirectoryController* _lastBuilt;
 
 - (void)saveBuildFlags
 {
-	NSString* path = [_path stringByAppendingPathComponent:@".mimsy.rtf"];
+	NSString* path = [_thePath stringByAppendingPathComponent:@".mimsy.rtf"];
 	for (NSUInteger i = 0; i < self.targetGlobs.count; ++i)
 	{
 		NSError* error = nil;
@@ -349,7 +388,7 @@ static DirectoryController* _lastBuilt;
 {
 	UNUSED(sender);
 	
-	NSString* path = [_path stringByAppendingPathComponent:@".mimsy.rtf"];
+	NSString* path = [_thePath stringByAppendingPathComponent:@".mimsy.rtf"];
 	(void) [OpenFile openPath:path atLine:-1 atCol:-1 withTabWidth:1];
 }
 
@@ -453,7 +492,7 @@ static DirectoryController* _lastBuilt;
 	SEL sel = [item action];
 	if (sel == @selector(openDirSettings:))
 	{
-		NSString* name = [_path lastPathComponent];
+		NSString* name = [_thePath lastPathComponent];
 		[item setTitle:[NSString stringWithFormat:@"Open %@ Settings", name]];
 		enabled = YES;
 	}
@@ -799,7 +838,7 @@ static DirectoryController* _lastBuilt;
 
 - (void)_loadPath:(NSString*)path
 {
-	_path = path;
+	_thePath = path;
 	[self _loadPrefs];
 	[self settingsChanged:nil];
 	
@@ -914,7 +953,7 @@ static DirectoryController* _lastBuilt;
 
 - (void)_loadPrefs
 {
-    NSString* path = [_path stringByAppendingPathComponent:@".mimsy.rtf"];
+    NSString* path = [_thePath stringByAppendingPathComponent:@".mimsy.rtf"];
     if (![self _prefsChanged:path])
         return;
     
@@ -1200,7 +1239,7 @@ static NSString* flagsToStr(FSEventStreamEventFlags flags)
     if ((flags & wanted) == 0)
         return;
     
-    LOG("Mimsy", "%s dir changed %s", STR(_path), STR(flagsToStr(flags)));
+    LOG("Mimsy", "%s dir changed %s", STR(_thePath), STR(flagsToStr(flags)));
 	
 	// Update which ever items were opened.
 	FileSystemItem* item = [_root find:path];

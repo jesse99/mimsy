@@ -1,2 +1,7 @@
 # Standard Mimsy color names may be used.
-Color: PeachPuff
+LineColor: PeachPuff
+
+# The HighlightLine plugin will only highlight lines if the selection is within
+# a single line. If the selection is more than MaxLen characters it won't even
+# bother checking if it is a single line and simply skip the highlighting.
+MaxSelLen: 1024

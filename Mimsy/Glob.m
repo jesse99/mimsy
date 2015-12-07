@@ -3,6 +3,11 @@
 
 @implementation Glob
 
+- (BOOL)matches:(NSString*)text
+{
+    return [self matchName:text] == 1;
+}
+
 - (id)initWithGlob:(NSString*)glob
 {
 	_globs = [NSArray arrayWithObject:glob];

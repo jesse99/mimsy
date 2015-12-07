@@ -11,19 +11,24 @@
 #include <objc/runtime.h>
 
 // ------------------------------------------------------------------------------------
-@interface PluginData : NSObject
+@interface PluginData : NSObject<SettingsContext>
 
 - (id)init:(MimsyPlugin*)plugin;
 
 @property (readonly) MimsyPlugin* plugin;
 @property (readonly) NSMutableArray* settingNames; // file names for settings
-@property (readonly) NSMutableArray* hashs;         // md5sums for the contents of those paths
 
 - (NSString*)bundleName;
+
+- (void)swapInSettings:(Settings*)settings;
+- (void)swapOutSettings;
 
 @end
 
 @implementation PluginData
+{
+    Settings* _settings;
+}
 
 - (id)init:(MimsyPlugin*)plugin
 {
@@ -33,7 +38,6 @@
     {
         _plugin = plugin;
         _settingNames = [NSMutableArray new];
-        _hashs = [NSMutableArray new];
     }
     
     return self;
@@ -42,6 +46,32 @@
 - (NSString*)bundleName
 {
     return _plugin.bundle.bundlePath.lastPathComponent;
+}
+
+- (void)swapInSettings:(Settings*)settings
+{
+    _settings = settings;
+    
+    AppDelegate* app = [NSApp delegate];
+    [app setSettingsParent:self];
+}
+
+- (void)swapOutSettings
+{
+    _settings = nil;
+    
+    AppDelegate* app = [NSApp delegate];
+    [app setSettingsParent:nil];
+}
+
+- (id<SettingsContext> __nullable)parent
+{
+    return nil;
+}
+
+- (Settings* __nullable)settings
+{
+    return _settings;
 }
 
 @end
@@ -145,10 +175,7 @@ static void doStage(int stage)
                 [installer addSourcePath:rsrc];
                 
                 if ([parent isEqualToString:@"settings"])
-                {
                     [data.settingNames addObject:rsrc.lastPathComponent];
-                    [data.hashs addObject:@0];
-                }
             }
         }];
         
@@ -176,12 +203,11 @@ static void doStage(int stage)
 
 + (void)_loadSettings
 {
-    AppDelegate* app = [NSApp delegate];
     NSString* root = [Paths installedDir:@"settings"];
     
     for (PluginData* data in _plugins)
     {
-        Settings* settings = [[Settings alloc] init:data.bundleName context:app];
+        Settings* settings = [[Settings alloc] init:data.bundleName context:data];
         
         for (NSUInteger i = 0; i < data.settingNames.count; ++i)
         {
@@ -190,7 +216,6 @@ static void doStage(int stage)
             ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
             if (parser)
             {
-                data.hashs[i] = @(parser.checksum);
                 [parser enumerate: ^(ConfigParserEntry* entry) {[settings addKey:entry.key value:entry.value];}];
             }
             else
@@ -200,19 +225,19 @@ static void doStage(int stage)
             }
         }
         
-        if (settings.getKeys.count > 0)
-            [data.plugin onLoadSettings:settings];
+        [data swapInSettings:settings];
+        [data.plugin onLoadSettings:[activeContext settings]];
+        [data swapOutSettings];
     }
 }
 
 + (void)refreshSettings
 {
-    AppDelegate* app = [NSApp delegate];
     NSString* root = [Paths installedDir:@"settings"];
    
     for (PluginData* data in _plugins)
     {
-        Settings* settings = [[Settings alloc] init:data.bundleName context:app];
+        Settings* settings = [[Settings alloc] init:data.bundleName context:data];
         
         for (NSUInteger i = 0; i < data.settingNames.count; ++i)
         {
@@ -221,12 +246,7 @@ static void doStage(int stage)
             ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
             if (parser)
             {
-                NSValue* value = @(parser.checksum);
-                if (![value isEqualToValue:data.hashs[i]] || data.settingNames.count > 1)
-                {
-                    data.hashs[i] = value;
-                    [parser enumerate: ^(ConfigParserEntry* entry) {[settings addKey:entry.key value:entry.value];}];
-                }
+                [parser enumerate: ^(ConfigParserEntry* entry) {[settings addKey:entry.key value:entry.value];}];
             }
             else
             {
@@ -235,8 +255,11 @@ static void doStage(int stage)
             }
         }
         
-        if (settings.getKeys.count > 0)
-            [data.plugin onLoadSettings:settings];
+        // Plugin settings can be overriden (and plugins can rely on common settings so
+        // there's no decent way for us to be smart about trying to skip notifications.
+        [data swapInSettings:settings];
+        [data.plugin onLoadSettings:[activeContext settings]];
+        [data swapOutSettings];
     }
 }
 

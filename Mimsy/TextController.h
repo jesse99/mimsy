@@ -39,7 +39,6 @@ typedef void (^LayoutCallback)(TextController* controller);
 - (void)changeStyle:(NSString*)path;
 - (void)resetStyles;
 - (void)showLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width;
-- (NSString*)path;
 
 - (void)shiftLeft:(id)sender;
 - (void)shiftRight:(id)sender;

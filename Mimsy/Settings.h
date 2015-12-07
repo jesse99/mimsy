@@ -9,7 +9,8 @@
 // and language files (e.g. C.mimsy).
 @protocol SettingsContext
 
-// Will be nil for the app.
+// Will be nil for the root which is either the app or, transiently,
+// a plugin.
 - (id<SettingsContext> __nullable)parent;
 
 - (Settings* __nullable)settings;

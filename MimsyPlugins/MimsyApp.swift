@@ -4,6 +4,7 @@ public typealias EnabledMenuItem = (NSMenuItem) -> Bool
 public typealias InvokeMenuItem = () -> ()
 public typealias InvokeTextCommand = (MimsyTextView) -> ()
 public typealias TextViewCallback = (MimsyTextView) -> ()
+public typealias TextViewKeyCallback = (MimsyTextView) -> Bool
 public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
 
 @objc public enum MenuItemLoc: Int
@@ -33,6 +34,10 @@ public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
     case AppliedStyles
 }
 
+// TODO: Once we can call static protocol methods from within swift we can
+// clean some of this up, e.g. text view registration, glob creation, etc.
+// See
+
 /// This is used by plugins to communicate with the top level of Mimsy.
 @objc public protocol MimsyApp
 {
@@ -47,6 +52,20 @@ public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
     
     /// Registers a function that will be called just before a save.
     func registerTextView(kind: TextViewNotification, _ hook: TextViewCallback)
+
+    /// Used to register a function that will be called when a key is pressed. 
+    ///
+    /// - Parameter key: Currently the key may be: "clear", "delete", "down-arrow", "end", "enter", 
+    /// "escape", "f<number>", "forward-delete" "help", "home", "left-arrow", "page-down", "page-up",
+    /// "right-arrow", "tab", "up-arrow". The key may be preceded by one or more of the following
+    /// modifiers: "command", "control", "option", "shift". If multiple modifiers are used they should
+    /// be listed in alphabetical order, e.g. "option-shift-tab".
+    /// - Parameter hook: Return true to suppress further processing of the key.
+    func registerTextViewKey(key: String, _ identifier: String, _ hook: TextViewKeyCallback)
+
+    /// Removes functions registered with registerTextViewKey. This is often used when the keys
+    /// plugins use change as a result of the user editing a settings file.
+    func clearRegisterTextViewKey(identifier: String)
     
     /// Used to add a custom menu item to text contextual menus when there is no selection.
     ///
@@ -71,9 +90,20 @@ public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
     /// name ("gray50"), hex RGB or RGBA numbers ("#FF0000" or "#FF0000FF"), or decimal RGB or RGBA
     /// tuples ("(255, 0, 0)" or "(255, 0, 0, 255)"). Names are lower cased and spaces are stripped.
     func mimsyColor(name: String) -> NSColor?
+    
+    /// Opens a file with Mimsy where possible and as if double-clicked within the Finder otherwise.
+    ///
+    /// - Parameter path: Full path to a file.
+    func open(path: String)
         
     /// Typically the extension method will be used instead of this.
     func logString(topic: String, text: String)
+
+    /// Create a glob using one pattern.
+    func globWithString(glob: String) -> MimsyGlob
+    
+    /// Create a glob using multiple patterns.
+    func globWithStrings(globs: [String]) -> MimsyGlob
 }
 
 public extension MimsyApp

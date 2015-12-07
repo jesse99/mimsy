@@ -31,6 +31,4 @@
 // Returns the value for the first key or nil if the key was not present.
 -(NSString*)valueForKey:(NSString*)key;
 
-@property(readonly) NSUInteger checksum;
-
 @end

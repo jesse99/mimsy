@@ -46,7 +46,6 @@
 	_index = 0;
 	_length = contents.length;
 	_line = 1;
-    _checksum = contents.hash;
 
 	*error = nil;
 	while (_index < _length && *error == nil)

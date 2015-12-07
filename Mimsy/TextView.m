@@ -161,8 +161,7 @@
     while (false);
 }
 
-#if OLD_EXTENSIONS
-static NSString* keyToFileName(NSEvent* event, NSString* key)
+static NSString* decorateKey(NSEvent* event, NSString* key)
 {
     NSMutableArray* labels = [NSMutableArray new];
     
@@ -291,22 +290,20 @@ static NSString* getKey(NSEvent* event)
     
     return nil;
 }
-#endif
 
 - (bool)_invokeExtensions:(NSEvent*)event
 {
-    UNUSED(event);
     bool handled = false;
     
-#if OLD_EXTENSIONS
     NSString* key = getKey(event);
     if (key)
     {
-        NSString* fn = keyToFileName(event, key);
-        NSString* path = [NSString stringWithFormat:@"/keydown/text-editor/%@/pressed", fn];
-        handled = [Extensions invokeBlocking:path];
+        NSString* fn = decorateKey(event, key);
+        
+        AppDelegate* app = [NSApp delegate];
+        TextController* controller = self.window.windowController;
+        handled = [app invokeTextViewKeyHook:fn view:controller];
     }
-#endif
     
     return handled;
 }

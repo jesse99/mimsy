@@ -22,15 +22,15 @@ Creating plugins
 
 
 
-* Add a highlight line plugin:
-    - may want a setting for max selection length
-    - description should say something about settings
-    - add a screen shot to the description?
+* Work on open-dual plugin:
+    - do something with help
+    - put the key into a setting (will need to somehow unregister to handle settings change)
+    - need to be able to load settings from mimsy (and when they change)
+    - for mac80211 could add some custom duals, e.g. to open mesh.h
 * Replace the old extensions:
-    - open dual
     - option tab
-    - show in finder
     - show trailing whitespace
+    - show in finder
     - copy path
     - duplicate file
     - new directory
@@ -38,6 +38,7 @@ Creating plugins
     - open as binary
     - trash item
 * Remove the old extensions.
+* Replace scripts
 * Remove lua support.
 * Replace the old builders?
 * Remove the old builders?
@@ -67,7 +68,7 @@ Creating plugins
     - also a link to go to plugin's web site
     - should be a simple way to see what is installed, eg to read descriptions and instructions
     - should be a way to disable plugins
-    - screenshots would be great (embed them in the description file? screenshots directory in resources?)
+    - screenshots would be great (if we put them into the rtf file we'd have to use rtfd, screenshots directory in resources?)
     - rating scheme would be cool
 * Should add copy rights everywhere.
 * Would be nice to have a fancier sort plugin. Maybe popup a dialog to allow user to pick a column to sort and gow to sort (eg ascending or descending, alpha or numeric).
@@ -81,6 +82,8 @@ Creating plugins
 * go fmt leaves documents in an edited state after saving
 * up_edges1 didn't style right in R.
 * 100:1 doesn't style right in R.
+* Should be able to load rtfd docs.
+    - should be able to create this by pasting an image into an rtf file and saving with xcode or probably TextEdit
 * Add declarations proc files
     - write extension name, file path, [name, offset, length, is_declaration]
     - might want a date too, could use the most up to date info for a file

@@ -1,11 +1,12 @@
 #import <Cocoa/Cocoa.h>
+#import "MimsyPlugins.h"
 #import "Settings.h"
 
 @class Glob;
 
 // This is the controller for the windows which display the contents of a directory.
 // These windows work a bit like project windows in IDEs.
-@interface DirectoryController : NSWindowController<SettingsContext>
+@interface DirectoryController : NSWindowController<SettingsContext, MimsyProject>
 
 + (DirectoryController*)getCurrentController;
 + (DirectoryController*)getController:(NSString*)path;
@@ -28,7 +29,7 @@
 - (id<SettingsContext>)parent;
 - (Settings*)settings;
 
-@property NSString* path;
+@property NSString* thePath;
 @property Glob* ignores;
 @property Glob* dontIgnores;
 @property NSMutableArray* targetGlobs;

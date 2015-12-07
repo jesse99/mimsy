@@ -53,11 +53,13 @@ void initLogGlobs(void);
 - (Settings* _Nonnull)settings;
 
 - (void)invokeTextViewHook:(enum TextViewNotification)kind view:(id<MimsyTextView> _Nonnull)view;
+- (bool)invokeTextViewKeyHook:(NSString* _Nonnull)key view:(id<MimsyTextView> _Nonnull)view;
 
 - (NSArray* _Nullable)noSelectionItems:(enum NoTextSelectionPos)pos;
 - (NSArray* _Nullable)withSelectionItems:(enum WithTextSelectionPos)pos;
 
 - (void)installSettingsPath:(NSString* _Nonnull)path;
+- (void)setSettingsParent:(id<SettingsContext> _Nullable)parent;
 
 @property (readonly) bool inited;
 @property (readonly) ProcFileSystem*_Nonnull procFileSystem;

@@ -22,6 +22,9 @@ import Cocoa
     /// - Parameter undoText: Text added to the Undo menu item.
     func setSelection(text: String, undoText: String)
     
+    /// Returns the project the text document is within, if any.
+    var project: MimsyProject? {get}
+
     var view: NSTextView {get}
 
     /// Returns a reference to the view's text. Note that text documents are always Unix
@@ -31,6 +34,9 @@ import Cocoa
     /// Returns a reference to the view's text. This is provided for plugins that need
     /// random access to characters which is much easier to do with NSString than String.
     var string: NSString {get}
+
+    /// Returns the full path to the associated document or nil if it hasn't been saved yet.
+    var path: NSString? {get}
     
     /// Replaces all of the text within the document.
     ///
@@ -68,8 +74,7 @@ public extension MimsyTextView
             start -= 1
         }
         
-        //                                          01
-        // Go forward till the end of the line.     X\n
+        // Go forward till the end of the line.
         while end < text.length
         {
             let ch = text.characterAtIndex(end - 1)

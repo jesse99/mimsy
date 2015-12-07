@@ -18,6 +18,7 @@
 #import "Languages.h"
 #import "Logger.h"
 #import "MenuCategory.h"
+#import "OpenFile.h"
 #import "OpenSelection.h"
 #import "Paths.h"
 #import "Plugins.h"
@@ -37,6 +38,7 @@
 typedef BOOL (^MenuEnabledBlock)(NSMenuItem* _Nonnull);
 typedef void (^MenuInvokeBlock)(void);
 typedef void (^TextViewBlock)(id<MimsyTextView> _Nonnull);
+typedef BOOL (^TextViewKeyBlock)(id<MimsyTextView> _Nonnull);
 
 // ------------------------------------------------------------------------------------
 @interface PluginMenuItem : NSObject
@@ -57,6 +59,33 @@ typedef void (^TextViewBlock)(id<MimsyTextView> _Nonnull);
     if (self)
     {
         _enabled = enabled;
+        _invoke = invoke;
+    }
+    
+    return self;
+}
+
+@end
+
+// ------------------------------------------------------------------------------------
+@interface TextKeyItem : NSObject
+
+- (id)init:(NSString*)identifier invoke:(TextViewKeyBlock)invoke;
+
+@property (readonly) NSString* identifier;
+@property (readonly) TextViewKeyBlock invoke;
+
+@end
+
+@implementation TextKeyItem
+
+- (id)init:(NSString*)identifier invoke:(TextViewKeyBlock)invoke
+{
+    self = [super init];
+    
+    if (self)
+    {
+        _identifier = identifier;
         _invoke = invoke;
     }
     
@@ -146,6 +175,7 @@ void initLogGlobs()
     ProcFileKeyStoreRW* _keyStoreFile;
 #endif
     NSMutableDictionary* _textHooks;
+    NSMutableDictionary* _textKeyHooks;
     
 	NSMutableDictionary* _pendingBlocks;
 	NSArray* _helpFileItems;
@@ -161,6 +191,7 @@ void initLogGlobs()
     Settings* _settings;
     
     InstallFiles* _installer;
+    id<SettingsContext> _parent;
 }
 
 - (id)init
@@ -188,6 +219,7 @@ void initLogGlobs()
 #endif
         _items = [NSMutableDictionary new];
         _textHooks = [NSMutableDictionary new];
+        _textKeyHooks = [NSMutableDictionary new];
         _noSelectionItems = [NSMutableDictionary new];
         _withSelectionItems = [NSMutableDictionary new];
         
@@ -266,6 +298,54 @@ void initLogGlobs()
     [_installer addSourcePath:path];
 }
 
+- (void)registerTextViewKey:(NSString* __nonnull)key :(NSString* __nonnull)identifier :(TextViewKeyBlock)hook
+{
+    key = [key lowercaseString];
+    NSMutableArray* items = [_textKeyHooks objectForKey:key];
+    if (!items)
+    {
+        items = [NSMutableArray new];
+        _textKeyHooks[key] = items;
+    }
+    
+    TextKeyItem* item = [[TextKeyItem alloc] init:identifier invoke:hook];
+    [items addObject:item];
+}
+
+
+- (void)clearRegisterTextViewKey:(NSString* __nonnull)identifier
+{
+    for (NSString* key in _textKeyHooks)
+    {
+        NSMutableArray* items = _textKeyHooks[key];
+        
+        NSUInteger i = 0;
+        while (i < items.count)
+        {
+            TextKeyItem* candidate = items[i];
+            if ([candidate.identifier isEqualToString:identifier])
+                [items removeObjectAtIndex:i];
+            else
+                ++i;
+        }
+    }
+}
+
+- (bool)invokeTextViewKeyHook:(NSString* _Nonnull)key view:(id<MimsyTextView> _Nonnull)view
+{
+    bool handled = false;
+
+    NSMutableArray* items = [_textKeyHooks objectForKey:key];
+    for (TextKeyItem* item in items)
+    {
+        handled = item.invoke(view);
+        if (handled)
+            break;
+    }
+    
+    return handled;
+}
+
 - (void)registerNoSelectionTextContextMenu:(enum NoTextSelectionPos)pos title:(TextContextMenuItemTitleBlock)title invoke:(InvokeTextCommandBlock)invoke
 {
     TextContextItem* item = [TextContextItem new];
@@ -328,6 +408,21 @@ void initLogGlobs()
                 return nil;
     }
     return nil;
+}
+
+- (id<MimsyGlob> __nonnull)globWithString:(NSString* __nonnull)glob
+{
+    return [[Glob alloc] initWithGlob:glob];
+}
+
+- (id<MimsyGlob> __nonnull)globWithStrings:(NSArray<NSString*>* __nonnull)globs
+{
+    return [[Glob alloc] initWithGlobs:globs];
+}
+
+- (void)open:(NSString* _Nonnull)path
+{
+    [OpenFile openPath:path atLine:-1 atCol:-1 withTabWidth:-1];
 }
 
 - (NSColor*)mimsyColor:(NSString *)name
@@ -739,9 +834,14 @@ void initLogGlobs()
 }
 #endif
 
+- (void)setSettingsParent:(id<SettingsContext> _Nullable)parent
+{
+    _parent = parent;
+}
+
 - (id<SettingsContext>)parent
 {
-    return nil;
+    return _parent;
 }
 
 - (Settings*)settings
@@ -848,6 +948,7 @@ void initLogGlobs()
     __weak AppDelegate* this = self;
     [TranscriptController startedUp];
     [[NSApp helpMenu] setDelegate:this];
+    activeContext = self;
     
     _installer = [self _createInstaller];
     [Plugins startLoading];
