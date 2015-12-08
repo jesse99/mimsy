@@ -19,13 +19,22 @@ Creating plugins
     - add MimsyPlugins to Target Dependencies for the plugin
     - add plugin to Target Dependencies in Mimsy's Build Phases panel
     - add a Description.rtf file, be sure to include it in the right target
+    - can be helpful to restart xcode (so auto-completion and errors work in the new plugin)
 
 
 
-* Work on open-dual plugin:
-    - for mac80211 could add some custom duals, e.g. to open mesh.h
+
+
+
+
+* Work on SelectElement plugin:
+    - if there is a language then use enumerateAttribute directly
+    - for backwards could just back up a few hundred characters
+    - if not then something else
+* Command-up-arrow is broken
+    - got a stack trace
+* Option down arrow should select next function
 * Replace the old extensions:
-    - option tab
     - show trailing whitespace
     - show in finder
     - copy path
@@ -34,6 +43,7 @@ Creating plugins
     - new file
     - open as binary
     - trash item
+* For mac80211 could add some custom duals, e.g. to open mesh.h
 * Remove the old extensions.
 * Replace scripts
 * Remove lua support.

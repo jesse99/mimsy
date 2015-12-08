@@ -70,6 +70,7 @@
 		3768CCDE16E1A61100D5CB57 /* DirectoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3768CCDD16E1A61100D5CB57 /* DirectoryView.m */; };
 		3768CCE016EB6C0A00D5CB57 /* builders in Resources */ = {isa = PBXBuildFile; fileRef = 3768CCDF16EB6C0A00D5CB57 /* builders */; };
 		3768CCE316ED322D00D5CB57 /* Builders.m in Sources */ = {isa = PBXBuildFile; fileRef = 3768CCE216ED322C00D5CB57 /* Builders.m */; };
+		377230AA1C1662820089F12D /* settings in Resources */ = {isa = PBXBuildFile; fileRef = 377230A91C1662820089F12D /* settings */; };
 		3775F4B01C0BC029001AFA06 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3775F4AE1C0BC029001AFA06 /* Plugin.swift */; };
 		3775F4B61C0BC0C7001AFA06 /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3775F4B51C0BC0C7001AFA06 /* Description.rtf */; };
 		377BDE6316C005C8008DADA5 /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = 377BDE6216C005C8008DADA5 /* scripts */; };
@@ -148,6 +149,8 @@
 		37D0BB8D1C13FDE60053617F /* settings in Resources */ = {isa = PBXBuildFile; fileRef = 37D0BB8C1C13FDE60053617F /* settings */; };
 		37D0BB911C14E0E60053617F /* MimsyGlob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D0BB901C14E0E60053617F /* MimsyGlob.swift */; };
 		37D0BB931C14E45F0053617F /* MimsyProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D0BB921C14E45F0053617F /* MimsyProject.swift */; };
+		37D0BBA11C165FD70053617F /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D0BBA01C165FD70053617F /* Plugin.swift */; };
+		37D0BBA71C1660620053617F /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 37D0BBA61C1660620053617F /* Description.rtf */; };
 		37E165C51B439C17005FECA9 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 37E165C41B439C17005FECA9 /* Settings.m */; };
 		37E1CA9E1B924A5600893991 /* UnicodeNames.zip in Resources */ = {isa = PBXBuildFile; fileRef = 37E1CA9D1B924A5600893991 /* UnicodeNames.zip */; };
 		37E7A8CA1AE1FD7700BD93B4 /* StringDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37E7A8C91AE1FD7700BD93B4 /* StringDialog.xib */; };
@@ -252,6 +255,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 37D0BB7D1C13FC620053617F;
 			remoteInfo = OpenDual;
+		};
+		37D0BBA21C16603C0053617F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37CDF3961C07BF9E009E48B4;
+			remoteInfo = MimsyPlugins;
+		};
+		37D0BBA41C1660440053617F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37D0BB991C165FAB0053617F;
+			remoteInfo = SelectElement;
 		};
 		37E8C5921C0C0E6B00849644 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -443,6 +460,7 @@
 		3768CCDF16EB6C0A00D5CB57 /* builders */ = {isa = PBXFileReference; lastKnownFileType = folder; path = builders; sourceTree = "<group>"; };
 		3768CCE116ED322C00D5CB57 /* Builders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Builders.h; sourceTree = "<group>"; };
 		3768CCE216ED322C00D5CB57 /* Builders.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Builders.m; sourceTree = "<group>"; };
+		377230A91C1662820089F12D /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = settings; sourceTree = "<group>"; };
 		3775F4A81C0BBFD9001AFA06 /* FindGremlin.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FindGremlin.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		3775F4AA1C0BBFD9001AFA06 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3775F4AE1C0BC029001AFA06 /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
@@ -583,6 +601,10 @@
 		37D0BB8C1C13FDE60053617F /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = settings; sourceTree = "<group>"; };
 		37D0BB901C14E0E60053617F /* MimsyGlob.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimsyGlob.swift; sourceTree = "<group>"; };
 		37D0BB921C14E45F0053617F /* MimsyProject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimsyProject.swift; sourceTree = "<group>"; };
+		37D0BB9A1C165FAB0053617F /* SelectElement.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SelectElement.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		37D0BB9C1C165FAB0053617F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		37D0BBA01C165FD70053617F /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
+		37D0BBA61C1660620053617F /* Description.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Description.rtf; sourceTree = "<group>"; };
 		37E165C31B439C17005FECA9 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
 		37E165C41B439C17005FECA9 /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
 		37E1CA9D1B924A5600893991 /* UnicodeNames.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = UnicodeNames.zip; sourceTree = "<group>"; };
@@ -675,6 +697,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		37D0BB7B1C13FC620053617F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37D0BB971C165FAB0053617F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1007,6 +1036,7 @@
 				37E8EE961C0C1F9300E1C3B9 /* SortLines.plugin */,
 				37E8EEA81C0FEAF600E1C3B9 /* HighlightLine.plugin */,
 				37D0BB7E1C13FC620053617F /* OpenDual.plugin */,
+				37D0BB9A1C165FAB0053617F /* SelectElement.plugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1138,9 +1168,9 @@
 				37CDF3A51C07C2C7009E48B4 /* MimsyPlugin.swift */,
 				37CDF3991C07BF9E009E48B4 /* MimsyPlugins.h */,
 				37D0BB921C14E45F0053617F /* MimsyProject.swift */,
+				37A93CF51C11EBAE00AFE5AC /* MimsySettings.swift */,
 				37BABAD41C091A7000B9B5AB /* MimsyTextView.swift */,
 				37B9CA001C0BC923006C479B /* MimsyTranscript.swift */,
-				37A93CF51C11EBAE00AFE5AC /* MimsySettings.swift */,
 			);
 			path = MimsyPlugins;
 			sourceTree = "<group>";
@@ -1166,6 +1196,7 @@
 				37E8EEA91C0FEAF700E1C3B9 /* HighlightLine */,
 				37D0BB7F1C13FC620053617F /* OpenDual */,
 				37E8C59D1C0C110500849644 /* ReverseLines */,
+				37D0BB9B1C165FAB0053617F /* SelectElement */,
 				37E8EE971C0C1F9300E1C3B9 /* SortLines */,
 			);
 			name = Plugins;
@@ -1180,6 +1211,17 @@
 				37D0BB8C1C13FDE60053617F /* settings */,
 			);
 			path = OpenDual;
+			sourceTree = "<group>";
+		};
+		37D0BB9B1C165FAB0053617F /* SelectElement */ = {
+			isa = PBXGroup;
+			children = (
+				37D0BB9C1C165FAB0053617F /* Info.plist */,
+				37D0BBA01C165FD70053617F /* Plugin.swift */,
+				37D0BBA61C1660620053617F /* Description.rtf */,
+				377230A91C1662820089F12D /* settings */,
+			);
+			path = SelectElement;
 			sourceTree = "<group>";
 		};
 		37E8C58B1C0C0DE500849644 /* EscapeText */ = {
@@ -1285,6 +1327,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				37D0BBA51C1660440053617F /* PBXTargetDependency */,
 				37D0BB891C13FCDA0053617F /* PBXTargetDependency */,
 				37E8EEB31C0FEB6200E1C3B9 /* PBXTargetDependency */,
 				37E8EEA11C0C1FEA00E1C3B9 /* PBXTargetDependency */,
@@ -1392,6 +1435,24 @@
 			productReference = 37D0BB7E1C13FC620053617F /* OpenDual.plugin */;
 			productType = "com.apple.product-type.bundle";
 		};
+		37D0BB991C165FAB0053617F /* SelectElement */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 37D0BB9D1C165FAB0053617F /* Build configuration list for PBXNativeTarget "SelectElement" */;
+			buildPhases = (
+				37D0BB961C165FAB0053617F /* Sources */,
+				37D0BB971C165FAB0053617F /* Frameworks */,
+				37D0BB981C165FAB0053617F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				37D0BBA31C16603C0053617F /* PBXTargetDependency */,
+			);
+			name = SelectElement;
+			productName = SelectElement;
+			productReference = 37D0BB9A1C165FAB0053617F /* SelectElement.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 		37E8C5891C0C0DE500849644 /* EscapeText */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 37E8C58F1C0C0DE500849644 /* Build configuration list for PBXNativeTarget "EscapeText" */;
@@ -1495,6 +1556,9 @@
 					37D0BB7D1C13FC620053617F = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
+					37D0BB991C165FAB0053617F = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
 					37E8C5891C0C0DE500849644 = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
@@ -1533,6 +1597,7 @@
 				37E8EE951C0C1F9300E1C3B9 /* SortLines */,
 				37E8EEA71C0FEAF600E1C3B9 /* HighlightLine */,
 				37D0BB7D1C13FC620053617F /* OpenDual */,
+				37D0BB991C165FAB0053617F /* SelectElement */,
 			);
 		};
 /* End PBXProject section */
@@ -1626,6 +1691,15 @@
 			files = (
 				37D0BB8B1C13FCFE0053617F /* Description.rtf in Resources */,
 				37D0BB8D1C13FDE60053617F /* settings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37D0BB981C165FAB0053617F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37D0BBA71C1660620053617F /* Description.rtf in Resources */,
+				377230AA1C1662820089F12D /* settings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1858,6 +1932,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		37D0BB961C165FAB0053617F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37D0BBA11C165FD70053617F /* Plugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		37E8C5861C0C0DE500849644 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1952,6 +2034,16 @@
 			isa = PBXTargetDependency;
 			target = 37D0BB7D1C13FC620053617F /* OpenDual */;
 			targetProxy = 37D0BB881C13FCDA0053617F /* PBXContainerItemProxy */;
+		};
+		37D0BBA31C16603C0053617F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37CDF3961C07BF9E009E48B4 /* MimsyPlugins */;
+			targetProxy = 37D0BBA21C16603C0053617F /* PBXContainerItemProxy */;
+		};
+		37D0BBA51C1660440053617F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37D0BB991C165FAB0053617F /* SelectElement */;
+			targetProxy = 37D0BBA41C1660440053617F /* PBXContainerItemProxy */;
 		};
 		37E8C5931C0C0E6B00849644 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2622,6 +2714,70 @@
 			};
 			name = Release;
 		};
+		37D0BB9E1C165FAB0053617F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = SelectElement/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.SelectElement;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		37D0BB9F1C165FAB0053617F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = SelectElement/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.SelectElement;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
 		37E8C58D1C0C0DE500849644 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2960,6 +3116,16 @@
 				37D0BB821C13FC620053617F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		37D0BB9D1C165FAB0053617F /* Build configuration list for PBXNativeTarget "SelectElement" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37D0BB9E1C165FAB0053617F /* Debug */,
+				37D0BB9F1C165FAB0053617F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		37E8C58F1C0C0DE500849644 /* Build configuration list for PBXNativeTarget "EscapeText" */ = {
 			isa = XCConfigurationList;

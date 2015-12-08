@@ -1,0 +1,16 @@
+# Elements (from language files) that should be selected.
+SelectElement: Boolean
+SelectElement: Conditional
+SelectElement: Exception
+SelectElement: Identifier
+SelectElement: Keyword
+SelectElement: Macro
+SelectElement: Repeat
+SelectElement: StorageClass
+SelectElement: Type
+
+SelectNextElementKey: Option-Tab
+SelectPreviousElementKey: Option-Shift-Tab
+
+SelectNextFunctionKey: Option-Down-Arrow
+SelectPreviousFunctionKey: Option-Up-Arrow
