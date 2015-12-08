@@ -9,6 +9,12 @@ SelectElement: Repeat
 SelectElement: StorageClass
 SelectElement: Type
 
+# Used by select element when the text document has no language.
+SelectWordRegex: \b[a-zA-Z][\w']*\b
+
+# Used by select function when the text document has no language.
+SelectParaRegex: \n([ \t]*\n)+
+
 SelectNextElementKey: Option-Tab
 SelectPreviousElementKey: Option-Shift-Tab
 

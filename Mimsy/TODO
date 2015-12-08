@@ -27,13 +27,12 @@ Creating plugins
 
 
 
-* Work on SelectElement plugin:
-    - if there is a language then use enumerateAttribute directly
-    - for backwards could just back up a few hundred characters
-    - if not then something else
 * Command-up-arrow is broken
     - got a stack trace
-* Option down arrow should select next function
+* Work on SelectElement plugin:
+    - get this working with plain text
+    - for backwards could just back up a few hundred characters
+    - if not then something else
 * Replace the old extensions:
     - show trailing whitespace
     - show in finder
