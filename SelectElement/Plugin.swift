@@ -8,15 +8,8 @@ class StdSelectElement: MimsyPlugin
         return nil
     }
     
-//    # Used by select element when the text document has no language.
-//    SelectWordRegex: \b[a-zA-Z]\w*\b
-//    
-//    # Used by select function when the text document has no language.
-//    SelectParaRegex: \n([ \t]*\n)+
     override func onLoadSettings(settings: MimsySettings)
     {
-        // TODOL get next element working with plain text
-        // TODOL get next function working with plain text
         elementNames = settings.stringValues("SelectElement")
         elementNames = elementNames.map {$0.lowercaseString}
         
@@ -136,54 +129,107 @@ class StdSelectElement: MimsyPlugin
         return true
     }
     
-    // TODO: Find the paragraph and then select an element.
     func selectNextFunction(view: MimsyTextView) -> Bool
     {
-        if let text = view.view.textStorage
+        if view.language != nil
+        {
+            if let text = view.view.textStorage
+            {
+                let start = view.selectionRange.location + view.selectionRange.length
+                let maxRange = NSRange(location: start, length: view.string.length - start)
+                let options = NSAttributedStringEnumerationOptions(rawValue: 0)
+                text.enumerateAttribute("element name", inRange: maxRange, options: options, usingBlock: { (value, range, stop) -> Void in
+                    if let name = value as? NSString
+                    {
+                        if name == "function"
+                        {
+                            view.selectionRange = range
+                            view.view.scrollRangeToVisible(range)
+                            view.view.showFindIndicatorForRange(range)
+                            
+                            stop.memory = true
+                        }
+                    }
+                })
+            }
+        }
+        else if let re = paraRe
         {
             let start = view.selectionRange.location + view.selectionRange.length
             let maxRange = NSRange(location: start, length: view.string.length - start)
-            let options = NSAttributedStringEnumerationOptions(rawValue: 0)
-            text.enumerateAttribute("element name", inRange: maxRange, options: options, usingBlock: { (value, range, stop) -> Void in
-                if let name = value as? NSString
-                {
-                    if name == "function"
-                    {
-                        view.selectionRange = range
-                        view.view.scrollRangeToVisible(range)
-                        view.view.showFindIndicatorForRange(range)
-                        
-                        stop.memory = true
-                    }
-                }
-            })
+            let range = re.rangeOfFirstMatchInString(view.text, options: .WithTransparentBounds, range: maxRange)
+            if range.length > 0
+            {
+                view.selectionRange = range
+                selectNextElement(view)
+
+                view.view.scrollRangeToVisible(view.selectionRange)
+                view.view.showFindIndicatorForRange(view.selectionRange)
+            }
         }
-        
+       
         return true
     }
     
     func selectPreviousFunction(view: MimsyTextView) -> Bool
     {
-        if let text = view.view.textStorage
+        if view.language != nil
+        {
+            if let text = view.view.textStorage
+            {
+                let start = view.selectionRange.location
+                let maxRange = NSRange(location: 0, length: start)
+                let options = NSAttributedStringEnumerationOptions.Reverse
+                text.enumerateAttribute("element name", inRange: maxRange, options: options, usingBlock: { (value, range, stop) -> Void in
+                    if let name = value as? NSString
+                    {
+                        if name == "function"
+                        {
+                            view.selectionRange = range
+                            view.view.scrollRangeToVisible(range)
+                            view.view.showFindIndicatorForRange(range)
+                            
+                            stop.memory = true
+                        }
+                    }
+                })
+            }
+        }
+        else if let re = paraRe
         {
             let start = view.selectionRange.location
-            let maxRange = NSRange(location: 0, length: start)
-            let options = NSAttributedStringEnumerationOptions.Reverse
-            text.enumerateAttribute("element name", inRange: maxRange, options: options, usingBlock: { (value, range, stop) -> Void in
-                if let name = value as? NSString
+            let loc = max(0, start - 10_000)
+            let maxRange = NSRange(location: loc, length: start - loc)
+            let matches = re.matchesInString(view.text, options: .WithTransparentBounds, range: maxRange)
+            
+            var found = false
+            if !matches.isEmpty
+            {
+                // Find the line break starting the current paragraph.
+                var i = 0
+                while i+1 < matches.count && matches[i+1].range.location < start
                 {
-                    if name == "function"
-                    {
-                        view.selectionRange = range
-                        view.view.scrollRangeToVisible(range)
-                        view.view.showFindIndicatorForRange(range)
-                        
-                        stop.memory = true
-                    }
+                    ++i
                 }
-            })
+
+                // Select the line break before that.
+                if i > 0 && matches[i-1].range.location < start
+                {
+                    view.selectionRange = matches[i-1].range
+                    found = true
+                }
+            }
+            
+            if !found
+            {
+                view.selectionRange = NSRange(location: 0, length: 0)
+            }
+            
+            selectNextElement(view)
+            view.view.scrollRangeToVisible(view.selectionRange)
+            view.view.showFindIndicatorForRange(view.selectionRange)
         }
-        
+       
         return true
     }
     

@@ -29,9 +29,18 @@ public class MimsyPlugin: NSObject {
     {
     }
     
-    /// Called between stage 0 and stage 1 and when the user edits the plugin's settings file.
+    /// Called between stage 0 and stage 1 and when settings change (either because the user
+    /// edited a settings file or because settings changed as a result of something like the
+    /// current project changed).
     public func onLoadSettings(settings: MimsySettings)
     {
+    }
+    
+    // Called when the main window changes. Note that this is called after onLoadSettings and
+    // after the old window resigns.
+    public func onMainChanged(controller: NSWindowController?)
+    {
+        
     }
     
     /// Plugins should use MimsyApp whenever they want to communicate with

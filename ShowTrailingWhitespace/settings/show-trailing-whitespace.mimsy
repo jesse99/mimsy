@@ -1,0 +1,12 @@
+# Whether to render whitespace appearing after characters on a line using
+# the style and characters below. Note that this is a setting that will
+# often be enabled per-project.
+ShowTrailingWhitespace: false
+
+# The language element to use to style the trailing whitespace characters.
+# Error is usually good because it is normally quite prominent,
+TrailingWhiteSpaceStyle: Error
+
+# The characters to render in place of whitespace. Default is BLACK DIAMOND
+# SUIT.
+TrailingWhitespaceChars: ♦

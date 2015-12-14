@@ -14,6 +14,7 @@
 #import "Mimsy-Swift.h"
 #import "OpenFile.h"
 #import "Paths.h"
+#import "Plugins.h"
 #import "TranscriptController.h"
 #import "UpdateConfig.h"
 #import "Utils.h"
@@ -1104,6 +1105,7 @@ static DirectoryController* _lastBuilt;
 	_flags = flags;
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
+    [Plugins refreshSettings];
 }
 
 - (NSAttributedString*)_loadPrefFile:(NSString*)path
@@ -1230,18 +1232,21 @@ static NSString* flagsToStr(FSEventStreamEventFlags flags)
     if (flags & kFSEventStreamEventFlagItemIsLastHardlink)
         result = [result stringByAppendingString:@"ItemIsLastHardlink "];
     
+    if (flags == kFSEventStreamEventFlagNone)
+        result = [result stringByAppendingString:@"None "];
+    
     return result;
 }
 
 - (void)_dirChanged:(NSString*)path flags:(FSEventStreamEventFlags)flags
 {
     FSEventStreamEventFlags wanted = kFSEventStreamEventFlagUserDropped | kFSEventStreamEventFlagKernelDropped | kFSEventStreamEventFlagItemCreated | kFSEventStreamEventFlagItemRemoved | kFSEventStreamEventFlagItemRenamed | kFSEventStreamEventFlagItemModified;
-    if ((flags & wanted) == 0)
+    if ((flags & wanted) == 0 && flags != kFSEventStreamEventFlagNone)
         return;
     
     LOG("Mimsy", "%s dir changed %s", STR(_thePath), STR(flagsToStr(flags)));
-	
-	// Update which ever items were opened.
+
+    // Update which ever items were opened.
 	FileSystemItem* item = [_root find:path];
 	if (item == _root)
 	{

@@ -10,11 +10,10 @@ typedef void (^LayoutCallback)(TextController* controller);
 
 @interface CharacterMapping : NSObject
 
-- (id)initWithFields:(NSString*)fields controller:(TextController*)controller;
+- (id)initWith:(NSRegularExpression*)regex style:(NSString*)style chars:(NSString*)chars options:(enum MappingOptions)options controller:(TextController*)controller;
 
 - (void)reload:(TextController*)controller;
 
-@property (readonly) NSString* key;
 @property (readonly) NSRegularExpression* regex;
 @property (readonly) NSString* style;
 @property (readonly) GlyphsAttribute* glyphs;
@@ -60,9 +59,6 @@ typedef void (^LayoutCallback)(TextController* controller);
 - (NSUInteger)getEditCount;
 
 - (void)onAppliedStyles;
-
-- (void)addMapping:(CharacterMapping*)mapping;
-- (void)removeMapping:(NSString*)key;
 - (NSArray*) charMappings;
 
 - (bool)showingLeadingSpaces;

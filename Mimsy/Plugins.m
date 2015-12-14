@@ -17,6 +17,7 @@
 
 @property (readonly) MimsyPlugin* plugin;
 @property (readonly) NSMutableArray* settingNames; // file names for settings
+@property NSUInteger checksum;
 
 - (NSString*)bundleName;
 
@@ -255,13 +256,25 @@ static void doStage(int stage)
             }
         }
         
-        // Plugin settings can be overriden (and plugins can rely on common settings so
-        // there's no decent way for us to be smart about trying to skip notifications.
         [data swapInSettings:settings];
-        [data.plugin onLoadSettings:[activeContext settings]];
+        Settings* current = [activeContext settings];
+        if (current.checksum != data.checksum)
+        {
+            [data.plugin onLoadSettings:current];
+            data.checksum = current.checksum;
+        }
         [data swapOutSettings];
     }
 }
+
++ (void)mainChanged:(NSWindowController*)controller
+{
+    for (PluginData* data in _plugins)
+    {
+        [data.plugin onMainChanged:controller];
+    }
+}
+
 
 + (bool)_validBundle:(NSBundle*)bundle
 {

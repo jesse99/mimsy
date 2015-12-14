@@ -38,38 +38,22 @@ static TextDocumentFiles* _files;
     bool _repeat;
 }
 
-- (id)initWithFields:(NSString*)fields controller:(TextController*)controller
+- (id)initWith:(NSRegularExpression*)regex style:(NSString*)style chars:(NSString*)chars options:(enum MappingOptions)options controller:(TextController*)controller
 {
     self = [super init];
     
     if (self)
     {
-        NSArray* parts = [fields componentsSeparatedByString:@"\f"];
-        if (parts.count != 5)
-        {
-            LOG("Extensions", "Expected <key>\f<regex>\f<style>\f<glyphs>\f<repeat> not '%s'", STR(fields));
-            return nil;
-        }
-        
-        _key = parts[0];
-        
-        NSError* error = nil;
-        NSRegularExpressionOptions options = NSRegularExpressionAllowCommentsAndWhitespace | NSRegularExpressionAnchorsMatchLines;
-        _regex = [[NSRegularExpression alloc] initWithPattern:parts[1] options:options error:&error];
-        if (!_regex)
-        {
-            LOG("Extensions", "'%s' is not a valid regex: %s", STR(parts[1]), STR(error.localizedFailureReason));
-            return nil;
-        }
+        _regex = regex;
         if (_regex.numberOfCaptureGroups > 1)
         {
-            LOG("Extensions", "'%s' regex has more than one capture group", STR(parts[1]));
+            LOG("Plugins", "'%s' regex has more than one capture group", STR(_regex));
             return nil;
         }
         
-        _style = [parts[2] lowercaseString];
-        _chars = parts[3];
-        _repeat = [parts[4] isEqualToString:@"true"];
+        _style = [style lowercaseString];
+        _chars = chars;
+        _repeat = options == MappingOptionsUseGlyphsForEachChar;
         
         NSDictionary* style = [controller.styles attributesForElement:_style];
         _glyphs = [[GlyphsAttribute alloc] initWithStyle:style chars:_chars repeat:_repeat];
@@ -178,6 +162,42 @@ static __weak TextController* _frontmost;
         [self.textView replaceCharactersInRange:forRange withString:text];
         [self.textView.undoManager setActionName:undoText];
         [self.textView didChangeText];
+    }
+}
+
+- (void)addMapping:(NSRegularExpression * __nonnull)regex style:(NSString * __nonnull)style chars:(NSString * __nonnull)chars options:(enum MappingOptions)options
+{
+    CharacterMapping* mapping = [[CharacterMapping alloc] initWith:regex style:style chars:chars options:options controller:self];
+
+    for (NSUInteger i = 0; i < _mappings.count; ++i)
+    {
+        CharacterMapping* candidate = _mappings[i];
+        if ([candidate.regex isEqual:regex])
+        {
+            _mappings[i] = mapping;
+            if (_applier)
+                [_applier addDirtyLocation:0 reason:@"new mapping"];
+            return;
+        }
+    }
+
+    [_mappings addObject:mapping];
+    if (_applier)
+        [_applier addDirtyLocation:0 reason:@"new mapping"];
+}
+
+- (void)removeMapping:(NSRegularExpression * __nonnull)regex
+{
+    for (NSUInteger i = 0; i < _mappings.count; ++i)
+    {
+        CharacterMapping* mapping = _mappings[i];
+        if ([mapping.regex isEqual:regex])
+        {
+            [_mappings removeObjectAtIndex:i];
+            if (_applier)
+                [_applier addDirtyLocation:0 reason:@"removed mapping"];
+            break;
+        }
     }
 }
 
@@ -727,28 +747,6 @@ static __weak TextController* _frontmost;
 			[result addObject:parts[0]];
 		}
 	}
-}
-
-- (void)addMapping:(CharacterMapping*)mapping
-{
-    ASSERT(mapping != nil);
-    [_mappings addObject:mapping];
-    if (_applier)
-        [_applier addDirtyLocation:0 reason:@"new mapping"];
-}
-
-- (void)removeMapping:(NSString*)key
-{
-    for (NSUInteger i = _mappings.count - 1; i < _mappings.count; --i)
-    {
-        CharacterMapping* mapping = _mappings[i];
-        if ([mapping.key isEqualToString:key])
-        {
-            [_mappings removeObjectAtIndex:i];
-        }
-    }
-    if (_applier)
-        [_applier addDirtyLocation:0 reason:@"removed mapping"];
 }
 
 - (NSArray*) charMappings

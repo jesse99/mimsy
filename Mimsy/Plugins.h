@@ -7,6 +7,7 @@
 + (void)startLoading;
 + (void)installFiles:(InstallFiles*)installer;
 + (void)refreshSettings;
++ (void)mainChanged:(NSWindowController*)controller;
 + (void)finishLoading;
 + (void)teardown;
 

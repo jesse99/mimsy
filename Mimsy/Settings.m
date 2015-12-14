@@ -2,10 +2,12 @@
 
 #import "AppDelegate.h"
 #import "DirectoryController.h"
+#import "Plugins.h"
 #import "TextController.h"
 #import "TranscriptController.h"
 
-static bool inited;
+static bool _inited;
+static NSWindow* _mainWindow;
 id<SettingsContext> activeContext;
 
 @implementation Settings
@@ -15,6 +17,7 @@ id<SettingsContext> activeContext;
     NSMutableArray* _keys;
     NSMutableArray* _values;
     NSMutableArray* _dupes;
+    NSUInteger _hash;
 }
 
 - (Settings*)init:(NSString*)name context:(id<SettingsContext>)context
@@ -29,10 +32,10 @@ id<SettingsContext> activeContext;
     _values = [NSMutableArray new];
     _dupes  = [NSMutableArray new];
     
-    if (!inited)
+    if (!_inited)
     {
         [Settings registerNotifications];
-        inited = true;
+        _inited = true;
     }
     
     return self;
@@ -71,7 +74,17 @@ id<SettingsContext> activeContext;
         }
         
         if (oldContext != activeContext)
+        {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"SettingsChanged" object:self];
+            [Plugins refreshSettings];
+        }
+        
+        NSWindow* window = [NSApp mainWindow];
+        if (window != _mainWindow)
+        {
+            [Plugins mainChanged:window.windowController];
+            _mainWindow = window;
+        }
     }];
 }
 
@@ -88,6 +101,7 @@ id<SettingsContext> activeContext;
     
     [_keys addObject:key];
     [_values addObject:value];
+    _hash += key.hash + value.hash;
 }
 
 - (bool)hasKey:(NSString*)name
@@ -196,6 +210,20 @@ id<SettingsContext> activeContext;
     }
 }
 
+- (NSUInteger)checksum
+{
+    NSUInteger hash = 0;
+    Settings* settings = self;
+    
+    while (settings)
+    {
+        hash += settings->_hash;
+        settings = settings.context.parent.settings;
+    }
+    
+    return hash;
+}
+
 - (NSString*)_findValueForKey:(NSString*)key missing:(NSString*)missing
 {
     Settings* settings = self;
@@ -277,7 +305,8 @@ id<SettingsContext> activeContext;
         NSString* candidate = _keys[i];
         if ([candidate compare:key] == NSOrderedSame)
         {
-            [values addObject:_values[i]];
+            NSObject* value =_values[i];
+            [values addObject:value];
         }
     }
 }

@@ -25,16 +25,8 @@ Creating plugins
 
 
 
-
-
-* Command-up-arrow is broken
-    - got a stack trace
-* Work on SelectElement plugin:
-    - get this working with plain text
-    - for backwards could just back up a few hundred characters
-    - if not then something else
+* Why don't files open back up with language set?'
 * Replace the old extensions:
-    - show trailing whitespace
     - show in finder
     - copy path
     - duplicate file
@@ -74,6 +66,7 @@ Creating plugins
     - also a link to go to plugin's web site
     - should be a simple way to see what is installed, eg to read descriptions and instructions
     - should be a way to disable plugins
+    - might want a button or something to open the plugin's settings file'
     - screenshots would be great (if we put them into the rtf file we'd have to use rtfd, screenshots directory in resources?)
     - rating scheme would be cool
 * Should add copy rights everywhere.

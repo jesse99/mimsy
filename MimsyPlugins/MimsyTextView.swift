@@ -1,5 +1,14 @@
 import Cocoa
 
+@objc public enum MappingOptions: Int
+{
+    /// The mappings glyphs are rendered for each character that was matched.
+    case UseGlyphsForEachChar = 0
+    
+    /// The mappings glyphs are rendered for the entire match.
+    case UseGlyphsForEntireRange
+}
+
 /// Helper used to communicate with Mimsy's text document views.
 @objc public protocol MimsyTextView
 {
@@ -50,6 +59,22 @@ import Cocoa
     /// - Parameter forRange: The range to replace with the new text.
     /// - Parameter undoText: Text added to the Undo menu item.
     func setText(text: String, forRange: NSRange, undoText: String)
+
+    /// Mappings are used to modify the way that text is rendered after language styles are applied.
+    /// If a mapping with the regex already exists then the old mapping will be replaced with the
+    /// new settings.
+    ///
+    /// - Parameter regex: The regular expression to use when matching ranges to the styled text,
+    /// - Parameter style: The style to use with the glyphs, e.g. "Normal" or "Error".
+    /// - Parameter chars: Characters to render the matched text with. Often a special Unicode character
+    /// like "\u2738" (HEAVY EIGHT POINTED RECTILINEAR BLACK STAR).
+    /// - Parameter options: Whether to use the glyphs for the entire match or for each character within the match.
+    func addMapping(regex: NSRegularExpression, style: String, chars: String, options: MappingOptions)
+    
+    /// Removes a mapping added with addMapiing. No-op if the regex cannot be found.
+    ///
+    /// - Parameter regex: Must be identical to the object passed into addMapping.
+    func removeMapping(regex: NSRegularExpression)
 }
 
 public extension MimsyTextView
@@ -61,7 +86,7 @@ public extension MimsyTextView
         let text = string
         
         var start = selectionRange.location
-        var end = selectionRange.location + selectionRange.length
+        var end = selectionRange.location + max(selectionRange.length, 1)
         
         // Go backwards till the start of the line.
         while start > 0

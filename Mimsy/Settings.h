@@ -51,5 +51,7 @@ extern id<SettingsContext> __nullable activeContext;
 // be included.
 - (void)enumerate:(NSString* __nonnull) key with:(void (^ __nonnull)(NSString* __nonnull fileName, NSString* __nonnull value))block;
 
+- (NSUInteger)checksum;
+
 @end
 
