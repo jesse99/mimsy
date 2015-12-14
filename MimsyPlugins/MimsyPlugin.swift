@@ -12,7 +12,9 @@ public class MimsyPlugin: NSObject {
     
     /// Called by Mimsy after the plugin is instantiated. Note that
     /// this is called multiple times with increasing stage numbers:
-    /// * Stage 0 is called as plugins load. Plugins seldom use this.
+    /// * Stage 0 is called as plugins load. Plugins should rarely use this (and if they do choose
+    /// to use it care must be taken not to run the event loop because the app hasn't finished
+    /// initializing).
     /// * Stage 1 is normally used by the built-in plugins to initialize themselves.
     /// * Stage 2 is normally used by custom plugins to initialize themselves.
     /// * Stage 3 can be used by plugins that want to execute after other plugins have initialized.

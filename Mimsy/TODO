@@ -25,9 +25,11 @@ Creating plugins
 
 
 
-* Why don't files open back up with language set?'
+* Why don't files open back up with language set?
+* Add show in finder plugin:
+    = text context menu?
+    - directory context menu
 * Replace the old extensions:
-    - show in finder
     - copy path
     - duplicate file
     - new directory

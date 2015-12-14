@@ -7,7 +7,7 @@ class StdShowTrailingWhitespace: MimsyPlugin
     {
         if stage == 1
         {
-            app.addMenuItem(title: "Show Trailing Whitespace", loc: .Sorted, sel: "showItems:", enabled: enabled, invoke: toggleShow)
+            app.addMenuItem(title: "Show Trailing Whitespace", loc: .Sorted, sel: "showItems:", enabled: enabled, invoke: toggleEnabled)
         }
         
         return nil
@@ -31,7 +31,7 @@ class StdShowTrailingWhitespace: MimsyPlugin
         return enabled
     }
     
-    func toggleShow()
+    func toggleEnabled()
     {
         userEnabled = !userEnabled
         

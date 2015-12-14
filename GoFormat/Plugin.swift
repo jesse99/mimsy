@@ -28,16 +28,14 @@ class StdGoFormat: MimsyPlugin
     {
         var err: String? = nil
         
-        if stage == 0
+        if stage == 1
         {
             path = app.findExe("gofmt")
             if path == nil
             {
                 err = "couldn't find a path to gofmt"
             }
-        }
-        else if stage == 1
-        {
+
             app.registerTextView(.Saving, onSave)
         }
         
