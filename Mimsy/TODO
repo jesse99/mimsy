@@ -26,8 +26,8 @@ Creating plugins
 
 
 * Replace the old extensions:
-    - copy path (this one should be added to both context menus)
     - duplicate file
+    - directory context items aren't sorted
     - new directory
     - new file (might want a path to a file to use for default values)
     - open as binary

@@ -562,7 +562,6 @@ static NSString* getKey(NSEvent* event)
         items = [app noSelectionItems:NoTextSelectionPosStart];
         [self _addItems:menu items:items];
         [self _addWordWrapContextMenu:menu];			// 0.853
-        [self _addCopyPathContextMenu:menu];			// 0.891
         
         items = [app noSelectionItems:NoTextSelectionPosMiddle];
         [self _addItems:menu items:items];
@@ -691,18 +690,6 @@ static NSString* getKey(NSEvent* event)
     TextController* controller = _controller;
     if (controller)
         [controller toggleWordWrap];
-}
-
-- (void)_addCopyPathContextMenu:(NSMenu*)menu
-{
-    TextController* controller = _controller;
-    if (controller)
-    {
-        NSString* title = @"Copy Path";
-        
-        NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(_processCopyPathItem:) keyEquivalent:@""];
-        [menu addItem:item];
-    }
 }
 
 - (void)_processCopyPathItem:(id)sender
