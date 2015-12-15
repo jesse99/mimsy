@@ -6,6 +6,8 @@ public typealias InvokeTextCommand = (MimsyTextView) -> ()
 public typealias TextViewCallback = (MimsyTextView) -> ()
 public typealias TextViewKeyCallback = (MimsyTextView) -> Bool
 public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
+public typealias ProjectContextMenuItemTitle = (files: [String], dirs: [String]) -> String?
+public typealias InvokeProjectCommand = (files: [String], dirs: [String]) -> ()
 
 @objc public enum MenuItemLoc: Int
 {
@@ -78,17 +80,24 @@ public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
     /// plugins use change as a result of the user editing a settings file.
     func clearRegisterTextViewKey(identifier: String)
     
+    /// Used to add a custom menu item to the directory editor.
+    ///
+    /// - Parameter title: Returns the name of the new menu item, or nil if an item should not be added.
+    /// Plugins should only add a menu item if they are able to process all the selected items.
+    /// - Parameter invoke: Called when the user selects the new menu item.
+    func registerProjectContextMenu(title: ProjectContextMenuItemTitle, invoke: InvokeProjectCommand)
+    
     /// Used to add a custom menu item to text contextual menus when there is no selection.
     ///
     /// - Parameter pos: Pre-defined location at which to insert the new sorted menu item.
-    /// - Parameter name: Returns the name of the new menu item, or nil if an item should not be added.
+    /// - Parameter title: Returns the name of the new menu item, or nil if an item should not be added.
     /// - Parameter invoke: Called when the user selects the new menu item.
     func registerNoSelectionTextContextMenu(pos: NoTextSelectionPos, title: TextContextMenuItemTitle, invoke: InvokeTextCommand)
     
     /// Used to add a custom menu item to text contextual menus when is a selection.
     ///
     /// - Parameter pos: Pre-defined location at which to insert the new sorted menu item.
-    /// - Parameter name: Returns the name of the new menu item, or nil if an item should not be added.
+    /// - Parameter title: Returns the name of the new menu item, or nil if an item should not be added.
     /// - Parameter invoke: Called when the user selects the new menu item.
     func registerWithSelectionTextContextMenu(pos: WithTextSelectionPos, title: TextContextMenuItemTitle, invoke: InvokeTextCommand)
     

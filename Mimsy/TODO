@@ -25,15 +25,11 @@ Creating plugins
 
 
 
-* Why don't files open back up with language set?
-* Add show in finder plugin:
-    = text context menu?
-    - directory context menu
 * Replace the old extensions:
-    - copy path
+    - copy path (this one should be added to both context menus)
     - duplicate file
     - new directory
-    - new file
+    - new file (might want a path to a file to use for default values)
     - open as binary
     - trash item
 * For mac80211 could add some custom duals, e.g. to open mesh.h

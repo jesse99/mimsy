@@ -99,6 +99,10 @@ typedef BOOL (^TextViewKeyBlock)(id<MimsyTextView> _Nonnull);
 
 @end
 
+@implementation ProjectContextItem
+
+@end
+
 // ------------------------------------------------------------------------------------
 void initLogGlobs()
 {
@@ -183,6 +187,7 @@ void initLogGlobs()
     NSMutableArray* _recentDirectories; // array [timestamp, path]
     NSMutableDictionary* _noSelectionItems;
     NSMutableDictionary* _withSelectionItems;
+    NSMutableArray* _projectItems;
     
     bool _mounted;
     NSString* _mountPath;
@@ -222,6 +227,7 @@ void initLogGlobs()
         _textKeyHooks = [NSMutableDictionary new];
         _noSelectionItems = [NSMutableDictionary new];
         _withSelectionItems = [NSMutableDictionary new];
+        _projectItems = [NSMutableArray new];
         
         NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
         _recentDirectories = [NSMutableArray new];
@@ -360,6 +366,20 @@ void initLogGlobs()
     }
     
     return handled;
+}
+
+- (void)registerProjectContextMenu:(ProjectContextMenuItemTitleBlock)title invoke:(InvokeProjectCommandBlock)invoke
+{
+    ProjectContextItem* item = [ProjectContextItem new];
+    item.title = title;
+    item.invoke = invoke;
+    
+    [_projectItems addObject:item];
+}
+
+- (NSArray* _Nullable)projectItems
+{
+    return _projectItems;
 }
 
 - (void)registerNoSelectionTextContextMenu:(enum NoTextSelectionPos)pos title:(TextContextMenuItemTitleBlock)title invoke:(InvokeTextCommandBlock)invoke

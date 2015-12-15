@@ -71,6 +71,8 @@
 		3768CCE016EB6C0A00D5CB57 /* builders in Resources */ = {isa = PBXBuildFile; fileRef = 3768CCDF16EB6C0A00D5CB57 /* builders */; };
 		3768CCE316ED322D00D5CB57 /* Builders.m in Sources */ = {isa = PBXBuildFile; fileRef = 3768CCE216ED322C00D5CB57 /* Builders.m */; };
 		376D81EF1C1E04F600866B4D /* settings in Resources */ = {isa = PBXBuildFile; fileRef = 376D81EE1C1E04F600866B4D /* settings */; };
+		376D81FB1C1FAA5A00866B4D /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376D81FA1C1FAA5A00866B4D /* Plugin.swift */; };
+		376D82011C1FAAC900866B4D /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 376D82001C1FAAC900866B4D /* Description.rtf */; };
 		377230AA1C1662820089F12D /* settings in Resources */ = {isa = PBXBuildFile; fileRef = 377230A91C1662820089F12D /* settings */; };
 		377230B61C1A98670089F12D /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377230B51C1A98670089F12D /* Plugin.swift */; };
 		377230BC1C1A98FA0089F12D /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 377230BB1C1A98FA0089F12D /* Description.rtf */; };
@@ -188,6 +190,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 3756B8B11C0BF257002B0B56;
 			remoteInfo = ConvertToInt;
+		};
+		376D81FC1C1FAAA800866B4D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37CDF3961C07BF9E009E48B4;
+			remoteInfo = MimsyPlugins;
+		};
+		376D81FE1C1FAAB000866B4D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 376D81F31C1FAA2900866B4D;
+			remoteInfo = ShowInFinder;
 		};
 		377230B71C1A98CF0089F12D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -478,6 +494,10 @@
 		3768CCE116ED322C00D5CB57 /* Builders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Builders.h; sourceTree = "<group>"; };
 		3768CCE216ED322C00D5CB57 /* Builders.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Builders.m; sourceTree = "<group>"; };
 		376D81EE1C1E04F600866B4D /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = settings; sourceTree = "<group>"; };
+		376D81F41C1FAA2900866B4D /* ShowInFinder.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShowInFinder.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		376D81F61C1FAA2900866B4D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		376D81FA1C1FAA5A00866B4D /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
+		376D82001C1FAAC900866B4D /* Description.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Description.rtf; sourceTree = "<group>"; };
 		377230A91C1662820089F12D /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = settings; sourceTree = "<group>"; };
 		377230AF1C1A982E0089F12D /* ShowTrailingWhitespace.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShowTrailingWhitespace.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		377230B11C1A982E0089F12D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -663,6 +683,13 @@
 
 /* Begin PBXFrameworksBuildPhase section */
 		3756B8AF1C0BF257002B0B56 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		376D81F11C1FAA2900866B4D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -960,6 +987,16 @@
 			name = "Directory Editor";
 			sourceTree = "<group>";
 		};
+		376D81F51C1FAA2900866B4D /* ShowInFinder */ = {
+			isa = PBXGroup;
+			children = (
+				376D81F61C1FAA2900866B4D /* Info.plist */,
+				376D81FA1C1FAA5A00866B4D /* Plugin.swift */,
+				376D82001C1FAAC900866B4D /* Description.rtf */,
+			);
+			path = ShowInFinder;
+			sourceTree = "<group>";
+		};
 		377230B01C1A982E0089F12D /* ShowTrailingWhitespace */ = {
 			isa = PBXGroup;
 			children = (
@@ -1078,6 +1115,7 @@
 				37D0BB7E1C13FC620053617F /* OpenDual.plugin */,
 				37D0BB9A1C165FAB0053617F /* SelectElement.plugin */,
 				377230AF1C1A982E0089F12D /* ShowTrailingWhitespace.plugin */,
+				376D81F41C1FAA2900866B4D /* ShowInFinder.plugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1238,8 +1276,9 @@
 				37D0BB7F1C13FC620053617F /* OpenDual */,
 				37E8C59D1C0C110500849644 /* ReverseLines */,
 				37D0BB9B1C165FAB0053617F /* SelectElement */,
-				37E8EE971C0C1F9300E1C3B9 /* SortLines */,
+				376D81F51C1FAA2900866B4D /* ShowInFinder */,
 				377230B01C1A982E0089F12D /* ShowTrailingWhitespace */,
+				37E8EE971C0C1F9300E1C3B9 /* SortLines */,
 			);
 			name = Plugins;
 			sourceTree = "<group>";
@@ -1338,6 +1377,24 @@
 			productReference = 3756B8B21C0BF257002B0B56 /* ConvertToInt.plugin */;
 			productType = "com.apple.product-type.bundle";
 		};
+		376D81F31C1FAA2900866B4D /* ShowInFinder */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 376D81F71C1FAA2900866B4D /* Build configuration list for PBXNativeTarget "ShowInFinder" */;
+			buildPhases = (
+				376D81F01C1FAA2900866B4D /* Sources */,
+				376D81F11C1FAA2900866B4D /* Frameworks */,
+				376D81F21C1FAA2900866B4D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				376D81FD1C1FAAA800866B4D /* PBXTargetDependency */,
+			);
+			name = ShowInFinder;
+			productName = ShowInFinder;
+			productReference = 376D81F41C1FAA2900866B4D /* ShowInFinder.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 		377230AE1C1A982E0089F12D /* ShowTrailingWhitespace */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 377230B21C1A982E0089F12D /* Build configuration list for PBXNativeTarget "ShowTrailingWhitespace" */;
@@ -1387,6 +1444,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				376D81FF1C1FAAB000866B4D /* PBXTargetDependency */,
 				377230BA1C1A98D90089F12D /* PBXTargetDependency */,
 				37D0BBA51C1660440053617F /* PBXTargetDependency */,
 				37D0BB891C13FCDA0053617F /* PBXTargetDependency */,
@@ -1602,6 +1660,9 @@
 					3756B8B11C0BF257002B0B56 = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
+					376D81F31C1FAA2900866B4D = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
 					377230AE1C1A982E0089F12D = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
@@ -1663,6 +1724,7 @@
 				37D0BB7D1C13FC620053617F /* OpenDual */,
 				37D0BB991C165FAB0053617F /* SelectElement */,
 				377230AE1C1A982E0089F12D /* ShowTrailingWhitespace */,
+				376D81F31C1FAA2900866B4D /* ShowInFinder */,
 			);
 		};
 /* End PBXProject section */
@@ -1673,6 +1735,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				3756B8BF1C0BF305002B0B56 /* Description.rtf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		376D81F21C1FAA2900866B4D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				376D82011C1FAAC900866B4D /* Description.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1848,6 +1918,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				3756B8B91C0BF28A002B0B56 /* Plugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		376D81F01C1FAA2900866B4D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				376D81FB1C1FAA5A00866B4D /* Plugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2067,6 +2145,16 @@
 			target = 3756B8B11C0BF257002B0B56 /* ConvertToInt */;
 			targetProxy = 3756B8BC1C0BF2EB002B0B56 /* PBXContainerItemProxy */;
 		};
+		376D81FD1C1FAAA800866B4D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37CDF3961C07BF9E009E48B4 /* MimsyPlugins */;
+			targetProxy = 376D81FC1C1FAAA800866B4D /* PBXContainerItemProxy */;
+		};
+		376D81FF1C1FAAB000866B4D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 376D81F31C1FAA2900866B4D /* ShowInFinder */;
+			targetProxy = 376D81FE1C1FAAB000866B4D /* PBXContainerItemProxy */;
+		};
 		377230B81C1A98CF0089F12D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 37CDF3961C07BF9E009E48B4 /* MimsyPlugins */;
@@ -2281,6 +2369,70 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.ConvertToInt;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+		376D81F81C1FAA2900866B4D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = ShowInFinder/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.ShowInFinder;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		376D81F91C1FAA2900866B4D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = ShowInFinder/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.ShowInFinder;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = plugin;
@@ -3201,6 +3353,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		376D81F71C1FAA2900866B4D /* Build configuration list for PBXNativeTarget "ShowInFinder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				376D81F81C1FAA2900866B4D /* Debug */,
+				376D81F91C1FAA2900866B4D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		377230B21C1A982E0089F12D /* Build configuration list for PBXNativeTarget "ShowTrailingWhitespace" */ = {
 			isa = XCConfigurationList;

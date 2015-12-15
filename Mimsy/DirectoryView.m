@@ -77,7 +77,30 @@
     [_contextMenu addExtensionItems:@"/directory" contents:contents];
 #endif
     
+    [self _addPluginItems];
+    
     return _contextMenu;
+}
+
+- (void)_addPluginItems
+{
+    AppDelegate* app = [NSApp delegate];
+    for (ProjectContextItem* citem in app.projectItems)
+    {
+        NSString* title = (citem.title)(_files, _dirs);
+        if (title)
+        {
+            NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(_processContextItem:) keyEquivalent:@""];
+            [item setRepresentedObject:citem.invoke];
+            [_contextMenu appendSortedItem:item];
+        }
+    }
+}
+
+- (void)_processContextItem:(NSMenuItem*)sender
+{
+    InvokeProjectCommandBlock invoke = sender.representedObject;
+    invoke(_files, _dirs);
 }
 
 - (void)keyDown:(NSEvent*)event
