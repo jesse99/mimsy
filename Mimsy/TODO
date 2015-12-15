@@ -23,18 +23,13 @@ Creating plugins
 
 
 
-* Add some String extensions:
-    - file name
-    - parent
-    - extension
-    - unique name
+
+
+
 * Replace the old extensions:
-    - duplicate file (might want a helper to get a unique file name)
-    - directory context items aren't sorted
-    - new directory
-    - new file (might want a path to a file to use for default values)
-    - open as binary
     - trash item
+    - open as binary
+* Directory context items aren't sorted
 * MimsyTextView text should always be exposed (and handled) as an NSString
     - because NSString isn't toll bridged to String
 * For mac80211 could add some custom duals, e.g. to open mesh.h

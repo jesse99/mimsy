@@ -25,6 +25,8 @@
 		3712632516B5A431007AF3BF /* libcrypto.0.9.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */; };
 		3717692619F00EA6007DC658 /* TextDocumentFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 3717692519F00EA6007DC658 /* TextDocumentFiles.m */; };
 		3720B6E11C1FBCBB00A6622C /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3720B6E01C1FBCBB00A6622C /* StringExtension.swift */; };
+		3720B6ED1C1FC82900A6622C /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3720B6EC1C1FC82900A6622C /* Plugin.swift */; };
+		3720B6F31C1FC88B00A6622C /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3720B6F21C1FC88B00A6622C /* Description.rtf */; };
 		372293D319C6733A0024426C /* SpecialKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 372293D219C6733A0024426C /* SpecialKeys.m */; };
 		372293D819CE80EC0024426C /* FileHandleCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 372293D719CE80EC0024426C /* FileHandleCategory.m */; };
 		372D8FA916F5719E00CBBC96 /* Build.png in Resources */ = {isa = PBXBuildFile; fileRef = 372D8FA816F5719E00CBBC96 /* Build.png */; };
@@ -173,6 +175,8 @@
 		37E8EEA31C0C1FFE00E1C3B9 /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 37E8EEA21C0C1FFE00E1C3B9 /* Description.rtf */; };
 		37E8EEAF1C0FEB1700E1C3B9 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E8EEAE1C0FEB1700E1C3B9 /* Plugin.swift */; };
 		37E8EEB51C0FEB8300E1C3B9 /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 37E8EEB41C0FEB8300E1C3B9 /* Description.rtf */; };
+		37EB1D631C1FE552005CC016 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37EB1D621C1FE552005CC016 /* Plugin.swift */; };
+		37EB1D691C1FE5B1005CC016 /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 37EB1D681C1FE5B1005CC016 /* Description.rtf */; };
 		37ECF06419296C7A00061C0A /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ECF06319296C7A00061C0A /* Constants.m */; };
 		37ECF067192EFCC100061C0A /* BaseTextController.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ECF066192EFCC100061C0A /* BaseTextController.m */; };
 		37ECF0691930201A00061C0A /* FindInFilesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37ECF0681930201A00061C0A /* FindInFilesWindow.xib */; };
@@ -182,6 +186,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3720B6EE1C1FC86A00A6622C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37CDF3961C07BF9E009E48B4;
+			remoteInfo = MimsyPlugins;
+		};
+		3720B6F01C1FC87200A6622C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3720B6E51C1FC80900A6622C;
+			remoteInfo = NewDirectory;
+		};
 		3756B8BA1C0BF2DD002B0B56 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
@@ -392,6 +410,20 @@
 			remoteGlobalIDString = 37E8EEA71C0FEAF600E1C3B9;
 			remoteInfo = HighlightLine;
 		};
+		37EB1D641C1FE58F005CC016 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37CDF3961C07BF9E009E48B4;
+			remoteInfo = MimsyPlugins;
+		};
+		37EB1D661C1FE59E005CC016 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37EB1D5B1C1FE52E005CC016;
+			remoteInfo = NewFile;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -439,6 +471,10 @@
 		3717692419F00EA6007DC658 /* TextDocumentFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextDocumentFiles.h; sourceTree = "<group>"; };
 		3717692519F00EA6007DC658 /* TextDocumentFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDocumentFiles.m; sourceTree = "<group>"; };
 		3720B6E01C1FBCBB00A6622C /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		3720B6E61C1FC80900A6622C /* NewDirectory.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewDirectory.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		3720B6E81C1FC80900A6622C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3720B6EC1C1FC82900A6622C /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
+		3720B6F21C1FC88B00A6622C /* Description.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Description.rtf; sourceTree = "<group>"; };
 		372293D119C6733A0024426C /* SpecialKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpecialKeys.h; sourceTree = "<group>"; };
 		372293D219C6733A0024426C /* SpecialKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpecialKeys.m; sourceTree = "<group>"; };
 		372293D619CE80EC0024426C /* FileHandleCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileHandleCategory.h; sourceTree = "<group>"; };
@@ -711,6 +747,10 @@
 		37E8EEAA1C0FEAF700E1C3B9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		37E8EEAE1C0FEB1700E1C3B9 /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
 		37E8EEB41C0FEB8300E1C3B9 /* Description.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Description.rtf; sourceTree = "<group>"; };
+		37EB1D5C1C1FE52E005CC016 /* NewFile.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewFile.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		37EB1D5E1C1FE52E005CC016 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		37EB1D621C1FE552005CC016 /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
+		37EB1D681C1FE5B1005CC016 /* Description.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Description.rtf; sourceTree = "<group>"; };
 		37ECF06219296C7A00061C0A /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		37ECF06319296C7A00061C0A /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		37ECF065192EFCC000061C0A /* BaseTextController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseTextController.h; sourceTree = "<group>"; };
@@ -724,6 +764,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		3720B6E31C1FC80900A6622C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3756B8AF1C0BF257002B0B56 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -850,6 +897,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		37EB1D591C1FE52E005CC016 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -861,6 +915,16 @@
 				3705C814167BC2F000E5D54C /* TranscriptWindow.xib */,
 			);
 			name = Transcript;
+			sourceTree = "<group>";
+		};
+		3720B6E71C1FC80900A6622C /* NewDirectory */ = {
+			isa = PBXGroup;
+			children = (
+				3720B6E81C1FC80900A6622C /* Info.plist */,
+				3720B6EC1C1FC82900A6622C /* Plugin.swift */,
+				3720B6F21C1FC88B00A6622C /* Description.rtf */,
+			);
+			path = NewDirectory;
 			sourceTree = "<group>";
 		};
 		373B9729194370A00084CCC1 /* Categories */ = {
@@ -1184,6 +1248,8 @@
 				376D81F41C1FAA2900866B4D /* ShowInFinder.plugin */,
 				3793190C1C1FAE22006F199D /* CopyPaths.plugin */,
 				37C32DBD1C1FB88D000742FB /* DuplicateFile.plugin */,
+				3720B6E61C1FC80900A6622C /* NewDirectory.plugin */,
+				37EB1D5C1C1FE52E005CC016 /* NewFile.plugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1354,6 +1420,8 @@
 				3775F4A91C0BBFD9001AFA06 /* FindGremlin */,
 				37BABAE01C0AB5CB00B9B5AB /* GoFormat */,
 				37E8EEA91C0FEAF700E1C3B9 /* HighlightLine */,
+				3720B6E71C1FC80900A6622C /* NewDirectory */,
+				37EB1D5D1C1FE52E005CC016 /* NewFile */,
 				37D0BB7F1C13FC620053617F /* OpenDual */,
 				37E8C59D1C0C110500849644 /* ReverseLines */,
 				37D0BB9B1C165FAB0053617F /* SelectElement */,
@@ -1427,6 +1495,16 @@
 			path = HighlightLine;
 			sourceTree = "<group>";
 		};
+		37EB1D5D1C1FE52E005CC016 /* NewFile */ = {
+			isa = PBXGroup;
+			children = (
+				37EB1D5E1C1FE52E005CC016 /* Info.plist */,
+				37EB1D621C1FE552005CC016 /* Plugin.swift */,
+				37EB1D681C1FE5B1005CC016 /* Description.rtf */,
+			);
+			path = NewFile;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1440,6 +1518,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		3720B6E51C1FC80900A6622C /* NewDirectory */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3720B6E91C1FC80900A6622C /* Build configuration list for PBXNativeTarget "NewDirectory" */;
+			buildPhases = (
+				3720B6E21C1FC80900A6622C /* Sources */,
+				3720B6E31C1FC80900A6622C /* Frameworks */,
+				3720B6E41C1FC80900A6622C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3720B6EF1C1FC86A00A6622C /* PBXTargetDependency */,
+			);
+			name = NewDirectory;
+			productName = NewDirectory;
+			productReference = 3720B6E61C1FC80900A6622C /* NewDirectory.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 		3756B8B11C0BF257002B0B56 /* ConvertToInt */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3756B8B71C0BF257002B0B56 /* Build configuration list for PBXNativeTarget "ConvertToInt" */;
@@ -1543,6 +1639,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				37EB1D671C1FE59E005CC016 /* PBXTargetDependency */,
+				3720B6F11C1FC87200A6622C /* PBXTargetDependency */,
 				37C32DC81C1FB903000742FB /* PBXTargetDependency */,
 				379319171C1FAE9B006F199D /* PBXTargetDependency */,
 				376D81FF1C1FAAB000866B4D /* PBXTargetDependency */,
@@ -1763,6 +1861,24 @@
 			productReference = 37E8EEA81C0FEAF600E1C3B9 /* HighlightLine.plugin */;
 			productType = "com.apple.product-type.bundle";
 		};
+		37EB1D5B1C1FE52E005CC016 /* NewFile */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 37EB1D611C1FE52E005CC016 /* Build configuration list for PBXNativeTarget "NewFile" */;
+			buildPhases = (
+				37EB1D581C1FE52E005CC016 /* Sources */,
+				37EB1D591C1FE52E005CC016 /* Frameworks */,
+				37EB1D5A1C1FE52E005CC016 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				37EB1D651C1FE58F005CC016 /* PBXTargetDependency */,
+			);
+			name = NewFile;
+			productName = NewFile;
+			productReference = 37EB1D5C1C1FE52E005CC016 /* NewFile.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1776,6 +1892,9 @@
 				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Jesse Jones";
 				TargetAttributes = {
+					3720B6E51C1FC80900A6622C = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
 					3756B8B11C0BF257002B0B56 = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
@@ -1821,6 +1940,9 @@
 					37E8EEA71C0FEAF600E1C3B9 = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
+					37EB1D5B1C1FE52E005CC016 = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
 				};
 			};
 			buildConfigurationList = 37A8C68C16758FF400D4DB13 /* Build configuration list for PBXProject "Mimsy" */;
@@ -1852,11 +1974,21 @@
 				376D81F31C1FAA2900866B4D /* ShowInFinder */,
 				3793190B1C1FAE22006F199D /* CopyPaths */,
 				37C32DBC1C1FB88D000742FB /* DuplicateFile */,
+				3720B6E51C1FC80900A6622C /* NewDirectory */,
+				37EB1D5B1C1FE52E005CC016 /* NewFile */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		3720B6E41C1FC80900A6622C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3720B6F31C1FC88B00A6622C /* Description.rtf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3756B8B01C0BF257002B0B56 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2023,6 +2155,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		37EB1D5A1C1FE52E005CC016 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37EB1D691C1FE5B1005CC016 /* Description.rtf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -2056,6 +2196,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		3720B6E21C1FC80900A6622C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3720B6ED1C1FC82900A6622C /* Plugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3756B8AE1C0BF257002B0B56 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2292,9 +2440,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		37EB1D581C1FE52E005CC016 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37EB1D631C1FE552005CC016 /* Plugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3720B6EF1C1FC86A00A6622C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37CDF3961C07BF9E009E48B4 /* MimsyPlugins */;
+			targetProxy = 3720B6EE1C1FC86A00A6622C /* PBXContainerItemProxy */;
+		};
+		3720B6F11C1FC87200A6622C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3720B6E51C1FC80900A6622C /* NewDirectory */;
+			targetProxy = 3720B6F01C1FC87200A6622C /* PBXContainerItemProxy */;
+		};
 		3756B8BB1C0BF2DD002B0B56 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 37CDF3961C07BF9E009E48B4 /* MimsyPlugins */;
@@ -2445,6 +2611,16 @@
 			target = 37E8EEA71C0FEAF600E1C3B9 /* HighlightLine */;
 			targetProxy = 37E8EEB21C0FEB6200E1C3B9 /* PBXContainerItemProxy */;
 		};
+		37EB1D651C1FE58F005CC016 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37CDF3961C07BF9E009E48B4 /* MimsyPlugins */;
+			targetProxy = 37EB1D641C1FE58F005CC016 /* PBXContainerItemProxy */;
+		};
+		37EB1D671C1FE59E005CC016 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37EB1D5B1C1FE52E005CC016 /* NewFile */;
+			targetProxy = 37EB1D661C1FE59E005CC016 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -2491,6 +2667,70 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		3720B6EA1C1FC80900A6622C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = NewDirectory/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.NewDirectory;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		3720B6EB1C1FC80900A6622C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = NewDirectory/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.NewDirectory;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
 		3756B8B51C0BF257002B0B56 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3650,9 +3890,82 @@
 			};
 			name = Release;
 		};
+		37EB1D5F1C1FE52E005CC016 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = NewFile/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.NewFile;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		37EB1D601C1FE52E005CC016 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = NewFile/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.NewFile;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3720B6E91C1FC80900A6622C /* Build configuration list for PBXNativeTarget "NewDirectory" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3720B6EA1C1FC80900A6622C /* Debug */,
+				3720B6EB1C1FC80900A6622C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		3756B8B71C0BF257002B0B56 /* Build configuration list for PBXNativeTarget "ConvertToInt" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -3814,6 +4127,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		37EB1D611C1FE52E005CC016 /* Build configuration list for PBXNativeTarget "NewFile" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37EB1D5F1C1FE52E005CC016 /* Debug */,
+				37EB1D601C1FE52E005CC016 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
