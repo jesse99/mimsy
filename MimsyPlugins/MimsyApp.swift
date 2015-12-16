@@ -115,6 +115,11 @@ public typealias InvokeProjectCommand = (files: [String], dirs: [String]) -> ()
     ///
     /// - Parameter path: Full path to a file.
     func open(path: String)
+    
+    /// Opens a file as raw binary and display the contents as hex and ASCII.
+    ///
+    /// - Parameter path: Full path to a file.
+    func openAsBinary(path: String)
         
     /// Typically the extension method will be used instead of this.
     func logString(topic: String, text: String)

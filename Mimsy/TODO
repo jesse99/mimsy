@@ -23,10 +23,12 @@ Creating plugins
 
 
 
+- add a Description.rtf file, be sure to include it in the right target
+- can be helpful to restart xcode (so auto-completion and errors work in the new plugin)
+
 
 
 * Replace the old extensions:
-    - trash items
     - open as binary
 * Directory context items aren't sorted
 * MimsyTextView text should always be exposed (and handled) as an NSString

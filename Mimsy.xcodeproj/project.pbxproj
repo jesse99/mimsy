@@ -135,6 +135,8 @@
 		37A93CFA1C13969000AFE5AC /* settings in Resources */ = {isa = PBXBuildFile; fileRef = 37A93CF91C13969000AFE5AC /* settings */; };
 		37ABF9B318C2EA9C006AFDB7 /* SearchSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */; };
 		37AD7570171B95460054A75F /* UpdateConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AD756F171B95460054A75F /* UpdateConfig.m */; };
+		37B557881C2107620060AD55 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B557871C2107620060AD55 /* Plugin.swift */; };
+		37B5578E1C2107EC0060AD55 /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 37B5578D1C2107EC0060AD55 /* Description.rtf */; };
 		37B9CA011C0BC923006C479B /* MimsyTranscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B9CA001C0BC923006C479B /* MimsyTranscript.swift */; };
 		37BABACF1C08105600B9B5AB /* Plugins.m in Sources */ = {isa = PBXBuildFile; fileRef = 37BABACE1C08105600B9B5AB /* Plugins.m */; };
 		37BABAD31C08CF2400B9B5AB /* MimsyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37BABAD21C08CF2400B9B5AB /* MimsyApp.swift */; };
@@ -292,6 +294,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 37A8C69116758FF400D4DB13;
 			remoteInfo = Mimsy;
+		};
+		37B557891C2107B80060AD55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37CDF3961C07BF9E009E48B4;
+			remoteInfo = MimsyPlugins;
+		};
+		37B5578B1C2107C00060AD55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37B557801C2107440060AD55;
+			remoteInfo = OpenAsBinary;
 		};
 		37BABAC91C080D2600B9B5AB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -694,6 +710,10 @@
 		37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchSite.m; sourceTree = "<group>"; };
 		37AD756E171B95460054A75F /* UpdateConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateConfig.h; sourceTree = "<group>"; };
 		37AD756F171B95460054A75F /* UpdateConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateConfig.m; sourceTree = "<group>"; };
+		37B557811C2107440060AD55 /* OpenAsBinary.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenAsBinary.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		37B557831C2107440060AD55 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		37B557871C2107620060AD55 /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
+		37B5578D1C2107EC0060AD55 /* Description.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Description.rtf; sourceTree = "<group>"; };
 		37B9CA001C0BC923006C479B /* MimsyTranscript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimsyTranscript.swift; sourceTree = "<group>"; };
 		37BABACD1C08105600B9B5AB /* Plugins.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Plugins.h; sourceTree = "<group>"; };
 		37BABACE1C08105600B9B5AB /* Plugins.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Plugins.m; sourceTree = "<group>"; };
@@ -851,6 +871,13 @@
 			files = (
 				37A8C6B816758FF400D4DB13 /* SenTestingKit.framework in Frameworks */,
 				37A8C6B916758FF400D4DB13 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37B5577E1C2107440060AD55 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1288,6 +1315,7 @@
 				3720B6E61C1FC80900A6622C /* NewDirectory.plugin */,
 				37EB1D5C1C1FE52E005CC016 /* NewFile.plugin */,
 				3747063A1C20FB40008F42DF /* TrashItems.plugin */,
+				37B557811C2107440060AD55 /* OpenAsBinary.plugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1399,6 +1427,16 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		37B557821C2107440060AD55 /* OpenAsBinary */ = {
+			isa = PBXGroup;
+			children = (
+				37B557831C2107440060AD55 /* Info.plist */,
+				37B557871C2107620060AD55 /* Plugin.swift */,
+				37B5578D1C2107EC0060AD55 /* Description.rtf */,
+			);
+			path = OpenAsBinary;
+			sourceTree = "<group>";
+		};
 		37BABAE01C0AB5CB00B9B5AB /* GoFormat */ = {
 			isa = PBXGroup;
 			children = (
@@ -1460,6 +1498,7 @@
 				37E8EEA91C0FEAF700E1C3B9 /* HighlightLine */,
 				3720B6E71C1FC80900A6622C /* NewDirectory */,
 				37EB1D5D1C1FE52E005CC016 /* NewFile */,
+				37B557821C2107440060AD55 /* OpenAsBinary */,
 				37D0BB7F1C13FC620053617F /* OpenDual */,
 				37E8C59D1C0C110500849644 /* ReverseLines */,
 				37D0BB9B1C165FAB0053617F /* SelectElement */,
@@ -1696,6 +1735,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				37B5578C1C2107C00060AD55 /* PBXTargetDependency */,
 				374706451C20FC90008F42DF /* PBXTargetDependency */,
 				37EB1D671C1FE59E005CC016 /* PBXTargetDependency */,
 				3720B6F11C1FC87200A6622C /* PBXTargetDependency */,
@@ -1738,6 +1778,24 @@
 			productName = MimsyTests;
 			productReference = 37A8C6B616758FF400D4DB13 /* MimsyTests.octest */;
 			productType = "com.apple.product-type.bundle.ocunit-test";
+		};
+		37B557801C2107440060AD55 /* OpenAsBinary */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 37B557861C2107440060AD55 /* Build configuration list for PBXNativeTarget "OpenAsBinary" */;
+			buildPhases = (
+				37B5577D1C2107440060AD55 /* Sources */,
+				37B5577E1C2107440060AD55 /* Frameworks */,
+				37B5577F1C2107440060AD55 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				37B5578A1C2107B80060AD55 /* PBXTargetDependency */,
+			);
+			name = OpenAsBinary;
+			productName = OpenAsBinary;
+			productReference = 37B557811C2107440060AD55 /* OpenAsBinary.plugin */;
+			productType = "com.apple.product-type.bundle";
 		};
 		37BABADE1C0AB5CB00B9B5AB /* GoFormat */ = {
 			isa = PBXNativeTarget;
@@ -1971,6 +2029,9 @@
 					3793190B1C1FAE22006F199D = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
+					37B557801C2107440060AD55 = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
 					37BABADE1C0AB5CB00B9B5AB = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
@@ -2038,6 +2099,7 @@
 				3720B6E51C1FC80900A6622C /* NewDirectory */,
 				37EB1D5B1C1FE52E005CC016 /* NewFile */,
 				374706391C20FB40008F42DF /* TrashItems */,
+				37B557801C2107440060AD55 /* OpenAsBinary */,
 			);
 		};
 /* End PBXProject section */
@@ -2140,6 +2202,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				37A8C6C116758FF400D4DB13 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37B5577F1C2107440060AD55 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37B5578E1C2107EC0060AD55 /* Description.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2430,6 +2500,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		37B5577D1C2107440060AD55 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37B557881C2107620060AD55 /* Plugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		37BABADB1C0AB5CB00B9B5AB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2603,6 +2681,16 @@
 			isa = PBXTargetDependency;
 			target = 37A8C69116758FF400D4DB13 /* Mimsy */;
 			targetProxy = 37A8C6BA16758FF400D4DB13 /* PBXContainerItemProxy */;
+		};
+		37B5578A1C2107B80060AD55 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37CDF3961C07BF9E009E48B4 /* MimsyPlugins */;
+			targetProxy = 37B557891C2107B80060AD55 /* PBXContainerItemProxy */;
+		};
+		37B5578C1C2107C00060AD55 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37B557801C2107440060AD55 /* OpenAsBinary */;
+			targetProxy = 37B5578B1C2107C00060AD55 /* PBXContainerItemProxy */;
 		};
 		37BABACA1C080D2600B9B5AB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3390,6 +3478,70 @@
 			};
 			name = Release;
 		};
+		37B557841C2107440060AD55 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = OpenAsBinary/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.OpenAsBinary;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		37B557851C2107440060AD55 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = OpenAsBinary/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.OpenAsBinary;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
 		37BABAE31C0AB5CB00B9B5AB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -4125,6 +4277,7 @@
 				3747063E1C20FB40008F42DF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3756B8B71C0BF257002B0B56 /* Build configuration list for PBXNativeTarget "ConvertToInt" */ = {
 			isa = XCConfigurationList;
@@ -4197,6 +4350,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		37B557861C2107440060AD55 /* Build configuration list for PBXNativeTarget "OpenAsBinary" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37B557841C2107440060AD55 /* Debug */,
+				37B557851C2107440060AD55 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		37BABAE21C0AB5CB00B9B5AB /* Build configuration list for PBXNativeTarget "GoFormat" */ = {
 			isa = XCConfigurationList;

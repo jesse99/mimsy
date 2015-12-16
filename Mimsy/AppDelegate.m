@@ -461,6 +461,12 @@ void initLogGlobs()
     [OpenFile openPath:path atLine:-1 atCol:-1 withTabWidth:-1];
 }
 
+- (void)openAsBinary:(NSString* _Nonnull)path
+{
+    NSURL* url = [[NSURL alloc] initFileURLWithPath:path];
+    [self openBinary:url];
+}
+
 - (NSColor*)mimsyColor:(NSString *)name
 {
     return [NSColor colorWithMimsyName:name];
@@ -1519,24 +1525,24 @@ void initLogGlobs()
 	}	
 }
 
-- (IBAction)openAsBinary:(id)sender
+- (IBAction)openAsBinaryAction:(id)sender
 {
-	UNUSED(sender);
-	
-	NSOpenPanel* panel = [NSOpenPanel new];
-	[panel setTitle:@"Open as Binary"];
-	[panel setTreatsFilePackagesAsDirectories:YES];
-	[panel setAllowsMultipleSelection:YES];
-	
-	NSInteger button = [panel runModal];
-	
-	if (button == NSModalResponseOK)
-	{
-		for (NSURL* url in [panel URLs])
-		{
-			[self openBinary:url];
-		}
-	}
+    UNUSED(sender);
+    
+    NSOpenPanel* panel = [NSOpenPanel new];
+    [panel setTitle:@"Open as Binary"];
+    [panel setTreatsFilePackagesAsDirectories:YES];
+    [panel setAllowsMultipleSelection:YES];
+    
+    NSInteger button = [panel runModal];
+    
+    if (button == NSModalResponseOK)
+    {
+        for (NSURL* url in [panel URLs])
+        {
+            [self openBinary:url];
+        }
+    }
 }
 
 - (void)openBinary:(NSURL*)url

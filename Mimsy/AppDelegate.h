@@ -35,7 +35,7 @@ void initLogGlobs(void);
 - (void)saveAllDocuments:(id _Nullable)sender;
 
 - (void)openWithMimsy:(NSURL* _Nonnull)url;
-- (IBAction)openAsBinary:(id _Nullable)sender;
+- (IBAction)openAsBinaryAction:(id _Nullable)sender;
 - (void)searchSite:(id _Nullable)sender;
 - (void)openLatestInTimeMachine:(id _Nullable)sender;
 - (void)openTimeMachine:(id _Nullable)sender;
