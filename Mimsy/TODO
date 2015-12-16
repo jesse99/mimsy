@@ -25,13 +25,13 @@ Creating plugins
 
 
 
-
 * Replace the old extensions:
-    - trash item
+    - trash items
     - open as binary
 * Directory context items aren't sorted
 * MimsyTextView text should always be exposed (and handled) as an NSString
     - because NSString isn't toll bridged to String
+    - might even want to wrap it up in a struct, BigText?
 * For mac80211 could add some custom duals, e.g. to open mesh.h
 * Remove the old extensions.
 * Replace scripts
@@ -193,6 +193,9 @@ Creating plugins
     - checkout
     - blame
     - log
+    - rename should do a git mv
+    - trash items plugin should do git rm
+    - new file should do a git add (make sure this works with renaming)
 * Might want stuff like dissasemble too
 * Pick something to use for a plugin:
     - loading plugins: https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/UsingPlugins.html#//apple_ref/doc/uid/20001276-100982

@@ -41,6 +41,8 @@
 		373B972F1945570F0084CCC1 /* ReplaceInFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B972E1945570D0084CCC1 /* ReplaceInFiles.m */; };
 		37431FD119AA80DC00A1B30E /* ProcFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 37431FD019AA80DC00A1B30E /* ProcFileSystem.m */; };
 		37431FD719AAA7FF00A1B30E /* ProcFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 37431FD619AAA7FF00A1B30E /* ProcFiles.m */; };
+		374706411C20FB70008F42DF /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 374706401C20FB70008F42DF /* Plugin.swift */; };
+		374706471C20FCA3008F42DF /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 374706461C20FCA3008F42DF /* Description.rtf */; };
 		375140D416800FFD00C329AF /* ConfigParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D316800FFD00C329AF /* ConfigParser.m */; };
 		375140D816801A4800C329AF /* ConfigParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D716801A4800C329AF /* ConfigParserTests.m */; };
 		375140E416828EB600C329AF /* WindowsDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140E316828EB600C329AF /* WindowsDatabase.m */; };
@@ -199,6 +201,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 3720B6E51C1FC80900A6622C;
 			remoteInfo = NewDirectory;
+		};
+		374706421C20FC88008F42DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37CDF3961C07BF9E009E48B4;
+			remoteInfo = MimsyPlugins;
+		};
+		374706441C20FC90008F42DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 374706391C20FB40008F42DF;
+			remoteInfo = TrashItems;
 		};
 		3756B8BA1C0BF2DD002B0B56 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -501,6 +517,10 @@
 		37431FD219AA9AA200A1B30E /* ProcFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProcFile.h; sourceTree = "<group>"; };
 		37431FD519AAA7FF00A1B30E /* ProcFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcFiles.h; sourceTree = "<group>"; };
 		37431FD619AAA7FF00A1B30E /* ProcFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProcFiles.m; sourceTree = "<group>"; };
+		3747063A1C20FB40008F42DF /* TrashItems.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrashItems.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		3747063C1C20FB40008F42DF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		374706401C20FB70008F42DF /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
+		374706461C20FCA3008F42DF /* Description.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Description.rtf; sourceTree = "<group>"; };
 		375140D216800FFD00C329AF /* ConfigParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParser.h; sourceTree = "<group>"; };
 		375140D316800FFD00C329AF /* ConfigParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigParser.m; sourceTree = "<group>"; };
 		375140D616801A4800C329AF /* ConfigParserTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParserTests.h; sourceTree = "<group>"; };
@@ -771,6 +791,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		374706371C20FB40008F42DF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3756B8AF1C0BF257002B0B56 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -949,6 +976,16 @@
 				377D49AD1A68AB8200DB4A03 /* SwiftExtensions.swift */,
 			);
 			name = Categories;
+			sourceTree = "<group>";
+		};
+		3747063B1C20FB40008F42DF /* TrashItems */ = {
+			isa = PBXGroup;
+			children = (
+				3747063C1C20FB40008F42DF /* Info.plist */,
+				374706401C20FB70008F42DF /* Plugin.swift */,
+				374706461C20FCA3008F42DF /* Description.rtf */,
+			);
+			path = TrashItems;
 			sourceTree = "<group>";
 		};
 		375140D91682352000C329AF /* Utils */ = {
@@ -1250,6 +1287,7 @@
 				37C32DBD1C1FB88D000742FB /* DuplicateFile.plugin */,
 				3720B6E61C1FC80900A6622C /* NewDirectory.plugin */,
 				37EB1D5C1C1FE52E005CC016 /* NewFile.plugin */,
+				3747063A1C20FB40008F42DF /* TrashItems.plugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1428,6 +1466,7 @@
 				376D81F51C1FAA2900866B4D /* ShowInFinder */,
 				377230B01C1A982E0089F12D /* ShowTrailingWhitespace */,
 				37E8EE971C0C1F9300E1C3B9 /* SortLines */,
+				3747063B1C20FB40008F42DF /* TrashItems */,
 			);
 			name = Plugins;
 			sourceTree = "<group>";
@@ -1536,6 +1575,24 @@
 			productReference = 3720B6E61C1FC80900A6622C /* NewDirectory.plugin */;
 			productType = "com.apple.product-type.bundle";
 		};
+		374706391C20FB40008F42DF /* TrashItems */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3747063F1C20FB40008F42DF /* Build configuration list for PBXNativeTarget "TrashItems" */;
+			buildPhases = (
+				374706361C20FB40008F42DF /* Sources */,
+				374706371C20FB40008F42DF /* Frameworks */,
+				374706381C20FB40008F42DF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				374706431C20FC88008F42DF /* PBXTargetDependency */,
+			);
+			name = TrashItems;
+			productName = TrashItems;
+			productReference = 3747063A1C20FB40008F42DF /* TrashItems.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 		3756B8B11C0BF257002B0B56 /* ConvertToInt */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3756B8B71C0BF257002B0B56 /* Build configuration list for PBXNativeTarget "ConvertToInt" */;
@@ -1639,6 +1696,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				374706451C20FC90008F42DF /* PBXTargetDependency */,
 				37EB1D671C1FE59E005CC016 /* PBXTargetDependency */,
 				3720B6F11C1FC87200A6622C /* PBXTargetDependency */,
 				37C32DC81C1FB903000742FB /* PBXTargetDependency */,
@@ -1895,6 +1953,9 @@
 					3720B6E51C1FC80900A6622C = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
+					374706391C20FB40008F42DF = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
 					3756B8B11C0BF257002B0B56 = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
@@ -1976,6 +2037,7 @@
 				37C32DBC1C1FB88D000742FB /* DuplicateFile */,
 				3720B6E51C1FC80900A6622C /* NewDirectory */,
 				37EB1D5B1C1FE52E005CC016 /* NewFile */,
+				374706391C20FB40008F42DF /* TrashItems */,
 			);
 		};
 /* End PBXProject section */
@@ -1986,6 +2048,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				3720B6F31C1FC88B00A6622C /* Description.rtf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		374706381C20FB40008F42DF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				374706471C20FCA3008F42DF /* Description.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2201,6 +2271,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				3720B6ED1C1FC82900A6622C /* Plugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		374706361C20FB40008F42DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				374706411C20FB70008F42DF /* Plugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2460,6 +2538,16 @@
 			isa = PBXTargetDependency;
 			target = 3720B6E51C1FC80900A6622C /* NewDirectory */;
 			targetProxy = 3720B6F01C1FC87200A6622C /* PBXContainerItemProxy */;
+		};
+		374706431C20FC88008F42DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37CDF3961C07BF9E009E48B4 /* MimsyPlugins */;
+			targetProxy = 374706421C20FC88008F42DF /* PBXContainerItemProxy */;
+		};
+		374706451C20FC90008F42DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 374706391C20FB40008F42DF /* TrashItems */;
+			targetProxy = 374706441C20FC90008F42DF /* PBXContainerItemProxy */;
 		};
 		3756B8BB1C0BF2DD002B0B56 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2725,6 +2813,70 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.NewDirectory;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+		3747063D1C20FB40008F42DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = TrashItems/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.TrashItems;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		3747063E1C20FB40008F42DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = TrashItems/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.TrashItems;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = plugin;
@@ -3966,6 +4118,14 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		3747063F1C20FB40008F42DF /* Build configuration list for PBXNativeTarget "TrashItems" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3747063D1C20FB40008F42DF /* Debug */,
+				3747063E1C20FB40008F42DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		3756B8B71C0BF257002B0B56 /* Build configuration list for PBXNativeTarget "ConvertToInt" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -4135,6 +4295,7 @@
 				37EB1D601C1FE52E005CC016 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
