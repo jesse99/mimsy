@@ -38,8 +38,7 @@
     }
     else
     {
-        NSInteger i = self.numberOfItems - 1;
-        [self _insertItemBefore:newItem at:i];
+        [self insertSortedItem:newItem atIndex:self.numberOfItems-1];
     }
 }
 
