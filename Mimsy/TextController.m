@@ -5,7 +5,6 @@
 #import "Balance.h"
 #import "ConfigParser.h"
 #import "DirectoryController.h"
-#import "Extensions.h"
 #import "FunctionalTest.h"
 #import "GlyphsAttribute.h"
 #import "IntegerDialogController.h"
@@ -1400,16 +1399,13 @@ static __weak TextController* _frontmost;
         // Update line number button.
         [self _updateLineNumberButton];
         
-        // TODO: For rich text documents we dont have a good way to consistently notify extensions
+        // TODO: For rich text documents we dont have a good way to consistently notify plugins
         // about style changes. So, for now, we notify them after the user types (which we have to
         // do anyway because typing changes text attributes).
         if (!_applier)
             [AppDelegate execute:@"apply styles" withSelector:@selector(onAppliedStyles) withObject:self deferBy:0.333];
         
-#if OLD_EXTENSIONS
-        // TODO: we should probably have a proc file to allow extensions to receive notifications
-		[_files onTextChanged:self];
-#endif
+        // TODO: should have a way to notify plugins of edits
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowEdited" object:self];
 	}
 }

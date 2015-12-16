@@ -9,12 +9,4 @@
 
 - (void)appendSortedItem:(NSMenuItem *)item;
 
-#if OLD_EXTENSIONS
-// This is normally used when building contextual menus. New items are added via addSortedItemWithTitle.
-// root is the proc file path less the /Volumes/Mimsy/ prefix.
-// contents is passed to extensions and should be some form of selection.
-// If an item added by this method is chosen the extension will be automagically called.
-- (void)addExtensionItems:(NSString*)root contents:(NSString*)contents;
-#endif
-
 @end

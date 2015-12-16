@@ -85,9 +85,8 @@ DefaultWindowWidth: 600
 DefaultWindowHeight: 800
 
 #### Misc Settings ####################################################
-# This is added to the PATH enviroment variable used by executable extensions
-# (this is useful because extensions inherit Mimsy's environment variables and
-# GUI applications don't have the same variables as shell tools).
+# This is added to the PATH enviroment variable so that plugins can find
+# executables (GUI applications don't have the same variables as shell tools).
 #
 # This setting may appear multiple times. /opt/local/bin is where Go installs
 # its tools.

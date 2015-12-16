@@ -1,13 +1,10 @@
 #import "AppDelegate.h"
 
-//#import <OSXFUSE/OSXFUSE.h>
-
 #import "ColorCategory.h"
 #import "ConfigParser.h"
 #import "Constants.h"
 #import "DirectoryController.h"
 #import "DirectoryWatcher.h"
-#import "Extensions.h"
 #import "FindInFilesController.h"
 #import "FindResultsController.h"
 #import "FunctionalTest.h"
@@ -170,10 +167,8 @@ void initLogGlobs()
     
 	DirectoryWatcher* _languagesWatcher;
     DirectoryWatcher* _settingsWatcher;
-	DirectoryWatcher* _extensionSettingsWatcher;
 	DirectoryWatcher* _stylesWatcher;
 	DirectoryWatcher* _scriptsStartupWatcher;
-	DirectoryWatcher* _extensionsWatcher;
 	DirectoryWatcher* _helpWatcher;
 #if OLD_EXTENSIONS
     ProcFileKeyStoreRW* _keyStoreFile;
@@ -551,21 +546,6 @@ void initLogGlobs()
 	
     NSString* esPath = [Paths installedDir:@"settings"];
     esPath = [esPath stringByAppendingPathComponent:@"extensions"];
-   _extensionSettingsWatcher = [[DirectoryWatcher alloc] initWithPath:esPath latency:1.0 block:
-         ^(NSString* path, FSEventStreamEventFlags flags)
-         {
-             UNUSED(path, flags);
-             
-             static bool invoking = false;
-             if (!invoking)
-             {
-                 invoking = true;
-                 [Extensions invokeNonBlocking:@"/extension-settings-changed"];
-                 invoking = false;
-             }
-         }
-        ];
-    
 	_beepFile = [[ProcFileReadWrite alloc]
          initWithDir:^NSString *{return @"/";}
          fileName:@"beep"
@@ -932,14 +912,6 @@ void initLogGlobs()
         
         [_items setObject:item forKey:ID];
     }
-}
-
-- (void) _onSelectExtensionMenuItem:(NSMenuItem*)sender
-{
-    // Note that extensions are not expected to actually read the path: the notification is just
-    // there to poke the extension.
-    NSString* path = sender.representedObject;
-    [Extensions invokeBlocking:path];
 }
 #endif
 
@@ -1694,7 +1666,6 @@ void initLogGlobs()
 		
 		installer = [[InstallFiles alloc] initWithDstPath:path];
 		[installer addSourceFile:@"builders"];
-		[installer addSourceFile:@"extensions"];
 		[installer addSourceFile:@"help"];
 		[installer addSourceFile:@"languages"];
 		[installer addSourceFile:@"scripts"];
@@ -1783,18 +1754,6 @@ void initLogGlobs()
 		}
 	];
 
-	dir = [Paths installedDir:@"extensions"];
-	_extensionsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
-		  ^(NSString* path, FSEventStreamEventFlags flags)
-		  {
-			  UNUSED(path, flags);
-#if OLD_EXTENSIONS
-			  [Extensions setup];
-#endif
-			  [[NSNotificationCenter defaultCenter] postNotificationName:@"ExtensionsChanged" object:self];
-		  }
-		  ];
-	
 #if OLD_EXTENSIONS
 	dir = [Paths installedDir:@"scripts/startup"];
 	_scriptsStartupWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:

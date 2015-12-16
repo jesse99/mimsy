@@ -6,7 +6,6 @@
 #import "ConditionalGlob.h"
 #import "ConfigParser.h"
 #import "DirectoryWatcher.h"
-#import "Extensions.h"
 #import "FileItem.h"
 #import "FolderItem.h"
 #import "FunctionalTest.h"

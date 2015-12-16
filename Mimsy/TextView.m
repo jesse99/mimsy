@@ -3,7 +3,6 @@
 #import "AppDelegate.h"
 #import "Balance.h"
 #import "Constants.h"
-#import "Extensions.h"
 #import "GlyphGenerator.h"
 #import "Language.h"
 #import "MenuCategory.h"
