@@ -19,8 +19,6 @@
 #import "OpenSelection.h"
 #import "Paths.h"
 #import "Plugins.h"
-#import "ProcFileSystem.h"
-#import "ProcFiles.h"
 #import "SearchSite.h"
 #import "SelectStyleController.h"
 #import "SpecialKeys.h"
@@ -140,39 +138,11 @@ void initLogGlobs()
 // ------------------------------------------------------------------------------------
 @implementation AppDelegate
 {
-#if OLD_EXTENSIONS
-    ProcFileReadWrite* _beepFile;
-    ProcFileKeyStoreR* _appSetting;
-    ProcFileKeyStoreR* _appSettings;
-    ProcFileReader* _cachesPath;
-    ProcFileReader* _installedFilesPath;
-    ProcFileReader* _resourcesPath;
-    ProcFileReader* _extensionSettingsPath;
-    ProcFileReadWrite* _logFile;
-    ProcFileReadWrite* _pasteBoardText;
-	ProcFileSystem* _procFileSystem;
-	ProcFileReader* _versionFile;
-    ProcFileAction* _copyItem;
-    ProcFileAction* _deleteItem;
-    ProcFileAction* _trashItem;
-    ProcFileAction* _showItem;
-    ProcFileAction* _newDirectory;
-    ProcFileAction* _openAsBinary;
-    ProcFileAction* _openLocal;
-    ProcFileAction* _addMenuItem;
-    ProcFileAction* _setMenuItemTitle;
-    ProcFileAction* _disableMenuItem;
-    ProcFileAction* _enableMenuItem;
-#endif
-    
 	DirectoryWatcher* _languagesWatcher;
     DirectoryWatcher* _settingsWatcher;
 	DirectoryWatcher* _stylesWatcher;
 	DirectoryWatcher* _scriptsStartupWatcher;
 	DirectoryWatcher* _helpWatcher;
-#if OLD_EXTENSIONS
-    ProcFileKeyStoreRW* _keyStoreFile;
-#endif
     NSMutableDictionary* _textHooks;
     NSMutableDictionary* _textKeyHooks;
     
@@ -208,15 +178,6 @@ void initLogGlobs()
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newMainWindow:) name:NSWindowDidBecomeMainNotification object:nil];
 		
-#if OLD_EXTENSIONS
-		NSNotificationCenter* center = [NSNotificationCenter defaultCenter];
-		[center addObserver:self selector:@selector(_didMount:)
-					   name:kGMUserFileSystemDidMount object:nil];
-		[center addObserver:self selector:@selector(_mountFailed:)
-					   name:kGMUserFileSystemMountFailed object:nil];
-
-        _procFileSystem = [ProcFileSystem new];
-#endif
         _items = [NSMutableDictionary new];
         _textHooks = [NSMutableDictionary new];
         _textKeyHooks = [NSMutableDictionary new];
@@ -528,334 +489,6 @@ void initLogGlobs()
     return false;
 }
 
-#if OLD_EXTENSIONS
-- (void)_didMount:(NSNotification*)notification
-{
-    NSDictionary* userInfo = [notification userInfo];
-    _mountPath = [userInfo objectForKey:kGMUserFileSystemMountPathKey];
-    
-    _mounted = true;
-    if (_launched)
-        [self _postInit];
-}
-
-- (void)_handleMount
-{
-	NSString* path = _mountPath;
-	LOG("ProcFS", "mounted %s", STR(path));
-	
-    NSString* esPath = [Paths installedDir:@"settings"];
-    esPath = [esPath stringByAppendingPathComponent:@"extensions"];
-	_beepFile = [[ProcFileReadWrite alloc]
-         initWithDir:^NSString *{return @"/";}
-         fileName:@"beep"
-         readStr:^NSString* {return @"";}
-         writeStr:^(NSString* str)
-         {
-             UNUSED(str);
-             LOG("App", "beeping for %s", STR([Extensions invoked]));
-             NSBeep();
-         }];
-    
-    _appSetting = [[ProcFileKeyStoreR alloc] initWithDir:^NSString *{return @"/setting";}
-        keys:^NSArray *{
-            return [_settings getKeys];
-        } values:^NSString *(NSString *key) {
-            return [_settings stringValue:key missing:@""];
-        }];
-    
-    _appSettings = [[ProcFileKeyStoreR alloc] initWithDir:^NSString *{return @"/settings";}
-        keys:^NSArray *{
-            return [_settings getKeys];
-        } values:^NSString *(NSString *key) {
-            NSArray* values = [_settings stringValues:key];
-            return [values componentsJoinedByString:@"\f"];
-        }];
-    
-    _cachesPath = [[ProcFileReader alloc]
-          initWithDir:^NSString *{return @"/";}
-          fileName:@"caches-path"
-          readStr:^NSString*
-          {
-              return [Paths caches];
-          }];
-    
-    _installedFilesPath = [[ProcFileReader alloc]
-          initWithDir:^NSString *{return @"/";}
-          fileName:@"installed-files-path"
-          readStr:^NSString*
-          {
-              return [Paths installedDir:nil];
-          }];
-    
-    _resourcesPath = [[ProcFileReader alloc]
-          initWithDir:^NSString *{return @"/";}
-          fileName:@"resources-path"
-          readStr:^NSString*
-          {
-              NSString* path = [[[NSBundle mainBundle] resourceURL] path];
-              return path;
-          }];
-    
-    _extensionSettingsPath = [[ProcFileReader alloc]
-        initWithDir:^NSString *{return @"/";}
-        fileName:@"extension-settings-path"
-        readStr:^NSString*
-        {
-            if (![[NSFileManager defaultManager] fileExistsAtPath:esPath isDirectory:NULL])
-            {
-                NSError* error = nil;
-                if (![[NSFileManager defaultManager] createDirectoryAtPath:esPath withIntermediateDirectories:TRUE attributes:nil error:&error])
-                {
-                    LOG("Error", "failed to create '%s': %s", STR(esPath), STR(error.localizedFailureReason));
-                }
-            }
-            
-            return esPath;
-        }];
-	
-    _logFile = [[ProcFileReadWrite alloc]
-        initWithDir:^NSString *{return @"/log";}
-        fileName:@"line"
-        readStr:^NSString* {return @"";}
-        writeStr:^(NSString* str)
-        {
-            NSRange range = [str rangeOfString:@"\f"];
-            if (range.location != NSNotFound)
-            {
-                NSString* text = [str substringFromIndex:range.location+1];
-                text = [text replaceCharacters:@"\f" with:@"\\f"];
-                LOG(STR([str substringToIndex:range.location]), "%s", STR(text));
-            }
-            else
-                LOG("Error", "expected '<topic>\f<line>' not: '%s'", STR(str));
-        }];
-    
-	_pasteBoardText = [[ProcFileReadWrite alloc]
-        initWithDir:^NSString *{return @"/";}
-        fileName:@"pasteboard-text"
-        readStr:^NSString* {
-            NSPasteboard* pb = [NSPasteboard generalPasteboard];
-            NSString* str = [pb stringForType:NSStringPboardType];
-            return str;
-        }
-        writeStr:^(NSString* str)
-        {
-            NSPasteboard* pb = [NSPasteboard generalPasteboard];
-            [pb clearContents];
-            [pb writeObjects:@[str]];
-        }];
-    
-    _versionFile = [[ProcFileReader alloc]
-        initWithDir:^NSString *{return @"/";}
-        fileName:@"version"
-        readStr:^NSString*
-        {
-            NSDictionary* info = [[NSBundle mainBundle] infoDictionary];
-            return [info objectForKey:@"CFBundleShortVersionString"];
-        }];
-    
-    _copyItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/copy";}
-        handler:^NSArray *(NSArray *args) {
-            NSString* srcPath = args[0];
-            NSString* dstPath = args[1];
-            
-            NSError* error = nil;
-            if (([[NSFileManager defaultManager] copyItemAtPath:srcPath toPath:dstPath error:&error]))
-            {
-                return @[@"0", @""];
-            }
-            else
-            {
-                return @[[NSString stringWithFormat:@"%ld", (long)error.code], error.localizedFailureReason];
-            }
-        }];
-    
-    _deleteItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/delete";}
-         handler:^NSArray *(NSArray *args) {
-             NSString* path = args[0];
-             
-             NSError* error = nil;
-             if ([[NSFileManager defaultManager] removeItemAtPath:path error:&error])
-             {
-                 return @[@"0", @""];
-             }
-             else
-             {
-                 return @[[NSString stringWithFormat:@"%ld", (long)error.code], error.localizedFailureReason];
-             }
-         }];
-
-    _trashItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/trash";}
-         handler:^NSArray *(NSArray *args) {
-             NSString* path = args[0];
-             
-             NSError* error = nil;
-             NSURL* url = [[NSURL alloc] initFileURLWithPath:path];
-             if ([[NSFileManager defaultManager] trashItemAtURL:url resultingItemURL:nil error:&error])
-             {
-                 return @[@"0", @""];
-             }
-             else
-             {
-                 return @[[NSString stringWithFormat:@"%ld", (long)error.code], error.localizedFailureReason];
-             }
-         }];
-    
-    _showItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/show-in-finder";}
-        handler:^NSArray *(NSArray *args) {
-            NSString* path = args[0];
-            
-            NSError* error = nil;
-            if ([[NSWorkspace sharedWorkspace] selectFile:path inFileViewerRootedAtPath:@""])
-            {
-                return @[@"0", @""];
-            }
-            else
-            {
-                return @[[NSString stringWithFormat:@"%ld", (long)error.code], error.localizedFailureReason];
-            }
-        }];
-    
-    _newDirectory = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/new-directory";}
-        handler:^NSArray *(NSArray *args) {
-            NSString* path = args[0];
-            
-            NSError* error = nil;
-            if (([[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&error]))
-            {
-                return @[@"0", @""];
-            }
-            else
-            {
-                return @[[NSString stringWithFormat:@"%ld", (long)error.code], error.localizedFailureReason];
-            }
-        }];
-
-    _openAsBinary = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/open-as-binary";}
-        handler:^NSArray *(NSArray *args) {
-            NSString* path = args[0];
-            
-            dispatch_queue_t main = dispatch_get_main_queue();
-            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_MSEC);
-            dispatch_after(delay, main, ^{
-                NSURL* url = [[NSURL alloc] initFileURLWithPath:path];
-                [self openBinary:url];
-            });
-            
-            return @[@"0", @""];
-        }];
-    
-    _openLocal = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/open-local";}
-         handler:^NSArray *(NSArray *args) {
-             NSString* path = args[0];
-             
-             dispatch_queue_t main = dispatch_get_main_queue();
-             dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_MSEC);
-             dispatch_after(delay, main, ^{
-                 (void) openLocalPath(path);
-             });
-             
-             return @[@"0", @""];
-         }];
-    
-    _addMenuItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/add-menu-item";}
-         handler:^NSArray *(NSArray *args) {
-             NSString* location = args[0];
-             NSString* title    = args[1];
-             NSString* path     = args[2];
-             
-             if ([location isEqualToString:@"text view"] || [location isEqualToString:@"find"])
-             {
-                 static int next_id = 1;
-                 NSString* ID = [NSString stringWithFormat:@"item %d", next_id++];
-                 
-                 dispatch_queue_t main = dispatch_get_main_queue();
-                 dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_MSEC);
-                 dispatch_after(delay, main, ^{
-                     if ([location isEqualToString:@"text view"])
-                         [self _addTextViewItem:ID title:title path:path];
-                     else
-                         [self _addFindItem:ID title:title path:path];
-                 });
-                 return @[ID];
-             }
-             else
-             {
-                 return @[@"1", @"bad location"];
-             }
-         }];
-    
-    _setMenuItemTitle = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/set-menu-item-title";}
-        handler:^NSArray *(NSArray *args) {
-            NSString* ID    = args[0];
-            NSString* title = args[1];
-            
-            dispatch_queue_t main = dispatch_get_main_queue();
-            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_MSEC);
-            dispatch_after(delay, main, ^{
-                [self _setMenuItemTitle:ID title:title];
-            });
-            
-            return @[@"0", @""];
-        }];
-    
-    _disableMenuItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/disable-menu-item";}
-        handler:^NSArray *(NSArray *args) {
-            NSString* ID = args[0];
-            
-            dispatch_queue_t main = dispatch_get_main_queue();
-            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_MSEC);
-            dispatch_after(delay, main, ^{
-                [self _toggleMenuItem:ID enabled:false];
-            });
-            
-            return @[@"0", @""];
-        }];
-    
-    _enableMenuItem = [[ProcFileAction alloc] initWithDir:^NSString *{return @"/actions/enable-menu-item";}
-        handler:^NSArray *(NSArray *args) {
-            NSString* ID = args[0];
-            
-            dispatch_queue_t main = dispatch_get_main_queue();
-            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1*NSEC_PER_MSEC);
-            dispatch_after(delay, main, ^{
-                [self _toggleMenuItem:ID enabled:true];
-            });
-            
-            return @[@"0", @""];
-        }];
-	
-    [_procFileSystem addWriter:_beepFile];
-    [_procFileSystem addReader:_appSetting];
-    [_procFileSystem addReader:_appSettings];
-    [_procFileSystem addReader:_cachesPath];
-    [_procFileSystem addReader:_installedFilesPath];
-    [_procFileSystem addReader:_resourcesPath];
-    [_procFileSystem addReader:_extensionSettingsPath];
-    [_procFileSystem addWriter:_logFile];
-    [_procFileSystem addWriter:_pasteBoardText];
-    [_procFileSystem addReader:_versionFile];
-    [_procFileSystem addReader:_copyItem];
-    [_procFileSystem addReader:_deleteItem];
-    [_procFileSystem addReader:_trashItem];
-    [_procFileSystem addReader:_showItem];
-    [_procFileSystem addReader:_newDirectory];
-    [_procFileSystem addReader:_pasteBoardText];
-    [_procFileSystem addReader:_openAsBinary];
-    [_procFileSystem addReader:_openLocal];
-    [_procFileSystem addReader:_addMenuItem];
-    [_procFileSystem addReader:_setMenuItemTitle];
-    [_procFileSystem addReader:_disableMenuItem];
-	[_procFileSystem addReader:_enableMenuItem];
-
-    [TextController startup];
-
-	[SpecialKeys setup];
-	[Extensions setup];
-}
-#endif
-
 - (void)setSettingsParent:(id<SettingsContext> _Nullable)parent
 {
     _parent = parent;
@@ -883,38 +516,6 @@ void initLogGlobs()
     UNUSED(sender);
 }
 
-#if OLD_EXTENSIONS
-- (void) _addTextViewItem:(NSString*)ID title:(NSString*)title path:(NSString*)path
-{
-    NSMenu* menu = self.textMenu;
-    if (menu)
-    {
-        NSInteger index = [menu indexOfItemWithTag:1];
-        
-        NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(_onSelectExtensionMenuItem:) keyEquivalent:@""];
-        [item setRepresentedObject:path];
-        [menu insertSortedItem:item atIndex:index+1];
-        
-        [_items setObject:item forKey:ID];
-    }
-}
-
-- (void) _addFindItem:(NSString*)ID title:(NSString*)title path:(NSString*)path
-{
-    NSMenu* menu = self.searchMenu;
-    if (menu)
-    {
-        NSInteger index = [menu indexOfItemWithTag:3];
-        
-        NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(_onSelectExtensionMenuItem:) keyEquivalent:@""];
-        [item setRepresentedObject:path];
-        [menu insertItem:item atIndex:index+1];
-        
-        [_items setObject:item forKey:ID];
-    }
-}
-#endif
-
 - (void) _setMenuItemTitle:(NSString*)ID title:(NSString*)title
 {
     NSMenuItem* item = [_items objectForKey:ID];
@@ -941,22 +542,6 @@ void initLogGlobs()
     }
 }
 
-#if OLD_EXTENSIONS
-- (void)_mountFailed:(NSNotification*)notification
-{
-	[SpecialKeys setup];	// needs the proc file system so we do it here
-	
-	NSDictionary* userInfo = [notification userInfo];
-	NSString* path = [userInfo objectForKey:kGMUserFileSystemMountPathKey];
-	NSError* error = [userInfo objectForKey:kGMUserFileSystemErrorKey];
-	LOG("Error", "failed to mount %s: %s", STR(path), STR(error.localizedFailureReason));
-  
-    _mounted = true;
-    if (_launched)
-        [self _postInit];
-}
-#endif
-
 - (void)_postInit
 {
     __weak AppDelegate* this = self;
@@ -982,10 +567,6 @@ void initLogGlobs()
     [WindowsDatabase setup];
     [Languages setup];
     
-#if OLD_EXTENSIONS
-    if (_mountPath)
-        [self _handleMount];
-#endif
 
     [Plugins finishLoading];
     [SpecialKeys updated];
@@ -999,11 +580,7 @@ void initLogGlobs()
     [defaults registerDefaults:@{@"recent-directories": @[]}];
 	
     _launched = true;
-    
-#if OLD_EXTENSIONS
-    if (_mounted)
-#endif
-        [self _postInit];
+    [self _postInit];
 }
 
 // Note that windows will still be open when this is called.
@@ -1012,9 +589,6 @@ void initLogGlobs()
 	UNUSED(notification);
 	LOG("App", "Terminating");
 	
-#if OLD_EXTENSIONS
-	[_procFileSystem teardown];
-#endif
     [Plugins teardown];
 }
 
@@ -1622,12 +1196,6 @@ void initLogGlobs()
 			}
 		}
 	}
-#if OLD_EXTENSIONS
-    else if (sel == @selector(_onSelectExtensionMenuItem:))
-    {
-        enabled = item.enabled;
-    }
-#endif
     else if (sel == @selector(_invokePluginMenuItem:))
     {
         PluginMenuItem* pi = [item representedObject];
@@ -1787,10 +1355,6 @@ void initLogGlobs()
 			[self _loadHelpFiles];
 		}
 	];
-	
-#if OLD_EXTENSIONS
-    _keyStoreFile = [self _createKeyStore:@"key-values"];
-#endif
     
     dir = [Paths installedDir:@"styles"];
 	_stylesWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
@@ -1801,24 +1365,5 @@ void initLogGlobs()
 		  }
 		  ];
 }
-
-#if OLD_EXTENSIONS
-- (ProcFileKeyStoreRW*)_createKeyStore:(NSString*)name
-{
-    ProcFileKeyStoreRW* file = nil;
-    
-    ProcFileSystem* fs = self.procFileSystem;
-    if (fs)
-    {
-        file = [[ProcFileKeyStoreRW alloc] initWithDir:^NSString*
-            {
-                return [NSString stringWithFormat:@"/%@", name];
-            }];
-        [fs addWriter:file];
-    }
-    
-    return file;
-}
-#endif
 
 @end

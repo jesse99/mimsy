@@ -3,8 +3,6 @@
 #import "AppDelegate.h"
 #import "FunctionalTest.h"
 #import "Paths.h"
-#import "ProcFileSystem.h"
-#import "ProcFiles.h"
 #import "TextStyles.h"
 
 static TranscriptController* controller;
@@ -31,22 +29,6 @@ static NSMutableArray* startupErrors;
         }
         startupErrors = nil;
     }
-
-#if OLD_EXTENSIONS
-    NSString* elementName = [runs indexToName:elementIndex];
-    ProcFileReadWrite* writeInfo = [[ProcFileReadWrite alloc]
-                      initWithDir:^NSString *{return @"/transcript";}
-                      fileName:@"write-info"
-                      readStr:^NSString* {return @"";}
-                      writeStr:^(NSString* str)
-                      {
-                          str = [str stringByAppendingString:@"\n"];
-                          [TranscriptController writeInfo:str];
-                      }];
-    
-    AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
-    [delegate.procFileSystem addWriter:writeInfo];
-#endif
 }
 
 - (id)init

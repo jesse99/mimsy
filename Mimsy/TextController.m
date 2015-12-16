@@ -17,7 +17,6 @@
 #import "StartupScripts.h"
 #import "TextView.h"
 #import "TextDocument.h"
-#import "TextDocumentFiles.h"
 #import "TextStyles.h"
 #import "TimeMachine.h"
 #import "TranscriptController.h"
@@ -26,10 +25,6 @@
 #import "WarningWindow.h"
 #import "WindowsDatabase.h"
 #import "Mimsy-Swift.h"
-
-#if OLD_EXTENSIONS
-static TextDocumentFiles* _files;
-#endif
 
 @implementation CharacterMapping
 {
@@ -90,21 +85,6 @@ static TextDocumentFiles* _files;
 }
 
 static __weak TextController* _frontmost;
-
-+ (void)startup
-{
-#if OLD_EXTENSIONS
-    if (!_files)
-    {
-        _files = [TextDocumentFiles new];
-        
-        [self _addTextViewItem:@"Show Leading Spaces" selector:@selector(_toggleLeadingSpaces:)];
-        [self _addTextViewItem:@"Show Leading Tabs" selector:@selector(_toggleLeadingTabs:)];
-        [self _addTextViewItem:@"Show Long Lines" selector:@selector(_toggleLongLines:)];
-        [self _addTextViewItem:@"Show Non-Leading Tabs" selector:@selector(_toggleNonLeadingTabs:)];
-    }
-#endif
-}
 
 - (id<MimsyLanguage>)language
 {
@@ -334,11 +314,6 @@ static __weak TextController* _frontmost;
         _showLongLines = -1;
         _showNonLeadingTabs = -1;
         _settings = [[Settings alloc] init:@"untitled" context:self];
-		
-#if OLD_EXTENSIONS
- 		updateInstanceCount(@"TextController", +1);
-		updateInstanceCount(@"TextWindow", +1);
-#endif
         
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(languagesChanged:) name:@"LanguagesChanged" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stylesChanged:) name:@"StylesChanged" object:nil];
@@ -351,9 +326,6 @@ static __weak TextController* _frontmost;
 
 - (void)dealloc
 {
-#if OLD_EXTENSIONS
-	updateInstanceCount(@"TextController", -1);
-#endif
 	freeUIntVector(&_lineStarts);
 }
 
@@ -386,10 +358,6 @@ static __weak TextController* _frontmost;
 			[self.textView setBackgroundColor:_styles.backColor];
 	}
     
-#if OLD_EXTENSIONS
-    [_files opened:self];
-#endif
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processedEditing:) name:NSTextStorageDidProcessEditingNotification object:self.textView.textStorage];
 }
 
@@ -419,15 +387,9 @@ static __weak TextController* _frontmost;
 	
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
-#if OLD_EXTENSIONS
-    [Extensions invokeBlocking:@"/text-document/closing"];
-#endif
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TextWindowClosing" object:self];
 	
 	_closed = true;
-#if OLD_EXTENSIONS
-	updateInstanceCount(@"TextWindow", -1);
-#endif
     
 	NSString* path = [self path];
 	if (path)
@@ -1264,17 +1226,10 @@ static __weak TextController* _frontmost;
 {
 	_wordWrap = !_wordWrap;
 	[self doResetWordWrap];
-	
-#if OLD_EXTENSIONS
-	[_files onWordWrapChanged:self];
-#endif
 }
 
 - (void)onAppliedStyles
 {
-#if OLD_EXTENSIONS
-    [_files onAppliedStyles:self];
-#endif
     [self.declarationsPopup onAppliedStyles:self.textView];
     
     AppDelegate* app = [NSApp delegate];
@@ -1327,9 +1282,6 @@ static __weak TextController* _frontmost;
 	}
 	
     [self _updateLineNumberButton];
-#if OLD_EXTENSIONS
-	[_files onSelectionChanged:self];
-#endif
     [_declarationsPopup onSelectionChanged:self.textView];
 
 #if OLD_EXTENSIONS
@@ -1568,19 +1520,10 @@ static __weak TextController* _frontmost;
     // 1) We don't use NSApp orderedWindows because it was a major bottleneck.
     // 2) We don't reset _frontmost because we want the frontmost text document,
     // not the main window.
-#if OLD_EXTENSIONS
-    TextController* oldFront = _frontmost;
-#endif
-    
     NSWindow* window = notification.object;
     if (window.windowController)
         if ([window.windowController isKindOfClass:[TextController class]])
             _frontmost = window.windowController;
-    
-#if OLD_EXTENSIONS
-    if (_frontmost && _frontmost != oldFront)
-        [Extensions invokeNonBlocking:@"/text-document/main-changed"];
-#endif
 }
 
 @end

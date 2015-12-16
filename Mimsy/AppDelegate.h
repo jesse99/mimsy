@@ -40,10 +40,6 @@ void initLogGlobs(void);
 - (void)openLatestInTimeMachine:(id _Nullable)sender;
 - (void)openTimeMachine:(id _Nullable)sender;
 
-#if OLD_EXTENSIONS
-+ (void)appendContextMenu:(NSMenu* _Nonnull)menu;
-#endif
-
 // This works like performSelector:withObject:afterDelay: except that calling it with a
 // name that is pending is a no-op.
 + (void)execute:(NSString* _Nonnull)key withSelector:(SEL _Nonnull)selector withObject:(id _Nullable)object afterDelay:(NSTimeInterval)delay;

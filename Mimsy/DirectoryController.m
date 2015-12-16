@@ -153,23 +153,9 @@ static DirectoryController* _lastBuilt;
 			[self _loadPath:path];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
-#if OLD_EXTENSIONS
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"OpenedDirectory" object:self];
-        [Extensions invokeBlocking:@"/directory/opened"];
-
-		updateInstanceCount(@"DirectoryController", +1);
-		updateInstanceCount(@"DirectoryWindow", +1);
-#endif
 	}
 	return self;
 }
-
-#if OLD_EXTENSIONS
-- (void)dealloc
-{
-	updateInstanceCount(@"DirectoryController", -1);
-}
-#endif
 
 - (NSString* _Nonnull)path
 {
@@ -216,14 +202,6 @@ static DirectoryController* _lastBuilt;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	
-#if OLD_EXTENSIONS
-    [Extensions invokeBlocking:@"/directory/closing"];
-
-    // It would be better to track DirectoryView, but it deallocates at a weird
-	// time (and sleeping for long periods in the functional test doesn't suffice).
-	updateInstanceCount(@"DirectoryWindow", -1);
-#endif
-    
 	if (_lastBuilt == self)
 		_lastBuilt = nil;
 	

@@ -663,13 +663,6 @@ static NSString* getKey(NSEvent* event)
     [self.textStorage replaceCharactersInRange:self.selectedRange withString:[sender representedObject]];
 }
 
-#if OLD_EXTENSIONS
-- (void)_addTransformsContextMenu:(NSMenu*)menu
-{
-    [AppDelegate appendContextMenu:menu];
-}
-#endif
-
 - (void)_addWordWrapContextMenu:(NSMenu*)menu
 {
     TextController* controller = _controller;

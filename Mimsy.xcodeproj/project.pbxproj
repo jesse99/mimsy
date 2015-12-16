@@ -23,7 +23,6 @@
 		3712631F16B4AA53007AF3BF /* InstallFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 3712631E16B4AA53007AF3BF /* InstallFiles.m */; };
 		3712632316B5A079007AF3BF /* DataCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3712632216B5A079007AF3BF /* DataCategory.m */; };
 		3712632516B5A431007AF3BF /* libcrypto.0.9.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */; };
-		3717692619F00EA6007DC658 /* TextDocumentFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 3717692519F00EA6007DC658 /* TextDocumentFiles.m */; };
 		3720B6E11C1FBCBB00A6622C /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3720B6E01C1FBCBB00A6622C /* StringExtension.swift */; };
 		3720B6ED1C1FC82900A6622C /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3720B6EC1C1FC82900A6622C /* Plugin.swift */; };
 		3720B6F31C1FC88B00A6622C /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3720B6F21C1FC88B00A6622C /* Description.rtf */; };
@@ -39,8 +38,6 @@
 		373B97281942BC110084CCC1 /* AttributedStringCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B97271942BC100084CCC1 /* AttributedStringCategory.m */; };
 		373B972C194374FA0084CCC1 /* PersistentRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B972B194374F90084CCC1 /* PersistentRange.m */; };
 		373B972F1945570F0084CCC1 /* ReplaceInFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 373B972E1945570D0084CCC1 /* ReplaceInFiles.m */; };
-		37431FD119AA80DC00A1B30E /* ProcFileSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = 37431FD019AA80DC00A1B30E /* ProcFileSystem.m */; };
-		37431FD719AAA7FF00A1B30E /* ProcFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 37431FD619AAA7FF00A1B30E /* ProcFiles.m */; };
 		374706411C20FB70008F42DF /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 374706401C20FB70008F42DF /* Plugin.swift */; };
 		374706471C20FCA3008F42DF /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 374706461C20FCA3008F42DF /* Description.rtf */; };
 		375140D416800FFD00C329AF /* ConfigParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 375140D316800FFD00C329AF /* ConfigParser.m */; };
@@ -116,7 +113,6 @@
 		379319131C1FAE42006F199D /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379319121C1FAE42006F199D /* Plugin.swift */; };
 		379319191C1FAEB0006F199D /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 379319181C1FAEB0006F199D /* Description.rtf */; };
 		3796F6FE169A8CC900659DBD /* convertVIMFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 3796F6FD169A8CC900659DBD /* convertVIMFiles.m */; };
-		37979FEA16A999E0009D9944 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 37979FE916A999E0009D9944 /* liblua.a */; };
 		37979FEE16AAEEC1009D9944 /* FunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 37979FED16AAEEC1009D9944 /* FunctionalTest.m */; };
 		379A4116191FDB8B00ACEA5C /* FindWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 379A4115191FDB8B00ACEA5C /* FindWindow.xib */; };
 		379A41191920031500ACEA5C /* FindController.m in Sources */ = {isa = PBXBuildFile; fileRef = 379A41181920031500ACEA5C /* FindController.m */; };
@@ -498,8 +494,6 @@
 		3712632116B5A079007AF3BF /* DataCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataCategory.h; sourceTree = "<group>"; };
 		3712632216B5A079007AF3BF /* DataCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataCategory.m; sourceTree = "<group>"; };
 		3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.0.9.8.dylib; path = ../../../usr/lib/libcrypto.0.9.8.dylib; sourceTree = "<group>"; };
-		3717692419F00EA6007DC658 /* TextDocumentFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextDocumentFiles.h; sourceTree = "<group>"; };
-		3717692519F00EA6007DC658 /* TextDocumentFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDocumentFiles.m; sourceTree = "<group>"; };
 		3720B6E01C1FBCBB00A6622C /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		3720B6E61C1FC80900A6622C /* NewDirectory.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewDirectory.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		3720B6E81C1FC80900A6622C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -526,11 +520,6 @@
 		373B972B194374F90084CCC1 /* PersistentRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersistentRange.m; sourceTree = "<group>"; };
 		373B972D1945570D0084CCC1 /* ReplaceInFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplaceInFiles.h; sourceTree = "<group>"; };
 		373B972E1945570D0084CCC1 /* ReplaceInFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplaceInFiles.m; sourceTree = "<group>"; };
-		37431FCF19AA80DC00A1B30E /* ProcFileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcFileSystem.h; sourceTree = "<group>"; };
-		37431FD019AA80DC00A1B30E /* ProcFileSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProcFileSystem.m; sourceTree = "<group>"; };
-		37431FD219AA9AA200A1B30E /* ProcFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProcFile.h; sourceTree = "<group>"; };
-		37431FD519AAA7FF00A1B30E /* ProcFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcFiles.h; sourceTree = "<group>"; };
-		37431FD619AAA7FF00A1B30E /* ProcFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProcFiles.m; sourceTree = "<group>"; };
 		3747063A1C20FB40008F42DF /* TrashItems.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrashItems.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		3747063C1C20FB40008F42DF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		374706401C20FB70008F42DF /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
@@ -852,7 +841,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				37979FEA16A999E0009D9944 /* liblua.a in Frameworks */,
 				37A8C69716758FF400D4DB13 /* Cocoa.framework in Frameworks */,
 				3712632516B5A431007AF3BF /* libcrypto.0.9.8.dylib in Frameworks */,
 				377BDE6E16CDACD1008DADA5 /* libsqlite3.0.dylib in Frameworks */,
@@ -1128,8 +1116,6 @@
 				3700403B1676D4860009907A /* TextDocument.xib */,
 				370040381676D4790009907A /* TextDocument.h */,
 				370040391676D4790009907A /* TextDocument.m */,
-				3717692419F00EA6007DC658 /* TextDocumentFiles.h */,
-				3717692519F00EA6007DC658 /* TextDocumentFiles.m */,
 				370DFE031A5A56EE00A169DB /* TextScrollView.h */,
 				370DFE041A5A56EE00A169DB /* TextScrollView.m */,
 				37862C5C168FEC3A00DB9E66 /* TextStyles.h */,
@@ -1228,11 +1214,6 @@
 				3768CCDA16E0F54900D5CB57 /* OpenFile.m */,
 				37BABACD1C08105600B9B5AB /* Plugins.h */,
 				37BABACE1C08105600B9B5AB /* Plugins.m */,
-				37431FD219AA9AA200A1B30E /* ProcFile.h */,
-				37431FD519AAA7FF00A1B30E /* ProcFiles.h */,
-				37431FD619AAA7FF00A1B30E /* ProcFiles.m */,
-				37431FCF19AA80DC00A1B30E /* ProcFileSystem.h */,
-				37431FD019AA80DC00A1B30E /* ProcFileSystem.m */,
 				37E165C31B439C17005FECA9 /* Settings.h */,
 				37E165C41B439C17005FECA9 /* Settings.m */,
 				372293D119C6733A0024426C /* SpecialKeys.h */,
@@ -2394,7 +2375,6 @@
 				3759B6601678376000D3F3B8 /* Decode.m in Sources */,
 				3705C815167BC2F000E5D54C /* TranscriptController.m in Sources */,
 				37CCD5B41ABB713100C01C2E /* GlyphsAttribute.m in Sources */,
-				37431FD719AAA7FF00A1B30E /* ProcFiles.m in Sources */,
 				3705C81E167BE9BD00E5D54C /* Utils.m in Sources */,
 				3705C821167BF72200E5D54C /* AppDelegate.m in Sources */,
 				375140D416800FFD00C329AF /* ConfigParser.m in Sources */,
@@ -2444,7 +2424,6 @@
 				379CEFA51A19340100BC2090 /* App.m in Sources */,
 				3751BCFC18445CCD00DD2C8A /* OpenSelection.m in Sources */,
 				3751BCFF1846E69000DD2C8A /* ScannerCategory.m in Sources */,
-				37431FD119AA80DC00A1B30E /* ProcFileSystem.m in Sources */,
 				370552A618710E15005F1438 /* SelectNameController.m in Sources */,
 				37ABF9B318C2EA9C006AFDB7 /* SearchSite.m in Sources */,
 				3782A8AD190D7CDC005ED276 /* TimeMachine.m in Sources */,
@@ -2467,7 +2446,6 @@
 				373B97281942BC110084CCC1 /* AttributedStringCategory.m in Sources */,
 				373B972C194374FA0084CCC1 /* PersistentRange.m in Sources */,
 				372293D319C6733A0024426C /* SpecialKeys.m in Sources */,
-				3717692619F00EA6007DC658 /* TextDocumentFiles.m in Sources */,
 				373B972F1945570F0084CCC1 /* ReplaceInFiles.m in Sources */,
 				37CF13D0194FC51800F35944 /* BaseInFiles.m in Sources */,
 			);

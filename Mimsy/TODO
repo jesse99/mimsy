@@ -33,6 +33,7 @@ Creating plugins
 * For mac80211 could add some custom duals, e.g. to open mesh.h
 * Replace scripts
 * Remove lua support.
+* Make sure that all the old OLD_EXTENSIONS code is gone.
 * Replace the old builders?
 * Remove the old builders?
 * objc language should style readonly (and related)

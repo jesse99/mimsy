@@ -23,8 +23,6 @@ typedef void (^LayoutCallback)(TextController* controller);
 // Contoller used to mediate between text documents and the NSTextView in the associated window.
 @interface TextController : BaseTextController<MimsyTextView, SettingsContext>
 
-+ (void)startup;
-
 + (TextController*)frontmost;
 + (void)enumerate:(void (^)(TextController* controller, bool* stop))block;
 + (TextController*)find:(NSString*)path;
