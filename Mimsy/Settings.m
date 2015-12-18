@@ -157,6 +157,38 @@ id<SettingsContext> activeContext;
     }
 }
 
+- (float)floatValue:(NSString *)name missing:(float)value
+{
+    NSString* str = [self _findValueForKey:name missing:nil];
+    
+    if (str)
+    {
+        float result = [str floatValue];
+        if (result != 0)
+        {
+            return result;
+        }
+        else
+        {
+            if ([str compare:@"0"] == NSOrderedSame || [str compare:@"0.0"] == NSOrderedSame)
+            {
+                return 0;
+            }
+            else
+            {
+                NSString* mesg = [NSString stringWithFormat:@"Setting %@'s value is '%@' which is not a valid float.", name, str];
+                [TranscriptController writeError:mesg];
+                
+                return value;
+            }
+        }
+    }
+    else
+    {
+        return value;
+    }
+}
+
 - (unsigned int)uintValue:(NSString*)name missing:(unsigned int)value
 {
     NSString* str = [self _findValueForKey:name missing:nil];

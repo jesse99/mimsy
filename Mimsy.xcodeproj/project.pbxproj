@@ -129,8 +129,11 @@
 		37A8C6C416758FF400D4DB13 /* DecodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6C316758FF400D4DB13 /* DecodeTests.m */; };
 		37A93CF61C11EBAE00AFE5AC /* MimsySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A93CF51C11EBAE00AFE5AC /* MimsySettings.swift */; };
 		37A93CFA1C13969000AFE5AC /* settings in Resources */ = {isa = PBXBuildFile; fileRef = 37A93CF91C13969000AFE5AC /* settings */; };
+		37AAB3821C22821F0041BA02 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37AAB3811C22821F0041BA02 /* Plugin.swift */; };
+		37AAB3881C2282950041BA02 /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 37AAB3871C2282950041BA02 /* Description.rtf */; };
 		37ABF9B318C2EA9C006AFDB7 /* SearchSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */; };
 		37AD7570171B95460054A75F /* UpdateConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AD756F171B95460054A75F /* UpdateConfig.m */; };
+		37B1F5CD1C23AB1C003C3383 /* settings in Resources */ = {isa = PBXBuildFile; fileRef = 37B1F5CC1C23AB1C003C3383 /* settings */; };
 		37B557881C2107620060AD55 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B557871C2107620060AD55 /* Plugin.swift */; };
 		37B5578E1C2107EC0060AD55 /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 37B5578D1C2107EC0060AD55 /* Description.rtf */; };
 		37B9CA011C0BC923006C479B /* MimsyTranscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B9CA001C0BC923006C479B /* MimsyTranscript.swift */; };
@@ -288,6 +291,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 37A8C69116758FF400D4DB13;
 			remoteInfo = Mimsy;
+		};
+		37AAB3831C2282760041BA02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37CDF3961C07BF9E009E48B4;
+			remoteInfo = MimsyPlugins;
+		};
+		37AAB3851C2282800041BA02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37AAB37A1C2282000041BA02;
+			remoteInfo = HighlightTodo;
 		};
 		37B557891C2107B80060AD55 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -693,10 +710,15 @@
 		37A8C6CD167590E700D4DB13 /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		37A93CF51C11EBAE00AFE5AC /* MimsySettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimsySettings.swift; sourceTree = "<group>"; };
 		37A93CF91C13969000AFE5AC /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = settings; sourceTree = "<group>"; };
+		37AAB37B1C2282000041BA02 /* HighlightTodo.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HighlightTodo.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		37AAB37D1C2282000041BA02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		37AAB3811C22821F0041BA02 /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
+		37AAB3871C2282950041BA02 /* Description.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Description.rtf; sourceTree = "<group>"; };
 		37ABF9B118C2EA9C006AFDB7 /* SearchSite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchSite.h; sourceTree = "<group>"; };
 		37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchSite.m; sourceTree = "<group>"; };
 		37AD756E171B95460054A75F /* UpdateConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateConfig.h; sourceTree = "<group>"; };
 		37AD756F171B95460054A75F /* UpdateConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateConfig.m; sourceTree = "<group>"; };
+		37B1F5CC1C23AB1C003C3383 /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = settings; sourceTree = "<group>"; };
 		37B557811C2107440060AD55 /* OpenAsBinary.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenAsBinary.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		37B557831C2107440060AD55 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		37B557871C2107620060AD55 /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
@@ -854,6 +876,13 @@
 			files = (
 				37A8C6B816758FF400D4DB13 /* SenTestingKit.framework in Frameworks */,
 				37A8C6B916758FF400D4DB13 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37AAB3781C2282000041BA02 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1290,6 +1319,7 @@
 				37EB1D5C1C1FE52E005CC016 /* NewFile.plugin */,
 				3747063A1C20FB40008F42DF /* TrashItems.plugin */,
 				37B557811C2107440060AD55 /* OpenAsBinary.plugin */,
+				37AAB37B1C2282000041BA02 /* HighlightTodo.plugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1400,6 +1430,17 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		37AAB37C1C2282000041BA02 /* HighlightTodo */ = {
+			isa = PBXGroup;
+			children = (
+				37AAB37D1C2282000041BA02 /* Info.plist */,
+				37AAB3811C22821F0041BA02 /* Plugin.swift */,
+				37AAB3871C2282950041BA02 /* Description.rtf */,
+				37B1F5CC1C23AB1C003C3383 /* settings */,
+			);
+			path = HighlightTodo;
+			sourceTree = "<group>";
+		};
 		37B557821C2107440060AD55 /* OpenAsBinary */ = {
 			isa = PBXGroup;
 			children = (
@@ -1469,6 +1510,7 @@
 				3775F4A91C0BBFD9001AFA06 /* FindGremlin */,
 				37BABAE01C0AB5CB00B9B5AB /* GoFormat */,
 				37E8EEA91C0FEAF700E1C3B9 /* HighlightLine */,
+				37AAB37C1C2282000041BA02 /* HighlightTodo */,
 				3720B6E71C1FC80900A6622C /* NewDirectory */,
 				37EB1D5D1C1FE52E005CC016 /* NewFile */,
 				37B557821C2107440060AD55 /* OpenAsBinary */,
@@ -1708,6 +1750,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				37AAB3861C2282800041BA02 /* PBXTargetDependency */,
 				37B5578C1C2107C00060AD55 /* PBXTargetDependency */,
 				374706451C20FC90008F42DF /* PBXTargetDependency */,
 				37EB1D671C1FE59E005CC016 /* PBXTargetDependency */,
@@ -1751,6 +1794,24 @@
 			productName = MimsyTests;
 			productReference = 37A8C6B616758FF400D4DB13 /* MimsyTests.octest */;
 			productType = "com.apple.product-type.bundle.ocunit-test";
+		};
+		37AAB37A1C2282000041BA02 /* HighlightTodo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 37AAB37E1C2282000041BA02 /* Build configuration list for PBXNativeTarget "HighlightTodo" */;
+			buildPhases = (
+				37AAB3771C2282000041BA02 /* Sources */,
+				37AAB3781C2282000041BA02 /* Frameworks */,
+				37AAB3791C2282000041BA02 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				37AAB3841C2282760041BA02 /* PBXTargetDependency */,
+			);
+			name = HighlightTodo;
+			productName = HighlightTodo;
+			productReference = 37AAB37B1C2282000041BA02 /* HighlightTodo.plugin */;
+			productType = "com.apple.product-type.bundle";
 		};
 		37B557801C2107440060AD55 /* OpenAsBinary */ = {
 			isa = PBXNativeTarget;
@@ -2002,6 +2063,9 @@
 					3793190B1C1FAE22006F199D = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
+					37AAB37A1C2282000041BA02 = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
 					37B557801C2107440060AD55 = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
@@ -2073,6 +2137,7 @@
 				37EB1D5B1C1FE52E005CC016 /* NewFile */,
 				374706391C20FB40008F42DF /* TrashItems */,
 				37B557801C2107440060AD55 /* OpenAsBinary */,
+				37AAB37A1C2282000041BA02 /* HighlightTodo */,
 			);
 		};
 /* End PBXProject section */
@@ -2174,6 +2239,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				37A8C6C116758FF400D4DB13 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37AAB3791C2282000041BA02 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37AAB3881C2282950041BA02 /* Description.rtf in Resources */,
+				37B1F5CD1C23AB1C003C3383 /* settings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2468,6 +2542,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		37AAB3771C2282000041BA02 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37AAB3821C22821F0041BA02 /* Plugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		37B5577D1C2107440060AD55 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2649,6 +2731,16 @@
 			isa = PBXTargetDependency;
 			target = 37A8C69116758FF400D4DB13 /* Mimsy */;
 			targetProxy = 37A8C6BA16758FF400D4DB13 /* PBXContainerItemProxy */;
+		};
+		37AAB3841C2282760041BA02 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37CDF3961C07BF9E009E48B4 /* MimsyPlugins */;
+			targetProxy = 37AAB3831C2282760041BA02 /* PBXContainerItemProxy */;
+		};
+		37AAB3861C2282800041BA02 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37AAB37A1C2282000041BA02 /* HighlightTodo */;
+			targetProxy = 37AAB3851C2282800041BA02 /* PBXContainerItemProxy */;
 		};
 		37B5578A1C2107B80060AD55 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3443,6 +3535,70 @@
 				TEST_AFTER_BUILD = NO;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+		37AAB37F1C2282000041BA02 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = HighlightTodo/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.HighlightTodo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		37AAB3801C2282000041BA02 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = HighlightTodo/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.HighlightTodo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
 		};
@@ -4315,6 +4471,15 @@
 			buildConfigurations = (
 				37A8C6CB16758FF400D4DB13 /* Debug */,
 				37A8C6CC16758FF400D4DB13 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		37AAB37E1C2282000041BA02 /* Build configuration list for PBXNativeTarget "HighlightTodo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37AAB37F1C2282000041BA02 /* Debug */,
+				37AAB3801C2282000041BA02 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

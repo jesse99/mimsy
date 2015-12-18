@@ -153,6 +153,7 @@ void initLogGlobs()
     NSMutableDictionary* _noSelectionItems;
     NSMutableDictionary* _withSelectionItems;
     NSMutableArray* _projectItems;
+    NSMutableDictionary* _applyElementStyles;
     
     bool _mounted;
     NSString* _mountPath;
@@ -184,6 +185,7 @@ void initLogGlobs()
         _noSelectionItems = [NSMutableDictionary new];
         _withSelectionItems = [NSMutableDictionary new];
         _projectItems = [NSMutableArray new];
+        _applyElementStyles = [NSMutableDictionary new];
         
         NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
         _recentDirectories = [NSMutableArray new];
@@ -336,6 +338,24 @@ void initLogGlobs()
 - (NSArray* _Nullable)projectItems
 {
     return _projectItems;
+}
+
+- (NSDictionary* _Nonnull)applyElementHooks
+{
+    return _applyElementStyles;
+}
+
+- (void)registerApplyStyle:(NSString*)element :(ApplyElementStyleBlock)hook
+{
+    element = [element lowercaseString];
+    NSMutableArray* items = [_applyElementStyles objectForKey:element];
+    if (!items)
+    {
+        items = [NSMutableArray new];
+        _applyElementStyles[element] = items;
+    }
+    
+    [items addObject:hook];
 }
 
 - (void)registerNoSelectionTextContextMenu:(enum NoTextSelectionPos)pos title:(TextContextMenuItemTitleBlock)title invoke:(InvokeTextCommandBlock)invoke

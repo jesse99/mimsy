@@ -8,6 +8,9 @@ import Foundation
 
     /// Returns either the named value or missing.
     func intValue(name: String, missing: Int) -> Int
+    
+    /// Returns either the named value or missing.
+    func floatValue(name: String, missing: Float) -> Float
 
     /// Returns either the named value or missing.
     func stringValue(name: String, missing: String) -> String

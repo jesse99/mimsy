@@ -1,0 +1,6 @@
+TodoWord: \bTODO\b
+TodoWord: \bFIXME\b
+TodoWord: \bXXX\b
+
+# Controls how bold to make the Todo words. Larger values are bolder.
+TodoWeight: 8.0

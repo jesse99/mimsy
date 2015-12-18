@@ -8,6 +8,7 @@ typedef void (^NullaryBlock)();
 typedef void (^InvokeTextCommandBlock)(id<MimsyTextView> _Nonnull);
 typedef NSString* _Nullable (^TextContextMenuItemTitleBlock)(id<MimsyTextView> _Nonnull);
 typedef NSString* __nullable (^ __nonnull ProjectContextMenuItemTitleBlock)(NSArray<NSString*>* __nonnull, NSArray<NSString*>* __nonnull);
+typedef void (^ApplyElementStyleBlock)(id<MimsyTextView> _Nonnull, NSRange);
 
 typedef void (^ __nonnull InvokeProjectCommandBlock)(NSArray<NSString*>* __nonnull, NSArray<NSString*>* __nonnull);
 
@@ -64,6 +65,7 @@ void initLogGlobs(void);
 - (NSArray* _Nullable)noSelectionItems:(enum NoTextSelectionPos)pos;
 - (NSArray* _Nullable)withSelectionItems:(enum WithTextSelectionPos)pos;
 - (NSArray* _Nullable)projectItems;
+- (NSDictionary* _Nonnull)applyElementHooks;
 
 - (void)installSettingsPath:(NSString* _Nonnull)path;
 - (void)setSettingsParent:(id<SettingsContext> _Nullable)parent;

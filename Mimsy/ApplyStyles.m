@@ -1,5 +1,6 @@
 #import "ApplyStyles.h"
 
+#import "AppDelegate.h"
 #import "AsyncStyler.h"
 #import "GlyphsAttribute.h"
 #import "Logger.h"
@@ -170,7 +171,9 @@
 	TextController* tmp = _controller;
 	if (tmp)
 	{
+        AppDelegate* app = [NSApp delegate];
 		NSTextStorage* storage = tmp.textView.textStorage;
+        NSDictionary* elementHooks = app.applyElementHooks;
 		double startTime = getTime();
 			
 		__block NSUInteger count = 0;
@@ -194,13 +197,16 @@
 					[storage removeAttribute:NSToolTipAttributeName range:range];
 					
 					[self _applyStyle:style index:elementIndex range:range storage:storage];
-#if OLD_EXTENSIONS
-                    NSString* elementName = [runs indexToName:elementIndex];
-                    if (tmp.document)
-                        [StartupScripts invokeOverrideStyle:tmp.document location:range.location length:range.length element:elementName];
-                    else
-                        LOG("Text", "doc was NULL");
-#endif
+                    
+                    if (elementHooks.count > 0)
+                    {
+                        NSString* elementName = [runs indexToName:elementIndex];
+                        NSArray* hooks = elementHooks[elementName];
+                        for (ApplyElementStyleBlock block in hooks)
+                        {
+                            block(tmp, range);
+                        }
+                    }
 					endLoc = range.location + range.length;
 					
 					if (++count % 1000 == 0 && (getTime() - startTime) > MaxProcessTime)
@@ -218,12 +224,16 @@
         {
             [self _applyBraceStylesAt:beginLoc length:endLoc-beginLoc storage:storage];
             [self _applyGlyphStylesAt:beginLoc length:endLoc-beginLoc storage:storage];
-#if OLD_EXTENSIONS
-            if (tmp.document)
-                [StartupScripts invokeApplyStyles:tmp.document location:beginLoc length:endLoc-beginLoc];
-            else
-                LOG("Text", "doc was NULL");
-#endif
+
+            if (elementHooks.count > 0)
+            {
+                NSRange range = NSMakeRange(beginLoc, endLoc-beginLoc);
+                NSArray* hooks = elementHooks[@"*"];
+                for (ApplyElementStyleBlock block in hooks)
+                {
+                    block(tmp, range);
+                }
+            }
         }
 		[storage endEditing];
 		
