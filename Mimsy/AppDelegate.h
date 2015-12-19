@@ -8,7 +8,7 @@ typedef void (^NullaryBlock)();
 typedef void (^InvokeTextCommandBlock)(id<MimsyTextView> _Nonnull);
 typedef NSString* _Nullable (^TextContextMenuItemTitleBlock)(id<MimsyTextView> _Nonnull);
 typedef NSString* __nullable (^ __nonnull ProjectContextMenuItemTitleBlock)(NSArray<NSString*>* __nonnull, NSArray<NSString*>* __nonnull);
-typedef void (^ApplyElementStyleBlock)(id<MimsyTextView> _Nonnull, NSRange);
+typedef void (^TextRangeBlock)(id<MimsyTextView> _Nonnull, NSRange);
 
 typedef void (^ __nonnull InvokeProjectCommandBlock)(NSArray<NSString*>* __nonnull, NSArray<NSString*>* __nonnull);
 

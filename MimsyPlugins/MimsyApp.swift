@@ -8,7 +8,7 @@ public typealias TextViewKeyCallback = (MimsyTextView) -> Bool
 public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
 public typealias ProjectContextMenuItemTitle = (files: [String], dirs: [String]) -> String?
 public typealias InvokeProjectCommand = (files: [String], dirs: [String]) -> ()
-public typealias ApplyStylesCallback = (MimsyTextView, NSRange) -> ()
+public typealias TextRangeCallback = (MimsyTextView, NSRange) -> ()
 
 @objc public enum MenuItemLoc: Int
 {
@@ -35,6 +35,12 @@ public typealias ApplyStylesCallback = (MimsyTextView, NSRange) -> ()
     
     /// Invoked after language styling is applied.
     case AppliedStyles
+
+    /// Invoked just after a text document is opened.
+    case Opened
+    
+    /// Invoked just before a text document is closed.
+    case Closing
 }
 
 // TODO: Once we can call static protocol methods from within swift we can
@@ -80,14 +86,14 @@ public typealias ApplyStylesCallback = (MimsyTextView, NSRange) -> ()
     /// Removes functions registered with registerTextViewKey. This is often used when the keys
     /// plugins use change as a result of the user editing a settings file.
     func clearRegisterTextViewKey(identifier: String)
-    
+        
     /// Used to register a function that will be called when a language style is applied.
     ///
     /// - Parameter element: The name of a language element, e.g. "Keyword", "Comment", "String", etc.
     /// "*" can also be used in which case the hook is called after a sequence of elements are styled.
     /// - Parameter hook: The function to call. This will often add new attributes to the range passed 
     /// into the hook.
-    func registerApplyStyle(element: String, _ hook: ApplyStylesCallback)
+    func registerApplyStyle(element: String, _ hook: TextRangeCallback)
     
     /// Used to add a custom menu item to the directory editor.
     ///

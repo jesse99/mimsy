@@ -75,6 +75,9 @@ import Cocoa
     ///
     /// - Parameter regex: Must be identical to the object passed into addMapping.
     func removeMapping(regex: NSRegularExpression)
+    
+    /// Forces language styling to be re-applied.
+    func resetStyles()
 }
 
 public extension MimsyTextView

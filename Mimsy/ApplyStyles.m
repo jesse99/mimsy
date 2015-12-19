@@ -202,7 +202,7 @@
                     {
                         NSString* elementName = [runs indexToName:elementIndex];
                         NSArray* hooks = elementHooks[elementName];
-                        for (ApplyElementStyleBlock block in hooks)
+                        for (TextRangeBlock block in hooks)
                         {
                             block(tmp, range);
                         }
@@ -229,7 +229,7 @@
             {
                 NSRange range = NSMakeRange(beginLoc, endLoc-beginLoc);
                 NSArray* hooks = elementHooks[@"*"];
-                for (ApplyElementStyleBlock block in hooks)
+                for (TextRangeBlock block in hooks)
                 {
                     block(tmp, range);
                 }

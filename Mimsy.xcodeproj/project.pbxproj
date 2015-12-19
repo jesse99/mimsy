@@ -59,6 +59,7 @@
 		3756B8BF1C0BF305002B0B56 /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3756B8BE1C0BF305002B0B56 /* Description.rtf */; };
 		3759B6571676F01900D3F3B8 /* TextController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3759B6561676F01900D3F3B8 /* TextController.m */; };
 		3759B6601678376000D3F3B8 /* Decode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3759B65F1678376000D3F3B8 /* Decode.m */; };
+		3763DC071C260B4100FE0C90 /* AttributedStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3763DC061C260B4100FE0C90 /* AttributedStringExtension.swift */; };
 		376407E816B8CB05000B7AE3 /* tophat.icns in Resources */ = {isa = PBXBuildFile; fileRef = 376407E716B8CB05000B7AE3 /* tophat.icns */; };
 		376407EB16BB60D4000B7AE3 /* DirectoryWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 376407EA16BB60D4000B7AE3 /* DirectoryWatcher.m */; };
 		376407EE16BEB856000B7AE3 /* ColorCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 376407ED16BEB856000B7AE3 /* ColorCategory.m */; };
@@ -134,6 +135,8 @@
 		37ABF9B318C2EA9C006AFDB7 /* SearchSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */; };
 		37AD7570171B95460054A75F /* UpdateConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 37AD756F171B95460054A75F /* UpdateConfig.m */; };
 		37B1F5CD1C23AB1C003C3383 /* settings in Resources */ = {isa = PBXBuildFile; fileRef = 37B1F5CC1C23AB1C003C3383 /* settings */; };
+		37B1F5D91C23B445003C3383 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B1F5D81C23B445003C3383 /* Plugin.swift */; };
+		37B1F5DF1C23B4AA003C3383 /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 37B1F5DE1C23B4AA003C3383 /* Description.rtf */; };
 		37B557881C2107620060AD55 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B557871C2107620060AD55 /* Plugin.swift */; };
 		37B5578E1C2107EC0060AD55 /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 37B5578D1C2107EC0060AD55 /* Description.rtf */; };
 		37B9CA011C0BC923006C479B /* MimsyTranscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37B9CA001C0BC923006C479B /* MimsyTranscript.swift */; };
@@ -305,6 +308,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 37AAB37A1C2282000041BA02;
 			remoteInfo = HighlightTodo;
+		};
+		37B1F5DA1C23B489003C3383 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37CDF3961C07BF9E009E48B4;
+			remoteInfo = MimsyPlugins;
+		};
+		37B1F5DC1C23B493003C3383 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37A8C68916758FF400D4DB13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37B1F5D11C23B422003C3383;
+			remoteInfo = HighlightSelection;
 		};
 		37B557891C2107B80060AD55 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -580,6 +597,7 @@
 		3759B65E1678376000D3F3B8 /* Decode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Decode.h; sourceTree = "<group>"; };
 		3759B65F1678376000D3F3B8 /* Decode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Decode.m; sourceTree = "<group>"; };
 		3760186D1984501800FF5814 /* UIntVectorUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIntVectorUtils.h; sourceTree = "<group>"; };
+		3763DC061C260B4100FE0C90 /* AttributedStringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributedStringExtension.swift; sourceTree = "<group>"; };
 		376407E716B8CB05000B7AE3 /* tophat.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = tophat.icns; sourceTree = "<group>"; };
 		376407E916BB60D4000B7AE3 /* DirectoryWatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryWatcher.h; sourceTree = "<group>"; };
 		376407EA16BB60D4000B7AE3 /* DirectoryWatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryWatcher.m; sourceTree = "<group>"; };
@@ -719,6 +737,10 @@
 		37AD756E171B95460054A75F /* UpdateConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateConfig.h; sourceTree = "<group>"; };
 		37AD756F171B95460054A75F /* UpdateConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateConfig.m; sourceTree = "<group>"; };
 		37B1F5CC1C23AB1C003C3383 /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = settings; sourceTree = "<group>"; };
+		37B1F5D21C23B422003C3383 /* HighlightSelection.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HighlightSelection.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		37B1F5D41C23B422003C3383 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		37B1F5D81C23B445003C3383 /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
+		37B1F5DE1C23B4AA003C3383 /* Description.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Description.rtf; sourceTree = "<group>"; };
 		37B557811C2107440060AD55 /* OpenAsBinary.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenAsBinary.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		37B557831C2107440060AD55 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		37B557871C2107620060AD55 /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
@@ -880,6 +902,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		37AAB3781C2282000041BA02 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37B1F5CF1C23B422003C3383 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1320,6 +1349,7 @@
 				3747063A1C20FB40008F42DF /* TrashItems.plugin */,
 				37B557811C2107440060AD55 /* OpenAsBinary.plugin */,
 				37AAB37B1C2282000041BA02 /* HighlightTodo.plugin */,
+				37B1F5D21C23B422003C3383 /* HighlightSelection.plugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1441,6 +1471,16 @@
 			path = HighlightTodo;
 			sourceTree = "<group>";
 		};
+		37B1F5D31C23B422003C3383 /* HighlightSelection */ = {
+			isa = PBXGroup;
+			children = (
+				37B1F5D41C23B422003C3383 /* Info.plist */,
+				37B1F5D81C23B445003C3383 /* Plugin.swift */,
+				37B1F5DE1C23B4AA003C3383 /* Description.rtf */,
+			);
+			path = HighlightSelection;
+			sourceTree = "<group>";
+		};
 		37B557821C2107440060AD55 /* OpenAsBinary */ = {
 			isa = PBXGroup;
 			children = (
@@ -1475,6 +1515,7 @@
 			isa = PBXGroup;
 			children = (
 				37CDF39B1C07BF9E009E48B4 /* Info.plist */,
+				3763DC061C260B4100FE0C90 /* AttributedStringExtension.swift */,
 				37BABAD21C08CF2400B9B5AB /* MimsyApp.swift */,
 				37D0BB901C14E0E60053617F /* MimsyGlob.swift */,
 				37BABAD91C0A99B600B9B5AB /* MimsyLanguage.swift */,
@@ -1510,6 +1551,7 @@
 				3775F4A91C0BBFD9001AFA06 /* FindGremlin */,
 				37BABAE01C0AB5CB00B9B5AB /* GoFormat */,
 				37E8EEA91C0FEAF700E1C3B9 /* HighlightLine */,
+				37B1F5D31C23B422003C3383 /* HighlightSelection */,
 				37AAB37C1C2282000041BA02 /* HighlightTodo */,
 				3720B6E71C1FC80900A6622C /* NewDirectory */,
 				37EB1D5D1C1FE52E005CC016 /* NewFile */,
@@ -1750,6 +1792,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				37B1F5DD1C23B493003C3383 /* PBXTargetDependency */,
 				37AAB3861C2282800041BA02 /* PBXTargetDependency */,
 				37B5578C1C2107C00060AD55 /* PBXTargetDependency */,
 				374706451C20FC90008F42DF /* PBXTargetDependency */,
@@ -1811,6 +1854,24 @@
 			name = HighlightTodo;
 			productName = HighlightTodo;
 			productReference = 37AAB37B1C2282000041BA02 /* HighlightTodo.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+		37B1F5D11C23B422003C3383 /* HighlightSelection */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 37B1F5D51C23B422003C3383 /* Build configuration list for PBXNativeTarget "HighlightSelection" */;
+			buildPhases = (
+				37B1F5CE1C23B422003C3383 /* Sources */,
+				37B1F5CF1C23B422003C3383 /* Frameworks */,
+				37B1F5D01C23B422003C3383 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				37B1F5DB1C23B489003C3383 /* PBXTargetDependency */,
+			);
+			name = HighlightSelection;
+			productName = HighlightSelection;
+			productReference = 37B1F5D21C23B422003C3383 /* HighlightSelection.plugin */;
 			productType = "com.apple.product-type.bundle";
 		};
 		37B557801C2107440060AD55 /* OpenAsBinary */ = {
@@ -2066,6 +2127,9 @@
 					37AAB37A1C2282000041BA02 = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
+					37B1F5D11C23B422003C3383 = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
 					37B557801C2107440060AD55 = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
@@ -2138,6 +2202,7 @@
 				374706391C20FB40008F42DF /* TrashItems */,
 				37B557801C2107440060AD55 /* OpenAsBinary */,
 				37AAB37A1C2282000041BA02 /* HighlightTodo */,
+				37B1F5D11C23B422003C3383 /* HighlightSelection */,
 			);
 		};
 /* End PBXProject section */
@@ -2248,6 +2313,14 @@
 			files = (
 				37AAB3881C2282950041BA02 /* Description.rtf in Resources */,
 				37B1F5CD1C23AB1C003C3383 /* settings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37B1F5D01C23B422003C3383 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37B1F5DF1C23B4AA003C3383 /* Description.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2550,6 +2623,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		37B1F5CE1C23B422003C3383 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37B1F5D91C23B445003C3383 /* Plugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		37B5577D1C2107440060AD55 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2578,6 +2659,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3763DC071C260B4100FE0C90 /* AttributedStringExtension.swift in Sources */,
 				37CDF3A61C07C2C7009E48B4 /* MimsyPlugin.swift in Sources */,
 				37BABADA1C0A99B600B9B5AB /* MimsyLanguage.swift in Sources */,
 				37B9CA011C0BC923006C479B /* MimsyTranscript.swift in Sources */,
@@ -2741,6 +2823,16 @@
 			isa = PBXTargetDependency;
 			target = 37AAB37A1C2282000041BA02 /* HighlightTodo */;
 			targetProxy = 37AAB3851C2282800041BA02 /* PBXContainerItemProxy */;
+		};
+		37B1F5DB1C23B489003C3383 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37CDF3961C07BF9E009E48B4 /* MimsyPlugins */;
+			targetProxy = 37B1F5DA1C23B489003C3383 /* PBXContainerItemProxy */;
+		};
+		37B1F5DD1C23B493003C3383 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37B1F5D11C23B422003C3383 /* HighlightSelection */;
+			targetProxy = 37B1F5DC1C23B493003C3383 /* PBXContainerItemProxy */;
 		};
 		37B5578A1C2107B80060AD55 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3596,6 +3688,70 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.HighlightTodo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+		37B1F5D61C23B422003C3383 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = HighlightSelection/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.HighlightSelection;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		37B1F5D71C23B422003C3383 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = HighlightSelection/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.HighlightSelection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = plugin;
@@ -4480,6 +4636,15 @@
 			buildConfigurations = (
 				37AAB37F1C2282000041BA02 /* Debug */,
 				37AAB3801C2282000041BA02 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		37B1F5D51C23B422003C3383 /* Build configuration list for PBXNativeTarget "HighlightSelection" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37B1F5D61C23B422003C3383 /* Debug */,
+				37B1F5D71C23B422003C3383 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

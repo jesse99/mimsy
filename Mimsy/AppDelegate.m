@@ -345,7 +345,7 @@ void initLogGlobs()
     return _applyElementStyles;
 }
 
-- (void)registerApplyStyle:(NSString*)element :(ApplyElementStyleBlock)hook
+- (void)registerApplyStyle:(NSString*)element :(TextRangeBlock)hook
 {
     element = [element lowercaseString];
     NSMutableArray* items = [_applyElementStyles objectForKey:element];

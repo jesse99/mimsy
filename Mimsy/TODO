@@ -25,18 +25,29 @@ Creating plugins
 
 
 
-- add a Description.rtf file, be sure to include it in the right target
-- can be helpful to restart xcode (so auto-completion and errors work in the new plugin)
 
-
-
-* Replace TODO script:
-    - use settings for what to replace
 * Replace highlight-selection script:
-    - can we use a setting to control the highlighting?
+    - review the code
+    - add some settings?
+* See if there are any other text notifications that should be bundled
+* For custom styling do something like a list of space separated list:
+    size=larger or smaller or much-larger or number
+    color=blue
+    stroke=normal or outline or bold or bolder or much-bolder or number
+    skew=italic or number
+    underline=none or single or thick or double or number
+    underline-color=black
+    back-color=black
+* Update docs:
+    - talk about colors
+    - talk about overriding styles
+    - settings files should reference doc
 * Remove lua support.
-- including the lua help file
+    - including the lua help file
 * Make sure that all the old OLD_EXTENSIONS code is gone.
+* Think about adding a path type
+    - interop seems very annoying
+    - maybe just a typealias?
 * MimsyTextView text should always be exposed (and handled) as an NSString
     - because NSString isn't toll bridged to String
     - might even want to wrap it up in a struct, BigText? MimsyString?
