@@ -2,7 +2,6 @@
 
 #import "AppDelegate.h"
 #import "Decode.h"
-#import "FunctionalTest.h"
 #import "InfoController.h"
 #import "Metadata.h"
 #import "TextController.h"

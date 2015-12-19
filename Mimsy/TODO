@@ -42,9 +42,6 @@ Creating plugins
     - talk about colors
     - talk about overriding styles
     - settings files should reference doc
-* Remove lua support.
-    - including the lua help file
-* Make sure that all the old OLD_EXTENSIONS code is gone.
 * Think about adding a path type
     - interop seems very annoying
     - maybe just a typealias?

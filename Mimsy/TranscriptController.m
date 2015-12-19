@@ -1,7 +1,6 @@
 #import "TranscriptController.h"
 
 #import "AppDelegate.h"
-#import "FunctionalTest.h"
 #import "Paths.h"
 #import "TextStyles.h"
 
@@ -160,30 +159,18 @@ static NSMutableArray* startupErrors;
 {
     LOG("Error", "%s", STR(text));
     
-#if OLD_EXTENSIONS
-    if (!functionalTestsAreRunning())
+    AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
+    if (!delegate || delegate.inited)
     {
-#endif
-        AppDelegate* delegate = (AppDelegate*) [NSApp delegate];
-        if (!delegate || delegate.inited)
-        {
-            if (!startupErrors)
-                startupErrors = [NSMutableArray new];
+        if (!startupErrors)
+            startupErrors = [NSMutableArray new];
 
-            [startupErrors addObject:text];
-            return;
-        }
+        [startupErrors addObject:text];
+        return;
+    }
 
-        TranscriptController* instance = [TranscriptController getInstance];
-        [instance _write:[text stringByAppendingString:@"\n"] withAttrs:instance->_stderrAttrs];
-#if OLD_EXTENSIONS
-    }
-    else
-    {
-        NSString* str = [[NSString alloc] initWithString:[text stringByAppendingString:@"\n"]];
-        recordFunctionalError(str);
-    }
-#endif
+    TranscriptController* instance = [TranscriptController getInstance];
+    [instance _write:[text stringByAppendingString:@"\n"] withAttrs:instance->_stderrAttrs];
 }
 
 + (NSMutableAttributedString*)getString

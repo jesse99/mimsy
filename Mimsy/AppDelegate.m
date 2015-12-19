@@ -7,7 +7,6 @@
 #import "DirectoryWatcher.h"
 #import "FindInFilesController.h"
 #import "FindResultsController.h"
-#import "FunctionalTest.h"
 #import "Glob.h"
 #import "HelpItem.h"
 #import "InstallFiles.h"
@@ -190,9 +189,6 @@ void initLogGlobs()
         [_recentDirectories addObjectsFromArray:[defaults arrayForKey:@"recent-directories"]];
 
         _inited = true;
-#if OLD_EXTENSIONS
-        initFunctionalTests();
-#endif
 	}
 	
 	return self;
@@ -578,9 +574,6 @@ void initLogGlobs()
     [self _updateDirectoriesMenu];
     [self _watchInstalledFiles];
     [TranscriptController writeInfo:@""];   // make sure we create this within the main thread
-#if OLD_EXTENSIONS
-    [StartupScripts setup];
-#endif
     [SpecialKeys setup];
     [WindowsDatabase setup];
     [Languages setup];
@@ -989,14 +982,6 @@ void initLogGlobs()
 	}
 }
 
-#if OLD_EXTENSIONS
-- (void)runFTests:(id)sender
-{
-	UNUSED(sender);
-	runFunctionalTests();
-}
-#endif
-
 // This isn't terribly useful with auto-saving on, but it will help make old-school
 // uses more comfortable. There's also a save all method on NSDocumentController but
 // I think it just auto-saves because it doesn't clear the "edited" text within the
@@ -1010,13 +995,6 @@ void initLogGlobs()
 				[doc saveDocument:sender];
 	}
 }
-
-#if OLD_EXTENSIONS
-- (void)runFTest:(id)sender
-{
-	runFunctionalTest([sender representedObject]);
-}
-#endif
 
 - (void)openWithMimsy:(NSURL*)url
 {

@@ -8,7 +8,6 @@
 #import "DirectoryWatcher.h"
 #import "FileItem.h"
 #import "FolderItem.h"
-#import "FunctionalTest.h"
 #import "Logger.h"
 #import "Mimsy-Swift.h"
 #import "OpenFile.h"

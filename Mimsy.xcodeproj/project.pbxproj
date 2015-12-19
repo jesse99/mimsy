@@ -112,7 +112,6 @@
 		379319131C1FAE42006F199D /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379319121C1FAE42006F199D /* Plugin.swift */; };
 		379319191C1FAEB0006F199D /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 379319181C1FAEB0006F199D /* Description.rtf */; };
 		3796F6FE169A8CC900659DBD /* convertVIMFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 3796F6FD169A8CC900659DBD /* convertVIMFiles.m */; };
-		37979FEE16AAEEC1009D9944 /* FunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 37979FED16AAEEC1009D9944 /* FunctionalTest.m */; };
 		379A4116191FDB8B00ACEA5C /* FindWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 379A4115191FDB8B00ACEA5C /* FindWindow.xib */; };
 		379A41191920031500ACEA5C /* FindController.m in Sources */ = {isa = PBXBuildFile; fileRef = 379A41181920031500ACEA5C /* FindController.m */; };
 		379A411C192033BF00ACEA5C /* BaseFindController.m in Sources */ = {isa = PBXBuildFile; fileRef = 379A411B192033BF00ACEA5C /* BaseFindController.m */; };
@@ -693,8 +692,6 @@
 		3796F6FC169A8CC900659DBD /* convertVIMFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = convertVIMFiles.h; sourceTree = "<group>"; };
 		3796F6FD169A8CC900659DBD /* convertVIMFiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = convertVIMFiles.m; sourceTree = "<group>"; };
 		37979FE916A999E0009D9944 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = /opt/local/lib/liblua.a; sourceTree = "<absolute>"; };
-		37979FEC16AAEEC1009D9944 /* FunctionalTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FunctionalTest.h; sourceTree = "<group>"; };
-		37979FED16AAEEC1009D9944 /* FunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FunctionalTest.m; sourceTree = "<group>"; };
 		379A4115191FDB8B00ACEA5C /* FindWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FindWindow.xib; sourceTree = "<group>"; };
 		379A41171920031500ACEA5C /* FindController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindController.h; sourceTree = "<group>"; };
 		379A41181920031500ACEA5C /* FindController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindController.m; sourceTree = "<group>"; };
@@ -1250,8 +1247,6 @@
 				379CEFA41A19340100BC2090 /* App.m */,
 				3705C81F167BF72200E5D54C /* AppDelegate.h */,
 				3705C820167BF72200E5D54C /* AppDelegate.m */,
-				37979FEC16AAEEC1009D9944 /* FunctionalTest.h */,
-				37979FED16AAEEC1009D9944 /* FunctionalTest.m */,
 				373B97161933B1CA0084CCC1 /* HelpItem.h */,
 				373B97171933B1CA0084CCC1 /* HelpItem.m */,
 				3712631D16B4AA53007AF3BF /* InstallFiles.h */,
@@ -2535,7 +2530,6 @@
 				37F2C58B169E7B92009C5355 /* ArrayCategory.m in Sources */,
 				3752CC1516A1F2B400B623F5 /* SelectStyleController.m in Sources */,
 				3752CC1816A2F7EA00B623F5 /* StringCategory.m in Sources */,
-				37979FEE16AAEEC1009D9944 /* FunctionalTest.m in Sources */,
 				3712631F16B4AA53007AF3BF /* InstallFiles.m in Sources */,
 				3712632316B5A079007AF3BF /* DataCategory.m in Sources */,
 				37C1D1A91A5232210031B90F /* MenuCategory.m in Sources */,

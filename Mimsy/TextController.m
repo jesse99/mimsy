@@ -5,7 +5,6 @@
 #import "Balance.h"
 #import "ConfigParser.h"
 #import "DirectoryController.h"
-#import "FunctionalTest.h"
 #import "GlyphsAttribute.h"
 #import "IntegerDialogController.h"
 #import "Language.h"
@@ -687,9 +686,6 @@ static __weak TextController* _frontmost;
 	if (path)
 	{
 		[self _addInstalledContexts:result forPath:path];
-#if OLD_EXTENSIONS
-		addFunctionalTestHelpContext(result, path);
-#endif
 	}
 	
 	[result addObject:@"text editor"];

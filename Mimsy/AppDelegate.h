@@ -51,11 +51,6 @@ void initLogGlobs(void);
 + (void)execute:(NSString* _Nonnull)key withSelector:(SEL _Nonnull)selector withObject:(id _Nullable)object deferBy:(NSTimeInterval)delay;
 + (void)execute:(NSString* _Nonnull)key deferBy:(NSTimeInterval)delay withBlock:(NullaryBlock _Nonnull)block;
 
-#if OLD_EXTENSIONS
-- (void)runFTest:(id)sender;
-- (void)runFTests:(id)sender;
-#endif
-
 - (id<SettingsContext> _Nullable)parent;
 - (Settings* _Nonnull)settings;
 
