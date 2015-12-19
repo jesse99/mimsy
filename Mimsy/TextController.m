@@ -14,7 +14,6 @@
 #import "Paths.h"
 #import "RangeVector.h"
 #import "RestoreView.h"
-#import "StartupScripts.h"
 #import "TextView.h"
 #import "TextDocument.h"
 #import "TextStyles.h"

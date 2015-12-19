@@ -22,7 +22,6 @@
 #import "SearchSite.h"
 #import "SelectStyleController.h"
 #import "SpecialKeys.h"
-#import "StartupScripts.h"
 #import "TextController.h"
 #import "TimeMachine.h"
 #import "TranscriptController.h"
@@ -141,7 +140,6 @@ void initLogGlobs()
 	DirectoryWatcher* _languagesWatcher;
     DirectoryWatcher* _settingsWatcher;
 	DirectoryWatcher* _stylesWatcher;
-	DirectoryWatcher* _scriptsStartupWatcher;
 	DirectoryWatcher* _helpWatcher;
     NSMutableDictionary* _textHooks;
     NSMutableDictionary* _textKeyHooks;
@@ -1256,7 +1254,6 @@ void initLogGlobs()
 		[installer addSourceFile:@"builders"];
 		[installer addSourceFile:@"help"];
 		[installer addSourceFile:@"languages"];
-		[installer addSourceFile:@"scripts"];
 		[installer addSourceFile:@"settings"];
 		[installer addSourceFile:@"styles"];
 	}
@@ -1342,18 +1339,6 @@ void initLogGlobs()
 		}
 	];
 
-#if OLD_EXTENSIONS
-	dir = [Paths installedDir:@"scripts/startup"];
-	_scriptsStartupWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
-		  ^(NSString* path, FSEventStreamEventFlags flags)
-		  {
-			  UNUSED(path, flags);
-			  [StartupScripts setup];
-			  [[NSNotificationCenter defaultCenter] postNotificationName:@"StartupScriptsChanged" object:self];
-		  }
-		  ];
-#endif
-    
 	dir = [Paths installedDir:@"settings"];
 	_settingsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
 		^(NSString* path, FSEventStreamEventFlags flags)

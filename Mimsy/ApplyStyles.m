@@ -4,7 +4,6 @@
 #import "AsyncStyler.h"
 #import "GlyphsAttribute.h"
 #import "Logger.h"
-#import "StartupScripts.h"
 #import "StyleRuns.h"
 #import "TextController.h"
 #import "TextStyles.h"

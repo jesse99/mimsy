@@ -199,7 +199,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 // The good:
 // 1) There's no annoying extra file hanging about while the document is unsaved.
 // 2) The window title includes a nifty " - Edited" suffix when the document is unsaved.
-// 3) The document is auto-saved to the right place so stuff like scripts should pretty
+// 3) The document is auto-saved to the right place so stuff like plugins should pretty
 // much always have the latest info even without an explicit save.
 //
 // The bad:

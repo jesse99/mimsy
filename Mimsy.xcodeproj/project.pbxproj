@@ -81,8 +81,6 @@
 		377230BC1C1A98FA0089F12D /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 377230BB1C1A98FA0089F12D /* Description.rtf */; };
 		3775F4B01C0BC029001AFA06 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3775F4AE1C0BC029001AFA06 /* Plugin.swift */; };
 		3775F4B61C0BC0C7001AFA06 /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3775F4B51C0BC0C7001AFA06 /* Description.rtf */; };
-		377BDE6316C005C8008DADA5 /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = 377BDE6216C005C8008DADA5 /* scripts */; };
-		377BDE6616C006BD008DADA5 /* StartupScripts.m in Sources */ = {isa = PBXBuildFile; fileRef = 377BDE6516C006BD008DADA5 /* StartupScripts.m */; };
 		377BDE6916CDA8F3008DADA5 /* Database.m in Sources */ = {isa = PBXBuildFile; fileRef = 377BDE6816CDA8F2008DADA5 /* Database.m */; };
 		377BDE6C16CDAC2B008DADA5 /* DatabaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 377BDE6B16CDAC2B008DADA5 /* DatabaseTests.m */; };
 		377BDE6E16CDACD1008DADA5 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 377BDE6D16CDACD1008DADA5 /* libsqlite3.0.dylib */; };
@@ -158,7 +156,6 @@
 		37CDF39F1C07BF9E009E48B4 /* MimsyPlugins.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 37CDF3971C07BF9E009E48B4 /* MimsyPlugins.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		37CDF3A61C07C2C7009E48B4 /* MimsyPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37CDF3A51C07C2C7009E48B4 /* MimsyPlugin.swift */; };
 		37CDF3B41C07CC75009E48B4 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37CDF3B31C07CC75009E48B4 /* Plugin.swift */; };
-		37CF062616AB998A00069A20 /* LuaSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF062516AB998A00069A20 /* LuaSupport.m */; };
 		37CF13D0194FC51800F35944 /* BaseInFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CF13CF194FC51800F35944 /* BaseInFiles.m */; };
 		37D0BB851C13FC890053617F /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D0BB841C13FC890053617F /* Plugin.swift */; };
 		37D0BB8B1C13FCFE0053617F /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 37D0BB8A1C13FCFE0053617F /* Description.rtf */; };
@@ -635,9 +632,6 @@
 		3775F4AA1C0BBFD9001AFA06 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3775F4AE1C0BC029001AFA06 /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
 		3775F4B51C0BC0C7001AFA06 /* Description.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Description.rtf; sourceTree = "<group>"; };
-		377BDE6216C005C8008DADA5 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = "<group>"; };
-		377BDE6416C006BD008DADA5 /* StartupScripts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartupScripts.h; sourceTree = "<group>"; };
-		377BDE6516C006BD008DADA5 /* StartupScripts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartupScripts.m; sourceTree = "<group>"; };
 		377BDE6716CDA8F2008DADA5 /* Database.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Database.h; sourceTree = "<group>"; };
 		377BDE6816CDA8F2008DADA5 /* Database.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Database.m; sourceTree = "<group>"; };
 		377BDE6A16CDAC2B008DADA5 /* DatabaseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseTests.h; sourceTree = "<group>"; };
@@ -776,8 +770,6 @@
 		37CDF3AD1C07CC3A009E48B4 /* ChangeCase.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChangeCase.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		37CDF3AF1C07CC3A009E48B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		37CDF3B31C07CC75009E48B4 /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
-		37CF062416AB998A00069A20 /* LuaSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaSupport.h; sourceTree = "<group>"; };
-		37CF062516AB998A00069A20 /* LuaSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LuaSupport.m; sourceTree = "<group>"; };
 		37CF13CC194E3CE500F35944 /* RangeVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RangeVector.h; sourceTree = "<group>"; };
 		37CF13CD194E3EE000F35944 /* RangeVectorUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RangeVectorUtils.h; sourceTree = "<group>"; };
 		37CF13CE194FC51800F35944 /* BaseInFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseInFiles.h; sourceTree = "<group>"; };
@@ -1264,8 +1256,6 @@
 				373B97171933B1CA0084CCC1 /* HelpItem.m */,
 				3712631D16B4AA53007AF3BF /* InstallFiles.h */,
 				3712631E16B4AA53007AF3BF /* InstallFiles.m */,
-				37CF062416AB998A00069A20 /* LuaSupport.h */,
-				37CF062516AB998A00069A20 /* LuaSupport.m */,
 				37A8C6A216758FF400D4DB13 /* main.m */,
 				37A8C6AE16758FF400D4DB13 /* MainMenu.xib */,
 				3768CCD916E0F54900D5CB57 /* OpenFile.h */,
@@ -1276,8 +1266,6 @@
 				37E165C41B439C17005FECA9 /* Settings.m */,
 				372293D119C6733A0024426C /* SpecialKeys.h */,
 				372293D219C6733A0024426C /* SpecialKeys.m */,
-				377BDE6416C006BD008DADA5 /* StartupScripts.h */,
-				377BDE6516C006BD008DADA5 /* StartupScripts.m */,
 				37ABF9B118C2EA9C006AFDB7 /* SearchSite.h */,
 				37ABF9B218C2EA9C006AFDB7 /* SearchSite.m */,
 				3782A8AB190D7CDC005ED276 /* TimeMachine.h */,
@@ -1415,7 +1403,6 @@
 				37EECF4C16A64A9E00BEB493 /* help */,
 				37BF4DF916F56CB3008FD480 /* images */,
 				375140EE168B789100C329AF /* languages */,
-				377BDE6216C005C8008DADA5 /* scripts */,
 				37862C641690BC0600DB9E66 /* settings */,
 				37862C5F168FF58900DB9E66 /* styles */,
 			);
@@ -2282,7 +2269,6 @@
 				3752CC1116A1F25E00B623F5 /* SelectStyleWindow.xib in Resources */,
 				37EECF4D16A64A9E00BEB493 /* help in Resources */,
 				376407E816B8CB05000B7AE3 /* tophat.icns in Resources */,
-				377BDE6316C005C8008DADA5 /* scripts in Resources */,
 				3768CCC816CDDAB100D5CB57 /* DirectoryWindow.xib in Resources */,
 				3768CCE016EB6C0A00D5CB57 /* builders in Resources */,
 				37E1CA9E1B924A5600893991 /* UnicodeNames.zip in Resources */,
@@ -2550,13 +2536,11 @@
 				3752CC1516A1F2B400B623F5 /* SelectStyleController.m in Sources */,
 				3752CC1816A2F7EA00B623F5 /* StringCategory.m in Sources */,
 				37979FEE16AAEEC1009D9944 /* FunctionalTest.m in Sources */,
-				37CF062616AB998A00069A20 /* LuaSupport.m in Sources */,
 				3712631F16B4AA53007AF3BF /* InstallFiles.m in Sources */,
 				3712632316B5A079007AF3BF /* DataCategory.m in Sources */,
 				37C1D1A91A5232210031B90F /* MenuCategory.m in Sources */,
 				376407EB16BB60D4000B7AE3 /* DirectoryWatcher.m in Sources */,
 				376407EE16BEB856000B7AE3 /* ColorCategory.m in Sources */,
-				377BDE6616C006BD008DADA5 /* StartupScripts.m in Sources */,
 				377BDE6916CDA8F3008DADA5 /* Database.m in Sources */,
 				3768CCCC16CDDCB000D5CB57 /* DirectoryController.m in Sources */,
 				3768CCD116CFFFEE00D5CB57 /* FileSystemItem.m in Sources */,
