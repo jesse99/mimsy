@@ -1,9 +1,9 @@
-{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf130
 {\fonttbl\f0\froman\fcharset0 Times-Roman;}
 {\colortbl;\red255\green255\blue255;}
 \viewkind0
 \deftab480
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f0\fs36 \cf0 The settings files use a simple line oriented format with a key and a value where the two are separated with a colon. The files are:\
 \
@@ -21,7 +21,41 @@
 \b0  - contains ratings and comments for style files as well as the name of the default style file. Note that it is usually simplest to edit this using the 
 \i Select Style
 \i0  item from the Mimsy menu.\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural\partightenfactor0
 \cf0 \'95 
 \b transcript.rtf
-\b0  - attributes and preferences for the transcript window.}
+\b0  - attributes and preferences for the transcript window.\
+\
+Plugins also may add settings files.\
+\
+Settings are arranged in a chain starting with language files (e.g. C.mimsy), then directory windows (.mimsy.rtf), then the app (app.mimsy), and then the active plugin (highlight-line.mimsy). This allows the app or project to override settings from settings files that appear later in the chain.\
+\
+Settings that specify colors can use \CocoaLigature0 CSS3 color names ("Dark Green"), VIM 7.3 names ("gray50"), hex RGB or RGBA values ("#FF0000" or "#FF0000FF"), or decimal RGB or RGBA values ("(255, 0, 0)" or "(255, 0, 0, 255)") may be used. Space and case differences are ignored.\
+\
+Text attributes such as the font, italics, underlining, etc are applied either by the user or by language files in conjunction with a style file. Some plugins override the default styling using a space separated list of key=value pairs where the pairs may be:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural\partightenfactor0
+\cf0 \'95\'a0
+\b \CocoaLigature1 back-color
+\b0 \CocoaLigature0 =<color name>\
+\'95\'a0
+\b \CocoaLigature1 color
+\b0 \CocoaLigature0 =<color-name>\
+\'95\'a0
+\b \CocoaLigature1 skew
+\b0 \CocoaLigature0 =italic or floating-point number\
+\'95\'a0
+\b \CocoaLigature1 size
+\b0 \CocoaLigature0 =much-smaller or smaller or larger or much-larger or floating-point point size\
+\'95\'a0
+\b \CocoaLigature1 stroke
+\b0 \CocoaLigature0 =normal or outline or bold or very-bold or super-bold or floating-point number\
+\'95\'a0
+\b \CocoaLigature1 underline
+\b0 \CocoaLigature0 =none or single or thick or double or integer mask (see {\field{\*\fldinst{HYPERLINK "https://developer.apple.com/library/ios/documentation/UIKit/Reference/NSAttributedString_UIKit_Additions/#//apple_ref/c/tdef/NSUnderlineStyle"}}{\fldrslt https://developer.apple.com/library/ios/documentation/UIKit/Reference/NSAttributedString_UIKit_Additions/#//apple_ref/c/tdef/NSUnderlineStyle}})\
+\'95\'a0
+\b \CocoaLigature1 underline-color
+\b0 \CocoaLigature0 =<color-name>\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab480\pardirnatural\partightenfactor0
+\cf0 \
+\
+}

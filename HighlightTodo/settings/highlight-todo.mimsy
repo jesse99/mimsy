@@ -2,5 +2,6 @@ TodoWord: \bTODO\b
 TodoWord: \bFIXME\b
 TodoWord: \bXXX\b
 
-# Controls how bold to make the Todo words. Larger values are bolder.
-TodoWeight: 8.0
+# Modifies the styling of TodoWords. See the Settings File help for more
+# information on what can be used here.
+TodoStyle: size=larger stroke=very-bold

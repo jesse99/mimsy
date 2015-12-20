@@ -17,27 +17,19 @@ class StdHighlightSelection: MimsyPlugin
     
     override func onLoadSettings(settings: MimsySettings)
     {
-//        var words = settings.stringValues("TodoWord")
-//        words = words.map {"(" + $0 + ")"}
-//        let pattern = words.joinWithSeparator("|")
-//        
-//        do
-//        {
-//            re = try NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions(rawValue: 0))
-//        }
-//        catch let err as NSError
-//        {
-//            app.transcript().write(.Error, text: "StdHighlightTodo couldn't compile '\(pattern)' as a regex: \(err.localizedFailureReason)")
-//        }
-//        catch
-//        {
-//            app.transcript().write(.Error, text: "StdHighlightTodo unknown error compiling '\(pattern)' as a regex")
-//        }
-//        
-//        // This doesn't provide much customization for users but the standard route of extracting
-//        // styles from an rtf setting file will be awkward because blowing away the existing comment
-//        // styling isn't composable. TODO: could use a setting with attribute name/value pairs.
-//        weight = settings.floatValue("TodoWeight", missing: 5.0)
+        do
+        {
+            let text = settings.stringValue("SelectionStyle", missing: "underline=thick")
+            styles = try MimsyStyle.parse(app, text)
+        }
+        catch let err as MimsyError
+        {
+            app.transcript().write(.Error, text: "StdHighlightSelection had an error loading settings: \(err.text)\n")
+        }
+        catch
+        {
+            app.transcript().write(.Error, text: "StdHighlightSelection unknown error\n")
+        }
     }
     
     func closing(view: MimsyTextView)
@@ -92,11 +84,11 @@ class StdHighlightSelection: MimsyPlugin
                 {
                     if isWord(view, wordRange)
                     {
-                        storage.addAttribute(NSUnderlineStyleAttributeName, value: NSNumber(integer:NSUnderlineStyle.StyleThick.rawValue), range: wordRange)
+                        MimsyStyle.apply(storage, self.styles, wordRange)
                     }
                     
                     searchRange.location = wordRange.location + wordRange.length
-                    searchRange.length = styledRange.length - searchRange.location
+                    searchRange.length = styledRange.location + styledRange.length - searchRange.location
                 }
                 else
                 {
@@ -108,15 +100,15 @@ class StdHighlightSelection: MimsyPlugin
     
     func isWord(view: MimsyTextView, _ range: NSRange) -> Bool
     {
-        // There is a tension between underlining what people are interested in and
-        // avoiding cluttering the display. Given that people can always fallback to
-        // doing an actual search this script elects to be conservative and only underlines
-        // identifiers and identifier-like words.
         guard let storage = view.view.textStorage else
         {
             return false
         }
         
+        // There is a tension between underlining what people are interested in and
+        // avoiding cluttering the display. Given that people can always fallback to
+        // doing an actual search this script elects to be conservative and only underlines
+        // identifiers and identifier-like words.
         let name = storage.getElementName(range)
         return name == "identifier" || name == "function" || name == "define" || name == "macro" || name == "type" || name == "structure" || name == "typedef"
     }
@@ -128,6 +120,7 @@ class StdHighlightSelection: MimsyPlugin
     }
     
     var selections: [String: Selection] = [:]
+    var styles: [MimsyStyle] = []
 }
 
 

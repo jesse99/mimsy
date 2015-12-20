@@ -23,6 +23,8 @@
 		3712631F16B4AA53007AF3BF /* InstallFiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 3712631E16B4AA53007AF3BF /* InstallFiles.m */; };
 		3712632316B5A079007AF3BF /* DataCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3712632216B5A079007AF3BF /* DataCategory.m */; };
 		3712632516B5A431007AF3BF /* libcrypto.0.9.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */; };
+		3719AD681C2639AA002E9046 /* MimsyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3719AD671C2639AA002E9046 /* MimsyError.swift */; };
+		3719AD6A1C266997002E9046 /* settings in Resources */ = {isa = PBXBuildFile; fileRef = 3719AD691C266997002E9046 /* settings */; };
 		3720B6E11C1FBCBB00A6622C /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3720B6E01C1FBCBB00A6622C /* StringExtension.swift */; };
 		3720B6ED1C1FC82900A6622C /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3720B6EC1C1FC82900A6622C /* Plugin.swift */; };
 		3720B6F31C1FC88B00A6622C /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3720B6F21C1FC88B00A6622C /* Description.rtf */; };
@@ -60,6 +62,7 @@
 		3759B6571676F01900D3F3B8 /* TextController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3759B6561676F01900D3F3B8 /* TextController.m */; };
 		3759B6601678376000D3F3B8 /* Decode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3759B65F1678376000D3F3B8 /* Decode.m */; };
 		3763DC071C260B4100FE0C90 /* AttributedStringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3763DC061C260B4100FE0C90 /* AttributedStringExtension.swift */; };
+		3763DC091C262B5E00FE0C90 /* MimsyStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3763DC081C262B5E00FE0C90 /* MimsyStyle.swift */; };
 		376407E816B8CB05000B7AE3 /* tophat.icns in Resources */ = {isa = PBXBuildFile; fileRef = 376407E716B8CB05000B7AE3 /* tophat.icns */; };
 		376407EB16BB60D4000B7AE3 /* DirectoryWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 376407EA16BB60D4000B7AE3 /* DirectoryWatcher.m */; };
 		376407EE16BEB856000B7AE3 /* ColorCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 376407ED16BEB856000B7AE3 /* ColorCategory.m */; };
@@ -524,6 +527,8 @@
 		3712632116B5A079007AF3BF /* DataCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataCategory.h; sourceTree = "<group>"; };
 		3712632216B5A079007AF3BF /* DataCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataCategory.m; sourceTree = "<group>"; };
 		3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.0.9.8.dylib; path = ../../../usr/lib/libcrypto.0.9.8.dylib; sourceTree = "<group>"; };
+		3719AD671C2639AA002E9046 /* MimsyError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimsyError.swift; sourceTree = "<group>"; };
+		3719AD691C266997002E9046 /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = settings; sourceTree = "<group>"; };
 		3720B6E01C1FBCBB00A6622C /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		3720B6E61C1FC80900A6622C /* NewDirectory.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewDirectory.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		3720B6E81C1FC80900A6622C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -594,6 +599,7 @@
 		3759B65F1678376000D3F3B8 /* Decode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Decode.m; sourceTree = "<group>"; };
 		3760186D1984501800FF5814 /* UIntVectorUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIntVectorUtils.h; sourceTree = "<group>"; };
 		3763DC061C260B4100FE0C90 /* AttributedStringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributedStringExtension.swift; sourceTree = "<group>"; };
+		3763DC081C262B5E00FE0C90 /* MimsyStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimsyStyle.swift; sourceTree = "<group>"; };
 		376407E716B8CB05000B7AE3 /* tophat.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = tophat.icns; sourceTree = "<group>"; };
 		376407E916BB60D4000B7AE3 /* DirectoryWatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryWatcher.h; sourceTree = "<group>"; };
 		376407EA16BB60D4000B7AE3 /* DirectoryWatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryWatcher.m; sourceTree = "<group>"; };
@@ -1459,6 +1465,7 @@
 				37B1F5D41C23B422003C3383 /* Info.plist */,
 				37B1F5D81C23B445003C3383 /* Plugin.swift */,
 				37B1F5DE1C23B4AA003C3383 /* Description.rtf */,
+				3719AD691C266997002E9046 /* settings */,
 			);
 			path = HighlightSelection;
 			sourceTree = "<group>";
@@ -1499,12 +1506,14 @@
 				37CDF39B1C07BF9E009E48B4 /* Info.plist */,
 				3763DC061C260B4100FE0C90 /* AttributedStringExtension.swift */,
 				37BABAD21C08CF2400B9B5AB /* MimsyApp.swift */,
+				3719AD671C2639AA002E9046 /* MimsyError.swift */,
 				37D0BB901C14E0E60053617F /* MimsyGlob.swift */,
 				37BABAD91C0A99B600B9B5AB /* MimsyLanguage.swift */,
 				37CDF3A51C07C2C7009E48B4 /* MimsyPlugin.swift */,
 				37CDF3991C07BF9E009E48B4 /* MimsyPlugins.h */,
 				37D0BB921C14E45F0053617F /* MimsyProject.swift */,
 				37A93CF51C11EBAE00AFE5AC /* MimsySettings.swift */,
+				3763DC081C262B5E00FE0C90 /* MimsyStyle.swift */,
 				37BABAD41C091A7000B9B5AB /* MimsyTextView.swift */,
 				37B9CA001C0BC923006C479B /* MimsyTranscript.swift */,
 				3720B6E01C1FBCBB00A6622C /* StringExtension.swift */,
@@ -2302,6 +2311,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				37B1F5DF1C23B4AA003C3383 /* Description.rtf in Resources */,
+				3719AD6A1C266997002E9046 /* settings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2637,6 +2647,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3719AD681C2639AA002E9046 /* MimsyError.swift in Sources */,
 				3763DC071C260B4100FE0C90 /* AttributedStringExtension.swift in Sources */,
 				37CDF3A61C07C2C7009E48B4 /* MimsyPlugin.swift in Sources */,
 				37BABADA1C0A99B600B9B5AB /* MimsyLanguage.swift in Sources */,
@@ -2646,6 +2657,7 @@
 				3720B6E11C1FBCBB00A6622C /* StringExtension.swift in Sources */,
 				37D0BB931C14E45F0053617F /* MimsyProject.swift in Sources */,
 				37D0BB911C14E0E60053617F /* MimsyGlob.swift in Sources */,
+				3763DC091C262B5E00FE0C90 /* MimsyStyle.swift in Sources */,
 				37BABAD31C08CF2400B9B5AB /* MimsyApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -608,7 +608,8 @@ void initLogGlobs()
 	NullaryBlock block = self->_pendingBlocks[name];
 	@try
 	{
-		block();
+        if (block)
+            block();
 	}
 	@catch (NSException *exception)
 	{
@@ -1254,18 +1255,21 @@ void initLogGlobs()
 	[Utils enumerateDir:helpDir glob:glob error:&error block:
 		 ^(NSString* path)
 		 {
-			 NSError* err = nil;
-			 HelpItem* help = [[HelpItem alloc] initFromPath:path err:&err];
-			 if (help)
-			 {
-				 [items addObject:help];
-			 }
-			 else
-			 {
-				NSString* reason = [err localizedFailureReason];
-				NSString* mesg = [NSString stringWithFormat:@"Failed to load '%@': %@", path, reason];
-				[TranscriptController writeError:mesg];
-			 }
+             if (![path contains:@".old"])
+             {
+                 NSError* err = nil;
+                 HelpItem* help = [[HelpItem alloc] initFromPath:path err:&err];
+                 if (help)
+                 {
+                     [items addObject:help];
+                 }
+                 else
+                 {
+                    NSString* reason = [err localizedFailureReason];
+                    NSString* mesg = [NSString stringWithFormat:@"Failed to load '%@': %@", path, reason];
+                    [TranscriptController writeError:mesg];
+                 }
+             }
 		 }];
 	
 	if (error)

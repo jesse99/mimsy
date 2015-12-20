@@ -22,20 +22,22 @@ class StdHighlightTodo: MimsyPlugin
         do
         {
             re = try NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions(rawValue: 0))
+
+            let text = settings.stringValue("TodoStyle", missing: "stroke=very-bold")
+            styles = try MimsyStyle.parse(app, text)
         }
         catch let err as NSError
         {
-            app.transcript().write(.Error, text: "StdHighlightTodo couldn't compile '\(pattern)' as a regex: \(err.localizedFailureReason)")
+            app.transcript().write(.Error, text: "StdHighlightTodo couldn't compile '\(pattern)' as a regex: \(err.localizedFailureReason)\n")
+        }
+        catch let err as MimsyError
+        {
+            app.transcript().write(.Error, text: "StdHighlightTodo had an error loading settings: \(err.text)\n")
         }
         catch
         {
-            app.transcript().write(.Error, text: "StdHighlightTodo unknown error compiling '\(pattern)' as a regex")
+            app.transcript().write(.Error, text: "StdHighlightTodo unknown error compiling '\(pattern)' as a regex\n")
         }
-    
-        // This doesn't provide much customization for users but the standard route of extracting
-        // styles from an rtf setting file will be awkward because blowing away the existing comment
-        // styling isn't composable. TODO: could use a setting with attribute name/value pairs.
-        weight = settings.floatValue("TodoWeight", missing: 5.0)
     }
     
     func render(view: MimsyTextView, range: NSRange)
@@ -45,12 +47,12 @@ class StdHighlightTodo: MimsyPlugin
             re.enumerateMatchesInString(view.text, options: .WithoutAnchoringBounds, range: range) { (result:NSTextCheckingResult?, flags:NSMatchingFlags, stop:UnsafeMutablePointer<ObjCBool>) in
                 if let r = result
                 {
-                    storage.addAttribute(NSStrokeWidthAttributeName, value: NSNumber(float: -self.weight), range: r.range)
+                    MimsyStyle.apply(storage, self.styles, r.range)
                 }
             }
         }
     }
     
     var re = try! NSRegularExpression(pattern: "TODO", options: NSRegularExpressionOptions(rawValue: 0))
-    var weight: Float = 5.0
+    var styles: [MimsyStyle] = []
 }
