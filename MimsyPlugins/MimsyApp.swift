@@ -234,24 +234,26 @@ public extension MimsyApp
     {
         var names = [String]()
         
-        var path = NSBundle.mainBundle().resourcePath as NSString?
-        path = path?.stringByAppendingPathComponent("UnicodeNames.zip")
-        if let path = path, unzip = findExe("unzip")
+        if let rpath = NSBundle.mainBundle().resourcePath
         {
-            let contents = unzipFile(unzip, path)
-            names = contents.componentsSeparatedByString("\n")
+            let path = MimsyPath(withString: rpath).append(component: "UnicodeNames.zip")
+            if let unzip = findExe("unzip")
+            {
+                let contents = unzipFile(unzip, path)
+                names = contents.componentsSeparatedByString("\n")
+            }
         }
         
         return names
     }
     
-    func unzipFile(tool: String, _ path: NSString) -> String
+    func unzipFile(tool: String, _ path: MimsyPath) -> String
     {
         let pipe = NSPipe()
         
         let task = NSTask()
         task.launchPath = tool
-        task.arguments = ["-p", path as String]
+        task.arguments = ["-p", path.asString()]
         task.standardOutput = pipe
         
         task.launch()

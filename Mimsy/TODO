@@ -23,24 +23,8 @@ Creating plugins
 
 
 
-app
-    ProjectContextMenuItemTitle
-    InvokeProjectCommand
-    open
-    openAsBinary
-    findExe
-    unzipFile
-project
-    path
-    resolve
-text view
-    path
 
 
-* Think about adding a path type
-    - will probably need stuff like internalPath
-    - make sure that OpenDual still works
-* HighlightSelection isnt working
 * Context menus arent sorted
 * For mac80211 could add some custom duals, e.g. to open mesh.h
 * objc language should style readonly (and related)
