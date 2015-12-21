@@ -30,18 +30,17 @@ class StdOpenDual: MimsyPlugin
     {
         if let path = view.path
         {
-            let stem = path.stringByDeletingPathExtension
+            let stem = path.popExtension()
 
-            let names = findNames(path as String)
+            let names = findNames(path)
             for name in names
             {
-                if name.hasPrefix(".")
+                switch name
                 {
-                    app.open(stem + name)
-                }
-                else
-                {
-                    app.open(name)
+                case .Extension(let name):
+                    app.open(stem.append(extensionName: name))
+                case .Path(let p):
+                    app.open(p)
                 }
             }
         }
@@ -49,7 +48,7 @@ class StdOpenDual: MimsyPlugin
         return true
     }
     
-    func findNames(path: String) -> [String]
+    func findNames(path: MimsyPath) -> [Name]
     {
         for mapping in mappings
         {
@@ -62,16 +61,29 @@ class StdOpenDual: MimsyPlugin
         return []
     }
     
+    enum Name
+    {
+        case Extension(String)
+        case Path(MimsyPath)
+        
+        static func parse(text: String) -> Name
+        {
+            return text.hasPrefix(".") ?
+                .Extension(text.substringFromIndex(text.startIndex.advancedBy(1))) :
+                .Path(MimsyPath(withString: text))
+        }
+    }
+    
     struct Mapping
     {
         let glob: MimsyGlob
-        let names: [String]
+        let names: [Name]
         
         init(_ app: MimsyApp, _ text: String)
         {
             var parts = text.componentsSeparatedByString(" ")
             glob = app.globWithString(parts.removeFirst())
-            names = parts
+            names = parts.map {Name.parse($0)}
         }
     }
     

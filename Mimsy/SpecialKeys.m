@@ -124,7 +124,7 @@ static NSDictionary* _json;
 
 + (void)_writeFiles:(NSDictionary*)contexts footers:(NSDictionary*)footers
 {
-	NSString* dir = [Paths installedDir:@"help"];
+	MimsyPath* dir = [Paths installedDir:@"help"];
 
 	for (NSString* context in contexts)
 	{
@@ -137,8 +137,8 @@ static NSDictionary* _json;
 		NSArray* parts = [context componentsSeparatedByString:@" "];
 		parts = [parts map:^id(NSString* element) {return [element titleCase];}];
 		NSString* name = [NSString stringWithFormat:@"%@-%@ Keys.rtf", context, [parts componentsJoinedByString:@" "]];
-		NSString* fname = [dir stringByAppendingPathComponent:name];
-		NSURL* url = [NSURL fileURLWithPath:fname];
+		MimsyPath* fname = [dir appendWithComponent:name];
+		NSURL* url = fname.asURL;
 		
 		NSError* error = nil;
 		NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute: NSRTFTextDocumentType};
@@ -215,11 +215,11 @@ static NSDictionary* _json;
 
 + (id)_loadBuiltIns
 {
-	NSString* dir = [Paths installedDir:@"help"];
-	NSString* fname = [dir stringByAppendingPathComponent:@"built-in-special-keys.json"];
+	MimsyPath* dir = [Paths installedDir:@"help"];
+	MimsyPath* fname = [dir appendWithComponent:@"built-in-special-keys.json"];
 	
 	NSError* error = nil;
-	NSString* text = [NSString stringWithContentsOfFile:fname encoding:NSUTF8StringEncoding error:&error];
+	NSString* text = [NSString stringWithContentsOfFile:fname.asString encoding:NSUTF8StringEncoding error:&error];
 	if (!text)
 	{
 		NSString* reason = error.localizedFailureReason;

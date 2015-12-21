@@ -6,8 +6,8 @@ public typealias InvokeTextCommand = (MimsyTextView) -> ()
 public typealias TextViewCallback = (MimsyTextView) -> ()
 public typealias TextViewKeyCallback = (MimsyTextView) -> Bool
 public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
-public typealias ProjectContextMenuItemTitle = (files: [String], dirs: [String]) -> String?
-public typealias InvokeProjectCommand = (files: [String], dirs: [String]) -> ()
+public typealias ProjectContextMenuItemTitle = (files: [MimsyPath], dirs: [MimsyPath]) -> String?
+public typealias InvokeProjectCommand = (files: [MimsyPath], dirs: [MimsyPath]) -> ()
 public typealias TextRangeCallback = (MimsyTextView, NSRange) -> ()
 
 @objc public enum MenuItemLoc: Int
@@ -46,7 +46,7 @@ public typealias TextRangeCallback = (MimsyTextView, NSRange) -> ()
 // TODO: Once we can call static protocol methods from within swift we can
 // clean some of this up, e.g. text view registration, glob creation, etc.
 
-/// This is used by plugins to communicate with the top level of Mimsy.
+/// This is used by plugins to communicate with the top level of Mimsy. 
 @objc public protocol MimsyApp
 {
     /// Typically the extension method will be used instead of this.
@@ -129,12 +129,12 @@ public typealias TextRangeCallback = (MimsyTextView, NSRange) -> ()
     /// Opens a file with Mimsy where possible and as if double-clicked within the Finder otherwise.
     ///
     /// - Parameter path: Full path to a file.
-    func open(path: String)
+    func open(path: MimsyPath)
     
     /// Opens a file as raw binary and display the contents as hex and ASCII.
     ///
     /// - Parameter path: Full path to a file.
-    func openAsBinary(path: String)
+    func openAsBinary(path: MimsyPath)
         
     /// Typically the extension method will be used instead of this.
     func logString(topic: String, text: String)

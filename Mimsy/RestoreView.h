@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "MimsyPlugins.h"
 
 @class TextController;
 
@@ -17,7 +18,7 @@
 
 - (id)init:(TextController*)controller;
 
-- (void)setPath:(NSString*)path;
+- (void)setPath:(MimsyPath*)path;
 
 // Scrolls the character range [begin, end) into view and displays the find
 // indicator for the [begin, begin + count) characters.

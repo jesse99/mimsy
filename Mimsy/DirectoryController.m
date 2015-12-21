@@ -13,6 +13,7 @@
 #import "OpenFile.h"
 #import "Paths.h"
 #import "Plugins.h"
+#import "TextController.h"
 #import "TranscriptController.h"
 #import "UpdateConfig.h"
 #import "Utils.h"
@@ -22,7 +23,7 @@ static DirectoryController* _lastBuilt;
 
 @implementation DirectoryController
 {
-	NSString* _thePath;
+	MimsyPath* _thePath;
 	FolderItem* _root;
 	DirectoryWatcher* _watcher;
 	NSDictionary* _dirAttrs;
@@ -59,11 +60,11 @@ static DirectoryController* _lastBuilt;
 			{
 				return candidate;
 			}
-			// if it has a path method then use the associated directory window,
-			else if ([candidate respondsToSelector:NSSelectorFromString(@"path")])
+			// if it has a text window then use the associated directory window,
+			else if ([candidate isKindOfClass:[TextController class]])
 			{
-				NSString* path = [candidate path];
-				DirectoryController* candidate = [DirectoryController getController:path];
+                TextController* text = candidate;
+				DirectoryController* candidate = [DirectoryController getController:text.path];
 				return candidate;
 			}
 			// if it hides on deactivate we'll ignore it (this is for stuff like Find windows),
@@ -81,15 +82,15 @@ static DirectoryController* _lastBuilt;
 	return nil;
 }
 
-+ (DirectoryController*)getController:(NSString*)path
++ (DirectoryController*)getController:(MimsyPath*)path
 {
-	path = [path stringByStandardizingPath];
+	path = [path standardize];
 	for (DirectoryController* controller in _controllers)
 	{
 		if (path && !controller->_closing)
 		{
-			NSString* candidate = [controller->_thePath stringByStandardizingPath];
-			if (candidate && [path rangeOfString:candidate].location == 0)
+			MimsyPath* candidate = [controller->_thePath standardize];
+			if (candidate && [path hasRoot:candidate])
 				return controller;
 		}
 	}
@@ -108,7 +109,7 @@ static DirectoryController* _lastBuilt;
 	}
 }
 
-+ (DirectoryController*)open:(NSString*)path
++ (DirectoryController*)open:(MimsyPath*)path
 {
 	DirectoryController* controller = [DirectoryController getController:path];
 	if (controller && !controller->_closing)
@@ -123,7 +124,7 @@ static DirectoryController* _lastBuilt;
 	return controller;
 }
 
-- (id)initWithDir:(NSString*)path
+- (id)initWithDir:(MimsyPath*)path
 {
 	self = [super initWithWindowNibName:@"DirectoryWindow"];
 	if (self)
@@ -148,7 +149,7 @@ static DirectoryController* _lastBuilt;
 			[table setTarget:self];
 		}
 		
-		if (![path isEqualToString:@":restoring:"])
+		if (![path.asString isEqualToString:@":restoring:"])
 			[self _loadPath:path];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
@@ -156,38 +157,38 @@ static DirectoryController* _lastBuilt;
 	return self;
 }
 
-- (NSString* _Nonnull)path
+- (MimsyPath* _Nonnull)path
 {
     return _thePath;
 }
 
-- (NSArray<NSString*>* __nonnull)resolve:(NSString* __nonnull)name
+- (NSArray<MimsyPath*>* __nonnull)resolve:(NSString* __nonnull)name
 {
     NSMutableArray* result = [NSMutableArray new];
     
     NSError* error = nil;
     if ([name hasPrefix:@"/"])
     {
-        [Utils enumerateDeepDir:self.path glob:nil error:&error block:^(NSString* item, bool* stop) {
+        [Utils enumerateDeepDir:self.path glob:nil error:&error block:^(MimsyPath* item, bool* stop) {
             UNUSED(stop);
-            if ([item isEqualToString:name])
+            if ([item.asString isEqualToString:name])
                 [result addObject:item];
         }];
     }
     else if ([name contains:@"/"])
     {
         name = [NSString stringWithFormat:@"/%@", name];
-        [Utils enumerateDeepDir:self.path glob:nil error:&error block:^(NSString* item, bool* stop) {
+        [Utils enumerateDeepDir:self.path glob:nil error:&error block:^(MimsyPath* item, bool* stop) {
             UNUSED(stop);
-            if ([item hasSuffix:name])
+            if ([item.asString hasSuffix:name])
                 [result addObject:item];
         }];
     }
     else
     {
-        [Utils enumerateDeepDir:self.path glob:nil error:&error block:^(NSString* item, bool* stop) {
+        [Utils enumerateDeepDir:self.path glob:nil error:&error block:^(MimsyPath* item, bool* stop) {
             UNUSED(stop);
-            if ([item.lastPathComponent isEqualToString:name])
+            if ([item.lastComponent isEqualToString:name])
                 [result addObject:item];
         }];
     }
@@ -213,23 +214,24 @@ static DirectoryController* _lastBuilt;
 {
 	UNUSED(window);
 	
-	[state encodeObject:_thePath];
+	[state encodeObject:_thePath.asString];
 }
 
 - (void)window:(NSWindow*)window didDecodeRestorableState:(NSCoder*)state
 {
 	UNUSED(window);
 	
-	NSString* path = (NSString*) [state decodeObject];
+	NSString* object = (NSString*) [state decodeObject];
+    MimsyPath* path = [[MimsyPath alloc] initWithString:object];
 	[self _loadPath:path];
 }
 
 // This only checks whether the path should be opened with mimsy using info
 // from the directory. Callers will typically also check to see if the file
 // can be opened with a language.
-- (bool)shouldOpen:(NSString*)path
+- (bool)shouldOpen:(MimsyPath*)path
 {
-	NSString* name = [path lastPathComponent];
+	NSString* name = [path lastComponent];
 	for (Glob* glob in _openWithMimsy)
 	{
 		if ([glob matchName:name])
@@ -278,7 +280,7 @@ static DirectoryController* _lastBuilt;
 	UNUSED(sender);
 	
 	NSArray* selectedItems = [self _getSelectedItems];
-	NSArray* urls = [selectedItems map:^id(FileSystemItem* item) {return [NSURL fileURLWithPath:item.path];}];
+	NSArray* urls = [selectedItems map:^id(FileSystemItem* item) {return item.path.asURL;}];
 	[[NSWorkspace sharedWorkspace] recycleURLs:urls completionHandler:
 	 ^(NSDictionary* urls, NSError* error)
 	 {
@@ -310,7 +312,7 @@ static DirectoryController* _lastBuilt;
 		NSString* target = [menu titleOfSelectedItem];
 		
 		NSError* error = nil;
-		NSString* path = [_thePath stringByAppendingPathComponent:@".mimsy.rtf"];
+		MimsyPath* path = [_thePath appendWithComponent:@".mimsy.rtf"];
 		if (!updatePref(path, @"BuildTarget", target, &error))
 		{
 			NSString* reason = [error localizedFailureReason];
@@ -322,7 +324,7 @@ static DirectoryController* _lastBuilt;
 
 - (void)saveBuildFlags
 {
-	NSString* path = [_thePath stringByAppendingPathComponent:@".mimsy.rtf"];
+	MimsyPath* path = [_thePath appendWithComponent:@".mimsy.rtf"];
 	for (NSUInteger i = 0; i < self.targetGlobs.count; ++i)
 	{
 		NSError* error = nil;
@@ -365,7 +367,7 @@ static DirectoryController* _lastBuilt;
 {
 	UNUSED(sender);
 	
-	NSString* path = [_thePath stringByAppendingPathComponent:@".mimsy.rtf"];
+	MimsyPath* path = [_thePath appendWithComponent:@".mimsy.rtf"];
 	(void) [OpenFile openPath:path atLine:-1 atCol:-1 withTabWidth:1];
 }
 
@@ -469,7 +471,7 @@ static DirectoryController* _lastBuilt;
 	SEL sel = [item action];
 	if (sel == @selector(openDirSettings:))
 	{
-		NSString* name = [_thePath lastPathComponent];
+		NSString* name = [_thePath lastComponent];
 		[item setTitle:[NSString stringWithFormat:@"Open %@ Settings", name]];
 		enabled = YES;
 	}
@@ -494,9 +496,8 @@ static DirectoryController* _lastBuilt;
 	return enabled;
 }
 
-- (NSDictionary*)getDirAttrs:(NSString*)path
+- (NSDictionary*)getDirAttrs:(NSString*)name
 {
-	NSString* name = [path lastPathComponent];
 	for (Glob* glob in _globs)
 	{
 		if ([glob matchName:name])
@@ -508,9 +509,8 @@ static DirectoryController* _lastBuilt;
 	return _dirAttrs;
 }
 
-- (NSDictionary*)getFileAttrs:(NSString*)path
+- (NSDictionary*)getFileAttrs:(NSString*)name
 {
-	NSString* name = [path lastPathComponent];
 	for (Glob* glob in _globs)
 	{
 		if ([glob matchName:name])
@@ -666,14 +666,14 @@ static DirectoryController* _lastBuilt;
 	
 	if ([item isKindOfClass:[FileItem class]])
 	{
-		NSString* oldPath = item.path;
-		NSString* dir = [oldPath stringByDeletingLastPathComponent];
-		NSString* newPath = [self _getDuplicatePath:dir oldName:[oldPath lastPathComponent]];
+		MimsyPath* oldPath = item.path;
+		MimsyPath* dir = [oldPath popComponent];
+		MimsyPath* newPath = [self _getDuplicatePath:dir oldName:[oldPath lastComponent]];
 		
 		if (newPath)
 		{
 			NSError* error = NULL;
-			if (![[NSFileManager defaultManager] copyItemAtPath:oldPath toPath:newPath error:&error])
+			if (![[NSFileManager defaultManager] copyItemAtPath:oldPath.asString toPath:newPath.asString error:&error])
 			{
 				NSString* reason = [error localizedFailureReason];
 				NSString* mesg = [NSString stringWithFormat:@"Failed to duplicate %@: %@", oldPath, reason];
@@ -694,7 +694,7 @@ static DirectoryController* _lastBuilt;
 	return copied;
 }
 
-- (NSString*)_getDuplicatePath:(NSString*)dir oldName:(NSString*)oldName
+- (MimsyPath*)_getDuplicatePath:(MimsyPath*)dir oldName:(NSString*)oldName
 {
 	NSString* ext = [oldName pathExtension];
 	NSString* name = [oldName stringByDeletingPathExtension];
@@ -705,8 +705,8 @@ static DirectoryController* _lastBuilt;
 		if (ext.length > 0)
 			newName = [newName stringByAppendingPathExtension:ext];
 		
-		NSString* newPath = [dir stringByAppendingPathComponent:newName];
-		if (![[NSFileManager defaultManager] fileExistsAtPath:newPath])
+		MimsyPath* newPath = [dir appendWithComponent:newName];
+		if (![[NSFileManager defaultManager] fileExistsAtPath:newPath.asString])
 			return newPath;
 	}
 	
@@ -780,7 +780,7 @@ static DirectoryController* _lastBuilt;
 	{
 		for (FileSystemItem* item  in selectedItems)
 		{
-			if ([item.path rangeOfString:@"(Autosaved)"].location == NSNotFound)
+			if ([item.path.asString rangeOfString:@"(Autosaved)"].location == NSNotFound)
 				[OpenFile openPath:item.path atLine:-1 atCol:-1 withTabWidth:1];
 		}
 	}
@@ -788,16 +788,16 @@ static DirectoryController* _lastBuilt;
 
 - (void)_rename:(FileSystemItem*)item as:(NSString*)newName
 {
-	NSString* oldPath = item.path;
-	NSString* oldName = [oldPath lastPathComponent];
+	MimsyPath* oldPath = item.path;
+	NSString* oldName = [oldPath lastComponent];
 	if (![oldName isEqualToString:newName])
 	{
-		NSString* dir = [oldPath stringByDeletingLastPathComponent];
-		NSString* newPath = [dir stringByAppendingPathComponent:newName];
+		MimsyPath* dir = [oldPath popComponent];
+		MimsyPath* newPath = [dir appendWithComponent:newName];
 		
 		// TODO: need to use a sccs to do the rename (if one is present)
 		NSError* error = nil;
-		if (![[NSFileManager defaultManager] moveItemAtPath:oldPath toPath:newPath error:&error])
+		if (![[NSFileManager defaultManager] moveItemAtPath:oldPath.asString toPath:newPath.asString error:&error])
 		{
 			NSString* reason = [error localizedFailureReason];
 			NSString* mesg = [NSString stringWithFormat:@"Couldn't rename %@: %@", oldName, reason];
@@ -813,7 +813,7 @@ static DirectoryController* _lastBuilt;
 	return size.height;
 }
 
-- (void)_loadPath:(NSString*)path
+- (void)_loadPath:(MimsyPath*)path
 {
 	_thePath = path;
 	[self _loadPrefs];
@@ -825,12 +825,12 @@ static DirectoryController* _lastBuilt;
 		[table reloadData];
 	
 	_watcher = [[DirectoryWatcher alloc] initWithPath:path latency:3.0 block:
-				^(NSString* path, FSEventStreamEventFlags flags) {[self _dirChanged:path flags:flags];}];
+				^(MimsyPath* path, FSEventStreamEventFlags flags) {[self _dirChanged:path flags:flags];}];
 	
 	_builderInfo = [Builders builderInfo:path];
     [self _loadTargets];
     
-	[self.window setTitle:[path lastPathComponent]];
+	[self.window setTitle:[path lastComponent]];
 	[self.window makeKeyAndOrderFront:self];
 }
 
@@ -876,11 +876,11 @@ static DirectoryController* _lastBuilt;
 			{
 				if ([glob isEqualToString:@"."])
 				{
-					return [self.path stringByAppendingPathComponent:@"*"];
+					return [self.path appendWithComponent:@"*"];
 				}
 				else if ([glob isEqualToString:@".."])
 				{
-					return [[self.path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"*"];
+					return [[self.path popComponent] appendWithComponent:@"*"];
 				}
 				else
 				{
@@ -911,12 +911,12 @@ static DirectoryController* _lastBuilt;
     }
 }
 
-- (bool)_prefsChanged:(NSString*)path
+- (bool)_prefsChanged:(MimsyPath*)path
 {
     bool changed = true;
     
     NSError* error = nil;
-    NSDictionary* attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error];
+    NSDictionary* attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:path.asString error:&error];
     if (attrs)
     {
         NSDate* fileTime = attrs[NSFileModificationDate];
@@ -930,7 +930,7 @@ static DirectoryController* _lastBuilt;
 
 - (void)_loadPrefs
 {
-    NSString* path = [_thePath stringByAppendingPathComponent:@".mimsy.rtf"];
+    MimsyPath* path = [_thePath appendWithComponent:@".mimsy.rtf"];
     if (![self _prefsChanged:path])
         return;
     
@@ -938,7 +938,7 @@ static DirectoryController* _lastBuilt;
 	_dontIgnores = nil;
 	
 	NSFileManager* fm = [NSFileManager defaultManager];
-	if (![fm fileExistsAtPath:path])
+	if (![fm fileExistsAtPath:path.asString])
 		path = [self _installPrefFile:path];
 	
 	NSMutableDictionary* dirAttrs = [NSMutableDictionary new];
@@ -1084,9 +1084,9 @@ static DirectoryController* _lastBuilt;
     [Plugins refreshSettings];
 }
 
-- (NSAttributedString*)_loadPrefFile:(NSString*)path
+- (NSAttributedString*)_loadPrefFile:(MimsyPath*)path
 {
-	NSURL* url = [NSURL fileURLWithPath:path];
+	NSURL* url = path.asURL;
 	
 	NSError* error = nil;
 	NSUInteger options = NSFileWrapperReadingImmediate | NSFileWrapperReadingWithoutMapping;
@@ -1104,13 +1104,13 @@ static DirectoryController* _lastBuilt;
 	}
 }
 
-- (NSString*)_installPrefFile:(NSString*)dst
+- (MimsyPath*)_installPrefFile:(MimsyPath*)dst
 {
-	NSString* src = [[Paths installedDir:@"settings"] stringByAppendingPathComponent:@"directory.rtf"];
+	MimsyPath* src = [[Paths installedDir:@"settings"] appendWithComponent:@"directory.rtf"];
 	
 	NSError* error = nil;
 	NSFileManager* fm = [NSFileManager defaultManager];
-	if (![fm copyItemAtPath:src toPath:dst error:&error])
+	if (![fm copyItemAtPath:src.asString toPath:dst.asString error:&error])
 	{
 		NSString* reason = [error localizedFailureReason];
 		NSString* mesg = [NSString stringWithFormat:@"Failed to copy %s to %s: %s", STR(src), STR(dst), STR(reason)];
@@ -1214,7 +1214,7 @@ static NSString* flagsToStr(FSEventStreamEventFlags flags)
     return result;
 }
 
-- (void)_dirChanged:(NSString*)path flags:(FSEventStreamEventFlags)flags
+- (void)_dirChanged:(MimsyPath*)path flags:(FSEventStreamEventFlags)flags
 {
     FSEventStreamEventFlags wanted = kFSEventStreamEventFlagUserDropped | kFSEventStreamEventFlagKernelDropped | kFSEventStreamEventFlagItemCreated | kFSEventStreamEventFlagItemRemoved | kFSEventStreamEventFlagItemRenamed | kFSEventStreamEventFlagItemModified;
     if ((flags & wanted) == 0 && flags != kFSEventStreamEventFlagNone)

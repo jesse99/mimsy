@@ -34,7 +34,7 @@ class StdHighlightSelection: MimsyPlugin
     
     func closing(view: MimsyTextView)
     {
-        if let path = view.path as? String
+        if let path = view.path
         {
             selections[path] = nil
         }
@@ -44,7 +44,7 @@ class StdHighlightSelection: MimsyPlugin
     // range is sane and then stash away the selected word (or nil out the old reference).
     func selectionChanged(view: MimsyTextView)
     {
-        if let path = view.path as? String where view.language != nil
+        if let path = view.path where view.language != nil
         {
             var selection: Selection? = nil
             
@@ -74,7 +74,7 @@ class StdHighlightSelection: MimsyPlugin
     // selection and not substrings of a larger identifier.
     func render(view: MimsyTextView, styledRange: NSRange)
     {
-        if let path = view.path as? String, let selection = selections[path], let storage = view.view.textStorage
+        if let path = view.path, let selection = selections[path], let storage = view.view.textStorage
         {
             var searchRange = styledRange
             while searchRange.length >= selection.range.length
@@ -119,7 +119,7 @@ class StdHighlightSelection: MimsyPlugin
         let range: NSRange
     }
     
-    var selections: [String: Selection] = [:]
+    var selections: [MimsyPath: Selection] = [:]
     var styles: [MimsyStyle] = []
 }
 

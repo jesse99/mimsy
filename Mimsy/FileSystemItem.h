@@ -1,11 +1,12 @@
 #import <Cocoa/Cocoa.h>
+#import "MimsyPlugins.h"
 
 @class DirectoryController;
 
 // Base class for the items which appear in the directory window outline view.
 @interface FileSystemItem : NSObject
 
-- (id)initWithPath:(NSString*)path controller:(DirectoryController*)controller;
+- (id)initWithPath:(MimsyPath*)path controller:(DirectoryController*)controller;
 
 // Note that this should be used instead of Count because it will not force
 // all children to be loaded. Defaults to false.
@@ -29,12 +30,12 @@
 
 // Returns the (opened) item which matches the specified path or nil
 // if no item was found.
-- (FileSystemItem*)find:(NSString*)path;
+- (FileSystemItem*)find:(MimsyPath*)path;
 
 - (BOOL)isEqual:(id)rhs;
 - (NSUInteger)hash;
 
 @property (readonly, weak) DirectoryController* controller;
-@property (readonly) NSString* path;
+@property (readonly) MimsyPath* path;
 
 @end

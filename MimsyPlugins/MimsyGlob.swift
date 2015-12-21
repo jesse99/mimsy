@@ -8,5 +8,5 @@ import Foundation
 @objc public protocol MimsyGlob
 {
     /// Returns true if at least one glob matches text.
-    func matches(text: String) -> Bool
+    func matches(path: MimsyPath) -> Bool
 }

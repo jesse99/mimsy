@@ -13,7 +13,7 @@ class StdOpenAsBinary: MimsyPlugin
         return nil
     }
     
-    func getTitle(files: [String], dirs: [String]) -> String?
+    func getTitle(files: [MimsyPath], dirs: [MimsyPath]) -> String?
     {
         if dirs.isEmpty && !files.isEmpty
         {
@@ -25,7 +25,7 @@ class StdOpenAsBinary: MimsyPlugin
         }
     }
     
-    func duplicateItems(files: [String], dirs: [String])
+    func duplicateItems(files: [MimsyPath], dirs: [MimsyPath])
     {
         for path in files
         {

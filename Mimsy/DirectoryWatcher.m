@@ -9,9 +9,9 @@ static void Callback(ConstFSEventStreamRef streamRef, void* clientCallBackInfo, 
 	DirectoryWatcherCallback _callback;
 }
 
-- (id)initWithPath:(NSString*)path latency:(double)latency block:(void (^)(NSString* path, FSEventStreamEventFlags flags))block
+- (id)initWithPath:(MimsyPath*)path latency:(double)latency block:(void (^)(MimsyPath* path, FSEventStreamEventFlags flags))block
 {
-	_watching = @[path];
+	_watching = @[path.asString];
 	_callback = block;
 	
 	FSEventStreamContext context = {.version = 0, .info = (__bridge void*)(self), .retain = NULL, .release = NULL, .copyDescription = NULL};
@@ -91,7 +91,8 @@ static void Callback(ConstFSEventStreamRef stream, void* refcon, size_t numEvent
 		if (flags[i] != blacklist)
 		{
 			LOG("Mimsy:Verbose", "%s %s", STR(paths[i]), STR(getFlags(flags[i])));
-			watcher.callback(paths[i], flags[i]);
+            MimsyPath* path = [[MimsyPath alloc] initWithString:paths[i]];
+			watcher.callback(path, flags[i]);
 		}
 	}
 }

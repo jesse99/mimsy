@@ -92,12 +92,12 @@ static NSArray* _languages;
 {	
 	NSMutableArray* languages = [NSMutableArray new];
 	
-	NSString* dir = [Paths installedDir:@"languages"];
+	MimsyPath* dir = [Paths installedDir:@"languages"];
 	Glob* glob = [[Glob alloc] initWithGlob:@"*.mimsy"];
 	
 	NSError* error = nil;
 	[Utils enumerateDir:dir glob:glob error:&error block:
-		^(NSString* item)
+		^(MimsyPath* item)
 		{
 			[self _processFile:item languages:languages];
 		}
@@ -112,11 +112,11 @@ static NSArray* _languages;
 }
 
 // This code would be clearer with goto, but goto often has problems when used with ARC.
-+ (void)_processFile:(NSString*)path languages:(NSMutableArray*)languages
++ (void)_processFile:(MimsyPath*)path languages:(NSMutableArray*)languages
 {
 	Language* lang = nil;
 	
-	LOG("Text:Styler:Verbose", "Loading %s", STR([path lastPathComponent]));
+	LOG("Text:Styler:Verbose", "Loading %s", STR([path lastComponent]));
 	
 	NSError* error = nil;
 	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];

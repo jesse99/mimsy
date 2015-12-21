@@ -1,8 +1,8 @@
 #import "UpdateConfig.h"
 
-static NSMutableAttributedString* loadPrefFile(NSString* path, NSError** outError)
+static NSMutableAttributedString* loadPrefFile(MimsyPath* path, NSError** outError)
 {
-	NSURL* url = [NSURL fileURLWithPath:path];
+	NSURL* url = path.asURL;
 	
 	NSUInteger options = NSFileWrapperReadingImmediate | NSFileWrapperReadingWithoutMapping;
 	NSFileWrapper* file = [[NSFileWrapper alloc] initWithURL:url options:options error:outError];
@@ -47,13 +47,13 @@ static void addPref(NSMutableString* contents, NSString* key, NSString* value)
 	[contents appendString:@"\n"];
 }
 
-static bool writePref(NSString* path, NSAttributedString* contents, NSError** outError)
+static bool writePref(MimsyPath* path, NSAttributedString* contents, NSError** outError)
 {
 	NSDictionary* attrs = @{NSDocumentTypeDocumentAttribute:NSRTFTextDocumentType};
 	NSData* data = [contents dataFromRange:NSMakeRange(0, contents.length) documentAttributes:attrs error:outError];
 	if (data)
 	{
-		NSURL* url = [NSURL fileURLWithPath:path];
+		NSURL* url = path.asURL;
 		NSFileWrapper* file = [[NSFileWrapper alloc] initRegularFileWithContents:data];
 		return [file writeToURL:url options:NSFileWrapperWritingAtomic originalContentsURL:nil error:outError];
 	}
@@ -61,7 +61,7 @@ static bool writePref(NSString* path, NSAttributedString* contents, NSError** ou
 	return false;
 }
 
-bool updatePref(NSString* path, NSString* key, NSString* value, NSError** outError)
+bool updatePref(MimsyPath* path, NSString* key, NSString* value, NSError** outError)
 {
 	NSMutableAttributedString* contents = loadPrefFile(path, outError);
 	if (contents)

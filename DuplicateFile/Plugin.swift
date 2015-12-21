@@ -13,7 +13,7 @@ class StdDuplicateFile: MimsyPlugin
         return nil
     }
     
-    func getTitle(files: [String], dirs: [String]) -> String?
+    func getTitle(files: [MimsyPath], dirs: [MimsyPath]) -> String?
     {
         if dirs.isEmpty && !files.isEmpty
         {
@@ -25,15 +25,15 @@ class StdDuplicateFile: MimsyPlugin
         }
     }
     
-    func duplicateItems(files: [String], dirs: [String])
+    func duplicateItems(files: [MimsyPath], dirs: [MimsyPath])
     {
         let fm = NSFileManager.defaultManager()
         for oldPath in files
         {
             do
             {
-                let newPath = oldPath.stringByFindingUniquePath()
-                try fm.copyItemAtPath(oldPath, toPath: newPath)
+                let newPath = oldPath.makeUnique()
+                try fm.copyItemAtPath(oldPath.asString(), toPath: newPath.asString())
             }
             catch let err as NSError
             {

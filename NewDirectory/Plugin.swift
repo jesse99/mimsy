@@ -13,7 +13,7 @@ class StdNewDirectory: MimsyPlugin
         return nil
     }
     
-    func getTitle(files: [String], dirs: [String]) -> String?
+    func getTitle(files: [MimsyPath], dirs: [MimsyPath]) -> String?
     {
         // We'll keep things simple and only create a new directory next
         // to a single item. This way we avoid creating a bunch of sibling
@@ -23,13 +23,12 @@ class StdNewDirectory: MimsyPlugin
         return files.count + dirs.count == 1 ? "New Directory" : nil
     }
     
-    func createItem(files: [String], dirs: [String])
+    func createItem(files: [MimsyPath], dirs: [MimsyPath])
     {
         for oldPath in files
         {
-            var path: NSString = (oldPath as NSString).stringByDeletingLastPathComponent
-            path = path.stringByAppendingPathComponent("untitled")
-            create(path as String)
+            let path = oldPath.popComponent().append(component: "untitled")
+            create(path)
         }
 
         for oldPath in dirs
@@ -37,19 +36,19 @@ class StdNewDirectory: MimsyPlugin
             // We could either create a sibling directory or a child directory.
             // Not entirely clear which is best so we'll do what New File does
             // and create a child directory.
-            let path = (oldPath as NSString).stringByAppendingPathComponent("untitled")
+            let path = oldPath.append(component: "untitled")
             create(path)
         }
     }
     
-    func create(var newPath: String)
+    func create(var newPath: MimsyPath)
     {
-        newPath = newPath.stringByFindingUniquePath()
+        newPath = newPath.makeUnique()
 
         do
         {
             let fm = NSFileManager.defaultManager()
-            try fm.createDirectoryAtPath(newPath, withIntermediateDirectories: true, attributes: nil)
+            try fm.createDirectoryAtPath(newPath.asString(), withIntermediateDirectories: true, attributes: nil)
         }
         catch let err as NSError
         {

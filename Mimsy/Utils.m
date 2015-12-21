@@ -132,17 +132,17 @@ bool rangeIntersects(NSRange lhs, NSRange rhs)
     return result;
 }
 
-+ (bool)enumerateDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item))block
++ (bool)enumerateDir:(MimsyPath*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(MimsyPath* item))block
 {
 	NSFileManager* fm = [NSFileManager new];
-	NSArray* candidates = [fm contentsOfDirectoryAtPath:path error:error];
+	NSArray* candidates = [fm contentsOfDirectoryAtPath:path.asString error:error];
 	if (candidates)
 	{
 		for (NSString* candidate in candidates)
 		{
 			if (!glob || [glob matchName:candidate])
 			{
-				NSString* item = [path stringByAppendingPathComponent:candidate];
+                MimsyPath* item = [path appendWithComponent:candidate];
 				block(item);
 			}
 		}
@@ -150,12 +150,12 @@ bool rangeIntersects(NSRange lhs, NSRange rhs)
 	return candidates;
 }
 
-+ (bool)enumerateDeepDir:(NSString*)path glob:(Glob*)glob error:(NSError**)outError block:(void (^)(NSString* item, bool* stop))block
++ (bool)enumerateDeepDir:(MimsyPath*)path glob:(Glob*)glob error:(NSError**)outError block:(void (^)(MimsyPath* item, bool* stop))block
 {	
 	NSFileManager* fm = [NSFileManager new];
 	NSMutableArray* errors = [NSMutableArray new];
 	
-	NSURL* at = [NSURL fileURLWithPath:path isDirectory:YES];
+	NSURL* at = [NSURL fileURLWithPath:path.asString isDirectory:YES];
 	NSArray* keys = @[NSURLNameKey, NSURLIsDirectoryKey, NSURLPathKey];
 	NSDirectoryEnumerationOptions options = glob ? NSDirectoryEnumerationSkipsHiddenFiles : 0;
 	NSDirectoryEnumerator* enumerator = [fm enumeratorAtURL:at includingPropertiesForKeys:keys options:options errorHandler:
@@ -178,8 +178,8 @@ bool rangeIntersects(NSRange lhs, NSRange rhs)
 
 		if (populated && !isDirectory.boolValue)		// note that NSDirectoryEnumerationSkipsHiddenFiles also skips hidden directories
 		{
-			NSString* candidate = url.path;
-			if (!glob || [glob matchName:candidate])
+            MimsyPath* candidate = [[MimsyPath alloc] initWithString:url.path];
+			if (!glob || [glob matchName:candidate.asString])
             {
 				block(candidate, &stop);
                 if (stop)
@@ -203,12 +203,12 @@ bool rangeIntersects(NSRange lhs, NSRange rhs)
 	return errors.count == 0;
 }
 
-+ (bool)copySrcFile:(NSString*)srcPath dstFile:(NSString*)dstPath outError:(NSError**)outError
++ (bool)copySrcFile:(MimsyPath*)srcPath dstFile:(MimsyPath*)dstPath outError:(NSError**)outError
 {
 	NSError* error = nil;
 	NSFileManager* fm = [NSFileManager defaultManager];
 	
-	if ([fm fileExistsAtPath:dstPath] && ![fm removeItemAtPath:dstPath error:&error])
+	if ([fm fileExistsAtPath:dstPath.asString] && ![fm removeItemAtPath:dstPath.asString error:&error])
 	{
 		NSString* reason = [error localizedFailureReason];
 		NSString* mesg = [NSString stringWithFormat:@"Failed to remove old '%@': %@", dstPath, reason];
@@ -217,8 +217,8 @@ bool rangeIntersects(NSRange lhs, NSRange rhs)
 		return false;
 	}
 	
-	NSString* dstDir = [dstPath stringByDeletingLastPathComponent];
-	if (![fm createDirectoryAtPath:dstDir withIntermediateDirectories:YES attributes:nil error:&error])
+	MimsyPath* dstDir = [dstPath popComponent];
+	if (![fm createDirectoryAtPath:dstDir.asString withIntermediateDirectories:YES attributes:nil error:&error])
 	{
 		NSString* reason = [error localizedFailureReason];
 		NSString* mesg = [NSString stringWithFormat:@"Failed to create directories for '%@': %@", dstPath, reason];
@@ -227,7 +227,7 @@ bool rangeIntersects(NSRange lhs, NSRange rhs)
 		return false;
 	}
 	
-	if (![fm copyItemAtPath:srcPath toPath:dstPath error:&error])
+	if (![fm copyItemAtPath:srcPath.asString toPath:dstPath.asString error:&error])
 	{
 		NSString* reason = [error localizedFailureReason];
 		NSString* mesg = [NSString stringWithFormat:@"Failed to copy '%@' to '%@': %@", srcPath, dstPath, reason];

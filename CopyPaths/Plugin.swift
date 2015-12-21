@@ -19,7 +19,7 @@ class StdCopyPaths: MimsyPlugin
         return view.path != nil ? "Copy Path" : nil
     }
     
-    func getProjectTitle(files: [String], dirs: [String]) -> String?
+    func getProjectTitle(files: [MimsyPath], dirs: [MimsyPath]) -> String?
     {
         let count = files.count + dirs.count
         
@@ -41,14 +41,14 @@ class StdCopyPaths: MimsyPlugin
     {
         let pb = NSPasteboard.generalPasteboard()
         pb.clearContents()
-        pb.writeObjects([view.path!])
+        pb.writeObjects([view.path!.asString()])
     }
     
-    func copyProjectItems(files: [String], dirs: [String])
+    func copyProjectItems(files: [MimsyPath], dirs: [MimsyPath])
     {
         let pb = NSPasteboard.generalPasteboard()
         pb.clearContents()
-        pb.writeObjects(files)
-        pb.writeObjects(dirs)
+        pb.writeObjects(files.map {$0.asString()})
+        pb.writeObjects(dirs.map {$0.asString()})
     }
 }

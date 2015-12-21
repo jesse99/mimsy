@@ -3,9 +3,9 @@
 
 @implementation Glob
 
-- (BOOL)matches:(NSString*)text
+- (BOOL)matches:(MimsyPath*)path
 {
-    return [self matchName:text] == 1;
+    return [self matchName:path.asString] == 1;
 }
 
 - (id)initWithGlob:(NSString*)glob

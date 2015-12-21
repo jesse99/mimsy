@@ -153,20 +153,15 @@ public class BuildErrors : NSObject
         
         func createRegex(pattern: String) -> NSRegularExpression?
         {
-            var error: NSError?
-            let regex: NSRegularExpression?
             do {
-                regex = try NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.AnchorsMatchLines)
-            } catch let error1 as NSError {
-                error = error1
-                regex = nil
-            }
-            if let error = error
-            {
+                return try NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.AnchorsMatchLines)
+            } catch let error as NSError {
                 TranscriptController.writeError("BuildError in \(fileName) regex '\(pattern)' is malformed: \(error.localizedFailureReason)")
                 return nil
+            } catch {
+                TranscriptController.writeError("BuildError in \(fileName) regex '\(pattern)' is malformed: unknown error")
+                return nil
             }
-            return regex
         }
         
         // BuildError: FLCM ^([^:\r\n]+):(\d+):(\d+):\s+\w+:\s+(.+)$
@@ -194,10 +189,10 @@ public class BuildErrors : NSObject
         {
             transcriptRange = PersistentRange(TranscriptController.getInstance(), range: match.range)
             
-            var file: String?
+            var file: MimsyPath?
             switch pattern.fields["F"]
             {
-            case .Some(let i): file = text.substringWithRange(match.rangeAtIndex(i))
+            case .Some(let i): file = MimsyPath(withString: text.substringWithRange(match.rangeAtIndex(i)))
             default: file = nil
             }
             
@@ -228,12 +223,12 @@ public class BuildErrors : NSObject
             let current = DirectoryController.getCurrentController()
             if current != nil && file != nil
             {
-                let paths = OpenFile.resolvePath(file!, rootedAt: current!.thePath)
+                let paths = OpenFile.resolvePath(file!, rootedAt: current!.path)
                 if paths.count > 0
                 {
                     // Hopefully tools will provide more than just a file name on errors.
                     // Failing that people will hopefully not reuse source file names.
-                    path = paths[0] as! NSString as String
+                    path = paths[0]
                 }
                 else
                 {
@@ -250,7 +245,7 @@ public class BuildErrors : NSObject
         let transcriptRange: PersistentRange
         var fileRange: PersistentRange? = nil
         
-        let path: String?
+        let path: MimsyPath?
         let line: Int
         let column: Int
         let message: String?

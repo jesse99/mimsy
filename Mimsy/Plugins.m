@@ -109,13 +109,13 @@ static void doStage(int stage)
     
     AppDelegate* app = [NSApp delegate];
     
-    NSString* plugins = [Paths installedDir:@"plugins"];
+    MimsyPath* plugins = [Paths installedDir:@"plugins"];
     LOG("Plugins:Verbose", "Loading plugins from %s", STR(plugins));
 
     NSError* err = nil;
     Glob* glob = [[Glob alloc] initWithGlob:@"*.plugin"];
-    [Utils enumerateDir:plugins glob:glob error:&err block:^(NSString *path) {
-        NSBundle* bundle = [NSBundle bundleWithPath:path];
+    [Utils enumerateDir:plugins glob:glob error:&err block:^(MimsyPath *path) {
+        NSBundle* bundle = [NSBundle bundleWithPath:path.asString];
         if (bundle)
         {
             if ([self _validBundle:bundle])
@@ -135,7 +135,7 @@ static void doStage(int stage)
                     }
                     else
                     {
-                        LOG("Plugins", "Skipping %s (%s)", STR(path.lastPathComponent), STR(err));
+                        LOG("Plugins", "Skipping %s (%s)", STR(path.lastComponent), STR(err));
                     }
                 }
                 else
@@ -161,13 +161,13 @@ static void doStage(int stage)
 {
     for (PluginData* data in _plugins)
     {
-        NSString* path = data.plugin.bundle.resourcePath;
+        MimsyPath* path = [[MimsyPath alloc] initWithString:data.plugin.bundle.resourcePath];
         
         NSError* error = nil;
-        [Utils enumerateDeepDir:path glob:nil error:&error block:^(NSString *rsrc, bool* stop) {
+        [Utils enumerateDeepDir:path glob:nil error:&error block:^(MimsyPath *rsrc, bool* stop) {
             UNUSED(stop);
             
-            NSArray* parts = [rsrc pathComponents];
+            NSArray* parts = rsrc.components;
             NSString* parent = parts.count >= 2 ? parts[parts.count - 2] : nil;
             if (![@"Resources" isEqualToString:parent])
             {
@@ -176,7 +176,7 @@ static void doStage(int stage)
                 [installer addSourcePath:rsrc];
                 
                 if ([parent isEqualToString:@"settings"])
-                    [data.settingNames addObject:rsrc.lastPathComponent];
+                    [data.settingNames addObject:rsrc.lastComponent];
             }
         }];
         
@@ -204,7 +204,7 @@ static void doStage(int stage)
 
 + (void)_loadSettings
 {
-    NSString* root = [Paths installedDir:@"settings"];
+    MimsyPath* root = [Paths installedDir:@"settings"];
     
     for (PluginData* data in _plugins)
     {
@@ -213,7 +213,7 @@ static void doStage(int stage)
         for (NSUInteger i = 0; i < data.settingNames.count; ++i)
         {
             NSError* error = nil;
-            NSString* path = [root stringByAppendingPathComponent:data.settingNames[i]];
+            MimsyPath* path = [root appendWithComponent:data.settingNames[i]];
             ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
             if (parser)
             {
@@ -234,7 +234,7 @@ static void doStage(int stage)
 
 + (void)refreshSettings
 {
-    NSString* root = [Paths installedDir:@"settings"];
+    MimsyPath* root = [Paths installedDir:@"settings"];
    
     for (PluginData* data in _plugins)
     {
@@ -243,7 +243,7 @@ static void doStage(int stage)
         for (NSUInteger i = 0; i < data.settingNames.count; ++i)
         {
             NSError* error = nil;
-            NSString* path = [root stringByAppendingPathComponent:data.settingNames[i]];
+            MimsyPath* path = [root appendWithComponent:data.settingNames[i]];
             ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
             if (parser)
             {

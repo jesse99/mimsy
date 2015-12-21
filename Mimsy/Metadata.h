@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "MimsyPlugins.h"
 
 // This class is used to associate arbitrary bits of information with files and
 // directories. There are two usage patterns:
@@ -25,11 +26,11 @@
 // .<fileName-dataName>.xml files.
 @interface Metadata : NSObject
 
-+ (NSError*)writeCriticalDataTo:(NSString*)path named:(NSString*)name with:(id<NSCoding>)object;
-+ (id)readCriticalDataFrom:(NSString*)path named:(NSString*)name outError:(NSError**)error;
++ (NSError*)writeCriticalDataTo:(MimsyPath*)path named:(NSString*)name with:(id<NSCoding>)object;
++ (id)readCriticalDataFrom:(MimsyPath*)path named:(NSString*)name outError:(NSError**)error;
 
 // These two log errors, but otherwise ignore them.
-+ (void)writeNonCriticalDataTo:(NSString*)path named:(NSString*)name with:(id<NSCoding>)object;
-+ (id)readNonCriticalDataFrom:(NSString*)path named:(NSString*)name;
++ (void)writeNonCriticalDataTo:(MimsyPath*)path named:(NSString*)name with:(id<NSCoding>)object;
++ (id)readNonCriticalDataFrom:(MimsyPath*)path named:(NSString*)name;
 
 @end

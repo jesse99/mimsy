@@ -22,7 +22,7 @@
 	return self;
 }
 
-- (void)setPath:(NSString*)path
+- (void)setPath:(MimsyPath*)path
 {
 	if (path)
 	{

@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "MimsyPlugins.h"
 
 // Provides access to the builder executable installed in the builders directory.
 @interface Builders : NSObject
@@ -7,7 +8,7 @@
 //    "name": the builder name (e.g. "make")
 //    "path": full path to the associated build file
 // Otherwise nil is returned.
-+ (NSDictionary*)builderInfo:(NSString*)dir;
++ (NSDictionary*)builderInfo:(MimsyPath*)dir;
 
 // Returns an array of strings for each target in the build file.
 // Info should be the result from builderInfo. Returns nil on failure.

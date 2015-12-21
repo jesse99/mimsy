@@ -13,7 +13,7 @@ class StdTrashItems: MimsyPlugin
         return nil
     }
     
-    func getTitle(files: [String], dirs: [String]) -> String?
+    func getTitle(files: [MimsyPath], dirs: [MimsyPath]) -> String?
     {
         let count = files.count + dirs.count
         if count > 1
@@ -30,7 +30,7 @@ class StdTrashItems: MimsyPlugin
         }
     }
     
-    func trashItems(files: [String], dirs: [String])
+    func trashItems(files: [MimsyPath], dirs: [MimsyPath])
     {
         for path in files
         {
@@ -43,13 +43,12 @@ class StdTrashItems: MimsyPlugin
         }
     }
     
-    func trash(path: String)
+    func trash(path: MimsyPath)
     {
         do
         {
             let fm = NSFileManager.defaultManager()
-            let url = NSURL(fileURLWithPath: path)
-            try fm.trashItemAtURL(url, resultingItemURL: nil)
+            try fm.trashItemAtURL(path.asURL(), resultingItemURL: nil)
         }
         catch let err as NSError
         {

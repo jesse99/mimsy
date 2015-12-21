@@ -55,18 +55,18 @@ static void _extendSelection(ValidIndexCallback predicate, NSString* text, NSUIn
 		++(*length);
 }
 
-static bool _doAbsolutePath(NSString* path, int line, int col)
+static bool _doAbsolutePath(MimsyPath* path, int line, int col)
 {
 	bool opened = false;
 	
-	if ([path isAbsolutePath])
+	if ([path isAbsolute])
 	{
 		BOOL isDir = FALSE;
-		if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir] && !isDir)
+		if ([[NSFileManager defaultManager] fileExistsAtPath:path.asString isDirectory:&isDir] && !isDir)
 		{
 			opened = [OpenFile tryOpenPath:path atLine:line atCol:col withTabWidth:1];
 		}
-		else if ([[NSWorkspace sharedWorkspace] isFilePackageAtPath:path])
+		else if ([[NSWorkspace sharedWorkspace] isFilePackageAtPath:path.asString])
 		{
 			opened = [OpenFile tryOpenPath:path atLine:line atCol:col withTabWidth:1];
 		}
@@ -77,7 +77,7 @@ static bool _doAbsolutePath(NSString* path, int line, int col)
 
 // If the name is an absolute path then we can open it with Mimsy if it's
 // a file type we handle or launch it with an external app if not.
-static bool _openAbsolutePath(NSString* path, int line, int col)
+static bool _openAbsolutePath(MimsyPath* path, int line, int col)
 {
 	bool opened = false;
 	
@@ -90,16 +90,16 @@ static bool _openAbsolutePath(NSString* path, int line, int col)
 	return opened;
 }
 
-static bool _openRelativePath(NSString* path, int line, int col)
+static bool _openRelativePath(MimsyPath* path, int line, int col)
 {
 	__block bool opened = false;
 	
-	if (![path isAbsolutePath])
+	if (![path isAbsolute])
 	{
 		DirectoryController* controller = [DirectoryController getCurrentController];
 		if (controller)
 		 {
-			 NSString* candidate = [NSString pathWithComponents:@[controller.path, path]];
+             MimsyPath* candidate = [controller.path appendWithPath:path];
 			 if (_doAbsolutePath(candidate, line, col))
 			 {
 				 LOG("Text:Verbose", "opened using relative path");
@@ -114,11 +114,11 @@ static bool _openRelativePath(NSString* path, int line, int col)
 // We assume that if we can find a match under the current directory that is what the user
 // wants to open. (And we do a slow manual search because the locate command isn't always
 // available, and even when it is, it does not match the current file system state).
-static bool _openLocalPath(NSString* path, int line, int col)
+static bool _openLocalPath(MimsyPath* path, int line, int col)
 {
 	__block bool opened = false;
 	
-	if (![path isAbsolutePath] && path.length > 2)		// don't do something lame like open all files with "e"
+	if (![path isAbsolute] && path.asString.length > 2)		// don't do something lame like open all files with "e"
 	{
 		DirectoryController* controller = [DirectoryController getCurrentController];
 		if (controller)
@@ -126,13 +126,13 @@ static bool _openLocalPath(NSString* path, int line, int col)
             NSMutableArray* normalFiles = [NSMutableArray new];
             NSMutableArray* hiddenFiles = [NSMutableArray new];
             
-			[Utils enumerateDeepDir:controller.path glob:nil error:NULL block:^(NSString* item, bool* stop)
+			[Utils enumerateDeepDir:controller.path glob:nil error:NULL block:^(MimsyPath* item, bool* stop)
 			{
                 UNUSED(stop);
-				NSRange range = [item rangeOfString:path];
+				NSRange range = [item.asString rangeOfString:path.asString];
                 if (range.location != NSNotFound)
                 {
-                    NSString* name = [item lastPathComponent];
+                    NSString* name = [item lastComponent];
                     if ([name startsWith:@"."])
                         [hiddenFiles addObject:item];
                     else
@@ -144,7 +144,7 @@ static bool _openLocalPath(NSString* path, int line, int col)
             if (normalFiles.count == 0)
                 normalFiles = hiddenFiles;
             
-            for (NSString* item in normalFiles)
+            for (MimsyPath* item in normalFiles)
             {
                 if (_doAbsolutePath(item, line, col))
                 {
@@ -158,13 +158,13 @@ static bool _openLocalPath(NSString* path, int line, int col)
 	return opened;
 }
 
-static NSArray* _locateFiles(NSString* path)
+static NSArray<NSString*>* _locateFiles(MimsyPath* path)
 {
 	// Unlike the other implementations of open selection here we only use
 	// the file name component of the path we're trying to open. We do this
 	// because it's fairly common to try and locate paths like <AppKit/NSResponder.h>
 	// which are links to paths like /System/Library/Frameworks/AppKit.framework/Versions/C/Headers/NSResponder.h
-	NSArray* components = [path pathComponents];
+	NSArray* components = [path components];
 	NSString* fileName = [components lastObject];
 	NSString* file = [@"/" stringByAppendingString:fileName];
 	
@@ -194,13 +194,13 @@ static NSArray* _locateFiles(NSString* path)
 	return files;
 }
 
-static bool _openAllLocatedFiles(NSArray* files, int line, int col)
+static bool _openAllLocatedFiles(NSArray<NSString*>* files, int line, int col)
 {
 	bool opened = false;
 
 	for (NSString* path in files)
 	{
-		if (_doAbsolutePath(path, line, col))
+		if (_doAbsolutePath([[MimsyPath alloc] initWithString:path], line, col))
 		{
 			LOG("Text:Verbose", "opened using located path");
 			opened = true;
@@ -210,7 +210,7 @@ static bool _openAllLocatedFiles(NSArray* files, int line, int col)
 	return opened;
 }
 
-static bool _selectLocatedFiles(NSArray* files, int line, int col)
+static bool _selectLocatedFiles(NSArray<NSString*>* files, int line, int col)
 {
 	__block bool opened = false;
 
@@ -233,7 +233,7 @@ static bool _selectLocatedFiles(NSArray* files, int line, int col)
 		[controller.selectedRows enumerateIndexesUsingBlock:^(NSUInteger index, BOOL* stop)
 		 {
 			 UNUSED(stop);
-			 if (_doAbsolutePath(files[index], line, col))
+			 if (_doAbsolutePath([[MimsyPath alloc] initWithString:files[index]], line, col))
 			 {
 				 LOG("Text:Verbose", "opened %s", [files[index] UTF8String]);
 				 opened = true;
@@ -247,7 +247,7 @@ static bool _selectLocatedFiles(NSArray* files, int line, int col)
 	return true;
 }
 
-static bool _openLocatedFiles(NSArray* files, int line, int col)
+static bool _openLocatedFiles(NSArray<NSString*>* files, int line, int col)
 {
 	bool opened = false;
 	
@@ -262,7 +262,7 @@ static bool _openLocatedFiles(NSArray* files, int line, int col)
 		}];
 
 		Glob* preferred = controller.preferredPaths;
-		NSArray* candidates = [files filteredArrayUsingBlock:^bool(id element)
+		NSArray<NSString*>* candidates = [files filteredArrayUsingBlock:^bool(id element)
 		{
 			return [preferred matchName:element];
 		}];
@@ -314,7 +314,7 @@ static void _getLineAndCol(NSString* text, NSUInteger location, NSUInteger lengt
 	}
 }
 
-bool openLocalPath(NSString* path)
+bool openLocalPath(MimsyPath* path)
 {
     int line = -1, col = -1;
 
@@ -344,18 +344,20 @@ static bool _openFile(NSString* text, NSUInteger location, NSUInteger length)
 		// we'll find "/Developer/SDKs/MacOSX10.5.sdk/usr/include/c++/4.0.0/list".
 		if (![path startsWith:@"//"])
 		{
+            MimsyPath* p = [[MimsyPath alloc] initWithString:path];
+            
 			if (!found)
-				found = _openAbsolutePath(path, line, col);
+				found = _openAbsolutePath(p, line, col);
 			
 			if (!found)
-				found = _openRelativePath(path, line, col);
+				found = _openRelativePath(p, line, col);
 			
 			if (!found)
-				found = _openLocalPath(path, line, col);
+				found = _openLocalPath(p, line, col);
 			
 			if (!found)
 			{
-				NSArray* candidates = _locateFiles(path);
+				NSArray<NSString*>* candidates = _locateFiles(p);
 
 				if (candidates.count > 0)
 					found = _openLocatedFiles(candidates, line, col);

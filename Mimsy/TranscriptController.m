@@ -230,8 +230,8 @@ static NSMutableArray* startupErrors;
 
 - (void)_loadSettings
 {
-	NSString* dir = [Paths installedDir:@"settings"];
-	NSString* path = [dir stringByAppendingPathComponent:@"transcript.rtf"];
+	MimsyPath* dir = [Paths installedDir:@"settings"];
+	MimsyPath* path = [dir appendWithComponent:@"transcript.rtf"];
 	TextStyles* styles = [[TextStyles new] initWithPath:path expectBackColor:true];
 	_infoAttrs    = [styles attributesForElement:@"info"];
 	_commandAttrs = [styles attributesForElement:@"command"];

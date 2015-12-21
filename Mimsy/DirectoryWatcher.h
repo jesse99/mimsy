@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "MimsyPlugins.h"
 
 // Flags are set as follows:
 //    create - kFSEventStreamEventFlagItemCreated
@@ -6,7 +7,7 @@
 //    rename - kFSEventStreamEventFlagItemRenamed
 //    edit   - kFSEventStreamEventFlagItemModified
 // If it is a file kFSEventStreamEventFlagItemIsFile is set. If it is a directory kFSEventStreamEventFlagItemIsDir is set.
-typedef void (^DirectoryWatcherCallback)(NSString* path, FSEventStreamEventFlags flags);
+typedef void (^DirectoryWatcherCallback)(MimsyPath* path, FSEventStreamEventFlags flags);
 
 // Used to call a block when files are added, removed, or changed from a
 // directory and its sub-directories.
@@ -15,7 +16,7 @@ typedef void (^DirectoryWatcherCallback)(NSString* path, FSEventStreamEventFlags
 // Latency is the number of seconds to wait before calling the block (to allow
 // multiple changes to be coalesced). Block will be called with absolute paths
 // to the directories with changes.
-- (id)initWithPath:(NSString*)path latency:(double)latency block:(DirectoryWatcherCallback)block;
+- (id)initWithPath:(MimsyPath*)path latency:(double)latency block:(DirectoryWatcherCallback)block;
 
 @property (readonly) DirectoryWatcherCallback callback;
 

@@ -394,7 +394,7 @@ static __weak TextController* _frontmost;
 	
 	_closed = true;
     
-	NSString* path = [self path];
+	MimsyPath* path = [self path];
 	if (path)
 	{
 		// If the document has changes but is not being saved then we don't
@@ -474,7 +474,7 @@ static __weak TextController* _frontmost;
 - (void)open
 {
 	if (self.path)
-		LOG("Text", "Window for %s opened", STR([self.path lastPathComponent]));
+		LOG("Text", "Window for %s opened", STR([self.path lastComponent]));
 	else
 		LOG("Text", "Untitled window opened");
 		
@@ -654,7 +654,7 @@ static __weak TextController* _frontmost;
 	}
 }
 
-+ (TextController*)find:(NSString*)path
++ (TextController*)find:(MimsyPath*)path
 {
 	for (NSWindow* window in [NSApp orderedWindows])
 	{
@@ -665,7 +665,7 @@ static __weak TextController* _frontmost;
 				if ([window.windowController isKindOfClass:[TextController class]])
 				{
 					TextController* controller = window.windowController;
-					if (controller.path && [controller.path compare:path] == NSOrderedSame)
+					if (controller.path && [controller.path isEqualToPath:path])
 						return controller;
 				}
 			}
@@ -682,7 +682,7 @@ static __weak TextController* _frontmost;
 	if (_language)
 		[result addObject:_language.name];
 	
-	NSString* path = [self path];
+	MimsyPath* path = [self path];
 	if (path)
 	{
 		[self _addInstalledContexts:result forPath:path];
@@ -693,16 +693,14 @@ static __weak TextController* _frontmost;
 	return result;
 }
 
-- (void)_addInstalledContexts:(NSMutableArray*)result forPath:(NSString*)path
+- (void)_addInstalledContexts:(NSMutableArray*)result forPath:(MimsyPath*)path
 {
-	NSString* dir = [Paths installedDir:nil];
-	if (dir && ![dir hasSuffix:@"/"])
-		dir = [dir stringByAppendingString:@"/"];
+	MimsyPath* dir = [Paths installedDir:nil];
 	
-	if ([path hasPrefix:dir])
+	if ([path hasRoot:dir])
 	{
-		NSString* name = [path substringFromIndex:dir.length];
-		NSArray* parts = [name pathComponents];
+		MimsyPath* name = [path removeRoot:dir];
+		NSArray* parts = [name components];
 		if (parts.count > 1)
 		{
 			[result addObject:parts[0]];
@@ -749,8 +747,8 @@ static __weak TextController* _frontmost;
 {
 	NSString* name = nil;
 	
-	NSString* dir = [Paths installedDir:@"settings"];
-	NSString* path = [dir stringByAppendingPathComponent:@"styles.mimsy"];
+	MimsyPath* dir = [Paths installedDir:@"settings"];
+	MimsyPath* path = [dir appendWithComponent:@"styles.mimsy"];
 	
 	NSError* error = nil;
 	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
@@ -780,10 +778,10 @@ static __weak TextController* _frontmost;
 	if (lang != _language)
 	{
 		_language = lang;
-		LOG("Text:Verbose", "Set language for %s to %s", STR([self.path lastPathComponent]), STR(lang));
+		LOG("Text:Verbose", "Set language for %s to %s", STR([self.path lastComponent]), STR(lang));
         
         // TODO: Might want to support per-file settings (though that doesn't seem terribly useful).
-        _settings = [[Settings alloc] init:self.path.lastPathComponent context:self];
+        _settings = [[Settings alloc] init:self.path.lastComponent context:self];
 		if (_language)
         {
             for (NSUInteger i = 0; i < _language.settingKeys.count; i++)
@@ -825,7 +823,7 @@ static __weak TextController* _frontmost;
 	
     if (_language)
     {
-        _settings = [[Settings alloc] init:self.path.lastPathComponent context:self];
+        _settings = [[Settings alloc] init:self.path.lastComponent context:self];
 		[self setLanguage:[Languages findWithlangName:_language.name]];
     }
 }
@@ -860,7 +858,7 @@ static __weak TextController* _frontmost;
     }
 }
 
-- (void)changeStyle:(NSString*)path
+- (void)changeStyle:(MimsyPath*)path
 {
 	assert(_language);
 	_styles = [[TextStyles alloc] initWithPath:path expectBackColor:true];
@@ -868,13 +866,13 @@ static __weak TextController* _frontmost;
 		[_applier resetStyles];
 }
 
-- (NSString* _Nullable)path
+- (MimsyPath* _Nullable)path
 {
 	NSURL* url = [self.document fileURL];
-    return url ? [url path] : nil;
+    return url ? [[MimsyPath alloc] initWithString:url.path] : nil;
 }
 
-- (void)_positionWindow:(NSString*)path
+- (void)_positionWindow:(MimsyPath*)path
 {
 	NSRect frame = [WindowsDatabase getFrame:path];
 	if (NSWidth(frame) >= 40)
@@ -894,14 +892,14 @@ static __weak TextController* _frontmost;
 
 - (void)onPathChanged
 {
-	NSString* path = [self path];
+	MimsyPath* path = [self path];
     NSDocument* doc = self.document;
 	if (path)
 	{
 		[self _positionWindow:path];
-        _settings = [[Settings alloc] init:path.lastPathComponent context:self];
+        _settings = [[Settings alloc] init:path.lastComponent context:self];
 		
-		NSString* name = [path lastPathComponent];
+		NSString* name = [path lastComponent];
         if ([doc.fileType isEqualToString:@"binary"])
             self.language = [Languages findWithlangName:@"binary"];
         else
@@ -918,7 +916,7 @@ static __weak TextController* _frontmost;
 		if ([TimeMachine isSnapshotFile:self.path])
 		{
 			NSString* label = [TimeMachine getSnapshotLabel:path];
-			NSString* title = [NSString stringWithFormat:@"%@ (from %@)", path.lastPathComponent, label];
+			NSString* title = [NSString stringWithFormat:@"%@ (from %@)", path.lastComponent, label];
 			self.customTitle = title;
 			[self synchronizeWindowTitleWithDocumentName];
 		}
@@ -1497,18 +1495,17 @@ static __weak TextController* _frontmost;
 
 - (TextStyles*)_createTextStyles
 {
-	NSString* dir = [Paths installedDir:@"styles"];
-	NSString* path = [dir stringByAppendingPathComponent:self._getDefaultStyleName];
+	MimsyPath* dir = [Paths installedDir:@"styles"];
+	MimsyPath* path = [dir appendWithComponent:self._getDefaultStyleName];
 	return [[TextStyles alloc] initWithPath:path expectBackColor:true];
 }
 
 - (TextStyles*)_createDefaultTextStyles
 {
-	NSString* dir = [Paths installedDir:@"settings"];
-	NSString* path = [dir stringByAppendingPathComponent:@"default-text.rtf"];
+	MimsyPath* dir = [Paths installedDir:@"settings"];
+	MimsyPath* path = [dir appendWithComponent:@"default-text.rtf"];
 	return [[TextStyles alloc] initWithPath:path expectBackColor:true];
 }
-
 
 - (void)_mainChanged:(NSNotification*)notification
 {

@@ -12,7 +12,7 @@ static SelectStyleController* _controller;
 
 @interface StyleRowObject : NSObject
 @property NSString* name;
-@property NSString* path;
+@property MimsyPath* path;
 @property NSString* rating;
 @property NSString* comment;
 @end
@@ -120,7 +120,7 @@ static SelectStyleController* _controller;
 {
 	StyleRowObject* object = _rows[(NSUInteger)sender.clickedRow];
 
-	NSURL* url = [[NSURL alloc] initFileURLWithPath:object.path];
+	NSURL* url = [[NSURL alloc] initFileURLWithPath:object.path.asString];
 	[[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES completionHandler:
 		^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
 		{
@@ -295,19 +295,20 @@ static SelectStyleController* _controller;
 {
 	NSMutableArray* rows = [NSMutableArray new];
 	
-	NSString* dir = [Paths installedDir:@"styles"];
+	MimsyPath* dir = [Paths installedDir:@"styles"];
 	Glob* glob = [[Glob alloc] initWithGlob:@"*.rtf"];
 	
 	NSError* error = nil;
 	[Utils enumerateDeepDir:dir glob:glob error:&error block:
-	 ^(NSString* path, bool* stop)
+	 ^(MimsyPath* path, bool* stop)
 	 {
          UNUSED(stop);
          
-		 if (![path hasSuffix:@"README.rtf"])
+         NSString* fname = path.lastComponent;
+         if (![fname isEqualToString:@"README.rtf"])
 		 {
 			 StyleRowObject* object = [StyleRowObject new];
-			 object.name = [path substringFromIndex:dir.length+1];
+             object.name = [path removeRoot:dir].asString;
 			 object.path = path;
 			 [rows addObject:object];
 		 }
@@ -321,8 +322,8 @@ static SelectStyleController* _controller;
 
 - (void)_loadSettings
 {
-	NSString* dir = [Paths installedDir:@"settings"];
-	NSString* path = [dir stringByAppendingPathComponent:@"styles.mimsy"];
+	MimsyPath* dir = [Paths installedDir:@"settings"];
+	MimsyPath* path = [dir appendWithComponent:@"styles.mimsy"];
 
 	NSError* error = nil;
 	ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
@@ -399,11 +400,11 @@ static SelectStyleController* _controller;
 
 - (void)_writeSettings:(NSString*)content
 {
-	NSString* dir = [Paths installedDir:@"settings"];
-	NSString* path = [dir stringByAppendingPathComponent:@"styles.mimsy"];
+	MimsyPath* dir = [Paths installedDir:@"settings"];
+	MimsyPath* path = [dir appendWithComponent:@"styles.mimsy"];
 	
 	NSError* error = nil;
-	BOOL written = [content writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:&error];
+	BOOL written = [content writeToFile:path.asString atomically:YES encoding:NSUTF8StringEncoding error:&error];
 	if (!written)
 	{
 		NSString* reason = [error localizedFailureReason];

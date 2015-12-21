@@ -59,9 +59,9 @@
 			UNUSED(stop);
 			if (controller.path)
 			{
-				NSString* fileName = [controller.path lastPathComponent];
+				NSString* fileName = [controller.path lastComponent];
 				if ([self.includeGlobs matchName:fileName])
-					[openFiles setValue:controller forKey:controller.path];
+					[openFiles setValue:controller forKey:controller.path.asString];
 			}
 		}];
 	
@@ -88,7 +88,7 @@
 		[self _finishedReplacing];
 }
 
-- (bool)_processPath:(NSString*) path withContents:(NSMutableString*)contents	// threaded
+- (bool)_processPath:(NSString*)path withContents:(NSMutableString*)contents	// threaded
 {
 	bool edited = false;
 	

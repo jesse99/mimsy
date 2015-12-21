@@ -28,7 +28,7 @@
 	if (table)
 		[table reloadData];
 	
-	NSString* title = [[controller.path lastPathComponent] stringByAppendingString:@" Build Flags"];
+	NSString* title = [[controller.path lastComponent] stringByAppendingString:@" Build Flags"];
 	[self.window setTitle:title];
 	
 	[self showWindow:self];

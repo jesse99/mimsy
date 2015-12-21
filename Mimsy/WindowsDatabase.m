@@ -63,7 +63,7 @@ err:
 	return self;
 }
 
-+ (NSRect) getFrame:(NSString*)path
++ (NSRect) getFrame:(MimsyPath*)path
 {
 	NSRect result = NSZeroRect;
 	
@@ -73,7 +73,7 @@ err:
 		NSArray* rows = [_instance->_db queryRows:[NSString stringWithFormat:
 @"			SELECT frame"
 "				FROM Windows"
-"			WHERE path = '%@'", [path stringByReplacingOccurrencesOfString:@"'" withString:@"''"]]
+"			WHERE path = '%@'", [path.asString stringByReplacingOccurrencesOfString:@"'" withString:@"''"]]
 		error:&error];
 		if (error)
 			goto err;
@@ -92,7 +92,7 @@ err:
 	return NSZeroRect;
 }
 
-+ (bool)getInfo:(struct WindowInfo*)info forPath:(NSString*)path
++ (bool)getInfo:(struct WindowInfo*)info forPath:(MimsyPath*)path
 {
  	NSError* error = nil;
 	if (_instance && _instance->_db)
@@ -100,7 +100,7 @@ err:
 		NSArray* rows = [_instance->_db queryRows:[NSString stringWithFormat:
 @"			SELECT length, scrollers, selection, word_wrap"
 "				FROM Windows"
-"			WHERE path = '%@'", [path stringByReplacingOccurrencesOfString:@"'" withString:@"''"]]
+"			WHERE path = '%@'", [path.asString stringByReplacingOccurrencesOfString:@"'" withString:@"''"]]
 		error:&error];
 		if (error)
 			goto err;
@@ -124,14 +124,14 @@ err:
 	return false;
 }
 
-+ (void)saveInfo:(const struct WindowInfo*)info frame:(NSRect)frame forPath:(NSString*)path
++ (void)saveInfo:(const struct WindowInfo*)info frame:(NSRect)frame forPath:(MimsyPath*)path
 {
 	NSError* error = nil;
 	if (_instance && _instance->_db)
 	{
 		[_instance->_db update:[NSString stringWithFormat:
 @"			INSERT OR REPLACE INTO Windows VALUES ('%@', '%@', '%@', '%@', '%@', %@)",
-			[path stringByReplacingOccurrencesOfString:@"'" withString:@"''"],
+			[path.asString stringByReplacingOccurrencesOfString:@"'" withString:@"''"],
 			[NSString stringWithFormat:@"%ld", info->length],
 			NSStringFromRect(frame),
 			NSStringFromPoint(info->origin),

@@ -2,16 +2,16 @@
 
 @implementation FileSystemItem
 {
-	NSString* _standardPath;
+	MimsyPath* _standardPath;
 }
 
-- (id)initWithPath:(NSString*)path controller:(DirectoryController*)controller
+- (id)initWithPath:(MimsyPath*)path controller:(DirectoryController*)controller
 {
     self = [super init];
     if (self)
 	{
 		_path = path;
-		_standardPath = [path stringByStandardizingPath];
+		_standardPath = [path standardize];
 		_controller = controller;
     }
     return self;
@@ -49,7 +49,7 @@
 
 - (NSString*)description
 {
-	return _path;
+	return _path.description;
 }
 
 - (bool)reload:(NSMutableArray*)added
@@ -58,9 +58,9 @@
 	return false;
 }
 
-- (FileSystemItem*)find:(NSString*)path
+- (FileSystemItem*)find:(MimsyPath*)path
 {
-	return [_standardPath isEqualToString:[path stringByStandardizingPath]] ? self : nil;
+	return [_standardPath isEqualToPath:[path standardize]] ? self : nil;
 }
 
 - (BOOL)isEqual:(id)rhs

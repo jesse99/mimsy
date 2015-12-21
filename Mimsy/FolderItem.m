@@ -13,12 +13,12 @@
 	NSMutableArray* _children;
 }
 
-- (id)initWithPath:(NSString*)path controller:(DirectoryController*)controller
+- (id)initWithPath:(MimsyPath*)path controller:(DirectoryController*)controller
 {
 	self = [super initWithPath:path controller:controller];
 	if (self)
 	{
-		NSString* name = [path lastPathComponent];
+		NSString* name = [path lastComponent];
 		NSDictionary* attrs = [controller getDirAttrs:name];
 		_name = [[NSAttributedString alloc] initWithString:name attributes:attrs];
 		_bytes = [[NSAttributedString alloc] initWithString:@"" attributes:attrs];
@@ -66,7 +66,7 @@
 	return _children[index];
 }
 
-- (FileSystemItem*)find:(NSString*)path
+- (FileSystemItem*)find:(MimsyPath*)path
 {
 	FileSystemItem* result = [super find:path];
 	
@@ -88,7 +88,7 @@
 	DirectoryController* controller = self.controller;
 	if (controller)
 	{
-		NSString* name = [self.path lastPathComponent];
+		NSString* name = [self.path lastComponent];
 		NSDictionary* attrs = [controller getDirAttrs:name];
 		_name = [[NSAttributedString alloc] initWithString:name attributes:attrs];
 		_bytes = [[NSAttributedString alloc] initWithString:@"" attributes:attrs];
@@ -129,15 +129,15 @@
 	// Add new items from paths.
 	for (NSUInteger i = 0; i < paths.count; ++i)
 	{
-		NSString* path = paths[i];
+		MimsyPath* path = paths[i];
 		
 		if (![_children containsObject:path])
 		{
 			BOOL isDir;
-			if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir])
+			if ([[NSFileManager defaultManager] fileExistsAtPath:path.asString isDirectory:&isDir])
 			{
 				FileSystemItem* item;
-				if (!isDir || [[NSWorkspace sharedWorkspace] isFilePackageAtPath:path])
+				if (!isDir || [[NSWorkspace sharedWorkspace] isFilePackageAtPath:path.asString])
 					item = [[FileItem alloc] initWithPath:path controller:self.controller];
 				else
 					item = [[FolderItem alloc] initWithPath:path controller:self.controller];
@@ -162,7 +162,7 @@
 				else if (!lhs && rhs)
 					return NSOrderedAscending;
 				else
-					return [lhs.path localizedCaseInsensitiveCompare:rhs.path];
+					return [lhs.path.asString localizedCaseInsensitiveCompare:rhs.path.asString];
 			}
 		 ];
 	}
@@ -178,9 +178,9 @@
 	
 	NSError* error = nil;
 	bool ok = [Utils enumerateDir:self.path glob:nil error:&error block:
-		^(NSString* item)
+		^(MimsyPath* item)
 		{
-			NSString* fileName = [item lastPathComponent];
+			NSString* fileName = [item lastComponent];
 			if (!controller || [controller.dontIgnores matchName:fileName] || ![controller.ignores matchName:fileName])
 				[paths addObject:item];
 		}

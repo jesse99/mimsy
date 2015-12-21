@@ -13,21 +13,21 @@ class StdShowInFinder: MimsyPlugin
         return nil
     }
     
-    func getTitle(files: [String], dirs: [String]) -> String?
+    func getTitle(files: [MimsyPath], dirs: [MimsyPath]) -> String?
     {
         return !files.isEmpty || !dirs.isEmpty ? "Show in Finder" : nil
     }
     
-    func showItems(files: [String], dirs: [String])
+    func showItems(files: [MimsyPath], dirs: [MimsyPath])
     {
         for path in files
         {
-            NSWorkspace.sharedWorkspace().selectFile(path, inFileViewerRootedAtPath: "")
+            NSWorkspace.sharedWorkspace().selectFile(path.asString(), inFileViewerRootedAtPath: "")
         }
 
         for path in dirs
         {
-            NSWorkspace.sharedWorkspace().selectFile(path, inFileViewerRootedAtPath: "")
+            NSWorkspace.sharedWorkspace().selectFile(path.asString(), inFileViewerRootedAtPath: "")
         }
     }
 }

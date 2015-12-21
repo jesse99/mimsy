@@ -10,12 +10,12 @@
 	NSAttributedString* _bytes;
 }
 
-- (id)initWithPath:(NSString*)path controller:(DirectoryController*)controller
+- (id)initWithPath:(MimsyPath*)path controller:(DirectoryController*)controller
 {
 	self = [super initWithPath:path controller:controller];
 	if (self)
 	{
-		NSString* name = [path lastPathComponent];
+		NSString* name = [path lastComponent];
 		NSDictionary* attrs = [controller getFileAttrs:name];
 		_name = [[NSAttributedString alloc] initWithString:name attributes:attrs];
 		
@@ -41,7 +41,7 @@
 	DirectoryController* controller = self.controller;
 	if (controller)
 	{
-		NSString* name = [self.path lastPathComponent];
+		NSString* name = [self.path lastComponent];
 		NSDictionary* attrs = [controller getFileAttrs:name];
 		_name = [[NSAttributedString alloc] initWithString:name attributes:attrs];
 	}
@@ -58,19 +58,19 @@
 	return false;
 }
 
-- (NSUInteger)_getBytes:(NSString*)path
+- (NSUInteger)_getBytes:(MimsyPath*)path
 {
 	__block NSUInteger bytes = 0;
 	
 	BOOL isDir;
 	NSFileManager* fm = [NSFileManager defaultManager];
-	if ([fm fileExistsAtPath:path isDirectory:&isDir])
+	if ([fm fileExistsAtPath:path.asString isDirectory:&isDir])
 	{
 		NSError* error = nil;
 		if (isDir)
 		{
 			if (![Utils enumerateDeepDir:path glob:nil error:&error block:	// this is the package case
-                  ^(NSString* item, bool* stop) {UNUSED(stop); bytes += [self _getBytes:item];}])
+                  ^(MimsyPath* item, bool* stop) {UNUSED(stop); bytes += [self _getBytes:item];}])
 			{
 				NSString* reason = [error localizedFailureReason];
 				LOG("Warning", "error getting sizes for %s: %s", STR(path), STR(reason));
@@ -78,7 +78,7 @@
 		}
 		else
 		{
-			NSDictionary* attrs = [fm attributesOfItemAtPath:path error:&error];	// ordinary file case
+			NSDictionary* attrs = [fm attributesOfItemAtPath:path.asString error:&error];	// ordinary file case
 			if (attrs)
 			{
 				NSNumber* value = attrs[NSFileSize];

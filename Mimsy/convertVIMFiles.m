@@ -1083,7 +1083,7 @@ static void addLine(NSMutableAttributedString* text, GlobalStyle* global, NSStri
 	[text setAttributes:attrs range:range];
 }
 
-static void addComment(NSMutableAttributedString* text, NSString* path, GlobalStyle* global)
+static void addComment(NSMutableAttributedString* text, MimsyPath* path, GlobalStyle* global)
 {
 	ElementStyle* comment = [ElementStyle new];
 	comment.fgColor = @"#EF122E";
@@ -1208,7 +1208,7 @@ static void addMissingElement(NSMutableAttributedString* text, Group* group, Glo
 	}
 }
 
-static NSMutableAttributedString* createText(NSString* path, GlobalStyle* global)
+static NSMutableAttributedString* createText(MimsyPath* path, GlobalStyle* global)
 {
 	NSMutableAttributedString* text = [NSMutableAttributedString new];
 	addComment(text, path, global);
@@ -1250,15 +1250,15 @@ static NSMutableAttributedString* createText(NSString* path, GlobalStyle* global
 	return text;
 }
 
-static NSError* saveMetadata(NSString* path, GlobalStyle* global, NSString* outDir)
+static NSError* saveMetadata(MimsyPath* path, GlobalStyle* global, MimsyPath* outDir)
 {
 	NSError* error = nil;
 	
 	NSColor* color = getColor(nil, global.bgColor);
 	if (color)
 	{
-		NSString* fname = [[path lastPathComponent] stringByDeletingPathExtension];
-		NSString* outPath = [[outDir stringByAppendingPathComponent:fname] stringByAppendingPathExtension:@"rtf"];
+		NSString* fname = [[path lastComponent] stringByDeletingPathExtension];
+		MimsyPath* outPath = [[outDir appendWithComponent:fname] appendWithExtensionName:@"rtf"];
 		NSError* error = [Metadata writeCriticalDataTo:outPath named:@"back-color" with:color];
 		if (error)
 		{
@@ -1270,7 +1270,7 @@ static NSError* saveMetadata(NSString* path, GlobalStyle* global, NSString* outD
 	return error;
 }
 
-static NSError* saveFile(NSString* path, NSMutableAttributedString* text, NSString* outDir)
+static NSError* saveFile(MimsyPath* path, NSMutableAttributedString* text, MimsyPath* outDir)
 {
 	NSError* error = nil;
 	
@@ -1278,9 +1278,9 @@ static NSError* saveFile(NSString* path, NSMutableAttributedString* text, NSStri
 	NSData* data = [text dataFromRange:NSMakeRange(0, text.length) documentAttributes:attrs error:&error];
 	if (data)
 	{
-		NSString* fname = [[path lastPathComponent] stringByDeletingPathExtension];
-		NSString* outPath = [[outDir stringByAppendingPathComponent:fname] stringByAppendingPathExtension:@"rtf"];
-		BOOL succeed = [data writeToFile:outPath options:0 error:&error];
+		NSString* fname = [[path lastComponent] stringByDeletingPathExtension];
+		MimsyPath* outPath = [[outDir appendWithComponent:fname] appendWithExtensionName:@"rtf"];
+		BOOL succeed = [data writeToFile:outPath.asString options:0 error:&error];
 		if (!succeed)
 		{
 			NSString* reason = [error localizedFailureReason];
@@ -1308,7 +1308,7 @@ static bool hasColors(GlobalStyle* global)
 	return false;
 }
 
-static bool convertFile(NSString* path, NSString* outDir)
+static bool convertFile(MimsyPath* path, MimsyPath* outDir)
 {
 	NSError* error = nil;
 	
@@ -1343,7 +1343,7 @@ static bool convertFile(NSString* path, NSString* outDir)
 	return error == nil;
 }
 
-void convertVIMFiles(NSString* vimDIR, NSString* outDir)
+void convertVIMFiles(MimsyPath* vimDIR, MimsyPath* outDir)
 {
 	__block int passed = 0;
 	__block int failed = 0;
@@ -1351,9 +1351,9 @@ void convertVIMFiles(NSString* vimDIR, NSString* outDir)
 	NSError* error = nil;
 	
 	NSFileManager* fm = [NSFileManager defaultManager];
-	if (![fm fileExistsAtPath:outDir])
+	if (![fm fileExistsAtPath:outDir.asString])
 	{
-		BOOL created = [fm createDirectoryAtPath:outDir withIntermediateDirectories:YES attributes:nil error:&error];
+		BOOL created = [fm createDirectoryAtPath:outDir.asString withIntermediateDirectories:YES attributes:nil error:&error];
 		if (!created)
 		{
 			NSString* reason = [error localizedFailureReason];
@@ -1364,7 +1364,7 @@ void convertVIMFiles(NSString* vimDIR, NSString* outDir)
 	}
 	
 	Glob* glob = [[Glob alloc] initWithGlob:@"*.vim"];
-	[Utils enumerateDir:vimDIR glob:glob error:&error block:^(NSString* path)
+	[Utils enumerateDir:vimDIR glob:glob error:&error block:^(MimsyPath* path)
 		{if (convertFile(path, outDir)) ++passed; else ++failed;}];
 	if (error)
 	{

@@ -25,7 +25,7 @@ typedef void (^LayoutCallback)(TextController* controller);
 
 + (TextController*)frontmost;
 + (void)enumerate:(void (^)(TextController* controller, bool* stop))block;
-+ (TextController*)find:(NSString*)path;
++ (TextController*)find:(MimsyPath*)path;
 
 - (void)open;
 - (bool)closed;
@@ -33,7 +33,7 @@ typedef void (^LayoutCallback)(TextController* controller);
 - (bool)isWordWrapping;
 - (void)toggleWordWrap;
 - (NSDictionary*)resetTypingAttributes;
-- (void)changeStyle:(NSString*)path;
+- (void)changeStyle:(MimsyPath*)path;
 - (void)resetStyles;
 - (void)showLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width;
 

@@ -45,7 +45,7 @@ import Cocoa
     var string: NSString {get}
 
     /// Returns the full path to the associated document or nil if it hasn't been saved yet.
-    var path: NSString? {get}
+    var path: MimsyPath? {get}
     
     /// Replaces all of the text within the document.
     ///

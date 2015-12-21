@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "MimsyPlugins.h"
 
 @interface TimeMachine : NSObject
 
@@ -7,7 +8,7 @@
 + (void)openLatest;
 + (void)openFiles;
 
-+(bool)isSnapshotFile:(NSString*)path;
-+(NSString*)getSnapshotLabel:(NSString*)path;
++(bool)isSnapshotFile:(MimsyPath*)path;
++(NSString*)getSnapshotLabel:(MimsyPath*)path;
 
 @end

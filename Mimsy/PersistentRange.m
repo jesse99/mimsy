@@ -5,7 +5,7 @@
 
 @implementation PersistentRange
 {
-	NSString* _path;
+	MimsyPath* _path;
 	NSRange _onDiskRange;
 	NSRange _inMemoryRange;
     NSUInteger _line;
@@ -38,7 +38,7 @@
     return self;
 }
 
-- (id)init:(NSString*)path range:(NSRange)range block:(RangeBlock)callback
+- (id)init:(MimsyPath*)path range:(NSRange)range block:(RangeBlock)callback
 {
 	ASSERT(path);
 	ASSERT(range.location != NSNotFound);
@@ -65,7 +65,7 @@
 	return self;
 }
 
-- (id)init:(NSString*)path line:(NSUInteger)line col:(NSUInteger)col block:(RangeBlock)callback
+- (id)init:(MimsyPath*)path line:(NSUInteger)line col:(NSUInteger)col block:(RangeBlock)callback
 {
     ASSERT(path);
     
@@ -120,7 +120,7 @@
     ASSERT(_path);
 
     TextController* controller = notification.object;
-    if ([_path compare:controller.path] == NSOrderedSame)
+    if ([_path isEqualToPath:controller.path])
     {
         [self _registerNotifications:controller];
         _controller = controller;

@@ -1,3 +1,4 @@
 #import <Foundation/Foundation.h>
+#import "MimsyPlugins.h"
 
-void convertVIMFiles(NSString* vimDIR, NSString* outDir);
+void convertVIMFiles(MimsyPath* vimDIR, MimsyPath* outDir);

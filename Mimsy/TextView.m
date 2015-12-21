@@ -693,7 +693,7 @@ static NSString* getKey(NSEvent* event)
     {
         NSPasteboard* pb = [NSPasteboard generalPasteboard];
         [pb clearContents];
-        [pb writeObjects:@[controller.path]];
+        [pb writeObjects:@[controller.path.asString]];
     }
 }
 

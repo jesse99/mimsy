@@ -13,7 +13,7 @@ class StdNewFile: MimsyPlugin
         return nil
     }
     
-    func getTitle(files: [String], dirs: [String]) -> String?
+    func getTitle(files: [MimsyPath], dirs: [MimsyPath]) -> String?
     {
         // We'll keep things simple and only create a new file next to a 
         // single item. This way we avoid creating a bunch of sibling files 
@@ -22,30 +22,29 @@ class StdNewFile: MimsyPlugin
         return files.count + dirs.count == 1 ? "New File" : nil
     }
     
-    func createItem(files: [String], dirs: [String])
+    func createItem(files: [MimsyPath], dirs: [MimsyPath])
     {
         for oldPath in files
         {
-            var path: NSString = (oldPath as NSString).stringByDeletingLastPathComponent
-            path = path.stringByAppendingPathComponent("untitled")
-            create(path as String)
+            let path = oldPath.popComponent().append(component: "untitled")
+            create(path)
         }
         
         for oldPath in dirs
         {
-            let path = (oldPath as NSString).stringByAppendingPathComponent("untitled")
+            let path = oldPath.append(component: "untitled")
             create(path)
         }
     }
     
-    func create(var newPath: String)
+    func create(var newPath: MimsyPath)
     {
-        newPath = newPath.stringByFindingUniquePath()
+        newPath = newPath.makeUnique()
         
         // We could do something like use a setting to initialize the new file's
         // contents but it seems better to use a snippet instead.
         let fm = NSFileManager.defaultManager()
-        if !fm.createFileAtPath(newPath, contents: nil, attributes: nil)
+        if !fm.createFileAtPath(newPath.asString(), contents: nil, attributes: nil)
         {
             app.transcript().write(.Error, text: "unknown error creating \(newPath)")
         }

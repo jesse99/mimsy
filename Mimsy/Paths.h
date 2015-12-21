@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "MimsyPlugins.h"
 
 // Misc methods related to the paths used by Mimsy to locate various files.
 @interface Paths : NSObject
@@ -9,6 +10,6 @@
 
 // Path to a directory of (dynamically) installed files in the current
 // user's home directory, e.g. "languages". Name may be nil.
-+ (NSString*)installedDir:(NSString*)name;
++ (MimsyPath*)installedDir:(NSString*)name;
 
 @end

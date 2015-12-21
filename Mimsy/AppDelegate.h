@@ -7,10 +7,10 @@
 typedef void (^NullaryBlock)();
 typedef void (^InvokeTextCommandBlock)(id<MimsyTextView> _Nonnull);
 typedef NSString* _Nullable (^TextContextMenuItemTitleBlock)(id<MimsyTextView> _Nonnull);
-typedef NSString* __nullable (^ __nonnull ProjectContextMenuItemTitleBlock)(NSArray<NSString*>* __nonnull, NSArray<NSString*>* __nonnull);
+typedef NSString* __nullable (^ __nonnull ProjectContextMenuItemTitleBlock)(NSArray<MimsyPath*>* __nonnull, NSArray<MimsyPath*>* __nonnull);
 typedef void (^TextRangeBlock)(id<MimsyTextView> _Nonnull, NSRange);
 
-typedef void (^ __nonnull InvokeProjectCommandBlock)(NSArray<NSString*>* __nonnull, NSArray<NSString*>* __nonnull);
+typedef void (^ __nonnull InvokeProjectCommandBlock)(NSArray<MimsyPath*>* __nonnull, NSArray<MimsyPath*>* __nonnull);
 
 void initLogGlobs(void);
 
@@ -62,7 +62,7 @@ void initLogGlobs(void);
 - (NSArray* _Nullable)projectItems;
 - (NSDictionary* _Nonnull)applyElementHooks;
 
-- (void)installSettingsPath:(NSString* _Nonnull)path;
+- (void)installSettingsPath:(MimsyPath* _Nonnull)path;
 - (void)setSettingsParent:(id<SettingsContext> _Nullable)parent;
 
 @property (readonly) bool inited;

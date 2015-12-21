@@ -24,9 +24,9 @@
 	NSUInteger _line;
 }
 
-- (id)initWithPath:(NSString*)path outError:(NSError**)error
+- (id)initWithPath:(MimsyPath*)path outError:(NSError**)error
 {
-	NSString* contents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:error];
+	NSString* contents = [NSString stringWithContentsOfFile:path.asString encoding:NSUTF8StringEncoding error:error];
 	if (contents)
 		self = [self initWithContent:contents outError:error];
 	else

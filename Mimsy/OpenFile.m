@@ -11,19 +11,19 @@
 
 @implementation OpenFile
 
-+ (NSArray*)resolvePath:(NSString*)path rootedAt:(NSString*)root
++ (NSArray<MimsyPath*>*)resolvePath:(MimsyPath*)path rootedAt:(MimsyPath*)root
 {
     __block NSMutableArray* result = [NSMutableArray new];
     
-    if ([path isAbsolutePath])
+    if ([path isAbsolute])
     {
         [result addObject:path];
     }
-    else if ([path contains:@"/"])
+    else if ([path.asString contains:@"/"])
     {
-        [Utils enumerateDeepDir:root glob:nil error:NULL block:^(NSString* item, bool* stop)
+        [Utils enumerateDeepDir:root glob:nil error:NULL block:^(MimsyPath* item, bool* stop)
         {
-            if ([item endsWith:path])
+            if ([item.asString endsWith:path.asString])
             {
                 [result addObject:item];
                 *stop = true;
@@ -32,11 +32,11 @@
     }
     else
     {
-        [Utils enumerateDeepDir:root glob:nil error:NULL block:^(NSString* item, bool* stop)
+        [Utils enumerateDeepDir:root glob:nil error:NULL block:^(MimsyPath* item, bool* stop)
         {
             UNUSED(stop);
             
-            if ([item endsWith:path])
+            if ([item.asString endsWith:path.asString])
                 [result addObject:item];
          }];
     }
@@ -69,7 +69,7 @@
 	return open;
 }
 
-+ (bool)tryOpenPath:(NSString*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width
++ (bool)tryOpenPath:(MimsyPath*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width
 {
 	bool can = [self _mimsyCanOpen:path];
 	
@@ -79,11 +79,11 @@
 	return can;
 }
 
-+ (void)openPath:(NSString*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width completed:(CompletionBlock)completed
++ (void)openPath:(MimsyPath*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width completed:(CompletionBlock)completed
 {
     if (![self _dontOpenWithMimsy:path])
     {
-        NSURL* url = [NSURL fileURLWithPath:path];
+        NSURL* url = path.asURL;
         NSDocumentController* dc = [NSDocumentController sharedDocumentController];
         [dc openDocumentWithContentsOfURL:url display:YES completionHandler:
          ^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
@@ -109,7 +109,7 @@
                  // files that people may want to edit. If we cannot open it within
                  // Mimsy then we'll open it like the Finder does (this will normally
                  // only happen for binary files).
-                 bool opened = [[NSWorkspace sharedWorkspace] openFile:path];
+                 bool opened = [[NSWorkspace sharedWorkspace] openFile:path.asString];
                  if (!opened)
                  {
                      NSString* reason = [error localizedFailureReason];
@@ -122,20 +122,20 @@
     }
     else
     {
-        [[NSWorkspace sharedWorkspace] openFile:path];
+        [[NSWorkspace sharedWorkspace] openFile:path.asString];
     }
 }
 
-+ (void)openPath:(NSString*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width
++ (void)openPath:(MimsyPath*)path atLine:(NSInteger)line atCol:(NSInteger)col withTabWidth:(NSInteger)width
 {
     [OpenFile openPath:path atLine:line atCol:col withTabWidth:width completed:nil];
 }
 
-+ (void)openPath:(NSString*)path withRange:(NSRange)range
++ (void)openPath:(MimsyPath*)path withRange:(NSRange)range
 {
 	if (![self _dontOpenWithMimsy:path])
 	{
-		NSURL* url = [NSURL fileURLWithPath:path];
+		NSURL* url = path.asURL;
 		NSDocumentController* dc = [NSDocumentController sharedDocumentController];
 		[dc openDocumentWithContentsOfURL:url display:YES completionHandler:
 			 ^(NSDocument* document, BOOL documentWasAlreadyOpen, NSError* error)
@@ -166,7 +166,7 @@
 				 }
 				 else if (error && error.code != NSUserCancelledError)
 				 {
-					 bool opened = [[NSWorkspace sharedWorkspace] openFile:path];
+					 bool opened = [[NSWorkspace sharedWorkspace] openFile:path.asString];
 					 if (!opened)
 					 {
 						 NSString* reason = [error localizedFailureReason];
@@ -178,11 +178,11 @@
 	}
 	else
 	{
-		[[NSWorkspace sharedWorkspace] openFile:path];
+		[[NSWorkspace sharedWorkspace] openFile:path.asString];
 	}
 }
 
-+ (bool)_mimsyCanOpen:(NSString*)path
++ (bool)_mimsyCanOpen:(MimsyPath*)path
 {
 	// Check to see if the user has marked the file as something he doesn't
 	// want to open with Mimsy.
@@ -199,22 +199,22 @@
 	// text file we'll wind up opening it anyway so we'll avoid the work of
 	// reading the file twice in the common case where the extension is enough
 	// to figure out whether we can open it.
-	if ([Languages findWithFileName:path.lastPathComponent contents:@""])
+	if ([Languages findWithFileName:path.lastComponent contents:@""])
 		return true;
 
 	// Fallback to checking to see if the file can be read as text.
-	NSData* data = [NSData dataWithContentsOfFile:path];
+	NSData* data = [NSData dataWithContentsOfFile:path.asString];
 	Decode* decode = data ? [[Decode alloc] initWithData:data] : nil;
 	return decode.text != nil;
 }
 
-+ (bool)_dontOpenWithMimsy:(NSString*)path
++ (bool)_dontOpenWithMimsy:(MimsyPath*)path
 {
-    if ([[NSWorkspace sharedWorkspace] isFilePackageAtPath:path])
+    if ([[NSWorkspace sharedWorkspace] isFilePackageAtPath:path.asString])
         return true;
     
     AppDelegate* app = [NSApp delegate];
-    NSString* fileName = [path lastPathComponent];
+    NSString* fileName = [path lastComponent];
     NSString* setting = [app.settings stringValue:@"DontOpenWithMimsy" missing:@""];
 	if (setting.length > 0)
 	{

@@ -4,7 +4,7 @@
 @interface FileItem : FileSystemItem
 
 // Overrides
-- (id)initWithPath:(NSString*)path controller:(DirectoryController*)controller;
+- (id)initWithPath:(MimsyPath*)path controller:(DirectoryController*)controller;
 - (NSAttributedString*) name;
 - (NSString*)bytes;
 - (bool)reload:(NSMutableArray*)added;

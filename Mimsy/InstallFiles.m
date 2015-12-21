@@ -9,17 +9,17 @@
 // ------------------------------------------------------------------------------------
 @interface SourceFile : NSObject
 
-- (id)init:(NSString*)srcPath;
+- (id)init:(MimsyPath*)srcPath;
 
-@property (readonly) NSString* rpath;         // path relative to <bundle>/Resources
-@property (readonly) NSString* srcPath;
+@property (readonly) MimsyPath* rpath;         // path relative to <bundle>/Resources
+@property (readonly) MimsyPath* srcPath;
 @property NSString* srcHash;
 
 @end
 
 @implementation SourceFile
 
-- (id)init:(NSString*)srcPath
+- (id)init:(MimsyPath*)srcPath
 {
     self = [super init];
     
@@ -32,9 +32,9 @@
     return self;
 }
 
-- (NSString*)_findRelativePath:(NSString*)path
+- (MimsyPath*)_findRelativePath:(MimsyPath*)path
 {
-    NSArray* parts = [path pathComponents];
+    NSArray* parts = [path components];
     
     NSUInteger i = parts.count >= 2 ? parts.count - 2 : 0;
     while (i > 0)
@@ -48,7 +48,7 @@
     ASSERT(i > 0);  // should always find Resources
     
     NSArray* subset = [parts subarrayWithRange:NSMakeRange(i+1, parts.count - i - 1)];
-    NSString* rpath = [subset componentsJoinedByString:@"/"];
+    MimsyPath* rpath = [[MimsyPath alloc] initWithArray:subset];
     return rpath;
 }
 
@@ -57,23 +57,21 @@
 // ------------------------------------------------------------------------------------
 @implementation InstallFiles
 {
-	NSString* _srcRoot;
-    NSString* _dstRoot;
+	MimsyPath* _srcRoot;
+    MimsyPath* _dstRoot;
 	NSMutableArray* _sources;
 
     NSString* _version;
 	NSString* _build;
 }
 
-- (id)initWithDstPath:(NSString*)path
+- (id)initWithDstPath:(MimsyPath*)path
 {
     self = [super init];
     
     if (self)
     {
-        _srcRoot = NSBundle.mainBundle.resourcePath;
-        if (![_srcRoot hasSuffix:@"/"])
-            _srcRoot = [_srcRoot stringByAppendingString:@"/"];
+        _srcRoot = [[MimsyPath alloc] initWithString:NSBundle.mainBundle.resourcePath];
         _dstRoot = path;
         
         _sources = [NSMutableArray new];
@@ -84,11 +82,11 @@
 
 - (void)addSourceFile:(NSString*)item
 {
-    NSString* path = [_srcRoot stringByAppendingPathComponent:item];
+    MimsyPath* path = [_srcRoot appendWithComponent:item];
 	[_sources addObject:[[SourceFile alloc] init:path]];
 }
 
-- (void)addSourcePath:(NSString*)path
+- (void)addSourcePath:(MimsyPath*)path
 {
     [_sources addObject:[[SourceFile alloc] init:path]];
 }
@@ -127,7 +125,7 @@
 	NSFileManager* fm = [NSFileManager defaultManager];
 	for (SourceFile* file in _sources)
 	{
-		NSString* installedHash = installedHashs[file.rpath];
+		NSString* installedHash = installedHashs[file.rpath.asString];
 		if ([@"ignore" isEqualToString:installedHash])
 		{
 			LOG("Mimsy", "Ignoring '%s'", STR(file.srcPath));
@@ -137,11 +135,11 @@
 		// Checking the hashs makes the install process a bit more efficient because we don't have to
 		// copy over files which haven't changed. But even more important this allows us to minimize
 		// our overwriting of files the user has changed.
-		NSString* dstPath = [_dstRoot stringByAppendingPathComponent:file.rpath];
-		if (![file.srcHash isEqualToString:installedHash] || ![fm fileExistsAtPath:dstPath])
+		MimsyPath* dstPath = [_dstRoot appendWithPath:file.rpath];
+		if (![file.srcHash isEqualToString:installedHash] || ![fm fileExistsAtPath:dstPath.asString])
 		{
 			NSError* error = nil;
-			if ([fm fileExistsAtPath:dstPath])
+			if ([fm fileExistsAtPath:dstPath.asString])
 			{
 				NSString* currentHash = [self _getHash:dstPath outError:&error];
 				if (currentHash && ![currentHash isEqualToString:installedHash])
@@ -150,11 +148,11 @@
                     // Although rtf files are annoying because they won't load properly
                     // if we change their extension. However those are loaded by name so
                     // it should be OK to keep the extension.
-                    NSString* backupPath;
-                    if ([dstPath hasSuffix:@".rtf"])
-                        backupPath = [dstPath replaceCharacters:@".rtf" with:@".old.rtf"];
+                    MimsyPath* backupPath;
+                    if ([dstPath.extensionName isEqualToString:@"rtf"])
+                        backupPath = [[dstPath popExtension] appendWithExtensionName:@"old.rtf"];
                     else
-                        backupPath = [dstPath stringByAppendingString:@".old"];
+                        backupPath = [dstPath appendWithExtensionName:@"old"];
                     
 					if ([Utils copySrcFile:dstPath dstFile:backupPath outError:&error])
 					{
@@ -187,10 +185,10 @@
 - (NSDictionary*)_getInstalledHashes
 {
 	NSMutableDictionary* files = [NSMutableDictionary new];
-	NSString* path = [_dstRoot stringByAppendingPathComponent:@"manifest.mimsy"];
+	MimsyPath* path = [_dstRoot appendWithComponent:@"manifest.mimsy"];
 	
 	NSFileManager* fm = [NSFileManager defaultManager];
-	if ([fm fileExistsAtPath:path])
+	if ([fm fileExistsAtPath:path.asString])
 	{
 		NSError* error = nil;
 		ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
@@ -233,7 +231,7 @@
 	for (SourceFile* file in inFiles)
 	{
 		BOOL isDir = NO;
-		if ([fm fileExistsAtPath:file.srcPath isDirectory:&isDir])
+		if ([fm fileExistsAtPath:file.srcPath.asString isDirectory:&isDir])
 		{
 			if (isDir)
 				[self _processSourceDirectory:outFiles forPath:file.srcPath];
@@ -250,11 +248,11 @@
 	return outFiles;
 }
 
-- (void)_processSourceDirectory:(NSMutableArray*)outFiles forPath:(NSString*)dir
+- (void)_processSourceDirectory:(NSMutableArray*)outFiles forPath:(MimsyPath*)dir
 {
     NSError* error = nil;
     [Utils enumerateDeepDir:dir glob:nil error:&error block:
-     ^(NSString* path, bool* stop)
+     ^(MimsyPath* path, bool* stop)
      {
          UNUSED(stop);
          [self _processSourceFile:outFiles forFile:[[SourceFile alloc] init:path]];
@@ -283,9 +281,9 @@
 	}
 }
 
-- (NSString*)_getHash:(NSString*)path outError:(NSError**)error
+- (NSString*)_getHash:(MimsyPath*)path outError:(NSError**)error
 {
-    NSData* data = [NSData dataWithContentsOfFile:path options:0 error:error];
+    NSData* data = [NSData dataWithContentsOfFile:path.asString options:0 error:error];
     return data != nil ? [data md5sum] : nil;
 }
 
@@ -304,7 +302,7 @@
 	
 	for (SourceFile* file in _sources)
 	{
-		NSString* hash = installedHashs[file.rpath];
+		NSString* hash = installedHashs[file.rpath.asString];
 		if ([@"ignore" isEqualToString:hash])
 		{
 			[contents appendFormat:@"%@: ignore\n", file.rpath];
@@ -320,12 +318,12 @@
 
 - (void)_writeManifest:(NSString*)contents
 {
-	NSString* path = [_dstRoot stringByAppendingPathComponent:@"manifest.mimsy"];
+	MimsyPath* path = [_dstRoot appendWithComponent:@"manifest.mimsy"];
 	LOG("Mimsy", "Writing %s", STR(path));
 	
 	NSError* error = nil;
 	NSFileManager* fm = [NSFileManager defaultManager];
-	if (![fm createDirectoryAtPath:[path stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:&error] || ![contents writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:&error])
+	if (![fm createDirectoryAtPath:[path.asString stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:&error] || ![contents writeToFile:path.asString atomically:YES encoding:NSUTF8StringEncoding error:&error])
 	{
 		NSString* reason = [error localizedFailureReason];
 		NSString* mesg = [NSString stringWithFormat:@"Failed to write '%@': %@", path, reason];

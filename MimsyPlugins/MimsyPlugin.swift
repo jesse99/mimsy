@@ -2,7 +2,8 @@ import Cocoa
 
 /// This is the base class that plugins inherit from. Often only onLoad
 /// is overriden.
-public class MimsyPlugin: NSObject {
+public class MimsyPlugin: NSObject
+{
     /// Mimsy will instantiate plugins when it loads their bundles.
     public init(fromApp app: MimsyApp, bundle: NSBundle)
     {

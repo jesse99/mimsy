@@ -40,16 +40,16 @@ static bool _triedCaches;
 	return _caches;
 }
 
-+ (NSString*)installedDir:(NSString*)name
++ (MimsyPath*)installedDir:(NSString*)name
 {
 	NSFileManager* fm = [NSFileManager defaultManager];
 	NSArray* urls = [fm URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask];
 	
-	NSString* path = [urls[0] path];
-	path = [path stringByAppendingPathComponent:@"Mimsy"];
+    MimsyPath* path = [[MimsyPath alloc] initWithString:[urls[0] path]];
+	path = [path appendWithComponent:@"Mimsy"];
 
 	if (name)
-		return [path stringByAppendingPathComponent:name];
+		return [path appendWithComponent:name];
 	else
 		return path;
 }

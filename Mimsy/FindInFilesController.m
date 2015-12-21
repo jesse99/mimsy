@@ -186,13 +186,13 @@ static FindInFilesController* _findFilesController = nil;
 	
 	DirectoryController* controller = [DirectoryController getCurrentController];
 	if (controller)
-		[self _selectPathInDirectoryMenu:controller.path];
+		[self _selectPathInDirectoryMenu:controller.path.asString];
 }
 
 - (void)openedDir:(NSNotification*)notification
 {
 	DirectoryController* controller = notification.object;
-	[self _addPathToDirectoryMenu:controller.path];
+	[self _addPathToDirectoryMenu:controller.path.asString];
 }
 
 - (void)_addOpenDirectoriesToMenu
@@ -200,7 +200,7 @@ static FindInFilesController* _findFilesController = nil;
 	[DirectoryController enumerate:
 		^(DirectoryController *controller)
 		{
-			[self _addPathToDirectoryMenu:controller.path];
+			[self _addPathToDirectoryMenu:controller.path.asString];
 		}];
 }
 

@@ -93,7 +93,7 @@
 			 UNUSED(stop);
 			 if (controller.path)
 			 {
-				 NSString* fileName = [controller.path lastPathComponent];
+				 NSString* fileName = [controller.path lastComponent];
 				 if ([self.includeGlobs matchName:fileName])
 				 {
 					 [openPaths addObject:controller.path];
@@ -127,7 +127,7 @@
 		nextStep();
 }
 
-- (bool)_processMatches:(NSArray*)matches forPath:(NSString*)path withContents:(NSMutableString*)contents	// threaded
+- (bool)_processMatches:(NSArray*)matches forPath:(MimsyPath*)path withContents:(NSMutableString*)contents	// threaded
 {	
 	NSAttributedString* pathStr = [self _getPathString:path];
 	NSArray* matchStrs = [matches map:
@@ -143,7 +143,7 @@
 		   {
 			   if (matches.count > 0)
 			   {
-				   LOG("Find:Verbose", "Found %lu matches for %s", matches.count, STR(path.lastPathComponent));
+				   LOG("Find:Verbose", "Found %lu matches for %s", matches.count, STR(path.lastComponent));
 				   ++_numFiles;
 				   _numMatches += matches.count;
 				   
@@ -152,7 +152,7 @@
 			   }
 			   else
 			   {
-				   LOG("Find:Verbose", "Found 0 matches for %s", STR(path.lastPathComponent));
+				   LOG("Find:Verbose", "Found 0 matches for %s", STR(path.lastComponent));
 			   }
 
 			   NSString* title = [self _getResultsWindowTitle];
@@ -222,13 +222,13 @@
 	   });
 }
 
-- (NSAttributedString*)_getPathString:(NSString*)path	// threaded
+- (NSAttributedString*)_getPathString:(MimsyPath*)path	// threaded
 {
 	NSMutableAttributedString* str = [NSMutableAttributedString new];
 	if (_reversePaths)
-		[str.mutableString appendString:[path reversePath]];
+		[str.mutableString appendString:[path.asString reversePath]];
 	else
-		[str.mutableString appendString:path];
+		[str.mutableString appendString:path.asString];
 	
 	NSRange range = NSMakeRange(0, str.string.length);
 	[str setAttributes:_pathAttrs range:range];
@@ -301,7 +301,7 @@
 	return [contents substringWithRange:NSMakeRange(begin, end - begin)];
 }
 
-- (void)_addPersistentAttribute:(NSArray*)matchStrs matches:(NSArray*)matches path:(NSString*)path
+- (void)_addPersistentAttribute:(NSArray*)matchStrs matches:(NSArray*)matches path:(MimsyPath*)path
 {
 	for (NSUInteger i = 0; i < matchStrs.count; ++i)
 	{
@@ -332,8 +332,8 @@
 
 - (void)_loadPrefs
 {
-	NSString* dir = [Paths installedDir:@"settings"];
-	NSString* path = [dir stringByAppendingPathComponent:@"find-results.rtf"];
+	MimsyPath* dir = [Paths installedDir:@"settings"];
+	MimsyPath* path = [dir appendWithComponent:@"find-results.rtf"];
 	TextStyles* styles = [[TextStyles new] initWithPath:path expectBackColor:false];
 	
 	_pathAttrs     = [styles attributesForElement:@"pathstyle"];

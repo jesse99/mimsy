@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "MimsyPlugins.h"
 
 // These are used to populate the Help menu. They are derived from
 // the files within the help directory and from ContextHelp app,
@@ -8,7 +9,7 @@
 // Path to a file in the help directory. The file name should be
 // formatted as context names terminated by dashes followed by
 // a menu item title.
-- (id)initFromPath:(NSString*)path err:(NSError**)error;
+- (id)initFromPath:(MimsyPath*)path err:(NSError**)error;
 
 // fileName is the setting file and used for error reporting. value
 // is formated as {context names separated by dashes}[title]url.

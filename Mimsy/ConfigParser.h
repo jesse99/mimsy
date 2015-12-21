@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "MimsyPlugins.h"
 
 @interface ConfigParserEntry : NSObject
 @property NSString* key;
@@ -18,7 +19,7 @@
 @interface ConfigParser : NSObject
 
 // If the parse fails nil is returned and error will be set appropiately.
-- (id)initWithPath:(NSString*)path outError:(NSError**)error;
+- (id)initWithPath:(MimsyPath*)path outError:(NSError**)error;
 - (id)initWithContent:(NSString*)contents outError:(NSError**)error;
 
 // Key/value pairs are returned in the same order they were declared.

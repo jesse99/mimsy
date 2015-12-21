@@ -7,26 +7,26 @@
 	NSURL* _url;
 }
 
-- (id)initFromPath:(NSString*)path err:(NSError**)error
+- (id)initFromPath:(MimsyPath*)path err:(NSError**)error
 {
 	self = [super init];
 	
 	if (self)
 	{
-		NSString* fileName = [[path lastPathComponent] stringByDeletingPathExtension];
+        NSString* fileName = [[path popExtension] lastComponent];
 		NSArray* parts = [fileName componentsSeparatedByString:@"-"];
 		if (parts.count >= 2)
 		{
 			_contexts = [parts subarrayWithRange:NSMakeRange(0, parts.count - 1)];
 			_title = parts[parts.count - 1];
-			_url = [[NSURL alloc] initFileURLWithPath:path isDirectory:FALSE];
+			_url = [[NSURL alloc] initFileURLWithPath:path.asString isDirectory:FALSE];
 			return self;
 		}
 		else
 		{
 			if (error)
 			{
-				NSString* mesg = [NSString stringWithFormat:@"'%@' isn't a valid help file name: expected a dash separating the context name from the menu title.", [path lastPathComponent]];
+				NSString* mesg = [NSString stringWithFormat:@"'%@' isn't a valid help file name: expected a dash separating the context name from the menu title.", [path lastComponent]];
 				NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
 				*error = [NSError errorWithDomain:@"mimsy" code:5 userInfo:dict];
 			}

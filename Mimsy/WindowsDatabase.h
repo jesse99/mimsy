@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "MimsyPlugins.h"
 
 struct WindowInfo
 {
@@ -16,11 +17,11 @@ struct WindowInfo
 + (void)setup;
 
 // Returns NSZeroRect if the path cannot be found.
-+ (NSRect)getFrame:(NSString*)path;
++ (NSRect)getFrame:(MimsyPath*)path;
 
 // Returns false if the path cannot be found.
-+ (bool)getInfo:(struct WindowInfo*)info forPath:(NSString*)path;
++ (bool)getInfo:(struct WindowInfo*)info forPath:(MimsyPath*)path;
 
-+ (void)saveInfo:(const struct WindowInfo*)info frame:(NSRect)frame forPath:(NSString*)path;
++ (void)saveInfo:(const struct WindowInfo*)info frame:(NSRect)frame forPath:(MimsyPath*)path;
 
 @end

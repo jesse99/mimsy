@@ -59,7 +59,7 @@
         UNUSED(stop);
         
         FileSystemItem* item = [self itemAtRow:(NSInteger)index];
-        if ([item isMemberOfClass:[FolderItem class]] || [ws isFilePackageAtPath:item.path])
+        if ([item isMemberOfClass:[FolderItem class]] || [ws isFilePackageAtPath:item.path.asString])
             [_dirs addObject:item.path];
         else
             [_files addObject:item.path];

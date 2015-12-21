@@ -10,13 +10,13 @@ static NSDictionary* _baseAttrs;
 
 @implementation TextStyles
 {
-	NSString* _path;					// path to the styles file
+	MimsyPath* _path;					// path to the styles file
 	NSMutableDictionary* _attrMap;		// element name => attributes
 	NSColor* _backColor;
 	NSDictionary* _values;
 }
 
-- (id)initWithPath:(NSString*)path expectBackColor:(bool)expectBackColor
+- (id)initWithPath:(MimsyPath*)path expectBackColor:(bool)expectBackColor
 {
 	if (_baseAttrs == nil)
 	{
@@ -96,7 +96,7 @@ static NSDictionary* _baseAttrs;
 
 - (NSAttributedString*)_loadStyles
 {
-	NSURL* url = [NSURL fileURLWithPath:_path];
+	NSURL* url = _path.asURL;
 	
 	NSError* error = nil;
 	NSUInteger options = NSFileWrapperReadingImmediate | NSFileWrapperReadingWithoutMapping;
@@ -114,7 +114,7 @@ static NSDictionary* _baseAttrs;
 	}
 }
 
-- (bool)_parseStyles:(NSAttributedString*)text attrMap:(NSMutableDictionary*)map path:(NSString*)path
+- (bool)_parseStyles:(NSAttributedString*)text attrMap:(NSMutableDictionary*)map path:(MimsyPath*)path
 {
 	ASSERT(map.count == 0);		// can't modify attributes once they have been applied
 	
@@ -144,7 +144,7 @@ static NSDictionary* _baseAttrs;
 	];
 	_values = values;
 	
-	if (!map[@"normal"] && [path rangeOfString:@"/styles/"].location != NSNotFound)
+	if (!map[@"normal"] && [path.asString rangeOfString:@"/styles/"].location != NSNotFound)
 	{
 		NSString* mesg = [[NSString alloc] initWithFormat:@"Styles file at '%@' is missing a Normal style.", _path];
 		[TranscriptController writeError:mesg];

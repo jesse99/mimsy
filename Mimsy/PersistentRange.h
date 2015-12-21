@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "MimsyPlugins.h"
 
 @class PersistentRange, BaseTextController, TranscriptController;
 typedef void (^RangeBlock)(PersistentRange* pr);
@@ -10,15 +11,15 @@ typedef void (^RangeBlock)(PersistentRange* pr);
 @interface PersistentRange : NSObject
 
 // Callback will be called if the location of the range changes.
-- (id)init:(NSString*)path range:(NSRange)range block:(RangeBlock)callback;
-- (id)init:(NSString*)path line:(NSUInteger)line col:(NSUInteger)col block:(RangeBlock)callback;
+- (id)init:(MimsyPath*)path range:(NSRange)range block:(RangeBlock)callback;
+- (id)init:(MimsyPath*)path line:(NSUInteger)line col:(NSUInteger)col block:(RangeBlock)callback;
 - (id)init:(TranscriptController*)controller range:(NSRange)range;
 
 // If the range has become invalidated (e.g. the associated text was
 // deleted) then the location will be NSNotFound.
 @property (readonly) NSRange range;
 
-@property (readonly) NSString* path;
+@property (readonly) MimsyPath* path;
 
 @property (readonly) __weak BaseTextController* controller;
 

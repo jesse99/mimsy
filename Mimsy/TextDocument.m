@@ -177,7 +177,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		_text = nil;
 	}
 	[_controller onPathChanged];		// have to do this after getting text
-	[self readMetataDataFrom:self.fileURL.path];
+	[self readMetataDataFrom:[[MimsyPath alloc] initWithString:self.fileURL.path]];
 	
 	[_controller open];
 }
@@ -416,7 +416,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		[self doReadFromData:data ofType:typeName error:outError];
 	
 	if (*outError == nil && self.fileURL && _controller)
-		[self readMetataDataFrom:self.fileURL.path];
+		[self readMetataDataFrom:[[MimsyPath alloc] initWithString:self.fileURL.path]];
 	
 	return *outError == nil;
 }
@@ -612,10 +612,10 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 {
 	[super setFileModificationDate:modificationDate];
 	if (self.fileURL && self.isDocumentEdited)			// need to check for edited because this is also called on open
-		[self saveMetataDataTo:self.fileURL.path];
+		[self saveMetataDataTo:[[MimsyPath alloc] initWithString:self.fileURL.path]];
 }
 
-- (void)saveMetataDataTo:(NSString*)path
+- (void)saveMetataDataTo:(MimsyPath*)path
 {
 	// If the document has a language then the back color is set via the
 	// styles file so there is no need to save colors for it.
@@ -632,7 +632,7 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 	}
 }
 
-- (void)readMetataDataFrom:(NSString*)path
+- (void)readMetataDataFrom:(MimsyPath*)path
 {
 	NSError* error = nil;
 	NSColor* color = [Metadata readCriticalDataFrom:path named:@"back-color" outError:&error];

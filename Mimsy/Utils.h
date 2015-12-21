@@ -1,4 +1,5 @@
 #import <Cocoa/Cocoa.h>
+#import "MimsyPlugins.h"
 
 @class Glob;
 
@@ -20,11 +21,11 @@ bool rangeIntersects(NSRange lhs, NSRange rhs);
 + (NSString*)bufferToStr:(const void*)buffer length:(NSUInteger)length;
 
 // Reads a file and returns an array containing each line (without the new lines).
-+ (NSArray*)readLines:(NSString*)path outError:(NSError**)error;
++ (NSArray*)readLines:(MimsyPath*)path outError:(NSError**)error;
 
 // This will create destination directories as needed and overwrite the destination
 // file if it exists.
-+ (bool)copySrcFile:(NSString*)srcPath dstFile:(NSString*)dstPath outError:(NSError**)outError;
++ (bool)copySrcFile:(MimsyPath*)srcPath dstFile:(MimsyPath*)dstPath outError:(NSError**)outError;
 
 // Runs the task returning the exit code. If stdout/stderr is not NULL then those
 // are returned as well. Timeout is either NoTimeOut, MainThreadTimeOut, or a time
@@ -33,14 +34,14 @@ bool rangeIntersects(NSRange lhs, NSRange rhs);
 + (NSError*)run:(NSTask*)task stdout:(NSString**)stdout stderr:(NSString**)stderr timeout:(time_t)timeout;
 
 // Returns a path to a unique file name in the temporary directory for the current user.
-+ (NSString*)pathForTemporaryFileWithPrefix:(NSString *)prefix;
++ (MimsyPath*)pathForTemporaryFileWithPrefix:(NSString *)prefix;
 
 // Iterates over all items in the directory that match the glob. Hidden files are
 // returned (except '.' and '..'). If glob is nil all the items are returned.
 // The block is called with full paths to each item.
-+ (bool)enumerateDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item))block;
++ (bool)enumerateDir:(MimsyPath*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(MimsyPath* item))block;
 
 // Just like the above except that sub-directories are searched.
-+ (bool)enumerateDeepDir:(NSString*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(NSString* item, bool* stop))block;
++ (bool)enumerateDeepDir:(MimsyPath*)path glob:(Glob*)glob error:(NSError**)error block:(void (^)(MimsyPath* item, bool* stop))block;
 
 @end

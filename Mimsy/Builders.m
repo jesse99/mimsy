@@ -11,24 +11,24 @@ static NSDictionary* _globs;	// name => glob
 
 @implementation Builders
 
-+ (NSDictionary*)builderInfo:(NSString*)dir
++ (NSDictionary*)builderInfo:(MimsyPath*)dir
 {
 	if (!_builders)
 		[self _loadBuilders];		// need to do this before the app finishes launching
 
 	NSError* error = nil;
 	NSFileManager* fm = [NSFileManager new];
-	NSArray* entries = [fm contentsOfDirectoryAtPath:dir error:&error];
+	NSArray* entries = [fm contentsOfDirectoryAtPath:dir.asString error:&error];
 	if (entries)
 	{
 		for (NSString* filename in entries)
 		{
-			NSString* path = [dir stringByAppendingPathComponent:filename];
+			MimsyPath* path = [dir appendWithComponent:filename];
 			for (NSString* name in _globs)
 			{
 				Glob* glob = _globs[name];
 				if ([glob matchName:filename])
-					return @{@"name": name, @"path": path};
+					return @{@"name": name, @"path": path.asString};
 			}
 		}
 	}
@@ -111,23 +111,23 @@ static NSDictionary* _globs;	// name => glob
 {
 	__block NSMutableDictionary* builders = [NSMutableDictionary new];
 	__block NSMutableDictionary* globs = [NSMutableDictionary new];
-	NSString* dir = [Paths installedDir:@"builders"];
+	MimsyPath* dir = [Paths installedDir:@"builders"];
 	
 	NSError* error = nil;
 	bool success = [Utils enumerateDir:dir glob:nil error:&error block:
-		^(NSString* path)
+		^(MimsyPath* path)
 		{
-			if ([[NSFileManager defaultManager] isExecutableFileAtPath:path])
+			if ([[NSFileManager defaultManager] isExecutableFileAtPath:path.asString])
 			{
 				NSTask* task = [NSTask new];
-				[task setLaunchPath:path];
+				[task setLaunchPath:path.asString];
 				
                 NSDictionary* json = [self _runBuilder:task timeout:10];
 				if (json)
 				{
 					NSString* name = json[@"name"];
 					NSArray* value = json[@"globs"];
-					builders[name] = path;
+					builders[name] = path.asString;
 					globs[name] = [[Glob alloc] initWithGlobs:value];
 				}
 			}

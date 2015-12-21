@@ -25,6 +25,7 @@
 		3712632516B5A431007AF3BF /* libcrypto.0.9.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */; };
 		3719AD681C2639AA002E9046 /* MimsyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3719AD671C2639AA002E9046 /* MimsyError.swift */; };
 		3719AD6A1C266997002E9046 /* settings in Resources */ = {isa = PBXBuildFile; fileRef = 3719AD691C266997002E9046 /* settings */; };
+		3719AD6C1C272359002E9046 /* MimsyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3719AD6B1C272359002E9046 /* MimsyPath.swift */; };
 		3720B6E11C1FBCBB00A6622C /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3720B6E01C1FBCBB00A6622C /* StringExtension.swift */; };
 		3720B6ED1C1FC82900A6622C /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3720B6EC1C1FC82900A6622C /* Plugin.swift */; };
 		3720B6F31C1FC88B00A6622C /* Description.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3720B6F21C1FC88B00A6622C /* Description.rtf */; };
@@ -529,6 +530,7 @@
 		3712632416B5A431007AF3BF /* libcrypto.0.9.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.0.9.8.dylib; path = ../../../usr/lib/libcrypto.0.9.8.dylib; sourceTree = "<group>"; };
 		3719AD671C2639AA002E9046 /* MimsyError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimsyError.swift; sourceTree = "<group>"; };
 		3719AD691C266997002E9046 /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = settings; sourceTree = "<group>"; };
+		3719AD6B1C272359002E9046 /* MimsyPath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimsyPath.swift; sourceTree = "<group>"; };
 		3720B6E01C1FBCBB00A6622C /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		3720B6E61C1FC80900A6622C /* NewDirectory.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewDirectory.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		3720B6E81C1FC80900A6622C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1509,6 +1511,7 @@
 				3719AD671C2639AA002E9046 /* MimsyError.swift */,
 				37D0BB901C14E0E60053617F /* MimsyGlob.swift */,
 				37BABAD91C0A99B600B9B5AB /* MimsyLanguage.swift */,
+				3719AD6B1C272359002E9046 /* MimsyPath.swift */,
 				37CDF3A51C07C2C7009E48B4 /* MimsyPlugin.swift */,
 				37CDF3991C07BF9E009E48B4 /* MimsyPlugins.h */,
 				37D0BB921C14E45F0053617F /* MimsyProject.swift */,
@@ -2654,6 +2657,7 @@
 				37B9CA011C0BC923006C479B /* MimsyTranscript.swift in Sources */,
 				37BABAD51C091A7000B9B5AB /* MimsyTextView.swift in Sources */,
 				37A93CF61C11EBAE00AFE5AC /* MimsySettings.swift in Sources */,
+				3719AD6C1C272359002E9046 /* MimsyPath.swift in Sources */,
 				3720B6E11C1FBCBB00A6622C /* StringExtension.swift in Sources */,
 				37D0BB931C14E45F0053617F /* MimsyProject.swift in Sources */,
 				37D0BB911C14E0E60053617F /* MimsyGlob.swift in Sources */,

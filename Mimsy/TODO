@@ -23,31 +23,51 @@ Creating plugins
 
 
 
-
+app
+    ProjectContextMenuItemTitle
+    InvokeProjectCommand
+    open
+    openAsBinary
+    findExe
+    unzipFile
+project
+    path
+    resolve
+text view
+    path
 
 
 * Think about adding a path type
     - will probably need stuff like internalPath
-    - maybe just a typealias?
-* MimsyTextView text should always be exposed (and handled) as an NSString
-    - or maybe we can use NSAttributedString?
-    - because NSString isn't toll bridged to String
-    - might even want to wrap it up in a struct, BigText? MimsyString?
+    - make sure that OpenDual still works
+* HighlightSelection isnt working
+* Context menus arent sorted
 * For mac80211 could add some custom duals, e.g. to open mesh.h
-* Replace the old builders?
-* Remove the old builders?
 * objc language should style readonly (and related)
-* Make sure that all the OLD_EXTENSIONS code is gone
+* Why couldn't we use open selection for:
+    src/mesh-tests/manual-test/manual-test.go:5: imported and not used: "bufio"
+* Errors in the mac aren't recognized.
+* up_edges1 didn't style right in R.
+* 100:1 doesn't style right in R.
+* Seems like we could get goto definition working with just the styler
+    - listen for open and close directory events
+    - add a setting for globs to parse
+    - use function regex from language files
+    - also use type
+    - probably want to special case C declarations
+    - add a setting for extra directories to parse
+* Get remote builds working:
+    remote-test:
+    ssh jjones@10.4.0.128 'make package/coco-mesh-minder/{compile,install} V=1 && scp bin/rb433-chaos/packages/coco/coco-mesh-minder_1_ar71xx.ipk root@192.168.6.11:/tmp && ssh root@192.168.6.11 "opkg install /tmp/coco-mesh-minder_1_ar71xx.ipk"'
+    - probably need to set USER and maybe HOME
+    - probably need to special case file matching if no match do a local search for the file name
+    - didn't get a decent error when cd'ing to a bad directory
 * Add snippets support:
     - snippets/<language> directories
     - snippets are just language files
     - can have INPUT-NAME text which prompts user for NAME's value
     - probably should adjust indentation level to match current selection
     - could have optional project .snippets directories
-* Do something with functional tests?
-* Do we need an unload method? Maybe takes a reason?
-- or can we somehow catch bugs?
-* Remove lua code?
 * Probably want a note about extension development workflow
 * Merge into master
 * Start adding extensions for core stuff.
@@ -70,37 +90,14 @@ Creating plugins
 
 
 * NSStringTransformToUnicodeName looks interesting
-* Why couldn't we use open selection for:
-    src/mesh-tests/manual-test/manual-test.go:5: imported and not used: "bufio"
 * Maybe LOG_ERROR should always go to the transcript
-* Errors in the mac aren't recognized.
-* go fmt leaves documents in an edited state after saving
-* up_edges1 didn't style right in R.
-* 100:1 doesn't style right in R.
 * Should be able to load rtfd docs.
     - should be able to create this by pasting an image into an rtf file and saving with xcode or probably TextEdit
-* Add declarations proc files
-    - write extension name, file path, [name, offset, length, is_declaration]
-    - might want a date too, could use the most up to date info for a file
-    - probably want to persist this info in caches directory or in the db
-* Seems like we could get goto definition working with just the styler
-    - use a go extension
-    - listen for open and close directory events
-    - add a setting for globs to parse
-    - use function regex from language files
-    - also use type
-    - probably want to special case C declarations
-    - add a setting for extra directories to parse
-* Get remote builds working
-    - didn't get a decent error when cd'ing to a bad directory
 * Might want a json validator
 * Support ctags
     - probably another go extension
     - write a setting to prevent default goto definition from using c files
-* Files keep getting marked as edited too.
-    didChangeText
-    resetAttributes
-    addDirtyLoc
+    - e.g. `make tags` on the linux kernal will generate a TAGS file
 * Think non-language docs should also use four spaces.
 * Projects should be able to add elements to languages:
     - add a commented out CustomStyle setting to default project settings
@@ -109,44 +106,20 @@ Creating plugins
     - add something nice to mac80211
     - directory needs to store these keyed by language
     - when applying the regex need to query the directory for custom styles
-* Look into using ctags.
-* Need to get rid of startup scripts
 * Would be great to have an option to show the log file.
-* Would be cool to leverage tags files
-    - e.g. `make tags` on the linux kernal will generate a TAGS file
 * Editor features: http://texteditors.org/cgi-bin/wiki.pl?HomePage
-* Settings added by extensions should be automatically registered
-* Get remote builds working:
-    remote-test:
-    ssh jjones@10.4.0.128 'make package/coco-mesh-minder/{compile,install} V=1 && scp bin/rb433-chaos/packages/coco/coco-mesh-minder_1_ar71xx.ipk root@192.168.6.11:/tmp && ssh root@192.168.6.11 "opkg install /tmp/coco-mesh-minder_1_ar71xx.ipk"'
-    - probably need to set USER and maybe HOME
-    - probably need to special case file matching
-      if no match do a local search for the file name
 * Would be great to have some sort of filtering extension
     - maybe a little language allowing edits to be made
     - could even do some MPW sort of thing
-* Experiment with a different proc-file based design:
-    - could have extensions to add some sort of chrome
-        ` load image files
-        ` add links to local (relative path) files
-        ` will need menu item to turn chrome off
-        ` how do we handle saving? some magic attribute?
-    - show proc files.rtf somehow, maybe a components menu
-    - remove startup scripts
-    - if FUSE for OSX is not installed disable extensions
 * Try and get functions working with C
     - might have to do something lame like line starts wih non-whitespace+word+(+anything not )+)+whitespace+{
       how do we gobble up the chars before the word? non-greedy kleene?
     - maybe structs too
-* Should be a way for extensions to override styles:
-    - 89 char lines (or use a setting for the limit)
-    - pjlib types
 * May want to add a command line helper
 * SHould be able to exclude files and directories from directory windows
     - maybe draw them dimmes
     - find in files should ignore them
 * Modern objc: https://developer.apple.com/library/Mac/releasenotes/ObjectiveC/ModernizationObjC/AdoptingModernObjective-C/AdoptingModernObjective-C.html#//apple_ref/doc/uid/TP40014150
-* OSXFUSE is releasing version 3.0 soon (can update via system preferences).
 * Should be able to double click in find in time machine.
 * Add a go extension for search on sites:
 	- will need language proc files
@@ -156,12 +129,22 @@ Creating plugins
     - and can embed UI widgets using text attachments
     - see http://asciiwwdc.com/2010/sessions/114
     - and Downloads/WWDC_2010_114
+* Look into supporting code folding:
+    - maybe just fold selections
+    - click could unfold
+    - NSGlyphInfoAttributeName looks like it might be good
+    - glyph should be a setting
+    Open Book
+    Right-Pointing Magnifying Glass
+    - getting glyphs
+    http://www.cocoabuilder.com/archive/cocoa/102837-getting-glyphs-and-their-outlines.html
+    http://www.cocoabuilder.com/archive/cocoa/22415-how-to-get-glyph-from-character.html
+    http://partners.adobe.com/public/developer/en/opentype/glyphlist.txt
+    - maybe a command to unfold all
 * Local search should try all open projects before doing a global search.
 * NSString adds an API that can be used to detect the string encoding of an array of bytes
 * Need an extension (or an option) to show a line at N characters.
 * Tab handling is sketchy.
-* Would be great to get something working for C functions and structs.
-* Use FUSE to enable remote editing.
 * Can tag files, for searching? Color coding? NSURLTagNamesKey
     - maybe a context menu item
 * Stuff like "http://%s/ubus" isn't formatted correctly:
@@ -175,7 +158,6 @@ Creating plugins
 	- weight column for how close the match is
 	- for menus could have a jsonfile describing menus
 	for edits have an op field that could be "add" or "remove"
-* Redo transforms?
 * Add tab stops
 	- they get screwed up now for things like tabbing to add comments to long lines)
 	  e.g. replaceSelection in TextEditorView.cs
@@ -195,24 +177,9 @@ Creating plugins
     - trash items plugin should do git rm
     - new file should do a git add (make sure this works with renaming)
 * Might want stuff like dissasemble too
-* Pick something to use for a plugin:
-    - loading plugins: https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/LoadingCode/Tasks/UsingPlugins.html#//apple_ref/doc/uid/20001276-100982
-    - should plugins go into ~/Library/Application Support/applicationSupportDirectory/PlugIns?
-    - probably need a protocol that plugins must implement
-        ` load, unload, settingsChanged (or maybe they can listen)
-    - will need to do something for building
-    maybe separate projects
-    could have a make file to build em all
-    - need some docs on writing plugins (and probably extensions)
 * May want a language option to force monospace
     - useful with open as binary
 * Use alertWithError where we don't just write to the transcript.
-* Should be something to manage extensions:
-	- see what is installed
-	- uinstall
-	- install
-	- search
-	- great if it could install from a repo
 * Might be nice if directory window styled dirty windows somehow
 	- maybe back color
 * Tabs don't work correctly
@@ -222,25 +189,6 @@ Creating plugins
 * Directory view window is collapsing open items:
 	- try running R scripts in samplers
 	- seems to be happening with root items
-* Look into supporting code folding:
-	- maybe just fold selections
-	- click could unfold
-	- NSGlyphInfoAttributeName looks like it might be good
-	- glyph should be a setting
-      Open Book
-      Right-Pointing Magnifying Glass
-	- getting glyphs
-	  http://www.cocoabuilder.com/archive/cocoa/102837-getting-glyphs-and-their-outlines.html
-	  http://www.cocoabuilder.com/archive/cocoa/22415-how-to-get-glyph-from-character.html
-	  http://partners.adobe.com/public/developer/en/opentype/glyphlist.txt
-	- maybe a command to unfold all
-* Should have some proc files for rich text documents.
-* Could use NSGlyphInfoAttributeName to re-render special chars?
-	- python colons
-	- rust arrows, matches
-	- braces
-	- maybe characters (or regexen) not in string or comment
-* Support goto line
 * Meson (build system)
 	- like CMake but saner
 	- easy to integrate with an IDE (see https://github.com/jpakkane/meson/wiki/IDE%20integration)

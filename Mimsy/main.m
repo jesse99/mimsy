@@ -135,9 +135,15 @@ int main(int argc, char* argv[])
 	struct Options options = parseArgs(argc, argv);
 	validateOptions(&options);
 	if (options.vimDir)
-		convertVIMFiles([NSString stringWithUTF8String:options.vimDir], [NSString stringWithUTF8String:options.outDir]);
+    {
+        MimsyPath* vimDir = [[MimsyPath alloc] initWithString:[NSString stringWithUTF8String:options.vimDir]];
+        MimsyPath* outDir = [[MimsyPath alloc] initWithString:[NSString stringWithUTF8String:options.outDir]];
+		convertVIMFiles(vimDir, outDir);
+    }
 	else
+    {
 		result = NSApplicationMain(argc, (const char **)argv);	// note that we typically don't return from NSApplicationMain
+    }
 	
 	return result;
 }

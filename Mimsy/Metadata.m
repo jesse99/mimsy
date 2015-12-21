@@ -4,25 +4,25 @@
 
 @implementation Metadata
 
-+ (NSString*)criticalPath:(NSString*)path named:(NSString*)name outError:(NSError**)error
++ (MimsyPath*)criticalPath:(MimsyPath*)path named:(NSString*)name outError:(NSError**)error
 {
 	ASSERT(error != NULL);
-	NSString* fpath = nil;
+	MimsyPath* fpath = nil;
 
 	BOOL isDir;
 	NSFileManager* fm = [NSFileManager defaultManager];
-	if ([fm fileExistsAtPath:path isDirectory:&isDir])
+	if ([fm fileExistsAtPath:path.asString isDirectory:&isDir])
 	{
 		if (isDir)
 		{
 			NSString* fname = [NSString stringWithFormat:@".%@.xml", name];
-			fpath = [path stringByAppendingPathComponent:fname];
+			fpath = [path appendWithComponent:fname];
 		}
 		else
 		{
-			NSString* fname = [NSString stringWithFormat:@".%@-%@.xml", path.lastPathComponent.stringByDeletingPathExtension, name];
-			path = [path stringByDeletingLastPathComponent];
-			fpath = [path stringByAppendingPathComponent:fname];
+			NSString* fname = [NSString stringWithFormat:@".%@-%@.xml", path.lastComponent.stringByDeletingPathExtension, name];
+			path = [path popComponent];
+			fpath = [path appendWithComponent:fname];
 		}
 	}
 	else
@@ -35,7 +35,7 @@
 	return fpath;
 }
 
-+ (NSError*)writeCriticalDataTo:(NSString*)path named:(NSString*)name with:(id<NSCoding>)object
++ (NSError*)writeCriticalDataTo:(MimsyPath*)path named:(NSString*)name with:(id<NSCoding>)object
 {
 	NSMutableData* data = [NSMutableData new];
 	NSKeyedArchiver* archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
@@ -44,19 +44,19 @@
 	[archiver finishEncoding];
 	
 	NSError* error = nil;
-	NSString* fpath = [Metadata criticalPath:path named:name outError:&error];
+	MimsyPath* fpath = [Metadata criticalPath:path named:name outError:&error];
 	if (fpath)
-		[data writeToFile:fpath options:NSDataWritingAtomic error:&error];
+		[data writeToFile:fpath.asString options:NSDataWritingAtomic error:&error];
 	
 	return error;
 }
 
-+ (id)readCriticalDataFrom:(NSString*)path named:(NSString*)name outError:(NSError**)error
++ (id)readCriticalDataFrom:(MimsyPath*)path named:(NSString*)name outError:(NSError**)error
 {	
-	NSString* fpath = [Metadata criticalPath:path named:name outError:error];
+	MimsyPath* fpath = [Metadata criticalPath:path named:name outError:error];
 	if (fpath)
 	{
-		NSData* data = [NSData dataWithContentsOfFile:fpath options:0 error:error];
+		NSData* data = [NSData dataWithContentsOfFile:fpath.asString options:0 error:error];
 		if (data)
 		{
 			NSKeyedUnarchiver* archiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
@@ -67,11 +67,11 @@
 	return nil;
 }
 
-+ (void)writeNonCriticalDataTo:(NSString*)path named:(NSString*)name with:(id<NSCoding>)object
++ (void)writeNonCriticalDataTo:(MimsyPath*)path named:(NSString*)name with:(id<NSCoding>)object
 {
 	NSData* data = [NSKeyedArchiver archivedDataWithRootObject:object];
 	
-	int result = setxattr(path.UTF8String, name.UTF8String, data.bytes, data.length, 0, 0);
+	int result = setxattr(path.asString.UTF8String, name.UTF8String, data.bytes, data.length, 0, 0);
 	if (result < 0)
 		LOG("Warning", "Failed writing %s to %s: %s", STR(name), STR(path), strerror(errno));
 }

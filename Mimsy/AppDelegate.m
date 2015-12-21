@@ -99,8 +99,8 @@ typedef BOOL (^TextViewKeyBlock)(id<MimsyTextView> _Nonnull);
 // ------------------------------------------------------------------------------------
 void initLogGlobs()
 {
-	NSString* path = [Paths installedDir:@"settings"];
-	path = [path stringByAppendingPathComponent:@"logging.mimsy"];
+	MimsyPath* path = [Paths installedDir:@"settings"];
+	path = [path appendWithComponent:@"logging.mimsy"];
 	
 	NSError* error = nil;
 	NSMutableArray* doPatterns = [NSMutableArray new];
@@ -251,7 +251,7 @@ void initLogGlobs()
     return env;
 }
 
-- (void)installSettingsPath:(NSString* _Nonnull)path
+- (void)installSettingsPath:(MimsyPath* _Nonnull)path
 {
     [_installer addSourcePath:path];
 }
@@ -426,18 +426,18 @@ void initLogGlobs()
     return [[Glob alloc] initWithGlobs:globs];
 }
 
-- (void)open:(NSString* _Nonnull)path
+- (void)open:(MimsyPath* _Nonnull)path
 {
     [OpenFile openPath:path atLine:-1 atCol:-1 withTabWidth:-1];
 }
 
-- (void)openAsBinary:(NSString* _Nonnull)path
+- (void)openAsBinary:(MimsyPath* _Nonnull)path
 {
-    NSURL* url = [[NSURL alloc] initFileURLWithPath:path];
+    NSURL* url = path.asURL;
     [self openBinary:url];
 }
 
-- (NSColor*)mimsyColor:(NSString *)name
+- (NSColor*)mimsyColor:(NSString*)name
 {
     return [NSColor colorWithMimsyName:name];
 }
@@ -748,13 +748,13 @@ void initLogGlobs()
 	[self reloadIfChanged];
 }
 
-- (NSUInteger)_findDirectoryWindow:(NSString*)path
+- (NSUInteger)_findDirectoryWindow:(MimsyPath*)path
 {
     for (NSUInteger i = 0; i < _recentDirectories.count; ++i)
     {
         NSArray* elements = _recentDirectories[i];
         NSString* candidate = elements[1];
-        if ([path compare:candidate] == NSOrderedSame)
+        if ([path.asString compare:candidate] == NSOrderedSame)
             return i;
     }
     
@@ -767,7 +767,7 @@ void initLogGlobs()
     if ([window.windowController isKindOfClass:[DirectoryController class]])
     {
         DirectoryController* controller = window.windowController;
-        NSArray* elements = @[[NSDate date], controller.path];
+        NSArray* elements = @[[NSDate date], controller.path.asString];
         
         NSUInteger index = [self _findDirectoryWindow:controller.path];
         if (index < _recentDirectories.count)
@@ -826,7 +826,8 @@ void initLogGlobs()
 	
 	if ([identifier isEqualToString:@"DirectoryWindow3"])
 	{
-		NSWindowController* controller = [DirectoryController open:@":restoring:"];
+        MimsyPath* path = [[MimsyPath alloc] initWithString:@":restoring:"];
+		NSWindowController* controller = [DirectoryController open:path];
 		handler(controller.window, NULL);
 	}
 	else
@@ -917,7 +918,8 @@ void initLogGlobs()
 
 - (void)openRecentDir:(id)sender
 {
-	NSString* path = [sender representedObject];
+	NSString* object = [sender representedObject];
+    MimsyPath* path = [[MimsyPath alloc] initWithString:object];
     [DirectoryController open:path];
 }
 
@@ -1025,8 +1027,8 @@ void initLogGlobs()
 {
 	UNUSED(sender);
 	
-	NSString* path = [Paths installedDir:nil];
-	[[NSWorkspace sharedWorkspace] openFile:path];
+	MimsyPath* path = [Paths installedDir:nil];
+	[[NSWorkspace sharedWorkspace] openFile:path.asString];
 }
 
 - (IBAction)setStyle:(id)sender
@@ -1063,7 +1065,8 @@ void initLogGlobs()
 	{
 		for (NSURL* url in panel.URLs)
 		{
-			(void) [DirectoryController open:[url path]];
+            MimsyPath* path = [[MimsyPath alloc] initWithString:url.path];
+			(void) [DirectoryController open:path];
 		}
 	}	
 }
@@ -1226,8 +1229,8 @@ void initLogGlobs()
 	NSArray* urls = [fm URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask];
 	if (urls.count > 0)
 	{
-		NSString* path = [urls[0] path];
-		path = [path stringByAppendingPathComponent:@"Mimsy"];
+		MimsyPath* path = [[MimsyPath alloc] initWithString:[urls[0] path]];
+		path = [path appendWithComponent:@"Mimsy"];
 		
 		installer = [[InstallFiles alloc] initWithDstPath:path];
 		[installer addSourceFile:@"builders"];
@@ -1247,15 +1250,15 @@ void initLogGlobs()
 
 - (void)_loadHelpFiles
 {
-	NSString* helpDir = [Paths installedDir:@"help"];
+	MimsyPath* helpDir = [Paths installedDir:@"help"];
 	Glob* glob = [[Glob alloc] initWithGlob:@"*-*.*"];
 	
 	NSError* error = nil;
 	NSMutableArray* items = [NSMutableArray new];
 	[Utils enumerateDir:helpDir glob:glob error:&error block:
-		 ^(NSString* path)
+		 ^(MimsyPath* path)
 		 {
-             if (![path contains:@".old"])
+             if (![path.lastComponent contains:@".old"])
              {
                  NSError* err = nil;
                  HelpItem* help = [[HelpItem alloc] initFromPath:path err:&err];
@@ -1286,10 +1289,10 @@ void initLogGlobs()
 {
     _settings = [[Settings alloc] init:@"app.mimsy" context:self];
 	
-	NSString* path = [Paths installedDir:@"settings"];
-	path = [path stringByAppendingPathComponent:@"app.mimsy"];
+	MimsyPath* path = [Paths installedDir:@"settings"];
+	path = [path appendWithComponent:@"app.mimsy"];
 	
-	if ([[NSFileManager defaultManager] fileExistsAtPath:path])
+	if ([[NSFileManager defaultManager] fileExistsAtPath:path.asString])
 	{
 		NSError* error = nil;
 		ConfigParser* parser = [[ConfigParser alloc] initWithPath:path outError:&error];
@@ -1311,9 +1314,9 @@ void initLogGlobs()
 
 - (void)_watchInstalledFiles
 {
-	NSString* dir = [Paths installedDir:@"languages"];
+	MimsyPath* dir = [Paths installedDir:@"languages"];
 	_languagesWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
-		^(NSString* path, FSEventStreamEventFlags flags)
+		^(MimsyPath* path, FSEventStreamEventFlags flags)
 		{
 			UNUSED(path, flags);
 			[Languages languagesChanged];
@@ -1323,7 +1326,7 @@ void initLogGlobs()
 
 	dir = [Paths installedDir:@"settings"];
 	_settingsWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
-		^(NSString* path, FSEventStreamEventFlags flags)
+		^(MimsyPath* path, FSEventStreamEventFlags flags)
 		{
 			UNUSED(path, flags);
 			initLogGlobs();
@@ -1336,7 +1339,7 @@ void initLogGlobs()
 	
 	dir = [Paths installedDir:@"help"];
 	_helpWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
-		^(NSString* path, FSEventStreamEventFlags flags)
+		^(MimsyPath* path, FSEventStreamEventFlags flags)
 		{
 			UNUSED(path, flags);
 			[self _loadHelpFiles];
@@ -1345,7 +1348,7 @@ void initLogGlobs()
     
     dir = [Paths installedDir:@"styles"];
 	_stylesWatcher = [[DirectoryWatcher alloc] initWithPath:dir latency:1.0 block:
-		  ^(NSString* path, FSEventStreamEventFlags flags)
+		  ^(MimsyPath* path, FSEventStreamEventFlags flags)
 		  {
 			  UNUSED(path, flags);
 			  [[NSNotificationCenter defaultCenter] postNotificationName:@"StylesChanged" object:self];

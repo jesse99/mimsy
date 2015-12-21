@@ -8,35 +8,35 @@
 // These windows work a bit like project windows in IDEs.
 @interface DirectoryController : NSWindowController<SettingsContext, MimsyProject>
 
-+ (DirectoryController*)getCurrentController;
-+ (DirectoryController*)getController:(NSString*)path;
-+ (DirectoryController*)open:(NSString*)path;
-+ (void)enumerate:(void (^)(DirectoryController* controller))block;
++ (DirectoryController* _Nullable)getCurrentController;
++ (DirectoryController* _Nullable)getController:(MimsyPath* __nonnull)path;
++ (DirectoryController* __nonnull)open:(MimsyPath* __nonnull)path;
++ (void)enumerate:(void (^ __nonnull)(DirectoryController* __nonnull controller))block;
 
-- (bool)shouldOpen:(NSString*)path;
-- (void)doubleClicked:(id)sender;
-- (void)deleted:(id)sender;
-- (IBAction)targetChanged:(id)sender;
+- (bool)shouldOpen:(MimsyPath* __nonnull)path;
+- (void)doubleClicked:(id __nonnull)sender;
+- (void)deleted:(id __nonnull)sender;
+- (IBAction)targetChanged:(id __nonnull)sender;
 - (bool)canBuild;
-- (NSString*)buildTargetName;
-- (void)buildTarget:(id)sender;
+- (NSString* _Nullable)buildTargetName;
+- (void)buildTarget:(id __nonnull)sender;
 - (void)saveBuildFlags;
 
-- (NSDictionary*)getDirAttrs:(NSString*)path;
-- (NSDictionary*)getFileAttrs:(NSString*)path;
-- (NSDictionary*)getSizeAttrs;
+- (NSDictionary* __nonnull)getDirAttrs:(NSString* __nonnull)name;
+- (NSDictionary* __nonnull)getFileAttrs:(NSString* __nonnull)name;
+- (NSDictionary* __nonnull)getSizeAttrs;
 
-- (id<SettingsContext>)parent;
-- (Settings*)settings;
+- (id<SettingsContext> __nonnull)parent;
+- (Settings* __nonnull)settings;
 
-@property NSString* thePath;
-@property Glob* ignores;
-@property Glob* dontIgnores;
-@property NSMutableArray* targetGlobs;
-@property NSMutableArray* flags;
-@property Glob* preferredPaths;
-@property Glob* ignoredPaths;
+@property Glob* __nonnull ignores;
+@property Glob* __nonnull dontIgnores;
+@property NSMutableArray* __nonnull targetGlobs;
+@property NSMutableArray* __nonnull flags;
+@property Glob* __nonnull preferredPaths;
+@property Glob* __nonnull ignoredPaths;
 
+@property (nonatomic, readonly, strong) MimsyPath * __nonnull path;
 @property (weak) IBOutlet NSOutlineView* table;
 @property (weak) IBOutlet NSPopUpButton* targetsMenu;
 @property (weak) IBOutlet NSToolbarItem* buildButton;

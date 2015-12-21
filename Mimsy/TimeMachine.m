@@ -8,13 +8,13 @@
 #import "Utils.h"
 
 static bool _lookedForTimeMachineDir;
-static NSString* _timeMachineDir;
+static MimsyPath* _timeMachineDir;
 
 @interface OldFile : NSObject
 
-- (id)initWithSnapshot:(NSString*)snapshotPath andPath:(NSString*)path;
+- (id)initWithSnapshot:(MimsyPath*)snapshotPath andPath:(MimsyPath*)path;
 
-@property (readonly) NSString* path;
+@property (readonly) MimsyPath* path;
 @property (readonly) NSNumber* fileNum;
 @property (readonly) NSString* title;
 @property (readonly) double timeStamp;		// seconds from now
@@ -65,14 +65,14 @@ static NSString* _getTimeStr(double timestamp)
 	return title;
 }
 
-- (id)initWithSnapshot:(NSString*)snapshotPath andPath:(NSString*)path
+- (id)initWithSnapshot:(MimsyPath*)snapshotPath andPath:(MimsyPath*)path
 {
 	UNUSED(snapshotPath);
 	
 	_path = path;
 	
 	NSError* error = nil;
-	NSDictionary* attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error];
+	NSDictionary* attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:path.asString error:&error];
 	if (attrs)
 	{
 		NSDate* fileTime = attrs[NSFileModificationDate];
@@ -93,12 +93,12 @@ static NSString* _getTimeStr(double timestamp)
 
 @implementation TimeMachine
 
-+(bool)isSnapshotFile:(NSString*)path
++(bool)isSnapshotFile:(MimsyPath*)path
 {
 	if (!_lookedForTimeMachineDir)
 		[TimeMachine _findTimeMachineDir];
 	
-	return _timeMachineDir && [path startsWith:_timeMachineDir];
+	return _timeMachineDir && [path hasRoot:_timeMachineDir];
 }
 
 +(NSString*)getSnapshotLabel:(NSString*)path
@@ -145,7 +145,7 @@ static NSString* _getTimeStr(double timestamp)
 	if (oldFiles && oldFiles.count > 0)
 	{
 		OldFile* file = oldFiles[0];
-		NSURL* url = [NSURL fileURLWithPath:file.path isDirectory:FALSE];
+		NSURL* url = [NSURL fileURLWithPath:file.path.asString isDirectory:FALSE];
 
 		AppDelegate* app = (AppDelegate*) [NSApp delegate];
 		[app openWithMimsy:url];
@@ -162,7 +162,7 @@ static NSString* _getTimeStr(double timestamp)
 	if (oldFiles && oldFiles.count > 0)
 	{
 		TextController* tc = [TextController frontmost];
-		NSString* title = [NSString stringWithFormat:@"%@ Files", tc.path.lastPathComponent];
+		NSString* title = [NSString stringWithFormat:@"%@ Files", tc.path.lastComponent];
 		NSArray* titles = [oldFiles map:^id(OldFile* file) {return file.title;}];
 		SelectNameController* controller = [[SelectNameController alloc] initWithTitle:title names:titles];
 		(void) [NSApp runModalForWindow:controller.window];
@@ -178,8 +178,7 @@ static NSString* _getTimeStr(double timestamp)
 						 UNUSED(stop);
 						 
 						 OldFile* file = oldFiles[index];
-						 NSURL* url = [NSURL fileURLWithPath:file.path isDirectory:FALSE];					 
-						 [app openWithMimsy:url];
+						 [app openWithMimsy:file.path.asURL];
 					 }];
 			}
 		}
@@ -232,14 +231,14 @@ static NSString* _getTimeStr(double timestamp)
 	 ];
 }
 
-+ (void)_getOriginalPath:(NSString**)originalPath andVolume:(NSString**)volume fromController:(TextController*)controller
++ (void)_getOriginalPath:(MimsyPath**)originalPath andVolume:(NSString**)volume fromController:(TextController*)controller
 {
-	if ([controller.path startsWith:_timeMachineDir])
+	if ([controller.path hasRoot:_timeMachineDir])
 	{
-		NSArray* root = [_timeMachineDir pathComponents];
+		NSArray* root = [_timeMachineDir components];
 		
 		// remove the time machine dir, e.g. /Volumes/Seagate/Backups.backupdb/Jesse Jones’s Mac Pro
-		NSMutableArray* inner = [NSMutableArray arrayWithArray:[controller.path pathComponents]];
+		NSMutableArray* inner = [NSMutableArray arrayWithArray:[controller.path components]];
 		[inner removeObjectsInRange:NSMakeRange(0, root.count)];
 		
 		// remove the snapshot dir, eg 2014-04-27-110800
@@ -250,12 +249,12 @@ static NSString* _getTimeStr(double timestamp)
 		[inner removeObjectAtIndex:0];
 
 		// save off the originalPath
-		*originalPath = [NSString pathWithComponents:inner];
+        *originalPath = [[MimsyPath alloc] initWithArray:inner];
 	}
 	else
 	{
 		NSError* error = nil;
-		NSURL* url = [[NSURL alloc] initFileURLWithPath:controller.path isDirectory:FALSE];
+		NSURL* url = controller.path.asURL;
 		if ([url getResourceValue:volume forKey:NSURLVolumeNameKey error:&error] && volume)
 		{
 			*originalPath = controller.path;
@@ -277,7 +276,7 @@ static NSString* _getTimeStr(double timestamp)
 	if (controller)
 	{
 		NSString* volume = nil;
-		NSString* path = nil;
+		MimsyPath* path = nil;
 		[TimeMachine _getOriginalPath:&path andVolume:&volume fromController:controller];
 		
 		if (path)
@@ -302,21 +301,21 @@ static NSString* _getTimeStr(double timestamp)
 //		2014-04-27-124723.inProgress
 //		Latest -> 2014-04-27-120915
 // And under those each volume that is backed up.
-+ (NSMutableArray*)_findOldFilesFor:(NSString*)originalPath inVolume:(NSString*)volume
++ (NSMutableArray*)_findOldFilesFor:(MimsyPath*)originalPath inVolume:(NSString*)volume
 {	
 	NSMutableArray* oldFiles = [NSMutableArray new];
 	
-	NSString* suffix = [volume stringByAppendingPathComponent:originalPath];
+	NSString* suffix = [volume stringByAppendingPathComponent:originalPath.asString];
 	
 	NSError* error = nil;
 	[Utils enumerateDir:_timeMachineDir glob:nil error:&error block:
-		^(NSString* snapshotPath)
+		^(MimsyPath* snapshotPath)
 		{
-			NSString* fileName = [snapshotPath lastPathComponent];
+			NSString* fileName = [snapshotPath lastComponent];
 			if (![fileName startsWith:@".'"] && ![fileName contains:@"inProgess"] && ![fileName contains:@"Latest"])
 			{
-				NSString* path = [snapshotPath stringByAppendingPathComponent:suffix];
-				if ([[NSFileManager defaultManager] fileExistsAtPath:path])
+				MimsyPath* path = [snapshotPath appendWithComponent:suffix];
+				if ([[NSFileManager defaultManager] fileExistsAtPath:path.asString])
 					[oldFiles addObject:[[OldFile alloc] initWithSnapshot:snapshotPath andPath:path]];
 			}
 		}
@@ -348,7 +347,8 @@ static NSString* _getTimeStr(double timestamp)
 	
 	if (!err)
 	{
-		_timeMachineDir = [stdout stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        NSString* output = [stdout stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		_timeMachineDir = [[MimsyPath alloc] initWithString:output];
 	}
 	else
 	{
