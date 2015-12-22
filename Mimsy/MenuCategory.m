@@ -30,7 +30,7 @@
 
 - (void)appendSortedItem:(NSMenuItem*)newItem
 {
-    if (self.numberOfItems == 0)
+    if (self.numberOfItems == 0 || self.itemArray.lastObject.isSeparatorItem)
     {
         [self addItem:newItem];
     }
