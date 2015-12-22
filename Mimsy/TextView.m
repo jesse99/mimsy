@@ -643,7 +643,7 @@ static NSString* getKey(NSEvent* event)
     NSArray* guesses = [[NSSpellChecker sharedSpellChecker] guessesForWordRange:self.selectedRange inString:self.textStorage.string language:@"en_US" inSpellDocumentWithTag:0];	// TODO: how can we not hard-code the language?
     if (guesses.count > 0)
     {
-        [menu addItem:[NSMenuItem separatorItem]];
+       [menu addItem:[NSMenuItem separatorItem]];
         
         for (NSUInteger i = 0; i < guesses.count; ++i)
         {

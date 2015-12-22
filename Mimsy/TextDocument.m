@@ -177,7 +177,10 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		_text = nil;
 	}
 	[_controller onPathChanged];		// have to do this after getting text
-	[self readMetataDataFrom:[[MimsyPath alloc] initWithString:self.fileURL.path]];
+    
+    NSURL* url = self.fileURL;
+    if (url)
+        [self readMetataDataFrom:[[MimsyPath alloc] initWithString:url.path]];
 	
 	[_controller open];
 }

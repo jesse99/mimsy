@@ -50,9 +50,9 @@ public class MimsyPath: NSObject
         return path.hash
     }
     
-    public func isEqualTo(path path: MimsyPath) -> Bool
+    public func isEqualTo(path path: MimsyPath?) -> Bool
     {
-        return self.path.isEqualToString(path.path as String)
+        return path != nil && self.path.isEqualToString(path!.path as String)
     }
     
     /// This should only be used for interop.
