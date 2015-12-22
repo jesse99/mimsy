@@ -26,17 +26,19 @@ public class BuildErrors : NSObject
         _index = -1
         
         var matches = [Int: Bool]()
-
+        
+        let remap = getRemapPath()
         for pattern in _patterns
         {
             pattern.regex.enumerateMatchesInString(text as String, options: [], range: range, usingBlock:
             {
-            (match, flags, stop) -> Void in
-                if matches[match!.range.location] == nil
+            (match, flags, stop) in
+                if match != nil && matches[match!.range.location] == nil
                 {
-                    let error = Error(text: text, pattern: pattern, match: match!)
+                    let error = Error(text: text, pattern: pattern, match: match!, remap: remap)
                     matches[match!.range.location] = true
                     self._errors.append(error)
+                    //SLOG("App", "found error at \(match!.range.location):\(match!.range.length): \(text.substringWithRange(match!.range))")
                 }
             })
         }
@@ -66,6 +68,27 @@ public class BuildErrors : NSObject
         showErrorInFile()
     }
     
+    private func getRemapPath() -> [String]
+    {
+        var mapping = ["", ""]
+        
+        if let context = activeContext, let settings = context.settings()
+        {
+            let remap = settings.stringValue("RemapBuildPath", missing: ":")
+            let parts = remap.componentsSeparatedByString(":")
+            if parts.count == 2
+            {
+                mapping = parts
+            }
+            else
+            {
+                TranscriptController.writeError("RemapBuildPath should be formatted as '<old path>:<new path>' not '\(remap)'")
+            }
+        }
+        
+        return mapping
+    }
+    
     private func gotoNewError(delta: Int)
     {
         let view = TranscriptController.getView()
@@ -82,27 +105,29 @@ public class BuildErrors : NSObject
         _index += delta
         let error = _errors[_index]
         let range = error.transcriptRange.range
+        //SLOG("App", "goto error at \(range.location):\(range.length): \(error.message)")
         if range.location != NSNotFound
         {
-            let attrs = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue]
+            let attrs = [NSUnderlineStyleAttributeName: NSNumber(integer: NSUnderlineStyle.StyleSingle.rawValue)]
             view.textStorage!.addAttributes(attrs, range: range)
 
             // Typically we'd call showFindIndicatorForRange but that seems a bit
             // distracting when multiple windows are involved.
-            view.scrollRangeToVisible(range)
+            let delay = dispatch_time(DISPATCH_TIME_NOW, Int64(10*NSEC_PER_MSEC))
+            let main = dispatch_get_main_queue()
+            dispatch_after(delay, main, {view.scrollRangeToVisible(range)})
         }
     }
     
     private func showErrorInFile()
     {
         let error = _errors[_index]
-        if error.path != nil && error.fileRange != nil  // this code would be simplier by matching on a tuple but that doesn't work with Xcode 6.1
+        if error.path != nil && error.fileRange != nil  // this code would be simpler by matching on a tuple but that doesn't work with Xcode 6.1
         {
             let range = error.fileRange!.range.location != NSNotFound ? error.fileRange!.range : NSMakeRange(0, 0)  // NSNotFound means that the range was deleted
             if let controller = error.fileRange!.controller
             {
                 controller.getTextView().setSelectedRange(range)
-                controller.getTextView().scrollRangeToVisible(range)
                 controller.getTextView().scrollRangeToVisible(range)
             }
             else
@@ -185,15 +210,20 @@ public class BuildErrors : NSObject
 
     private class Error
     {
-        init(text: NSString, pattern: Pattern, match: NSTextCheckingResult)
+        init(text: NSString, pattern: Pattern, match: NSTextCheckingResult, remap: [String])
         {
-            transcriptRange = PersistentRange(TranscriptController.getInstance(), range: match.range)
-            
             var file: MimsyPath?
             switch pattern.fields["F"]
             {
-            case .Some(let i): file = MimsyPath(withString: text.substringWithRange(match.rangeAtIndex(i)))
-            default: file = nil
+            case .Some(let i):
+                var s = text.substringWithRange(match.rangeAtIndex(i))
+                if !remap.isEmpty && !remap[0].isEmpty
+                {
+                    s = s.stringByReplacingOccurrencesOfString(remap[0], withString: remap[1])
+                }
+                file = MimsyPath(withString: s)
+            default:
+                file = nil
             }
             
             if let i = pattern.fields["L"]
@@ -216,8 +246,12 @@ public class BuildErrors : NSObject
             
             switch pattern.fields["M"]
             {
-            case .Some(let i): message = text.substringWithRange(match.rangeAtIndex(i))
-            default: message = nil
+            case .Some(let i):
+                message = text.substringWithRange(match.rangeAtIndex(i))
+                transcriptRange = PersistentRange(TranscriptController.getInstance(), range: match.rangeAtIndex(i))
+            default:
+                message = nil
+                transcriptRange = PersistentRange(TranscriptController.getInstance(), range: match.range)
             }
 
             let current = DirectoryController.getCurrentController()

@@ -25,27 +25,16 @@ Creating plugins
 
 
 
-* Context menus arent sorted
-* For mac80211 could add some custom duals, e.g. to open mesh.h
-* objc language should style readonly (and related)
-* Why couldn't we use open selection for:
-    src/mesh-tests/manual-test/manual-test.go:5: imported and not used: "bufio"
-* Errors in the mac aren't recognized.
-* up_edges1 didn't style right in R.
-* 100:1 doesn't style right in R.
-* Seems like we could get goto definition working with just the styler
+* Get remote builds working:
+    - didn't get a decent error when cd'ing to a bad directory
+* Merge into master
+* Seems like we could get goto definition working with just the styler:
     - listen for open and close directory events
     - add a setting for globs to parse
     - use function regex from language files
     - also use type
     - probably want to special case C declarations
     - add a setting for extra directories to parse
-* Get remote builds working:
-    remote-test:
-    ssh jjones@10.4.0.128 'make package/coco-mesh-minder/{compile,install} V=1 && scp bin/rb433-chaos/packages/coco/coco-mesh-minder_1_ar71xx.ipk root@192.168.6.11:/tmp && ssh root@192.168.6.11 "opkg install /tmp/coco-mesh-minder_1_ar71xx.ipk"'
-    - probably need to set USER and maybe HOME
-    - probably need to special case file matching if no match do a local search for the file name
-    - didn't get a decent error when cd'ing to a bad directory
 * Add snippets support:
     - snippets/<language> directories
     - snippets are just language files
@@ -53,7 +42,6 @@ Creating plugins
     - probably should adjust indentation level to match current selection
     - could have optional project .snippets directories
 * Probably want a note about extension development workflow
-* Merge into master
 * Start adding extensions for core stuff.
 
 * Need a plugin manager:

@@ -620,10 +620,11 @@ static DirectoryController* _lastBuilt;
 		  stderr = [stderr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 		  if (stderr && stderr.length > 0)
 		  {
-			  [TranscriptController writeStderr:stderr];
+			  NSRange range = [TranscriptController writeStderr:stderr];
 			  [TranscriptController writeStderr:@"\n"];
 
-              [BuildErrors.instance parseErrors:stderr range:NSMakeRange(0, stderr.length)];
+              NSString* text = [[TranscriptController getString] string];
+              [BuildErrors.instance parseErrors:text range:range];
               if (BuildErrors.instance.canGotoNextError)
                   [BuildErrors.instance gotoNextError];
           }

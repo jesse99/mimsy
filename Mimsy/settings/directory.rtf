@@ -1,11 +1,11 @@
-{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf340
 {\fonttbl\f0\fnil\fcharset0 Verdana;\f1\froman\fcharset0 Times-Roman;\f2\fswiss\fcharset0 Helvetica;
-\f3\fnil\fcharset0 Menlo-Regular;}
+}
 {\colortbl;\red255\green255\blue255;\red240\green0\blue31;\red32\green78\blue51;\red106\green11\blue19;
 \red65\green51\blue255;\red22\green118\blue20;\red46\green58\blue181;}
 \viewkind0
 \deftab480
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f0\i\fs28 \cf2 # This is the default settings file used for directory windows. When a new directory is
 \i0 \cf0 \
@@ -24,20 +24,20 @@
 \i\b0 \cf2  
 \f1\i0\fs32 \cf0 PATH=/opt/local/bin:/opt/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 \f0\fs28 \
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f2\fs24 \cf0 \
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f0\i\fs28 \cf2 # Sets the number of spaces used to render tabs and when highlighting lines that are too long.
 \i0 \cf0 \
 
 \b \cf3 TabWidth:
 \b0 \cf0  4\
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f2\fs24 \cf0 \
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f0\i\fs28 \cf2 # Overrides TabWidth but only for rendering.
 \i0 \cf0 \
@@ -50,13 +50,21 @@
 # files (e.g. make files). The format is menu item title, full path to an executable, executable arguments\
 # all separated with section signs (usually produced via option-6).
 \i0 \cf0 \
-\pard\tx626\pardeftab626\pardirnatural
+\pard\tx626\pardeftab626\pardirnatural\partightenfactor0
 
-\i \cf2 #BuildItem: Make mac80211\'a7/usr/bin/ssh\'a7jjones@10.8.0.2\'a7cd vendor/openwrt && make package/mac80211/\{compile,install\} V=1 -j7
-\f3\i0\fs26 \cf0 \CocoaLigature0 \
-\pard\pardeftab480\pardirnatural
+\i \cf2 #BuildItem: Make mac80211\'a7/usr/bin/ssh\'a7jjones@10.8.0.2\'a7cd vendor/openwrt && make package/mac80211/\{compile,install\} V=1 -j7\
+\
+\pard\pardeftab480\pardirnatural\partightenfactor0
+\cf2 # This can be used with remote builds to map paths on the remote machine to paths on the\
+# locally mounted volume (e.g. with Connect to Server in the Finder) or with build systems\
+# that copy source files to a build or staging directory. The format is <remote path>:<local path>.\
+\pard\tx626\pardeftab626\pardirnatural\partightenfactor0
+\cf2 #RemapBuildPath: /home/jjones/coco/devel/vendor/build_dir/:/Volumes/devel/vendor/
+\f2\i0\fs36 \cf0 \expnd0\expndtw0\kerning0
+\
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
-\f0\i\fs28 \cf2 \CocoaLigature1 \
+\f0\i\fs28 \cf2 \kerning1\expnd0\expndtw0 \
 # These are globs for files and directories that are not shown in the directory window.
 \i0 \cf0 \
 
@@ -111,72 +119,72 @@
 
 \b \cf3 OpenWithMimsy:
 \b0 \cf0  *.txt\
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f2\fs24 \cf0 \
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f0\i\fs28 \cf2 # The entries below are used to style items in directory windows. DirectoryStyle and \
 # FileStyle are used if none of the GlobStyles match. Note that these are the only\
 # directory settings where the font styles are significant.
 \i0 \cf0 \
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f1\b\fs36 \cf0 DirectoryStyle: 
 \b0 \
 FileStyle: note that packages are considered to be files\
 SizeStyle: used for the second column in the view (byte size of files and packages)\
 \
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f0\i\fs28 \cf2 # Binaries
 \i0 \cf0 \
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f1\fs36 \cf2 GlobStyles: *.dll *.dylib *.exe *.lib\
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f2\fs24 \cf0 \
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f0\i\fs28 \cf2 # Build files
 \i0 \cf0 \
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f1\fs36 \cf4 GlobStyles: *.am *.make *.mk Makefile Make.shared *.rc SConscript SConstruct wscript wscript_build\
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 \cf0 \
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f0\i\fs28 \cf2 # Data files
 \i0 \cf0 \
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f1\fs36 \cf5 GlobStyles: *.config *.css *.doc *.docx *.htm *.html *.json *.mimsy *.pdf *.plist *.rtf *.schema *.sdef *.xml *.xsd *.xsdl *.xsl\
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 \cf0 \
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f0\i\fs28 \cf2 # Resources\
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f1\i0\fs36 \cf6 GlobStyles: *.aiff *.au *.avi *.bmp favicon.ico *.gif *.gzip *.icon *.icns *.jpeg *.jpg *.midi *.mp3 *.mpeg *.nib *.pict *.png *.qt *.tar *.tiff *.wav *.xib *.zip\
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 \cf0 \
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f0\i\fs28 \cf2 # Scripts
 \i0 \cf0 \
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f1\fs36 \cf7 GlobStyles: *.as *.js *.php *.pl *.py *.R *.rb *.ref *.sh\
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 \cf0 \
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f0\i\fs28 \cf2 # Source files
 \i0 \cf0 \
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f1\fs36 \cf0 GlobStyles: *.c *.cpp *.cs *.h *.hpp *.go *.java *.rs\
 }
