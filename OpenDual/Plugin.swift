@@ -28,19 +28,38 @@ class StdOpenDual: MimsyPlugin
     
     func openDual(view: MimsyTextView) -> Bool
     {
-        if let path = view.path
+        if let originalPath = view.path
         {
-            let stem = path.popExtension()
-
-            let names = findNames(path)
+            var fileNames: [String] = []
+            
+            let names = findNames(originalPath)
+            let stem = originalPath.popExtension().lastComponent()
             for name in names
             {
                 switch name
                 {
                 case .Extension(let name):
-                    app.open(stem.append(extensionName: name))
-                case .Path(let p):
-                    app.open(p)
+                    fileNames.append(stem + "." + name)
+
+                case .Path(let path):
+                    fileNames.append(path)
+                }
+            }
+            
+            for fname in fileNames
+            {
+                if let project = view.project
+                {
+                    let paths = project.resolve(fname)
+                    for path in paths
+                    {
+                        app.open(path)
+                    }
+                }
+                else
+                {
+                    let path = originalPath.popComponent().append(component: fname)
+                    app.open(path)
                 }
             }
         }
@@ -64,13 +83,13 @@ class StdOpenDual: MimsyPlugin
     enum Name
     {
         case Extension(String)
-        case Path(MimsyPath)
+        case Path(String)
         
         static func parse(text: String) -> Name
         {
             return text.hasPrefix(".") ?
                 .Extension(text.substringFromIndex(text.startIndex.advancedBy(1))) :
-                .Path(MimsyPath(withString: text))
+                .Path(text)
         }
     }
     
