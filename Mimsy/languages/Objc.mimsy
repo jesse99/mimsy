@@ -19,10 +19,10 @@ PreProc: \x23 \s* (?: warning | error | line | pragma)
 PreCondit: \x23 \s* (?: ifdef | ifndef | if | else | elif | endif) .* $
 Include: \x23 \s* (?: include | import)
 
-Type: \b(?: char | double | float | int | long | short | signed | unsigned | void | id | BOOL | SEL | IMP)\b
+Type: \b(?: bool | IBOutlet | __weak | __nonnull | __nullable | nullable | nonnull | _Nullable | _Nonnull | char | double | float | int | long | short | signed | unsigned | void | id | BOOL | SEL | IMP)\b
 Conditional: \b(?: case | else | if | switch)\b
 Exception: (?: @try | @catch | @finally | @throw)\b
-Keyword: \b(?: break | const | continue | default | enum | goto | return | struct | typedef | union | self | super | Class | nil | Nil)\b
+Keyword: \b(?: strong | weak | readonly | readwrite | atomic | nonatomic | unsafe_unretained | copy | break | const | continue | default | enum | goto | return | struct | typedef | union | self | super | Class | nil | Nil)\b
 Keyword: (?: @class | @property | @synthesize | @public | @private | @protected | @contained | @interface | @implementation | @protocol  | @end | @defs  | @encode  | @selector | @synchronized)\b
 Operator: \b(?: sizeof)\b
 Repeat: \b(?: do | for | while)\b
@@ -37,3 +37,4 @@ Float: (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)? [fFlL]?)
 Float: (\. [\d_]+ (?: [eE] [+-]? [\d_]+)? [fFlL]?)
 Number: (\d+ (?: [luLU]{0, 2}))
 Number: (0x [0-9a-fA-f]+ (?: [luLU]{0, 2}))
+
