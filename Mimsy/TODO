@@ -25,8 +25,6 @@ Creating plugins
 
 
 
-* Get remote builds working:
-    - didn't get a decent error when cd'ing to a bad directory
 * Merge into master
 * Seems like we could get goto definition working with just the styler:
     - listen for open and close directory events
@@ -35,6 +33,7 @@ Creating plugins
     - also use type
     - probably want to special case C declarations
     - add a setting for extra directories to parse
+* Add basic tab completion.
 * Add snippets support:
     - snippets/<language> directories
     - snippets are just language files
