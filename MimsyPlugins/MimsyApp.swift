@@ -9,6 +9,7 @@ public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
 public typealias ProjectContextMenuItemTitle = (files: [MimsyPath], dirs: [MimsyPath]) -> String?
 public typealias InvokeProjectCommand = (files: [MimsyPath], dirs: [MimsyPath]) -> ()
 public typealias TextRangeCallback = (MimsyTextView, NSRange) -> ()
+public typealias ProjectCallback = (MimsyProject) -> ()
 
 @objc public enum MenuItemLoc: Int
 {
@@ -35,12 +36,26 @@ public typealias TextRangeCallback = (MimsyTextView, NSRange) -> ()
     
     /// Invoked after language styling is applied.
     case AppliedStyles
-
+    
     /// Invoked just after a text document is opened.
     case Opened
     
     /// Invoked just before a text document is closed.
     case Closing
+}
+
+@objc public enum ProjectNotification: Int
+{
+    /// Invoked just after a project window is opened.
+    case Opened = 1
+    
+    /// Invoked just before a project window is closed.
+    case Closing
+    
+    /// Called when a file or directory within the project  is created, 
+    /// removed, renamed, or modified. (These events are coalesced so for 
+    /// something like a move there will only be one notification).
+    case Changed
 }
 
 // TODO: Once we can call static protocol methods from within swift we can
@@ -58,7 +73,10 @@ public typealias TextRangeCallback = (MimsyTextView, NSRange) -> ()
     /// Returns an object that can be used to display status or error messages.
     func transcript() -> MimsyTranscript
     
-    /// Registers a function that will be called just before a save.
+    /// Registers a function that will be called when various project related events happen.
+    func registerProject(kind: ProjectNotification, _ hook: ProjectCallback)
+    
+    /// Registers a function that will be called when various text view related events happen.
     func registerTextView(kind: TextViewNotification, _ hook: TextViewCallback)
 
     /// Used to register a function that will be called when a key is pressed. 

@@ -8,7 +8,7 @@ typedef void (^NullaryBlock)();
 typedef void (^InvokeTextCommandBlock)(id<MimsyTextView> _Nonnull);
 typedef NSString* _Nullable (^TextContextMenuItemTitleBlock)(id<MimsyTextView> _Nonnull);
 typedef NSString* __nullable (^ __nonnull ProjectContextMenuItemTitleBlock)(NSArray<MimsyPath*>* __nonnull, NSArray<MimsyPath*>* __nonnull);
-typedef void (^TextRangeBlock)(id<MimsyTextView> _Nonnull, NSRange);
+typedef void (^TextRangeBlock)(id<MimsyTextView> _Nonnull, NSRange);    // used elsewhere
 
 typedef void (^ __nonnull InvokeProjectCommandBlock)(NSArray<MimsyPath*>* __nonnull, NSArray<MimsyPath*>* __nonnull);
 
@@ -54,6 +54,7 @@ void initLogGlobs(void);
 - (id<SettingsContext> _Nullable)parent;
 - (Settings* _Nonnull)settings;
 
+- (void)invokeProjectHook:(enum ProjectNotification)kind project:(id<MimsyProject> _Nonnull)project;
 - (void)invokeTextViewHook:(enum TextViewNotification)kind view:(id<MimsyTextView> _Nonnull)view;
 - (bool)invokeTextViewKeyHook:(NSString* _Nonnull)key view:(id<MimsyTextView> _Nonnull)view;
 

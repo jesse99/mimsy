@@ -32,6 +32,7 @@ typedef BOOL (^MenuEnabledBlock)(NSMenuItem* _Nonnull);
 typedef void (^MenuInvokeBlock)(void);
 typedef void (^TextViewBlock)(id<MimsyTextView> _Nonnull);
 typedef BOOL (^TextViewKeyBlock)(id<MimsyTextView> _Nonnull);
+typedef void (^ProjectBlock)(id<MimsyProject> _Nonnull);
 
 // ------------------------------------------------------------------------------------
 @interface PluginMenuItem : NSObject
@@ -140,6 +141,7 @@ void initLogGlobs()
     DirectoryWatcher* _settingsWatcher;
 	DirectoryWatcher* _stylesWatcher;
 	DirectoryWatcher* _helpWatcher;
+    NSMutableDictionary* _projectHooks;
     NSMutableDictionary* _textHooks;
     NSMutableDictionary* _textKeyHooks;
     
@@ -177,6 +179,7 @@ void initLogGlobs()
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newMainWindow:) name:NSWindowDidBecomeMainNotification object:nil];
 		
         _items = [NSMutableDictionary new];
+        _projectHooks = [NSMutableDictionary new];
         _textHooks = [NSMutableDictionary new];
         _textKeyHooks = [NSMutableDictionary new];
         _noSelectionItems = [NSMutableDictionary new];
@@ -440,6 +443,29 @@ void initLogGlobs()
 - (NSColor*)mimsyColor:(NSString*)name
 {
     return [NSColor colorWithMimsyName:name];
+}
+
+- (void)registerProject:(enum ProjectNotification)kind :(ProjectBlock)hook
+{
+    NSValue* key = @((int) kind);
+    NSMutableArray* hooks = [_projectHooks objectForKey:key];
+    if (!hooks)
+    {
+        hooks = [NSMutableArray new];
+        _projectHooks[key] = hooks;
+    }
+    
+    [hooks addObject:hook];
+}
+
+- (void)invokeProjectHook:(enum ProjectNotification)kind project:(id<MimsyProject> _Nonnull)project
+{
+    NSValue* key = @((int) kind);
+    NSMutableArray* hooks = [_projectHooks objectForKey:key];
+    for (ProjectBlock hook in hooks)
+    {
+        hook(project);
+    }
 }
 
 - (void)registerTextView:(enum TextViewNotification)kind :(TextViewBlock)hook

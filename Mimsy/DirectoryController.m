@@ -151,6 +151,9 @@ static DirectoryController* _lastBuilt;
 		
 		if (![path.asString isEqualToString:@":restoring:"])
 			[self _loadPath:path];
+        
+        AppDelegate* app = [NSApp delegate];
+        [app invokeProjectHook:ProjectNotificationOpened project:self];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
 	}
@@ -200,6 +203,9 @@ static DirectoryController* _lastBuilt;
 {
 	UNUSED(notification);
     
+    AppDelegate* app = [NSApp delegate];
+    [app invokeProjectHook:ProjectNotificationClosing project:self];
+
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	
 	if (_lastBuilt == self)
@@ -1255,6 +1261,9 @@ static NSString* flagsToStr(FSEventStreamEventFlags flags)
 	// may have changed and we need to let Cocoa know if any row heights have changed).
 	if (table && item == _root)
 		[table reloadData];
+
+    AppDelegate* app = [NSApp delegate];
+    [app invokeProjectHook:ProjectNotificationChanged project:self];
 }
 
 @end

@@ -36,7 +36,7 @@
 
 - (bool)reload:(NSMutableArray*)added
 {
-	(void) added;
+	UNUSED(added);
 	
 	DirectoryController* controller = self.controller;
 	if (controller)

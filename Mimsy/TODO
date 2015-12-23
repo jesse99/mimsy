@@ -25,7 +25,45 @@ Creating plugins
 
 
 
-* Merge into master
+/// This is persisted, updated as files change on disk, and used to generate ItemPaths.
+public typealias ItemNames = [MimsyPath: [ItemName]]
+
+/// Used to add text context menu items.
+public typealias ItemPaths = [String: [ItemPath]]
+
+
+public enum ItemPath
+{
+/// Paths should be full paths.
+case Declaration(path: MimsyPath, location: Int)
+
+case Definition(path: MimsyPath, location: Int)
+}
+
+
+
+
+[path: [(name, range, isDef)]]		don’t need to worry about duplicates
+
+[name: [(path, range, isDef)]]		sorted by file name and location
+
+for titles
+    if one match then use use the name
+    if path has multiple ranges then use name+file name+ location
+    else use name+file name
+
+plugins need to register themselves as able to collect definitions
+    register extensions and parsing method (regex, parser, tool)
+    mimsy should use a background task to dispatch files to plugins
+    plugin function returns a NameRange array
+    mimsy needs to watch for changed files
+mimsy should add a text context menu item
+add a setting for additional directories to process
+persist DefinitionPaths somewhere?
+look at using some go tool to collect definitions
+
+
+
 * Seems like we could get goto definition working with just the styler:
     - listen for open and close directory events
     - add a setting for globs to parse
