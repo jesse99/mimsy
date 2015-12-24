@@ -10,13 +10,17 @@
 
 + (bool)parseHelp:(NSString* _Nonnull)value help:(NSMutableArray* _Nonnull)help;
 
+- (BOOL)matches:(MimsyPath* __nonnull)file;
+
+- (NSArray<NSString*>* __nonnull)getPatterns:(NSString* __nonnull)element;
+
 // ---- Required Elements -----------------------------------------
 
 // The name of the language, e.g. "c", "python", etc.
 @property (nonatomic, readonly, copy) NSString * __nonnull name;
 
 // The object used to associate files with this particular language.
-@property (readonly) ConditionalGlob* _Nonnull glob;
+@property (nonatomic, readonly, copy) ConditionalGlob * __nonnull glob;
 
 // Sequence of tool names.
 @property (readonly) NSArray* _Nonnull shebangs;

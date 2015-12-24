@@ -1,7 +1,7 @@
 import Foundation
 
 /// Type safe path abstraction.
-public class MimsyPath: NSObject
+public class MimsyPath: NSObject, CustomDebugStringConvertible
 {
     /// Constructs a path without attempting to standardize the path.
     public init(withString: String)
@@ -31,6 +31,11 @@ public class MimsyPath: NSObject
         assert(path.length > 0)
     }
     
+    public override var debugDescription: String
+    {
+        get {return path as String}
+    }
+
     override public var description: String
     {
         return path as String
@@ -40,7 +45,7 @@ public class MimsyPath: NSObject
     {
         if let rhs = object as? MimsyPath
         {
-            return path == rhs.path
+            return path.isEqualToString(rhs.path as String)
         }
         return false
     }

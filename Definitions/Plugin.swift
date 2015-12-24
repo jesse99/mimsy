@@ -50,7 +50,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         
         // TODO: may want to do this only if we have a parser
         let concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)
-        dispatch_async(concurrent) {self.fullScan(project.path)}
+        dispatch_async(concurrent) {self.scan(project.path)}
     }
     
     func onClosing(project: MimsyProject)
@@ -63,15 +63,18 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         // TODO: kick off a background scan
         // TODO: what if one is in progress? probably defer using a flag
         // TODO: may want to do this only if we have a parser
+        let concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)
+        dispatch_async(concurrent) {self.scan(project.path)}
     }
     
     // Threaded code
-    func fullScan(root: MimsyPath)
+    func scan(root: MimsyPath)
     {
-        var paths: [MimsyPath: [Item]] = [:]
+        var paths: [MimsyPath: PathInfo] = [:]
+        let oldPaths = projects[root]
         
         let fm = NSFileManager.defaultManager()
-        let keys = [NSURLIsDirectoryKey, NSURLPathKey]
+        let keys = [NSURLIsDirectoryKey, NSURLPathKey, NSURLContentModificationDateKey]
         if let enumerator = fm.enumeratorAtURL(root.asURL(), includingPropertiesForKeys: keys, options: .SkipsHiddenFiles, errorHandler:
         {(url, err) -> Bool in
             self.app.log("Plugins", "Failed to enumerate %@ when trying to parse definitions: %@", url, err)
@@ -87,10 +90,15 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
                     if try !url.isDirectoryValue()
                     {
                         let path = try url.pathValue()
-                        self.app.log("Plugins", "parsing %@", path.lastComponent())
-                        if let parser = findParser(path)
+                        let oldInfo = oldPaths?[root]
+                        let currentDate = try url.contentModificationDateValue()
+                        if oldInfo == nil || currentDate.compare(oldInfo!.date) == .OrderedDescending
                         {
-                            paths[path] = try parser.parse(path)
+//                            self.app.log("Plugins", "parsing %@", path.lastComponent())
+                            if let parser = findParser(path)
+                            {
+                                paths[path] = PathInfo(date: currentDate, items: try parser.parse(path))
+                            }
                         }
                     }
                 }
@@ -180,8 +188,14 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
 //        }
 //    }
     
+    struct PathInfo
+    {
+        let date: NSDate
+        let items: [ItemName]
+    }
+    
     // Project path to file path to definitions within that file
-    typealias ProjectItemNames = [MimsyPath: [MimsyPath: [Item]]]
+    typealias ProjectItemNames = [MimsyPath: [MimsyPath: PathInfo]]
     
     var toolParsers: [ItemParser] = []      // we use separate arrays for parsers to make priorization easier
     var parserParsers: [ItemParser] = []    // note that, while these are var, they won't change after plugins finish loading

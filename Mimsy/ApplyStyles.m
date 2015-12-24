@@ -453,7 +453,10 @@
                     while (offset < length && ch == ' ')
                     {
                         ++offset;
-                        ch = [controller.text characterAtIndex:location + offset];
+                        if (location + offset < controller.text.length)
+                            ch = [controller.text characterAtIndex:location + offset];
+                        else
+                            ch = '\x0';
                     }
                     
                     // Allow leading spaces before multi-line C-style comments.

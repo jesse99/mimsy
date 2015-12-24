@@ -15,7 +15,7 @@ static void Callback(ConstFSEventStreamRef streamRef, void* clientCallBackInfo, 
 	_callback = block;
 	
 	FSEventStreamContext context = {.version = 0, .info = (__bridge void*)(self), .retain = NULL, .release = NULL, .copyDescription = NULL};
-	_stream = FSEventStreamCreate(NULL, Callback, &context, (__bridge CFArrayRef) _watching, kFSEventStreamEventIdSinceNow, latency, kFSEventStreamCreateFlagUseCFTypes);
+	_stream = FSEventStreamCreate(NULL, Callback, &context, (__bridge CFArrayRef) _watching, kFSEventStreamEventIdSinceNow, latency, kFSEventStreamCreateFlagUseCFTypes|kFSEventStreamCreateFlagFileEvents);
 	
 	FSEventStreamScheduleWithRunLoop(_stream, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
 	bool started = FSEventStreamStart(_stream);

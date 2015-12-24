@@ -2157,7 +2157,7 @@
 				CLASSPREFIX = MIM;
 				LastSwiftMigration = 0710;
 				LastSwiftUpdateCheck = 0720;
-				LastTestingUpgradeCheck = 0710;
+				LastTestingUpgradeCheck = 0720;
 				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Jesse Jones";
 				TargetAttributes = {

@@ -2,6 +2,18 @@ import Foundation
 
 public extension NSURL
 {
+    /// Wrapper around getResourceValue(NSURLContentModificationDateKey).
+    public func contentModificationDateValue() throws -> NSDate
+    {
+        var rsrc: AnyObject?
+        try self.getResourceValue(&rsrc, forKey: NSURLContentModificationDateKey)
+        if let date = rsrc as? NSDate
+        {
+            return date
+        }
+        throw MimsyError("NSURLContentModificationDateKey resource isn't an NSDate")
+    }
+
     /// Wrapper around getResourceValue(NSURLIsDirectoryKey).
     public func isDirectoryValue() throws -> Bool
     {

@@ -604,9 +604,19 @@ void initLogGlobs()
     [WindowsDatabase setup];
     [Languages setup];
     
-
     [Plugins finishLoading];
     [SpecialKeys updated];
+    
+    // Previously opened windows are opened by Cocoa very early during startup
+    // (before the AppDelegate finishes initializing and even before things
+    // like the main menu are set up). So it is much easier to defer notifications
+    // of opened windows until after everything is initialized.
+    [DirectoryController enumerate:^(DirectoryController* _Nonnull p) {[self invokeProjectHook:ProjectNotificationOpened project:p];}];
+    
+    [TextController enumerate:^(TextController* c, bool* stop) {
+        UNUSED(stop);
+        [self invokeTextViewHook:TextViewNotificationOpened view:c];
+    }];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification

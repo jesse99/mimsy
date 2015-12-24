@@ -1,6 +1,6 @@
 import Foundation
 
-public enum Item
+public enum ItemName
 {
     /// Declarations are things like C function prototypes declared in headers.
     case Declaration(name: String, location: Int)
@@ -22,7 +22,7 @@ public protocol ItemParser
 
     var globs: MimsyGlob {get}
     
-    func parse(path: MimsyPath) throws -> [Item]
+    func parse(path: MimsyPath) throws -> [ItemName]
 }
 
 /// Uses registered parsers to parse files within a project. The parsed information

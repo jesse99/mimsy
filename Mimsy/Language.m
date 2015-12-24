@@ -9,6 +9,7 @@
 {
     NSMutableArray* _settingKeys;
     NSMutableArray* _settingValues;
+    NSDictionary* _patterns;
 }
 
 - (id)initWithParser:(ConfigParser*)parser outError:(NSError**)error
@@ -24,6 +25,7 @@
 		NSMutableArray* regexen = [NSMutableArray new];
 		NSMutableArray* conditionals = [NSMutableArray new];
 		NSMutableArray* errors = [NSMutableArray new];
+        NSMutableDictionary* epatterns = [NSMutableDictionary new];
 		
 		NSMutableArray* names = [NSMutableArray new];
 		NSMutableArray* patterns = [NSMutableArray new];
@@ -113,6 +115,14 @@
                     [patterns addObject:entry.value];
                     [lines addObject:[NSNumber numberWithUnsignedLong:entry.line]];
                     
+                    NSMutableArray* evalue = epatterns[key];
+                    if (!evalue)
+                    {
+                        evalue = [NSMutableArray new];
+                        epatterns[key] = evalue;
+                    }
+                    [evalue addObject:entry.value];
+                    
                     [_settingKeys addObject:entry.key];
                     [_settingValues addObject:entry.value];
 				}
@@ -146,6 +156,7 @@
 		_glob = [[ConditionalGlob alloc] initWithGlobs:globs regexen:regexen conditionals:conditionals];
 		_shebangs = shebangs;
 		_styler = [self _createStyler:names patterns:patterns lines:lines errors:errors];
+        _patterns = epatterns;
 		
 		if (errors.count > 0)
 		{
@@ -173,6 +184,33 @@
 - (NSArray*)settingValues
 {
     return _settingValues;
+}
+
+- (BOOL)matches:(MimsyPath* __nonnull)file
+{
+    NSString* fileName = file.lastComponent;
+    if ([_glob matchName:fileName] == 1)
+        return true;
+    
+    if (_shebangs.count > 0)
+    {
+        NSFileHandle* handle = [NSFileHandle fileHandleForReadingAtPath:file.asString];
+        NSData* data = [handle readDataOfLength:512];
+        [handle closeFile];
+        
+        if (data && data.length > 0)
+        {
+            NSString* contents = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            return [_glob matchName:fileName contents:contents] != 0;
+        }
+    }
+    
+    return false;
+}
+
+- (NSArray<NSString*>* __nonnull)getPatterns:(NSString* __nonnull)element
+{
+    return _patterns[element];
 }
 
 // value is formatted as: [C Library]http://www.cplusplus.com/reference/clibrary/
