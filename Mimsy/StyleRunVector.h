@@ -45,7 +45,7 @@ static inline void reserveStyleRunVector(struct StyleRunVector* vector, NSUInteg
 	}
 }
 	
-// If the vector is grown the new elements will be zero initialized.
+/// If the vector is grown the new elements will be zero initialized.
 static inline void setSizeStyleRunVector(struct StyleRunVector* vector, NSUInteger newSize)
 {
 	reserveStyleRunVector(vector, newSize);

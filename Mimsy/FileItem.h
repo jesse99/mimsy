@@ -1,6 +1,6 @@
 #import "FileSystemItem.h"
 
-// Class for files appearing in the directory window outline view.
+/// Class for files appearing in the directory window outline view.
 @interface FileItem : FileSystemItem
 
 // Overrides

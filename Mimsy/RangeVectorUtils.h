@@ -42,8 +42,8 @@ static inline void sortRangeVector(struct RangeVector* vector)
 	qsort(vector->data, vector->count, sizeof(NSRange), compareRanges);
 }
 
-// Searches a sorted vector for a range containing index. If not found
-// (NSNotFound, 0) is returned.
+/// Searches a sorted vector for a range containing index. If not found
+/// (NSNotFound, 0) is returned.
 static inline NSRange indexSearchRangeVector(struct RangeVector* vector, NSUInteger index)
 {
 	NSRange key = NSMakeRange(index, 0);
@@ -51,8 +51,8 @@ static inline NSRange indexSearchRangeVector(struct RangeVector* vector, NSUInte
 	return range ? *range : NSMakeRange(NSNotFound, 0);
 }
 
-// Returns an element that completely contains key or (NSNotFound, 0). The
-// vector must be sorted.
+/// Returns an element that completely contains key or (NSNotFound, 0). The
+/// vector must be sorted.
 static inline NSRange subsetRangeVector(struct RangeVector* vector, NSRange key)
 {
 	NSRange range = indexSearchRangeVector(vector, key.location);

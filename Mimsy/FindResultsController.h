@@ -4,7 +4,7 @@
 
 typedef NSAttributedString* (^RefreshStr)(NSAttributedString*);
 
-// Controller for the window used to show the results of find all.
+/// Controller for the window used to show the results of find all.
 @interface FindResultsController : NSWindowController
 
 + (FindResultsController*)frontmost;

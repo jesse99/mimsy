@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 
-// Used to select a Styles.rtf file to use for syntax highlighting and to
-// rate the existing styles files.
+/// Used to select a Styles.rtf file to use for syntax highlighting and to
+/// rate the existing styles files.
 @interface SelectStyleController : NSWindowController <NSTableViewDataSource>
 
 + (SelectStyleController*)open;

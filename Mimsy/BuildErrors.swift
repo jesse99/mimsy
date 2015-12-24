@@ -4,7 +4,7 @@ import Foundation
 // XCode 6.1.
 var _instance: BuildErrors = BuildErrors()
 
-// Used to parse and display build errors.  
+/// Used to parse and display build errors.  
 public class BuildErrors : NSObject
 {    
     class var instance: BuildErrors {return _instance}

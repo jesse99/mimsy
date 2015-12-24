@@ -2,8 +2,8 @@
 
 @class Language;
 
-// Base class for window controllers using an NSTextView. This is used
-// to support things like the find window.
+/// Base class for window controllers using an NSTextView. This is used
+/// to support things like the find window.
 @interface BaseTextController : NSWindowController
 
 + (BaseTextController*)frontmost;

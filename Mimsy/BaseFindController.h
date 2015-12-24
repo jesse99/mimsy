@@ -3,10 +3,10 @@
 
 @class BaseTextController;
 
-// Base class for find and find in files.
+/// Base class for find and find in files.
 @interface BaseFindController : NSWindowController
 
-// Use these instead of changing the combo boxes directly.
+/// Use these instead of changing the combo boxes directly.
 @property NSString* findText;
 @property NSString* replaceText;
 @property NSString* searchWithinText;

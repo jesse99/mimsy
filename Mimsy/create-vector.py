@@ -56,7 +56,7 @@ static inline void reserve{NAME}(struct {NAME}* vector, {SIZE} capacity)
 	}
 }
 	
-// If the vector is grown the new elements will be zero initialized.
+/// If the vector is grown the new elements will be zero initialized.
 static inline void setSize{NAME}(struct {NAME}* vector, {SIZE} newSize)
 {
 	reserve{NAME}(vector, newSize);

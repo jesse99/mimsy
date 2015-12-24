@@ -4,8 +4,8 @@
 #import "MimsyPlugins.h"
 
 
-// Manages access to the window used to display the results of builds
-// (and the occasional message from Mimsy).
+/// Manages access to the window used to display the results of builds
+/// (and the occasional message from Mimsy).
 @interface TranscriptController : BaseTextController <MimsyTranscript>
 
 @property IBOutlet NSTextView* view;

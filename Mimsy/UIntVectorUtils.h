@@ -1,8 +1,8 @@
 #import "UIntVector.h"
 
-// Searches a sorted vector for the specified value. If value is in the vector then
-// its index is returned. Otherwise the ones-complement of the vector index is returned
-// where, if the value is inserted there, the vector remains sorted.
+/// Searches a sorted vector for the specified value. If value is in the vector then
+/// its index is returned. Otherwise the ones-complement of the vector index is returned
+/// where, if the value is inserted there, the vector remains sorted.
 static inline NSUInteger searchUIntVector(struct UIntVector* vector, NSUInteger value)
 {
 	if (vector->count == 0)

@@ -1,5 +1,5 @@
-// This is used to generate the "app-Special Keys.rtf" help file. It uses the
-// built-in-special-keys.json file as well as information provided by plugins.
+/// This is used to generate the "app-Special Keys.rtf" help file. It uses the
+/// built-in-special-keys.json file as well as information provided by plugins.
 @interface SpecialKeys : NSObject
 
 + (void)setup;

@@ -2,8 +2,8 @@
 
 @class TextDocument;
 
-// Used to display (and set) information related to the document,
-// e.g. line ending and language.
+/// Used to display (and set) information related to the document,
+/// e.g. line ending and language.
 @interface InfoController : NSWindowController
 
 + (InfoController*)openFor:(TextDocument*)doc;

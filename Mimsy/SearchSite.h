@@ -2,7 +2,7 @@
 
 @protocol SettingsContext;
 
-// Used to add search on various web sites to both the main menu and context menus.
+/// Used to add search on various web sites to both the main menu and context menus.
 @interface SearchSite : NSObject
 
 +(void)updateMainMenu:(NSMenu*)searchMenu;

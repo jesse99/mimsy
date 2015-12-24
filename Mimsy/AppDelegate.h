@@ -41,13 +41,13 @@ void initLogGlobs(void);
 - (void)openLatestInTimeMachine:(id _Nullable)sender;
 - (void)openTimeMachine:(id _Nullable)sender;
 
-// This works like performSelector:withObject:afterDelay: except that calling it with a
+//// This works like performSelector:withObject:afterDelay: except that calling it with a
 // name that is pending is a no-op.
 + (void)execute:(NSString* _Nonnull)key withSelector:(SEL _Nonnull)selector withObject:(id _Nullable)object afterDelay:(NSTimeInterval)delay;
 + (void)execute:(NSString* _Nonnull)key afterDelay:(NSTimeInterval)delay withBlock:(NullaryBlock _Nonnull)block;
 
-// This works like performSelector:withObject:afterDelay: except that if called when the
-// block is pending it's execution time is pushed back by delay.
+/// This works like performSelector:withObject:afterDelay: except that if called when the
+/// block is pending it's execution time is pushed back by delay.
 + (void)execute:(NSString* _Nonnull)key withSelector:(SEL _Nonnull)selector withObject:(id _Nullable)object deferBy:(NSTimeInterval)delay;
 + (void)execute:(NSString* _Nonnull)key deferBy:(NSTimeInterval)delay withBlock:(NullaryBlock _Nonnull)block;
 

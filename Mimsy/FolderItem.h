@@ -2,7 +2,7 @@
 
 @class DirectoryController;
 
-// Class for sub-directories appearing in the directory window outline view.
+/// Class for sub-directories appearing in the directory window outline view.
 @interface FolderItem : FileSystemItem
 
 // Overrides

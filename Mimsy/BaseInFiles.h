@@ -2,7 +2,7 @@
 
 @class FindInFilesController;
 
-// This is common code used by Find in Files and Replace in Files.
+/// This is common code used by Find in Files and Replace in Files.
 @interface BaseInFiles : NSObject
 
 - (id)init:(FindInFilesController*)controller path:(NSString*)path;

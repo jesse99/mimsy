@@ -62,7 +62,6 @@ look at using some go tool to collect definitions
 
 
 
-* Change C headers to use ///.
 * Seems like we could get goto definition working with just the styler:
     - listen for open and close directory events
     - add a setting for globs to parse

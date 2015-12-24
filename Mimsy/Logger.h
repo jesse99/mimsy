@@ -1,4 +1,4 @@
-// Relatively simple logger that supports both log topics and log levels.
+/// Relatively simple logger that supports both log topics and log levels.
 #import <Foundation/Foundation.h>
 
 @class Glob;
@@ -18,9 +18,9 @@ static inline const char* STR(NSObject* object)
 	return object.description.UTF8String;
 }
 
-// If you want to always log set the topic to the empty string.
-// This is a macro so that we can avoid evaluating the arguments
-// if _shouldLog returns false.
+/// If you want to always log set the topic to the empty string.
+/// This is a macro so that we can avoid evaluating the arguments
+/// if _shouldLog returns false.
 static inline void LOG(const char* topic, const char* format, ...)
 {
 	if (topic[0] == '\0' || _shouldLog(topic))

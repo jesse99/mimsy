@@ -4,8 +4,8 @@
 
 @class Glob;
 
-// This is the controller for the windows which display the contents of a directory.
-// These windows work a bit like project windows in IDEs.
+/// This is the controller for the windows which display the contents of a directory.
+/// These windows work a bit like project windows in IDEs.
 @interface DirectoryController : NSWindowController<SettingsContext, MimsyProject>
 
 + (DirectoryController* _Nullable)getCurrentController;

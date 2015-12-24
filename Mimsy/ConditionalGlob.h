@@ -1,7 +1,7 @@
 #import "Glob.h"
 
-// Like Glob except that it can also check to see if the file contents match
-// at least one regex.
+/// Like Glob except that it can also check to see if the file contents match
+/// at least one regex.
 @interface ConditionalGlob : Glob
 
 - (id)initWithGlob:(NSString*)glob;
