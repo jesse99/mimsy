@@ -21,9 +21,9 @@ import Cocoa
     case Error
 }
 
-/// Helper used to communicate with Mimsy's transcript window.
+/// Used to display status or error messages.
 @objc public protocol MimsyTranscript
-{
+{    
     /// Writes the text to the transcript window. Note that this will not add a new line.
     func write(style: TranscriptStyle, text: String)
 }

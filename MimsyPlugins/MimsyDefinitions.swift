@@ -19,10 +19,12 @@ public enum ParseMethod: Int
 public protocol ItemParser
 {
     var method: ParseMethod {get}
-
-    var globs: MimsyGlob {get}
     
-    func parse(path: MimsyPath) throws -> [ItemName]
+    /// Returns a value if the parser was capable of parsing the file.
+    /// Throws if there was an error parsing (typically a file IO error,
+    /// syntax problems should be ignored). Note that this is typically
+    /// called from a thread.
+    func tryParse(path: MimsyPath) throws -> [ItemName]?
 }
 
 /// Uses registered parsers to parse files within a project. The parsed information

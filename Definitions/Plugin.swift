@@ -60,7 +60,6 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     
     func onChanged(project: MimsyProject)
     {
-        // TODO: kick off a background scan
         // TODO: what if one is in progress? probably defer using a flag
         // TODO: may want to do this only if we have a parser
         let concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)
@@ -90,15 +89,22 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
                     if try !url.isDirectoryValue()
                     {
                         let path = try url.pathValue()
-                        let oldInfo = oldPaths?[root]
                         let currentDate = try url.contentModificationDateValue()
-                        if oldInfo == nil || currentDate.compare(oldInfo!.date) == .OrderedDescending
+                        
+                        if let oldInfo = oldPaths?[path]
                         {
-//                            self.app.log("Plugins", "parsing %@", path.lastComponent())
-                            if let parser = findParser(path)
+                            if currentDate.compare(oldInfo.date) == .OrderedDescending
                             {
-                                paths[path] = PathInfo(date: currentDate, items: try parser.parse(path))
+                                paths[path] = PathInfo(date: currentDate, items: try parse(path))
                             }
+                            else
+                            {
+                                paths[path] = oldInfo
+                            }
+                        }
+                        else
+                        {
+                            paths[path] = PathInfo(date: currentDate, items: try parse(path))
                         }
                     }
                 }
@@ -128,22 +134,23 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     }
     
     // Threaded code
-    func findParser(path: MimsyPath) -> ItemParser?
+    func parse(path: MimsyPath) throws -> [ItemName]
     {
-        func findParser(candidates: [ItemParser], _ path: MimsyPath) -> ItemParser?
+        func _parse(candidates: [ItemParser], _ path: MimsyPath) throws -> [ItemName]?
         {
             for parser in candidates
             {
-                if parser.globs.matches(path)
+                if let items = try parser.tryParse(path)
                 {
-                    return parser
+                    return items
+                    
                 }
             }
             
             return nil
         }
         
-        return findParser(toolParsers, path) ?? findParser(parserParsers, path) ?? findParser(regexParsers, path)
+        return try _parse(toolParsers, path) ?? _parse(parserParsers, path) ?? _parse(regexParsers, path) ?? []
     }
     
     // TODO:

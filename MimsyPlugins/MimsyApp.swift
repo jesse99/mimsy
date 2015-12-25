@@ -162,6 +162,9 @@ public typealias ProjectCallback = (MimsyProject) -> ()
     
     /// Create a glob using multiple patterns.
     func globWithStrings(globs: [String]) -> MimsyGlob
+
+    /// Uses the file's extension (and possibly shebang) to try and find a language associated with the file.
+    func findLanguage(path: MimsyPath) -> MimsyLanguage?
 }
 
 public extension MimsyApp

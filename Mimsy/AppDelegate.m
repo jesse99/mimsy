@@ -202,6 +202,22 @@ void initLogGlobs()
     LOG(STR(topic), "%s", STR(text));
 }
 
+- (id<MimsyLanguage> __nullable)findLanguage:(MimsyPath* __nonnull)path
+{
+    __block Language* language = nil;
+    
+    [Languages enumerate:^(Language *candidate, bool *stop)
+    {
+        if ([candidate matches:path])
+        {
+            language = candidate;
+            *stop = true;
+        }
+    }];
+    
+    return language;
+}
+
 -(BOOL)addMenuItem:(NSMenuItem*)item loc:(enum MenuItemLoc)loc sel:(NSString*)sel enabled:(MenuEnabledBlock)enabled invoke:(MenuInvokeBlock)invoke
 {
     NSMenu* menu = nil;

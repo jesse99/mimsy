@@ -210,7 +210,7 @@
 
 - (NSArray<NSString*>* __nonnull)getPatterns:(NSString* __nonnull)element
 {
-    return _patterns[element];
+    return _patterns[element.lowercaseString];
 }
 
 // value is formatted as: [C Library]http://www.cplusplus.com/reference/clibrary/
