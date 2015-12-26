@@ -10,13 +10,16 @@ class StdConvertToInt: MimsyPlugin
             app.addMenuItem(title: "Convert to Decimal", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: toDecimal)
             app.addMenuItem(title: "Convert to Hex", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: toHex)
             
-            app.registerWithSelectionTextContextMenu(.Transform, title: {_ in
-                "Convert to Decimal"}, invoke: { _ in self.toDecimal()})
-            app.registerWithSelectionTextContextMenu(.Transform, title: {_ in
-                "Convert to Hex"}, invoke: { _ in self.toHex()})
+            app.registerWithSelectionTextContextMenu(.Transform, callback: contextMenu)
         }
         
         return nil
+    }
+    
+    func contextMenu(view: MimsyTextView) -> [TextContextMenuItem]
+    {
+        return [TextContextMenuItem(title: "Convert to Decimal", invoke: {_ in self.toDecimal()}),
+            TextContextMenuItem(title: "Convert to Hex", invoke: {_ in self.toHex()})]
     }
     
     func enabled(item: NSMenuItem) -> Bool

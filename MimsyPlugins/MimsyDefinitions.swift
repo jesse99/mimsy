@@ -1,5 +1,12 @@
 import Foundation
 
+public enum ParseMethod: Int
+{
+    case Regex = 1
+    case Parser
+    case ExternalTool
+}
+
 public enum ItemName
 {
     /// Declarations are things like C function prototypes declared in headers.
@@ -9,11 +16,17 @@ public enum ItemName
     case Definition(name: String, location: Int)
 }
 
-public enum ParseMethod: Int
+public struct ItemPath
 {
-    case Regex = 1
-    case Parser
-    case ExternalTool
+    public init(path: MimsyPath, location: Int)
+    {
+        self.path = path
+        self.location = location
+    }
+    
+    public let path: MimsyPath
+    
+    public let location: Int
 }
 
 public protocol ItemParser
@@ -35,7 +48,14 @@ public protocol MimsyDefinitions
     /// a file the plugin with the larger value is used (for ties one plugin is
     /// chosen in an undefined way).
     func register(parser: ItemParser)
+    
+    /// Returns zero or more paths to declarations for a name.
+    func declarations(project: MimsyProject, name: String) -> [ItemPath]
+    
+    /// Returns zero or more paths to declarations for a name.
+    func definitions(project: MimsyProject, name: String) -> [ItemPath]
 }
 
 /// Initialized by (hopefully one) plugin at stage 0.
-public var definitions: MimsyDefinitions? = nil
+public var definitionsPlugin: MimsyDefinitions? = nil
+

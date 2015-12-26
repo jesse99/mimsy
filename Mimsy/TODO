@@ -25,22 +25,6 @@ Creating plugins
 
 
 
-/// This is persisted, updated as files change on disk, and used to generate ItemPaths.
-public typealias ItemNames = [MimsyPath: [ItemName]]
-
-/// Used to add text context menu items.
-public typealias ItemPaths = [String: [ItemPath]]
-
-
-public enum ItemPath
-{
-/// Paths should be full paths.
-case Declaration(path: MimsyPath, location: Int)
-
-case Definition(path: MimsyPath, location: Int)
-}
-
-
 
 for titles
     if one match then use use the name
@@ -54,13 +38,20 @@ persist DefinitionPaths somewhere?
 
 
 
+
+- add a  file, be sure to include it in the right target
+- can be helpful to restart xcode (so auto-completion and errors work in the new plugin)
+
+
+
+
+
 * Seems like we could get goto definition working with just the styler:
-    - definitions should provide access to names
-    - add goto definition plugin
     - only allow one scan at a time
     - add a setting for extra directories to parse
     - update a few coco projects with extra directories
     - look into adding a go tool
+* Project context menus should probably be created like text menus.
 * Add basic tab completion.
 * Add snippets support:
     - snippets/<language> directories
@@ -69,6 +60,10 @@ persist DefinitionPaths somewhere?
     - probably should adjust indentation level to match current selection
     - could have optional project .snippets directories
 * Probably want a note about extension development workflow
+* Probably want to start moving classes into the framework:
+    - i.e. start replacing protocols with NSObject subclasses
+    - would allow code to be better organized because static methods can be used
+    - would move more code out of objc
 * Start adding extensions for core stuff.
 
 * Need a plugin manager:

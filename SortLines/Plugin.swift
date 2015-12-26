@@ -9,10 +9,22 @@ class StdSortLines: MimsyPlugin
         {
             app.addMenuItem(title: "Sort Lines", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: sortLines)
             
-            app.registerWithSelectionTextContextMenu(.Transform, title: title, invoke: { _ in self.sortLines()})
+            app.registerWithSelectionTextContextMenu(.Transform, callback: contextMenu)
         }
         
         return nil
+    }
+    
+    func contextMenu(view: MimsyTextView) -> [TextContextMenuItem]
+    {
+        if view.selection.containsString("\n")
+        {
+            return [TextContextMenuItem(title: "Sort Lines", invoke: {_ in self.sortLines()})]
+        }
+        else
+        {
+            return []
+        }
     }
     
     func title(view: MimsyTextView) -> String?

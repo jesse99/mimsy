@@ -2,14 +2,28 @@ import Cocoa
 
 public typealias EnabledMenuItem = (NSMenuItem) -> Bool
 public typealias InvokeMenuItem = () -> ()
-public typealias InvokeTextCommand = (MimsyTextView) -> ()
 public typealias TextViewCallback = (MimsyTextView) -> ()
 public typealias TextViewKeyCallback = (MimsyTextView) -> Bool
-public typealias TextContextMenuItemTitle = (MimsyTextView) -> String?
 public typealias ProjectContextMenuItemTitle = (files: [MimsyPath], dirs: [MimsyPath]) -> String?
 public typealias InvokeProjectCommand = (files: [MimsyPath], dirs: [MimsyPath]) -> ()
 public typealias TextRangeCallback = (MimsyTextView, NSRange) -> ()
 public typealias ProjectCallback = (MimsyProject) -> ()
+
+public typealias InvokeTextCommand = (MimsyTextView) -> ()
+
+public class TextContextMenuItem: NSObject
+{
+    public init(title: String, invoke: InvokeTextCommand)
+    {
+        self.title = title
+        self.invoke = invoke
+    }
+    
+    public let title: String
+    public let invoke: InvokeTextCommand
+}
+
+public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMenuItem]
 
 @objc public enum MenuItemLoc: Int
 {
@@ -125,14 +139,14 @@ public typealias ProjectCallback = (MimsyProject) -> ()
     /// - Parameter pos: Pre-defined location at which to insert the new sorted menu item.
     /// - Parameter title: Returns the name of the new menu item, or nil if an item should not be added.
     /// - Parameter invoke: Called when the user selects the new menu item.
-    func registerNoSelectionTextContextMenu(pos: NoTextSelectionPos, title: TextContextMenuItemTitle, invoke: InvokeTextCommand)
+    func registerNoSelectionTextContextMenu(pos: NoTextSelectionPos, callback: TextContextMenuItemCallback)
     
     /// Used to add a custom menu item to text contextual menus when is a selection.
     ///
     /// - Parameter pos: Pre-defined location at which to insert the new sorted menu item.
     /// - Parameter title: Returns the name of the new menu item, or nil if an item should not be added.
     /// - Parameter invoke: Called when the user selects the new menu item.
-    func registerWithSelectionTextContextMenu(pos: WithTextSelectionPos, title: TextContextMenuItemTitle, invoke: InvokeTextCommand)
+    func registerWithSelectionTextContextMenu(pos: WithTextSelectionPos, callback: TextContextMenuItemCallback)
     
     /// Returns the environment variables Mimsy was launched with (which are normally a subset
     /// of the variables the shell commands receive) augmented with Mimsy settings (e.g. to append
@@ -148,6 +162,12 @@ public typealias ProjectCallback = (MimsyProject) -> ()
     ///
     /// - Parameter path: Full path to a file.
     func open(path: MimsyPath)
+    
+    /// Opens a file with Mimsy where possible and as if double-clicked within the Finder otherwise.
+    ///
+    /// - Parameter path: Full path to a file.
+    /// - Parameter withRange: Range of text to select and scroll into view.
+    func open(path: MimsyPath, withRange: NSRange)
     
     /// Opens a file as raw binary and display the contents as hex and ASCII.
     ///

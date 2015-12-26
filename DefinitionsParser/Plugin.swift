@@ -7,7 +7,7 @@ class StdDefinitionsParser: MimsyPlugin, ItemParser
     {
         if stage == 1
         {
-            if let defs = definitions
+            if let defs = definitionsPlugin
             {
                 defs.register(self)
             }

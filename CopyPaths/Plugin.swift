@@ -7,16 +7,23 @@ class StdCopyPaths: MimsyPlugin
     {
         if stage == 1
         {
-            app.registerNoSelectionTextContextMenu(.Start, title: getFileTitle, invoke: copyFileItem)
+            app.registerNoSelectionTextContextMenu(.Start, callback: contextMenu)
             app.registerProjectContextMenu(getProjectTitle, invoke: copyProjectItems)
         }
         
         return nil
     }
     
-    func getFileTitle(view: MimsyTextView) -> String?
+    func contextMenu(view: MimsyTextView) -> [TextContextMenuItem]
     {
-        return view.path != nil ? "Copy Path" : nil
+        if view.path != nil
+        {
+            return [TextContextMenuItem(title: "Copy Path", invoke: copyFileItem)]
+        }
+        else
+        {
+            return []
+        }
     }
     
     func getProjectTitle(files: [MimsyPath], dirs: [MimsyPath]) -> String?

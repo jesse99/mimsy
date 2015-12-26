@@ -530,7 +530,7 @@ static NSString* getKey(NSEvent* event)
     [self _extendSelection:event];
     [self.window makeKeyAndOrderFront:self];
     
-    NSArray* items;
+    NSArray<TextContextMenuBlock>* items;
     if (self.selectedRange.length > 0)
     {
         if (self.selectedRange.length < 100)
@@ -573,16 +573,16 @@ static NSString* getKey(NSEvent* event)
     return menu;
 }
 
-- (void)_addItems:(NSMenu*)menu items:(NSArray*)items
+- (void)_addItems:(NSMenu*)menu items:(NSArray<TextContextMenuBlock>*)blocks
 {
     TextController* controller = _controller;
     if (controller)
     {
         bool addedSep = false;
-        for (TextContextItem* citem in items)
+        for (TextContextMenuBlock block in blocks)
         {
-            NSString* title = citem.title(controller);
-            if (title)
+            NSArray<TextContextMenuItem*>* items = block(controller);
+            for (TextContextMenuItem* item in items)
             {
                 if (!addedSep)
                 {
@@ -591,9 +591,9 @@ static NSString* getKey(NSEvent* event)
                     addedSep = true;
                 }
 
-                NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:title action:@selector(_processTextContextItem:) keyEquivalent:@""];
-                [item setRepresentedObject:citem.invoke];
-                [menu appendSortedItem:item];
+                NSMenuItem* mitem = [[NSMenuItem alloc] initWithTitle:item.title action:@selector(_processTextContextItem:) keyEquivalent:@""];
+                [mitem setRepresentedObject:item.invoke];
+                [menu appendSortedItem:mitem];
             }
         }
     }

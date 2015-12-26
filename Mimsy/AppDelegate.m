@@ -34,6 +34,10 @@ typedef void (^TextViewBlock)(id<MimsyTextView> _Nonnull);
 typedef BOOL (^TextViewKeyBlock)(id<MimsyTextView> _Nonnull);
 typedef void (^ProjectBlock)(id<MimsyProject> _Nonnull);
 
+@implementation ProjectContextItem
+
+@end
+
 // ------------------------------------------------------------------------------------
 @interface PluginMenuItem : NSObject
 
@@ -85,15 +89,6 @@ typedef void (^ProjectBlock)(id<MimsyProject> _Nonnull);
     
     return self;
 }
-
-@end
-
-// ------------------------------------------------------------------------------------
-@implementation TextContextItem
-
-@end
-
-@implementation ProjectContextItem
 
 @end
 
@@ -371,12 +366,8 @@ void initLogGlobs()
     [items addObject:hook];
 }
 
-- (void)registerNoSelectionTextContextMenu:(enum NoTextSelectionPos)pos title:(TextContextMenuItemTitleBlock)title invoke:(InvokeTextCommandBlock)invoke
+- (void)registerNoSelectionTextContextMenu:(enum NoTextSelectionPos)pos callback:(TextContextMenuBlock)callback
 {
-    TextContextItem* item = [TextContextItem new];
-    item.title = title;
-    item.invoke = invoke;
-    
     NSValue* key = @((int) pos);
     NSMutableArray* items = [_noSelectionItems objectForKey:key];
     if (!items)
@@ -384,16 +375,12 @@ void initLogGlobs()
         items = [NSMutableArray new];
         _noSelectionItems[key] = items;
     }
-
-    [items addObject:item];
+    
+    [items addObject:callback];
 }
 
-- (void)registerWithSelectionTextContextMenu:(enum WithTextSelectionPos)pos title:(TextContextMenuItemTitleBlock)title invoke:(InvokeTextCommandBlock)invoke
+- (void)registerWithSelectionTextContextMenu:(enum WithTextSelectionPos)pos callback:(TextContextMenuBlock)callback
 {
-    TextContextItem* item = [TextContextItem new];
-    item.title = title;
-    item.invoke = invoke;
-    
     NSValue* key = @((int) pos);
     NSMutableArray* items = [_withSelectionItems objectForKey:key];
     if (!items)
@@ -402,16 +389,16 @@ void initLogGlobs()
         _withSelectionItems[key] = items;
     }
     
-    [items addObject:item];
+    [items addObject:callback];
 }
 
-- (NSArray* _Nullable)noSelectionItems:(enum NoTextSelectionPos)pos
+- (NSArray<TextContextMenuBlock>* _Nullable)noSelectionItems:(enum NoTextSelectionPos)pos
 {
     NSValue* key = @((int) pos);
     return [_noSelectionItems objectForKey:key];
 }
 
-- (NSArray* _Nullable)withSelectionItems:(enum WithTextSelectionPos)pos
+- (NSArray<TextContextMenuBlock>* _Nullable)withSelectionItems:(enum WithTextSelectionPos)pos
 {
     NSValue* key = @((int) pos);
     return [_withSelectionItems objectForKey:key];
@@ -448,6 +435,11 @@ void initLogGlobs()
 - (void)open:(MimsyPath* _Nonnull)path
 {
     [OpenFile openPath:path atLine:-1 atCol:-1 withTabWidth:-1];
+}
+
+- (void)open:(MimsyPath* __nonnull)path withRange:(NSRange)range
+{
+    [OpenFile openPath:path withRange:range];
 }
 
 - (void)openAsBinary:(MimsyPath* _Nonnull)path

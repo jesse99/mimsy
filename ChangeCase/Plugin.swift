@@ -10,13 +10,16 @@ class StdChangeCase: MimsyPlugin
             app.addMenuItem(title: "Upper Case", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: upperCase)
             app.addMenuItem(title: "Lower Case", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: lowerCase)
             
-            app.registerWithSelectionTextContextMenu(.Transform, title: {_ in
-                "Upper Case"}, invoke: { _ in self.upperCase()})
-            app.registerWithSelectionTextContextMenu(.Transform, title: {_ in
-                "Lower Case"}, invoke: { _ in self.lowerCase()})
+            app.registerWithSelectionTextContextMenu(.Transform, callback: contextMenu)
         }
         
         return nil
+    }
+    
+    func contextMenu(view: MimsyTextView) -> [TextContextMenuItem]
+    {
+        return [TextContextMenuItem(title: "Upper Case", invoke: {_ in self.upperCase()}),
+            TextContextMenuItem(title: "Lower Case", invoke: {_ in self.lowerCase()})]
     }
     
     func enabled(item: NSMenuItem) -> Bool

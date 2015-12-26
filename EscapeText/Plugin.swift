@@ -11,13 +11,16 @@ class StdEscapeText: MimsyPlugin
             app.addMenuItem(title: "Escape HTML", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: html)
             app.addMenuItem(title: "Escape XML", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: xml)
             
-            app.registerWithSelectionTextContextMenu(.Transform, title: {_ in
-                "Escape HTML"}, invoke: { _ in self.html()})
-            app.registerWithSelectionTextContextMenu(.Transform, title: {_ in
-                "Escape XML"}, invoke: { _ in self.xml()})
+            app.registerWithSelectionTextContextMenu(.Transform, callback: contextMenu)
         }
         
         return nil
+    }
+    
+    func contextMenu(view: MimsyTextView) -> [TextContextMenuItem]
+    {
+        return [TextContextMenuItem(title: "Escape HTML", invoke: {_ in self.html()}),
+            TextContextMenuItem(title: "Escape XML", invoke: {_ in self.xml()})]
     }
     
     func enabled(item: NSMenuItem) -> Bool

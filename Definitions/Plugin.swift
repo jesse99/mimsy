@@ -8,19 +8,13 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     {
         if stage == 0
         {
-            definitions = self
+            definitionsPlugin = self
         }
         else if stage == 1
         {
             app.registerProject(.Opened, onOpened)
             app.registerProject(.Closing, onClosing)
             app.registerProject(.Changed, onChanged)
-            
-            // TODO: maybe we want yet another plugin to assemble the context menu items
-//            app.registerWithSelectionTextContextMenu(.Transform, title: {_ in
-//                "Escape HTML"}, invoke: { _ in self.html()})
-//            app.registerWithSelectionTextContextMenu(.Transform, title: {_ in
-//                "Escape XML"}, invoke: { _ in self.xml()})
         }
         else if (stage == 3)
         {
@@ -42,6 +36,16 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         case .Parser: parserParsers.append(parser)
         case .ExternalTool: toolParsers.append(parser)
         }
+    }
+    
+    func declarations(project: MimsyProject, name: String) -> [ItemPath]
+    {
+        return declarations[project.path]?[name] ?? []
+    }
+    
+    func definitions(project: MimsyProject, name: String) -> [ItemPath]
+    {
+        return definitions[project.path]?[name] ?? []
     }
     
     func onOpened(project: MimsyProject)
@@ -69,8 +73,8 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     // Threaded code
     func scan(root: MimsyPath)
     {
-        var paths: [MimsyPath: PathInfo] = [:]
-        let oldPaths = projects[root]
+        var pathInfos: [MimsyPath: ItemsInfo] = [:]
+        let oldPathInfos = projects[root]
         
         let fm = NSFileManager.defaultManager()
         let keys = [NSURLIsDirectoryKey, NSURLPathKey, NSURLContentModificationDateKey]
@@ -91,20 +95,20 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
                         let path = try url.pathValue()
                         let currentDate = try url.contentModificationDateValue()
                         
-                        if let oldInfo = oldPaths?[path]
+                        if let oldPathInfo = oldPathInfos?[path]
                         {
-                            if currentDate.compare(oldInfo.date) == .OrderedDescending
+                            if currentDate.compare(oldPathInfo.date) == .OrderedDescending
                             {
-                                paths[path] = PathInfo(date: currentDate, items: try parse(path))
+                                pathInfos[path] = ItemsInfo(date: currentDate, items: try parse(path))
                             }
                             else
                             {
-                                paths[path] = oldInfo
+                                pathInfos[path] = oldPathInfo
                             }
                         }
                         else
                         {
-                            paths[path] = PathInfo(date: currentDate, items: try parse(path))
+                            pathInfos[path] = ItemsInfo(date: currentDate, items: try parse(path))
                         }
                     }
                 }
@@ -119,7 +123,9 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
            }
         }
         
-        // TODO: probably want to compute names here
+        let (decs, defs) = buildPaths(pathInfos)
+//        dumpPaths("Declarations", decs)
+//        dumpPaths("Definitions", defs)
         
         let main = dispatch_get_main_queue()
         let delay = dispatch_time(DISPATCH_TIME_NOW, Int64(0*NSEC_PER_MSEC))
@@ -128,8 +134,29 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
             // Update the projects dictionary, but only if the project is still open.
             if let _ = self.projects[root]
             {
-                self.projects[root] = paths
+                self.projects[root] = pathInfos
+                self.declarations[root] = decs
+                self.definitions[root] = defs
             }
+        }
+    }
+    
+    func dumpPaths(kind: String, _ paths: [String: [ItemPath]])
+    {
+        app.log("Plugins", "\(kind):")
+        
+        var entries: [String] = []
+        for (name, items) in paths
+        {
+            let loc = (items.map {"\($0.path.lastComponent()):\($0.location)"}).joinWithSeparator(", ")
+            entries.append("   \(name)  \(loc)")
+        }
+        
+        entries.sortInPlace()
+        
+        for entry in entries
+        {
+            app.log("Plugins", "%@", entry)
         }
     }
     
@@ -153,61 +180,60 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         return try _parse(toolParsers, path) ?? _parse(parserParsers, path) ?? _parse(regexParsers, path) ?? []
     }
     
-    // TODO:
-    // context menu logic needs to use the right project
-    // should be able to use additional directories (open selection should also use those)
-//    func enabled(item: NSMenuItem) -> Bool
-//    {
-//        var enabled = false
-//        
-//        if let view = app.textView()
-//        {
-//            enabled = view.selectionRange.length > 0
-//        }
-//        
-//        return enabled
-//    }
-//    
-//    func html()
-//    {
-//        if let view = app.textView()
-//        {
-//            var text = view.selection
-//            text = text.stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-//            text = text.stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-//            text = text.stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-//            text = text.stringByReplacingOccurrencesOfString("\"", withString: "&quot;")
-//            view.setSelection(text, undoText: "Escape HTML")
-//        }
-//    }
-//    
-//    func xml()
-//    {
-//        if let view = app.textView()
-//        {
-//            var text = view.selection
-//            text = text.stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-//            text = text.stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-//            text = text.stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-//            text = text.stringByReplacingOccurrencesOfString("\"", withString: "&quot;")
-//            text = text.stringByReplacingOccurrencesOfString("'", withString: "&apos;")
-//            view.setSelection(text, undoText: "Escape XML")
-//        }
-//    }
+    // Threaded code
+    func buildPaths(infos: [MimsyPath: ItemsInfo]) -> ([String: [ItemPath]], [String: [ItemPath]])
+    {
+        func add(inout namePaths: [String: [ItemPath]], _ name: String, _ path: ItemPath)
+        {
+            if var paths = namePaths[name]
+            {
+                paths.append(path)
+                namePaths[name] = paths
+            }
+            else
+            {
+                namePaths[name] = [path]
+            }
+        }
+        
+        var decs: [String: [ItemPath]] = [:]
+        var defs: [String: [ItemPath]] = [:]
+        
+        for (path, info) in infos
+        {
+            for item in info.items
+            {
+                switch item
+                {
+                case .Declaration(let name, let location):
+                    add(&decs, name, ItemPath(path: path, location: location))
+                case .Definition(let name, let location):
+                    add(&defs, name, ItemPath(path: path, location: location))
+                }
+            }
+        }
+        
+        return (decs, defs)
+    }
     
-    struct PathInfo
+    struct ItemsInfo
     {
         let date: NSDate
         let items: [ItemName]
     }
     
     // Project path to file path to definitions within that file
-    typealias ProjectItemNames = [MimsyPath: [MimsyPath: PathInfo]]
+    typealias ProjectItemNames = [MimsyPath: [MimsyPath: ItemsInfo]]
+
+    // Project path to name to definitions.
+    typealias ProjectItemPaths = [MimsyPath: [String: [ItemPath]]]
     
-    var toolParsers: [ItemParser] = []      // we use separate arrays for parsers to make priorization easier
+    var toolParsers: [ItemParser] = []      // we use separate arrays for parsers to make prioritization easier
     var parserParsers: [ItemParser] = []    // note that, while these are var, they won't change after plugins finish loading
     var regexParsers: [ItemParser] = []
     var frozen = false
     
     var projects: ProjectItemNames = [:]
+    var declarations: ProjectItemPaths = [:]
+    var definitions: ProjectItemPaths = [:]
 }

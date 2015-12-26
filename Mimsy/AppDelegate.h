@@ -11,15 +11,9 @@ typedef NSString* __nullable (^ __nonnull ProjectContextMenuItemTitleBlock)(NSAr
 typedef void (^TextRangeBlock)(id<MimsyTextView> _Nonnull, NSRange);    // used elsewhere
 
 typedef void (^ __nonnull InvokeProjectCommandBlock)(NSArray<MimsyPath*>* __nonnull, NSArray<MimsyPath*>* __nonnull);
+typedef NSArray<TextContextMenuItem*>* __nonnull (^ __nonnull TextContextMenuBlock)(id <MimsyTextView> __nonnull);
 
 void initLogGlobs(void);
-
-@interface TextContextItem : NSObject
-
-@property (strong) TextContextMenuItemTitleBlock _Nonnull title;
-@property (strong) InvokeTextCommandBlock _Nonnull invoke;
-
-@end
 
 @interface ProjectContextItem : NSObject
 
@@ -58,8 +52,8 @@ void initLogGlobs(void);
 - (void)invokeTextViewHook:(enum TextViewNotification)kind view:(id<MimsyTextView> _Nonnull)view;
 - (bool)invokeTextViewKeyHook:(NSString* _Nonnull)key view:(id<MimsyTextView> _Nonnull)view;
 
-- (NSArray* _Nullable)noSelectionItems:(enum NoTextSelectionPos)pos;
-- (NSArray* _Nullable)withSelectionItems:(enum WithTextSelectionPos)pos;
+- (NSArray<TextContextMenuBlock>* _Nullable)noSelectionItems:(enum NoTextSelectionPos)pos;
+- (NSArray<TextContextMenuBlock>* _Nullable)withSelectionItems:(enum WithTextSelectionPos)pos;
 - (NSArray* _Nullable)projectItems;
 - (NSDictionary* _Nonnull)applyElementHooks;
 
