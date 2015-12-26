@@ -26,30 +26,12 @@ Creating plugins
 
 
 
-for titles
-    if one match then use use the name
-    if path has multiple ranges then use name+file name+ location
-    else use name+file name
-
-add a setting for additional directories to process
-persist DefinitionPaths somewhere?
-
-
-
-
-
-
-- add a  file, be sure to include it in the right target
-- can be helpful to restart xcode (so auto-completion and errors work in the new plugin)
-
-
-
-
-
 * Seems like we could get goto definition working with just the styler:
     - only allow one scan at a time
     - add a setting for extra directories to parse
     - update a few coco projects with extra directories
+    - persist definitions?
+    - check for TODOs
     - look into adding a go tool
 * Project context menus should probably be created like text menus.
 * Add basic tab completion.

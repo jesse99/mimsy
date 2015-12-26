@@ -51,23 +51,35 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     func onOpened(project: MimsyProject)
     {
         projects[project.path] = [:]
-        
-        // TODO: may want to do this only if we have a parser
-        let concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)
-        dispatch_async(concurrent) {self.scan(project.path)}
+        startScanning(project.path)
     }
     
     func onClosing(project: MimsyProject)
     {
         projects[project.path] = nil
+        states[project.path] = nil
     }
     
     func onChanged(project: MimsyProject)
     {
-        // TODO: what if one is in progress? probably defer using a flag
-        // TODO: may want to do this only if we have a parser
+        switch states[project.path]!
+        {
+        case .Idle:
+            startScanning(project.path)
+        case .Scanning:
+            states[project.path] = .Queued
+        case .Queued:
+            break
+        }
+    }
+    
+    func startScanning(root: MimsyPath)
+    {
+        assert(states[root] ?? .Idle != .Scanning)
+        states[root] = .Scanning
+        
         let concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)
-        dispatch_async(concurrent) {self.scan(project.path)}
+        dispatch_async(concurrent) {self.scan(root)}
     }
     
     // Threaded code
@@ -137,10 +149,23 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
                 self.projects[root] = pathInfos
                 self.declarations[root] = decs
                 self.definitions[root] = defs
+
+                switch self.states[root]!
+                {
+                case .Idle:
+                    assert(false)
+                    
+                case .Scanning:
+                    self.states[root] = .Idle
+                    
+                case .Queued:
+                    self.startScanning(root)
+                }
             }
         }
     }
     
+    // Threaded code
     func dumpPaths(kind: String, _ paths: [String: [ItemPath]])
     {
         app.log("Plugins", "\(kind):")
@@ -216,6 +241,13 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         return (decs, defs)
     }
     
+    enum State
+    {
+        case Idle
+        case Scanning
+        case Queued
+    }
+    
     struct ItemsInfo
     {
         let date: NSDate
@@ -233,6 +265,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     var regexParsers: [ItemParser] = []
     var frozen = false
     
+    var states: [MimsyPath: State] = [:]
     var projects: ProjectItemNames = [:]
     var declarations: ProjectItemPaths = [:]
     var definitions: ProjectItemPaths = [:]
