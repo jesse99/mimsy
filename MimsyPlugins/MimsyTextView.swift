@@ -12,7 +12,11 @@ import Cocoa
 /// Helper used to communicate with Mimsy's text document views.
 @objc public protocol MimsyTextView
 {
-    /// Language objects are used to style the text (e.g. to render keywords using bold) and 
+    /// Contains settings for the language (if any) the project and the app but not for the 
+    /// current plugin.
+    var settings: MimsySettings {get}
+    
+   /// Language objects are used to style the text (e.g. to render keywords using bold) and
     /// to customize bits of behavior (e.g. to allow double-clicking to select identifiers
     /// in languages that allow unusual characters in identifiers). If there is no language
     /// then the document is a rich text document and styles must all be manually applied.

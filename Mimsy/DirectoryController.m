@@ -40,7 +40,7 @@ static DirectoryController* _lastBuilt;
 	BuildOptionsController* _optionsController;
 	NSMutableArray* _targets;
 	NSMutableArray* _flags;
-    Settings* _settings;
+    Settings* _layeredSettings;
     NSMutableDictionary* _buildItems;
     NSDate* _prefModTime;
     NSDate* _builderModTime;
@@ -135,7 +135,7 @@ static DirectoryController* _lastBuilt;
 		self.flags = [NSMutableArray new];
 		self.preferredPaths = [[Glob alloc] initWithGlobs:@[]];
 		self.ignoredPaths = [[Glob alloc] initWithGlobs:@[]];
-		_settings = [[Settings alloc] init:@".mimsy.rtf" context:self];
+		_layeredSettings = [[Settings alloc] init:@".mimsy.rtf" context:self];
         _buildItems = [NSMutableDictionary new];
 		
 		if (!_controllers)
@@ -163,6 +163,11 @@ static DirectoryController* _lastBuilt;
 - (MimsyPath* _Nonnull)path
 {
     return _thePath;
+}
+
+- (id<MimsySettings> __nonnull)settings
+{
+    return _layeredSettings;
 }
 
 - (NSArray<MimsyPath*>* __nonnull)resolve:(NSString* __nonnull)name
@@ -253,9 +258,9 @@ static DirectoryController* _lastBuilt;
     return app;
 }
 
-- (Settings*)settings
+- (Settings*)layeredSettings
 {
-    return _settings;
+    return _layeredSettings;
 }
 
 - (void)doubleClicked:(id)sender
@@ -875,10 +880,10 @@ static DirectoryController* _lastBuilt;
 
 	if (self.path)
 	{
-		NSArray* globs = [_settings stringValues:@"IgnoredPath"];
+		NSArray* globs = [_layeredSettings stringValues:@"IgnoredPath"];
 		_ignoredPaths = [[Glob alloc] initWithGlobs:globs];
 
-		globs = [[_settings stringValues:@"PreferredPath"] map:
+		globs = [[_layeredSettings stringValues:@"PreferredPath"] map:
 			^id (NSString* glob)
 			{
 				if ([glob isEqualToString:@"."])
@@ -897,7 +902,7 @@ static DirectoryController* _lastBuilt;
 		_preferredPaths = [[Glob alloc] initWithGlobs:globs];
         
         _buildItems = [NSMutableDictionary new];
-        for (NSString* value in [_settings stringValues:@"BuildItem"])
+        for (NSString* value in [_layeredSettings stringValues:@"BuildItem"])
         {
             NSArray* fields = [value componentsSeparatedByString:@"\u00A7"];
             if (fields.count >= 2)
@@ -973,7 +978,7 @@ static DirectoryController* _lastBuilt;
 			return;
 		}
 		
-		_settings = [[Settings alloc] init:@".mimsy.rtf" context:self];
+		_layeredSettings = [[Settings alloc] init:@".mimsy.rtf" context:self];
 
 		NSMutableArray* ignores = [NSMutableArray new];
 		NSMutableArray* dontIgnores = [NSMutableArray new];
@@ -1065,7 +1070,7 @@ static DirectoryController* _lastBuilt;
 			 }
 			 else
 			 {
-				 [_settings addKey:entry.key value:entry.value];
+				 [_layeredSettings addKey:entry.key value:entry.value];
 			 }
 		 }
 		 ];

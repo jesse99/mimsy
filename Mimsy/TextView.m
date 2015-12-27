@@ -806,7 +806,7 @@ static NSString* getKey(NSEvent* event)
     if (controller)
         [controller resetTypingAttributes];
     
-    if (![controller.settings boolValue:@"PasteCopiesBackColor" missing:false])
+    if (![controller.layeredSettings boolValue:@"PasteCopiesBackColor" missing:false])
     {
         NSPasteboard* pb = [NSPasteboard generalPasteboard];
         NSString* str = [pb stringForType:NSStringPboardType];

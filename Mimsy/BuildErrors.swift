@@ -13,7 +13,7 @@ public class BuildErrors : NSObject
     {
         _patterns = [Pattern]()
         let app = NSApplication.sharedApplication().delegate as! AppDelegate;
-        app.settings().enumerate("BuildError", with: self.parseSetting)
+        app.layeredSettings().enumerate("BuildError", with: self.parseSetting)
         
         // We want to use the regexen that are able to pick out more information
         // first because the regexen can match the same messages.
@@ -72,7 +72,7 @@ public class BuildErrors : NSObject
     {
         var mapping = ["", ""]
         
-        if let context = activeContext, let settings = context.settings()
+        if let context = activeContext, let settings = context.layeredSettings()
         {
             let remap = settings.stringValue("RemapBuildPath", missing: ":")
             let parts = remap.componentsSeparatedByString(":")

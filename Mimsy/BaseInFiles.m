@@ -33,7 +33,7 @@
 		_excludeGlobs = [[Glob alloc] initWithGlobs:globs];
 		
         AppDelegate* app = [NSApp delegate];
-		globs = [[app.settings stringValue:@"FindAllAlwaysExclude" missing:@""] splitByString:@" "];
+		globs = [[app.layeredSettings stringValue:@"FindAllAlwaysExclude" missing:@""] splitByString:@" "];
 		_excludeAllGlobs = [[Glob alloc] initWithGlobs:globs];
 	}
 	

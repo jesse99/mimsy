@@ -46,7 +46,7 @@ void initLogGlobs(void);
 + (void)execute:(NSString* _Nonnull)key deferBy:(NSTimeInterval)delay withBlock:(NullaryBlock _Nonnull)block;
 
 - (id<SettingsContext> _Nullable)parent;
-- (Settings* _Nonnull)settings;
+- (Settings* _Nonnull)layeredSettings;
 
 - (void)invokeProjectHook:(enum ProjectNotification)kind project:(id<MimsyProject> _Nonnull)project;
 - (void)invokeTextViewHook:(enum TextViewNotification)kind view:(id<MimsyTextView> _Nonnull)view;

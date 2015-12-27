@@ -22,14 +22,14 @@ Creating plugins
     - can be helpful to restart xcode (so auto-completion and errors work in the new plugin)
 
 
-
+ExtraDirectory
 
 
 
 * Seems like we could get goto definition working with just the styler:
-    - only allow one scan at a time
-    - add a setting for extra directories to parse
+    - open local should use ExtraDirectory setting
     - update a few coco projects with extra directories
+    - make sure definitions are segregated by projects
     - persist definitions?
     - check for TODOs
     - look into adding a go tool

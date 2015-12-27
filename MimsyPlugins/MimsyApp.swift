@@ -78,6 +78,10 @@ public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMe
 /// This is used by plugins to communicate with the top level of Mimsy. 
 @objc public protocol MimsyApp
 {
+    /// Contains settings for the app, but not for the current
+    /// plugin or languages or projects.
+    var settings: MimsySettings {get}
+    
     /// Typically the extension method will be used instead of this.
     func addMenuItem(item: NSMenuItem, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem?, invoke: InvokeMenuItem) -> Bool
     

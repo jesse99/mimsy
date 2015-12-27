@@ -74,7 +74,7 @@
 	NSMutableArray* _layoutBlocks;
 	struct UIntVector _lineStarts;	// first index is at zero, other indexes are one past new-lines
     NSMutableArray* _mappings;
-    Settings* _settings;
+    Settings* _layeredSettings;
     
     int _showLeadingSpaces; // -1 == use app settings, 0 == off, 1 == on
     int _showLeadingTabs;
@@ -87,6 +87,11 @@ static __weak TextController* _frontmost;
 - (id<MimsyLanguage>)language
 {
     return _language;
+}
+
+- (id<MimsySettings> __nonnull)settings
+{
+    return _layeredSettings;
 }
 
 - (id<MimsyProject> __nullable)project
@@ -252,7 +257,7 @@ static __weak TextController* _frontmost;
 {
     if (_applier)
         if (_showLeadingSpaces == -1)
-            return [_settings boolValue:@"ShowLeadingSpaces" missing:false];
+            return [_layeredSettings boolValue:@"ShowLeadingSpaces" missing:false];
         else
             return _showLeadingSpaces;
     else
@@ -263,7 +268,7 @@ static __weak TextController* _frontmost;
 {
     if (_applier)
         if (_showLeadingTabs == -1)
-            return [_settings boolValue:@"ShowLeadingTabs" missing:false];
+            return [_layeredSettings boolValue:@"ShowLeadingTabs" missing:false];
         else
             return _showLeadingTabs;
     else
@@ -274,7 +279,7 @@ static __weak TextController* _frontmost;
 {
     if (_applier)
         if (_showLongLines == -1)
-            return [_settings boolValue:@"ShowLongLines" missing:false];
+            return [_layeredSettings boolValue:@"ShowLongLines" missing:false];
         else
             return _showLongLines;
     else
@@ -285,7 +290,7 @@ static __weak TextController* _frontmost;
 {
     if (_applier)
         if (_showNonLeadingTabs == -1)
-            return [_settings boolValue:@"ShowNonLeadingTabs" missing:false];
+            return [_layeredSettings boolValue:@"ShowNonLeadingTabs" missing:false];
         else
             return _showNonLeadingTabs;
     else
@@ -311,7 +316,7 @@ static __weak TextController* _frontmost;
         _showLeadingTabs = -1;
         _showLongLines = -1;
         _showNonLeadingTabs = -1;
-        _settings = [[Settings alloc] init:@"untitled" context:self];
+        _layeredSettings = [[Settings alloc] init:@"untitled" context:self];
         
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(languagesChanged:) name:@"LanguagesChanged" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stylesChanged:) name:@"StylesChanged" object:nil];
@@ -336,8 +341,8 @@ static __weak TextController* _frontmost;
     [self.textView.layoutManager setBackgroundLayoutEnabled:YES];
     
     NSRect frame = self.window.frame;
-    int width = [_settings intValue:@"DefaultWindowWidth" missing:0];
-    int height = [_settings intValue:@"DefaultWindowHeight" missing:0];
+    int width = [_layeredSettings intValue:@"DefaultWindowWidth" missing:0];
+    int height = [_layeredSettings intValue:@"DefaultWindowHeight" missing:0];
     if (width)
         frame.size.width = width;
     if (height)
@@ -372,9 +377,9 @@ static __weak TextController* _frontmost;
     return app;
 }
 
-- (Settings*)settings
+- (Settings*)layeredSettings
 {
-    return _settings;
+    return _layeredSettings;
 }
 
 - (void)registerBlockWhenLayoutCompletes:(LayoutCallback)block
@@ -781,12 +786,12 @@ static __weak TextController* _frontmost;
 		LOG("Text:Verbose", "Set language for %s to %s", STR([self.path lastComponent]), STR(lang));
         
         // TODO: Might want to support per-file settings (though that doesn't seem terribly useful).
-        _settings = [[Settings alloc] init:self.path.lastComponent context:self];
+        _layeredSettings = [[Settings alloc] init:self.path.lastComponent context:self];
 		if (_language)
         {
             for (NSUInteger i = 0; i < _language.settingKeys.count; i++)
             {
-                [_settings addKey:_language.settingKeys[i] value:_language.settingValues[i]];
+                [_layeredSettings addKey:_language.settingKeys[i] value:_language.settingValues[i]];
             }
 			_styles = [self _createTextStyles];
         }
@@ -811,7 +816,7 @@ static __weak TextController* _frontmost;
 {
 	NSDocument* doc = self.document;
 	NSString* type = doc.fileType;
-	bool enable = _language == nil && ![type contains:@"Plain Text"] && ![type isEqualToString:@"binary"] && [_settings boolValue:@"EnableSubstitutions" missing:true];
+	bool enable = _language == nil && ![type contains:@"Plain Text"] && ![type isEqualToString:@"binary"] && [_layeredSettings boolValue:@"EnableSubstitutions" missing:true];
 	[self.textView setAutomaticQuoteSubstitutionEnabled:enable];
 	[self.textView setAutomaticDashSubstitutionEnabled:enable];
 	[self.textView setAutomaticTextReplacementEnabled:enable];
@@ -823,7 +828,7 @@ static __weak TextController* _frontmost;
 	
     if (_language)
     {
-        _settings = [[Settings alloc] init:self.path.lastComponent context:self];
+        _layeredSettings = [[Settings alloc] init:self.path.lastComponent context:self];
 		[self setLanguage:[Languages findWithlangName:_language.name]];
     }
 }
@@ -897,7 +902,7 @@ static __weak TextController* _frontmost;
 	if (path)
 	{
 		[self _positionWindow:path];
-        _settings = [[Settings alloc] init:path.lastComponent context:self];
+        _layeredSettings = [[Settings alloc] init:path.lastComponent context:self];
 		
 		NSString* name = [path lastComponent];
         if ([doc.fileType isEqualToString:@"binary"])
@@ -950,8 +955,8 @@ static __weak TextController* _frontmost;
         NSDictionary* attrs = [_styles attributesForElement:@"normal"];
         NSAttributedString* str = [[NSAttributedString alloc] initWithString:@" " attributes:attrs];
         double charWidth = str.size.width;
-        int tabWidth = [_settings intValue:@"TabWidth" missing:4];
-        tabWidth = [_settings intValue:@"DisplayTabWidth" missing:tabWidth];
+        int tabWidth = [_layeredSettings intValue:@"TabWidth" missing:4];
+        tabWidth = [_layeredSettings intValue:@"DisplayTabWidth" missing:tabWidth];
         
         NSMutableParagraphStyle* paragraphStyle = [[self.textView defaultParagraphStyle] mutableCopy];
         if (!paragraphStyle)

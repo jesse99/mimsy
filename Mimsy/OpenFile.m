@@ -215,7 +215,7 @@
     
     AppDelegate* app = [NSApp delegate];
     NSString* fileName = [path lastComponent];
-    NSString* setting = [app.settings stringValue:@"DontOpenWithMimsy" missing:@""];
+    NSString* setting = [app.layeredSettings stringValue:@"DontOpenWithMimsy" missing:@""];
 	if (setting.length > 0)
 	{
 		NSArray* patterns = [setting splitByString:@" "];

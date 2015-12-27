@@ -36,7 +36,7 @@
 		_resultsController = [[FindResultsController alloc] initWith:self];
 		
         AppDelegate* app = [NSApp delegate];
-		_reversePaths = [app.settings boolValue:@"ReversePaths" missing:true];
+		_reversePaths = [app.layeredSettings boolValue:@"ReversePaths" missing:true];
 				
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
 		[self _loadPrefs];

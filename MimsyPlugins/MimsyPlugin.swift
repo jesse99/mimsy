@@ -32,9 +32,9 @@ public class MimsyPlugin: NSObject
     {
     }
     
-    /// Called between stage 0 and stage 1 and when settings change (either because the user
-    /// edited a settings file or because settings changed as a result of something like the
-    /// current project changed).
+    /// Called between stage 0 and stage 1 and when settings change. Contains settings for the 
+    /// current language (if any), for the current project (if any), for the app, and for the
+    /// plugin (if any).
     public func onLoadSettings(settings: MimsySettings)
     {
     }

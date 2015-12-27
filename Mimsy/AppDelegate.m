@@ -153,7 +153,7 @@ void initLogGlobs()
     NSString* _mountPath;
     bool _launched;
     NSMutableDictionary* _items;
-    Settings* _settings;
+    Settings* _layeredSettings;
     
     InstallFiles* _installer;
     id<SettingsContext> _parent;
@@ -167,7 +167,7 @@ void initLogGlobs()
 	{
 //		ASSERT([NSThread isMultiThreaded]);
 		
-        _settings = [[Settings alloc] init:@"app.mimsy" context:self];
+        _layeredSettings = [[Settings alloc] init:@"app.mimsy" context:self];
 		_pendingBlocks = [NSMutableDictionary new];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
@@ -248,7 +248,7 @@ void initLogGlobs()
     NSMutableDictionary* env = [NSMutableDictionary new];
     [env addEntriesFromDictionary:[[NSProcessInfo processInfo] environment]];
     
-    NSArray* newPaths = [self.settings stringValues:@"AppendPath"];
+    NSArray* newPaths = [self.layeredSettings stringValues:@"AppendPath"];
     if (newPaths && newPaths.count > 0)
     {
         NSString* suffix = [newPaths componentsJoinedByString:@":"];
@@ -268,6 +268,11 @@ void initLogGlobs()
 - (void)installSettingsPath:(MimsyPath* _Nonnull)path
 {
     [_installer addSourcePath:path];
+}
+
+- (id<MimsySettings> __nonnull)settings
+{
+    return _layeredSettings;
 }
 
 - (void)addKeyHelp:(NSString * __nonnull)plugin :(NSString * __nonnull)context :(NSString * __nonnull)key :(NSString * __nonnull)description
@@ -547,9 +552,9 @@ void initLogGlobs()
     return _parent;
 }
 
-- (Settings*)settings
+- (Settings*)layeredSettings
 {
-    return _settings;
+    return _layeredSettings;
 }
 
 // Selector attached to a hidden menu item giving plugins a place to add menu items to.
@@ -838,7 +843,7 @@ void initLogGlobs()
     [BuildErrors.instance appSettingsChanged];
 	
 	NSMutableArray* helps = [NSMutableArray new];
-	[activeContext.settings enumerate:@"ContextHelp" with:
+	[activeContext.layeredSettings enumerate:@"ContextHelp" with:
 		^(NSString *fileName, NSString *value)
 		{
 			NSError* error = nil;
@@ -1331,7 +1336,7 @@ void initLogGlobs()
 
 - (void)_loadSettings
 {
-    _settings = [[Settings alloc] init:@"app.mimsy" context:self];
+    _layeredSettings = [[Settings alloc] init:@"app.mimsy" context:self];
 	
 	MimsyPath* path = [Paths installedDir:@"settings"];
 	path = [path appendWithComponent:@"app.mimsy"];
@@ -1345,7 +1350,7 @@ void initLogGlobs()
 			[parser enumerate:
 				 ^(ConfigParserEntry* entry)
 				 {
-					 [_settings addKey:entry.key value:entry.value];
+					 [_layeredSettings addKey:entry.key value:entry.value];
 				 }];
 		}
 		else

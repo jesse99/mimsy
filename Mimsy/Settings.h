@@ -13,7 +13,7 @@
 /// a plugin.
 - (id<SettingsContext> __nullable)parent;
 
-- (Settings* __nullable)settings;
+- (Settings* __nullable)layeredSettings;
 
 @end
 

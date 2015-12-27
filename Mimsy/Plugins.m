@@ -28,7 +28,7 @@
 
 @implementation PluginData
 {
-    Settings* _settings;
+    Settings* layeredSettings;
 }
 
 - (id)init:(MimsyPlugin*)plugin
@@ -51,7 +51,7 @@
 
 - (void)swapInSettings:(Settings*)settings
 {
-    _settings = settings;
+    layeredSettings = settings;
     
     AppDelegate* app = [NSApp delegate];
     [app setSettingsParent:self];
@@ -59,7 +59,7 @@
 
 - (void)swapOutSettings
 {
-    _settings = nil;
+    layeredSettings = nil;
     
     AppDelegate* app = [NSApp delegate];
     [app setSettingsParent:nil];
@@ -70,9 +70,9 @@
     return nil;
 }
 
-- (Settings* __nullable)settings
+- (Settings* __nullable)layeredSettings
 {
-    return _settings;
+    return layeredSettings;
 }
 
 @end
@@ -227,7 +227,7 @@ static void doStage(int stage)
         }
         
         [data swapInSettings:settings];
-        [data.plugin onLoadSettings:[activeContext settings]];
+        [data.plugin onLoadSettings:[activeContext layeredSettings]];
         [data swapOutSettings];
     }
 }
@@ -257,7 +257,7 @@ static void doStage(int stage)
         }
         
         [data swapInSettings:settings];
-        Settings* current = [activeContext settings];
+        Settings* current = [activeContext layeredSettings];
         if (current.checksum != data.checksum)
         {
             [data.plugin onLoadSettings:current];

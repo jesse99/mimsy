@@ -216,7 +216,7 @@ static bool _selectLocatedFiles(NSArray<NSString*>* files, int line, int col)
 
 	NSArray* reversed = files;
     AppDelegate* app = [NSApp delegate];
-	if ([app.settings boolValue:@"ReversePaths" missing:true])
+	if ([app.layeredSettings boolValue:@"ReversePaths" missing:true])
 	{
 		reversed = [files map:
 					 ^id(id element)

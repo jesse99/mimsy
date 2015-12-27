@@ -65,7 +65,7 @@ typedef void (^LayoutCallback)(TextController* controller);
 - (bool)showingNonLeadingTabs;
 
 - (id<SettingsContext>)parent;
-- (Settings*)settings;
+- (Settings*)layeredSettings;
 
 @property IBOutlet TextView* textView;
 @property IBOutlet __weak NSScrollView* scrollView;

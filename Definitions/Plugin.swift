@@ -15,6 +15,8 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
             app.registerProject(.Opened, onOpened)
             app.registerProject(.Closing, onClosing)
             app.registerProject(.Changed, onChanged)
+
+            app.registerWithSelectionTextContextMenu(.Lookup, callback: contextMenu)
         }
         else if (stage == 3)
         {
@@ -22,6 +24,19 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         }
         
         return nil
+    }
+    
+    func contextMenu(view: MimsyTextView) -> [TextContextMenuItem]
+    {
+        if let project = view.project
+        {
+            return [TextContextMenuItem(title: "Log Definitions", invoke: {_ in
+                self.dumpPaths("Declarations", self.declarations[project.path] ?? [:])
+                self.dumpPaths("Definitions", self.definitions[project.path] ?? [:])
+            })]
+        }
+        
+        return []
     }
     
     func register(parser: ItemParser)
@@ -51,7 +66,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     func onOpened(project: MimsyProject)
     {
         projects[project.path] = [:]
-        startScanning(project.path)
+        startScanning(project)
     }
     
     func onClosing(project: MimsyProject)
@@ -65,7 +80,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         switch states[project.path]!
         {
         case .Idle:
-            startScanning(project.path)
+            startScanning(project)
         case .Scanning:
             states[project.path] = .Queued
         case .Queued:
@@ -73,24 +88,67 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         }
     }
     
-    func startScanning(root: MimsyPath)
+    func startScanning(project: MimsyProject)
     {
+        let root = project.path
         assert(states[root] ?? .Idle != .Scanning)
         states[root] = .Scanning
         
         let concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)
-        dispatch_async(concurrent) {self.scan(root)}
+        dispatch_async(concurrent) {self.scanProject(project)}
     }
     
     // Threaded code
-    func scan(root: MimsyPath)
+    func scanProject(project: MimsyProject)
     {
         var pathInfos: [MimsyPath: ItemsInfo] = [:]
+
+        let root = project.path
+        
+        scanDir(&pathInfos, root, root)
+        for dir in project.settings.stringValues("ExtraDirectory")
+        {
+            scanDir(&pathInfos, root, MimsyPath(withString: dir))
+        }
+        
+        let (decs, defs) = buildPaths(pathInfos)
+        //        dumpPaths("Declarations", decs)
+        //        dumpPaths("Definitions", defs)
+        
+        let main = dispatch_get_main_queue()
+        let delay = dispatch_time(DISPATCH_TIME_NOW, Int64(0*NSEC_PER_MSEC))
+        dispatch_after(delay, main)
+        {
+            // Update the projects dictionary, but only if the project is still open.
+            if let _ = self.projects[root]
+            {
+                self.projects[root] = pathInfos
+                self.declarations[root] = decs
+                self.definitions[root] = defs
+                
+                switch self.states[root]!
+                {
+                case .Idle:
+                    assert(false)
+                    
+                case .Scanning:
+                    self.states[root] = .Idle
+                    
+                case .Queued:
+                    self.startScanning(project)
+                }
+            }
+        }
+    }
+    
+    // Threaded code
+    func scanDir(inout pathInfos: [MimsyPath: ItemsInfo], _ root: MimsyPath, _ dir: MimsyPath)
+    {
         let oldPathInfos = projects[root]
         
         let fm = NSFileManager.defaultManager()
         let keys = [NSURLIsDirectoryKey, NSURLPathKey, NSURLContentModificationDateKey]
-        if let enumerator = fm.enumeratorAtURL(root.asURL(), includingPropertiesForKeys: keys, options: .SkipsHiddenFiles, errorHandler:
+        if let enumerator = fm.enumeratorAtURL(dir.asURL(), includingPropertiesForKeys: keys, options: .SkipsHiddenFiles, errorHandler:
         {(url, err) -> Bool in
             self.app.log("Plugins", "Failed to enumerate %@ when trying to parse definitions: %@", url, err)
             return true
@@ -134,54 +192,28 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
                 }
            }
         }
-        
-        let (decs, defs) = buildPaths(pathInfos)
-//        dumpPaths("Declarations", decs)
-//        dumpPaths("Definitions", defs)
-        
-        let main = dispatch_get_main_queue()
-        let delay = dispatch_time(DISPATCH_TIME_NOW, Int64(0*NSEC_PER_MSEC))
-        dispatch_after(delay, main)
-        {
-            // Update the projects dictionary, but only if the project is still open.
-            if let _ = self.projects[root]
-            {
-                self.projects[root] = pathInfos
-                self.declarations[root] = decs
-                self.definitions[root] = defs
-
-                switch self.states[root]!
-                {
-                case .Idle:
-                    assert(false)
-                    
-                case .Scanning:
-                    self.states[root] = .Idle
-                    
-                case .Queued:
-                    self.startScanning(root)
-                }
-            }
-        }
     }
     
     // Threaded code
     func dumpPaths(kind: String, _ paths: [String: [ItemPath]])
     {
-        app.log("Plugins", "\(kind):")
-        
-        var entries: [String] = []
-        for (name, items) in paths
+        if !paths.isEmpty
         {
-            let loc = (items.map {"\($0.path.lastComponent()):\($0.location)"}).joinWithSeparator(", ")
-            entries.append("   \(name)  \(loc)")
-        }
-        
-        entries.sortInPlace()
-        
-        for entry in entries
-        {
-            app.log("Plugins", "%@", entry)
+            app.log("Plugins", "\(kind):")
+            
+            var entries: [String] = []
+            for (name, items) in paths
+            {
+                let loc = (items.map {"\($0.path.lastComponent()):\($0.location)"}).joinWithSeparator(", ")
+                entries.append("   \(name)  \(loc)")
+            }
+            
+            entries.sortInPlace()
+            
+            for entry in entries
+            {
+                app.log("Plugins", "%@", entry)
+            }
         }
     }
     

@@ -27,7 +27,7 @@
 - (NSDictionary* __nonnull)getSizeAttrs;
 
 - (id<SettingsContext> __nonnull)parent;
-- (Settings* __nonnull)settings;
+- (Settings* __nonnull)layeredSettings;
 
 @property Glob* __nonnull ignores;
 @property Glob* __nonnull dontIgnores;
@@ -36,7 +36,8 @@
 @property Glob* __nonnull preferredPaths;
 @property Glob* __nonnull ignoredPaths;
 
-@property (nonatomic, readonly, strong) MimsyPath * __nonnull path;
+@property (nonatomic, readonly, strong) MimsyPath* __nonnull path;
+@property (nonatomic, readonly, strong) id<MimsySettings> __nonnull settings;
 @property (weak) IBOutlet NSOutlineView* table;
 @property (weak) IBOutlet NSPopUpButton* targetsMenu;
 @property (weak) IBOutlet NSToolbarItem* buildButton;

@@ -22,7 +22,7 @@ static FindInFilesController* _findFilesController = nil;
 	{
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(openedDir:) name:@"OpenedDirectory" object:nil];
         AppDelegate* app = [NSApp delegate];
-		_reversedPaths = [app.settings boolValue:@"ReversePaths" missing:true];
+		_reversedPaths = [app.layeredSettings boolValue:@"ReversePaths" missing:true];
 		_normalPaths = [NSMutableDictionary new];
     }
     
@@ -164,19 +164,19 @@ static FindInFilesController* _findFilesController = nil;
 	UNUSED(sender);
 
     AppDelegate* app = [NSApp delegate];
-	_reversedPaths = [app.settings boolValue:@"ReversePaths" missing:true];
+	_reversedPaths = [app.layeredSettings boolValue:@"ReversePaths" missing:true];
 	_normalPaths = [NSMutableDictionary new];
 
-	NSString* value = [app.settings stringValue:@"FindAllIncludes" missing:@""];
+	NSString* value = [app.layeredSettings stringValue:@"FindAllIncludes" missing:@""];
 	[self.includedGlobsComboBox setStringValue:value];
 	
-	value = [app.settings stringValue:@"FindAllExcludes" missing:@""];
+	value = [app.layeredSettings stringValue:@"FindAllExcludes" missing:@""];
 	[self.excludedGlobsComboBox setStringValue:value];
 	
-	value = [app.settings stringValue:@"FindAllAlwaysExclude" missing:@""];
+	value = [app.layeredSettings stringValue:@"FindAllAlwaysExclude" missing:@""];
 	self->_alwaysExcludeGlobs = value;
 
-	NSArray* values = [app.settings stringValues:@"DefaultFindAllDirectory"];
+	NSArray* values = [app.layeredSettings stringValues:@"DefaultFindAllDirectory"];
 	[self.directoryMenu removeAllItems];
 	for (NSString* title in values)
 	{

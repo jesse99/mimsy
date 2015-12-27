@@ -238,7 +238,7 @@ id<SettingsContext> activeContext;
     while (settings)
     {
         [settings _enumerateOne:key with:block];
-        settings = settings.context.parent.settings;
+        settings = settings.context.parent.layeredSettings;
     }
 }
 
@@ -250,7 +250,7 @@ id<SettingsContext> activeContext;
     while (settings)
     {
         hash += settings->_hash;
-        settings = settings.context.parent.settings;
+        settings = settings.context.parent.layeredSettings;
     }
     
     return hash;
@@ -265,7 +265,7 @@ id<SettingsContext> activeContext;
         NSString* candidate = [settings _findValueForKeyOne:key];
         if (candidate)
             return candidate;
-        settings = settings.context.parent.settings;
+        settings = settings.context.parent.layeredSettings;
     }
     
     return missing;
@@ -279,7 +279,7 @@ id<SettingsContext> activeContext;
     while (settings)
     {
         [settings _addValuesForKeyOne:key values:values];
-        settings = settings.context.parent.settings;
+        settings = settings.context.parent.layeredSettings;
     }
     
     return values;
@@ -293,7 +293,7 @@ id<SettingsContext> activeContext;
     while (settings)
     {
         [settings _addKeysOne:keys];
-        settings = settings.context.parent.settings;
+        settings = settings.context.parent.layeredSettings;
     }
     
     return keys;

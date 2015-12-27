@@ -28,7 +28,7 @@
 // sources is used when reporting errors within the search URL
 + (void)_findSearchers:(NSMutableArray*)searchers sources:(NSMutableArray*)sources context:(id<SettingsContext>)context
 {
-	[context.settings enumerate:@"SearchIn" with:
+	[context.layeredSettings enumerate:@"SearchIn" with:
 		 ^(NSString *fileName, NSString *value)
 		 {
 			 [sources addObject:fileName];
