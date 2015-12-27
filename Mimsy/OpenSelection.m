@@ -9,6 +9,8 @@
 #import "TranscriptController.h"
 #import "Utils.h"
 
+#define MAX_FILES_TO_OPEN 4
+
 typedef bool (*ValidIndexCallback)(NSString* text, NSUInteger index);
 
 static bool _validHtml(NSString* text, NSUInteger index)
@@ -111,6 +113,23 @@ static bool _openRelativePath(MimsyPath* path, int line, int col)
 	return opened;
 }
 
+static void _addLocalPaths(MimsyPath* dir, MimsyPath* path, NSMutableArray* normalFiles, NSMutableArray* hiddenFiles)
+{
+    [Utils enumerateDeepDir:dir glob:nil error:NULL block:^(MimsyPath* item, bool* stop)
+     {
+         UNUSED(stop);
+         NSRange range = [item.asString rangeOfString:path.asString];
+         if (range.location != NSNotFound)
+         {
+             NSString* name = [item lastComponent];
+             if ([name startsWith:@"."])
+                 [hiddenFiles addObject:item];
+             else
+                 [normalFiles addObject:item];
+         }
+     }];
+}
+
 // We assume that if we can find a match under the current directory that is what the user
 // wants to open. (And we do a slow manual search because the locate command isn't always
 // available, and even when it is, it does not match the current file system state).
@@ -126,30 +145,26 @@ static bool _openLocalPath(MimsyPath* path, int line, int col)
             NSMutableArray* normalFiles = [NSMutableArray new];
             NSMutableArray* hiddenFiles = [NSMutableArray new];
             
-			[Utils enumerateDeepDir:controller.path glob:nil error:NULL block:^(MimsyPath* item, bool* stop)
-			{
-                UNUSED(stop);
-				NSRange range = [item.asString rangeOfString:path.asString];
-                if (range.location != NSNotFound)
-                {
-                    NSString* name = [item lastComponent];
-                    if ([name startsWith:@"."])
-                        [hiddenFiles addObject:item];
-                    else
-                        [normalFiles addObject:item];
-                }
-			}];
+            _addLocalPaths(controller.path, path, normalFiles, hiddenFiles);
+            for (NSString* extra in [controller.settings stringValues:@"ExtraDirectory"])
+            {
+                MimsyPath* dir = [[MimsyPath alloc] initWithString:extra];
+                _addLocalPaths(controller.path, dir, normalFiles, hiddenFiles);
+            }
             
             // Only open hidden files if there are no normal files to open.
             if (normalFiles.count == 0)
                 normalFiles = hiddenFiles;
             
-            for (MimsyPath* item in normalFiles)
+            if (normalFiles.count <= MAX_FILES_TO_OPEN)
             {
-                if (_doAbsolutePath(item, line, col))
+                for (MimsyPath* item in normalFiles)
                 {
-                    LOG("Text:Verbose", "opened using local path");
-                    opened = true;
+                    if (_doAbsolutePath(item, line, col))
+                    {
+                        LOG("Text:Verbose", "opened using local path");
+                        opened = true;
+                    }
                 }
             }
 		}
@@ -267,14 +282,14 @@ static bool _openLocatedFiles(NSArray<NSString*>* files, int line, int col)
 			return [preferred matchName:element];
 		}];
 
-		if (candidates.count < 4)
+		if (candidates.count <= MAX_FILES_TO_OPEN)
 			opened = _openAllLocatedFiles(candidates, line, col);
 	}
 	
 	// If we couldn't do that and we have a small number of files
 	// then just open them all.
 	if (!opened)
-		if (files.count < 4)
+		if (files.count <= MAX_FILES_TO_OPEN)
 			opened = _openAllLocatedFiles(files, line, col);
 	
 	// Otherwise pop up a dialog and let the user select which he wants

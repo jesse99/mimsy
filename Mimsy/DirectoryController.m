@@ -880,26 +880,28 @@ static DirectoryController* _lastBuilt;
 
 	if (self.path)
 	{
-		NSArray* globs = [_layeredSettings stringValues:@"IgnoredPath"];
-		_ignoredPaths = [[Glob alloc] initWithGlobs:globs];
+		NSArray* patterns = [_layeredSettings stringValues:@"IgnoredPath"];
+		_ignoredPaths = [[Glob alloc] initWithGlobs:patterns];
 
-		globs = [[_layeredSettings stringValues:@"PreferredPath"] map:
+		patterns = [[_layeredSettings stringValues:@"PreferredPath"] map:
 			^id (NSString* glob)
 			{
 				if ([glob isEqualToString:@"."])
 				{
-					return [self.path appendWithComponent:@"*"];
+                    MimsyPath* path = [self.path appendWithComponent:@"*"];
+                    return path.asString;
 				}
 				else if ([glob isEqualToString:@".."])
 				{
-					return [[self.path popComponent] appendWithComponent:@"*"];
+                    MimsyPath* path = [[self.path popComponent] appendWithComponent:@"*"];
+                    return path.asString;
 				}
 				else
 				{
 					return glob;
 				}
 			}];
-		_preferredPaths = [[Glob alloc] initWithGlobs:globs];
+		_preferredPaths = [[Glob alloc] initWithGlobs:patterns];
         
         _buildItems = [NSMutableDictionary new];
         for (NSString* value in [_layeredSettings stringValues:@"BuildItem"])

@@ -28,13 +28,16 @@ ExtraDirectory
 
 * Seems like we could get goto definition working with just the styler:
     - open local should use ExtraDirectory setting
+    - log scan times
+    - can we speed up samba?
     - update a few coco projects with extra directories
     - make sure definitions are segregated by projects
     - persist definitions?
     - check for TODOs
-    - look into adding a go tool
 * Project context menus should probably be created like text menus.
-* Add basic tab completion.
+* Add basic tab completion:
+    - should we parse files with identifier?
+    - would get lots of false positives for stuff like comments and strings
 * Add snippets support:
     - snippets/<language> directories
     - snippets are just language files
