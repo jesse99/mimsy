@@ -10,8 +10,14 @@ Comment: /\* (?: . | \r | \n)*? \*/
 String: " (?: [^"\r\n\\] | \\.)* "
 String: (?<= \x23 include) \s+ (< (?: [^>\r\n\\] | \\.)* >)
 
-Structure: ^[ \t]* struct \s+ ([\w_]+) \s+ \{
-Function: ^\w+ [\w\s_*]+? ([\w_]+) \s* \( [^()]* \) \s* [{;]
+Structure: ^ [\ \t]* (?: typedef \s+)? (?: struct | union) \s+ (\w+) \s+ \{
+Structure: ^ [\ \t]* (?: typedef \s+)? enum \s+ (\w+) \s+ \{
+
+Function: ^ \w+ [\w\s*]+? (\w+) \s* \( [^()]* \) \s* [{;]
+Function: ^ \w+ \s* \( [\w\s*]+ \)  \s*(\w+) \s* \( [^()]* \) \s* [{;]
+Function: ^ [\ \t]* \x23 \s* define \s+ (\w+) \s* \(
+Function: ^ [\ \t]* \x23 \s* define \s+ (\w+) [\ \t]+ [^\s]
+Function: ^ [\ \t]* typedef \s+ \w+ [\w\s*]*? (\w+) \s* ;
 
 PreProc: \x23 \s* (?: define | undef)
 PreProc: \x23 \s* (?: warning | error | line | pragma)
@@ -31,7 +37,7 @@ Macro: \b(?: __FILE__ | __LINE__ | __DATE__ | __TIME__ | __STDC__ | __STDC_VERSI
 
 Boolean: \b(?: false | true | FALSE | TRUE)\b
 
-Identifier: \b [a-zA-Z_] [\w_]* \b
+Identifier: \b [a-zA-Z_] \w* \b
 
 Float: (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)? [fFlL]?)
 Float: (\. [\d_]+ (?: [eE] [+-]? [\d_]+)? [fFlL]?)
