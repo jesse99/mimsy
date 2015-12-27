@@ -39,6 +39,10 @@ DefaultFindAllDirectory: /Applications/Xcode.app/Contents/Developer/Platforms/Ma
 DefaultFindAllDirectory: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/Foundation.framework/Versions/Current/Headers
 DefaultFindAllDirectory: /System/Library/Frameworks/CoreFoundation.framework/Versions/Current/Headers
 
+# Causes operations which may be slow to log (or otherwise dump) the amount of
+# time they take.
+ReportElapsedTimes: false
+
 #### Build Errors ######################################################
 # These are used to parse build output for error messages. The values
 # are formatted as "flags regex" where flag indexes correspond to group

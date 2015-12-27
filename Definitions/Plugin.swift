@@ -95,20 +95,29 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         states[root] = .Scanning
         
         let concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)
-        dispatch_async(concurrent) {self.scanProject(project)}
+        dispatch_async(concurrent) {self.scanProject(project, NSDate().timeIntervalSince1970)}
     }
     
     // Threaded code
-    func scanProject(project: MimsyProject)
+    func scanProject(project: MimsyProject, _ startTime: NSTimeInterval)
     {
+        func reportElapsed(count: Int)
+        {
+            if app.settings.boolValue("ReportElapsedTimes", missing: false)
+            {
+                let elapsed = NSDate().timeIntervalSince1970 - startTime
+                app.transcript().writeLine(.Plain, "Parsed %@ for definitions in %.1fs (%.2f files/sec)", project.path, elapsed, NSTimeInterval(count)/elapsed)
+            }
+        }
+        
         var pathInfos: [MimsyPath: ItemsInfo] = [:]
 
         let root = project.path
         
-        scanDir(&pathInfos, root, root)
+        var count = scanDir(&pathInfos, root, root)
         for dir in project.settings.stringValues("ExtraDirectory")
         {
-            scanDir(&pathInfos, root, MimsyPath(withString: dir))
+            count += scanDir(&pathInfos, root, MimsyPath(withString: dir))
         }
         
         let (decs, defs) = buildPaths(pathInfos)
@@ -125,6 +134,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
                 self.projects[root] = pathInfos
                 self.declarations[root] = decs
                 self.definitions[root] = defs
+                reportElapsed(count)
                 
                 switch self.states[root]!
                 {
@@ -142,9 +152,10 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     }
     
     // Threaded code
-    func scanDir(inout pathInfos: [MimsyPath: ItemsInfo], _ root: MimsyPath, _ dir: MimsyPath)
+    func scanDir(inout pathInfos: [MimsyPath: ItemsInfo], _ root: MimsyPath, _ dir: MimsyPath) -> Int
     {
         let oldPathInfos = projects[root]
+        var count = 0
         
         let fm = NSFileManager.defaultManager()
         let keys = [NSURLIsDirectoryKey, NSURLPathKey, NSURLContentModificationDateKey]
@@ -170,6 +181,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
                             if currentDate.compare(oldPathInfo.date) == .OrderedDescending
                             {
                                 pathInfos[path] = ItemsInfo(date: currentDate, items: try parse(path))
+                                count += 1
                             }
                             else
                             {
@@ -179,6 +191,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
                         else
                         {
                             pathInfos[path] = ItemsInfo(date: currentDate, items: try parse(path))
+                            count += 1
                         }
                     }
                 }
@@ -192,6 +205,8 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
                 }
            }
         }
+        
+        return count
     }
     
     // Threaded code

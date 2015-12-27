@@ -195,7 +195,14 @@
 		title = [NSString stringWithFormat:@"Find '%@' with %d files left", _findText, self.numFilesLeft];
 	}
 	
-	return title;
+    AppDelegate* app = [NSApp delegate];
+    if ([app.settings boolValue:@"ReportElapsedTimes" missing:false])
+    {
+        double elapsed = getTime() - self.startTime;
+        title = [title stringByAppendingFormat:@" (%.1fs)", elapsed];
+    }
+    
+    return title;
 }
 
 - (bool)_aborted	// threaded
@@ -209,7 +216,7 @@
 	dispatch_async(main,
 	   ^{
 		   LOG("Find:Verbose", "Finished find");
-		   if (_resultsController.window.isVisible)
+           if (_resultsController.window.isVisible)
 		   {
 			   NSString* title = [self _getResultsWindowTitle];
 			   [_resultsController.window setTitle:title];

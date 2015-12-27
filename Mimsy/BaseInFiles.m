@@ -14,6 +14,7 @@
 {
 	Glob* _excludeGlobs;
 	Glob* _excludeAllGlobs;
+    double _startTime;
 }
 
 - (id)init:(FindInFilesController*)controller path:(MimsyPath*)path
@@ -43,6 +44,8 @@
 - (void)_processRoot
 {
 	LOG("Find:Verbose", "regex = '%s'", STR(_regex.pattern));
+    
+    _startTime = getTime();
 	[self _step1ProcessOpenFiles];
 }
 

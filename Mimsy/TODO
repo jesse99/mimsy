@@ -23,13 +23,13 @@ Creating plugins
 
 
 
-
+* Persist definitions:
+    - see how long go-tools takes to scan if we don't do reads
+    - save these off locally in the caches directory, probably as binary blobs
+    - go-tools normally takes 100s to scan
 * Seems like we could get goto definition working with just the styler:
-    - log scan times
-    - can we speed up samba?
     - update a few coco projects with extra directories
     - make sure definitions are segregated by projects
-    - persist definitions?
     - check for TODOs
 * Project context menus should probably be created like text menus.
 * Add basic tab completion:

@@ -1,5 +1,6 @@
 #import "ReplaceInFiles.h"
 
+#import "AppDelegate.h"
 #import "FindInFilesController.h"
 #import "TextController.h"
 #import "TranscriptController.h"
@@ -167,13 +168,21 @@
 		NSString* matchStr = _numMatches == 1 ? @"1 match" : [NSString stringWithFormat:@"%d matches", _numMatches];
 		NSString* filesStr = _numFiles == 1 ? @"within 1 file" : [NSString stringWithFormat:@"within %d files", _numFiles];
 		
-		mesg = [NSString stringWithFormat:@"Replace '%@' replaced %@ %@.\n", _findController.findText, matchStr, filesStr];
+		mesg = [NSString stringWithFormat:@"Replace '%@' replaced %@ %@", _findController.findText, matchStr, filesStr];
 	}
 	else
 	{
-		mesg = [NSString stringWithFormat:@"Replace '%@' replaced nothing.\n", _findController.findText];
+		mesg = [NSString stringWithFormat:@"Replace '%@' replaced nothing", _findController.findText];
 	}
 	
+    AppDelegate* app = [NSApp delegate];
+    if ([app.settings boolValue:@"ReportElapsedTimes" missing:false])
+    {
+        double elapsed = getTime() - self.startTime;
+        mesg = [mesg stringByAppendingFormat:@" (%.1fs)", elapsed];
+    }
+    
+    mesg = [mesg stringByAppendingString:@".\n"];
 	[TranscriptController writeInfo:mesg];
 }
 

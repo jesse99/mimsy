@@ -23,6 +23,7 @@
 @property (readonly) NSRegularExpression* regex;
 @property (readonly) NSString* searchWithin;
 @property (readonly) Glob* includeGlobs;
+@property (readonly) double startTime;
 
 @property int numFilesLeft;
 
