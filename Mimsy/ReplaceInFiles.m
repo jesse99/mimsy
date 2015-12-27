@@ -15,7 +15,7 @@
 	int32_t _numThreads;
 }
 
-- (id)init:(FindInFilesController*)controller path:(NSString*)path template:(NSString*)template
+- (id)init:(FindInFilesController*)controller path:(MimsyPath*)path template:(NSString*)template
 {
 	self = [super init:controller path:path];
 	
@@ -41,7 +41,7 @@
 	_numThreads = 1;
 	
 	_openFiles = [self _findMatchingOpenFiles];
-	if ([self.root compare:@"Open Windows"] != NSOrderedSame)
+	if ([self.root.asString compare:@"Open Windows"] != NSOrderedSame)
 	{
 		++_numThreads;
 		[self _step2FindPaths];
@@ -88,7 +88,7 @@
 		[self _finishedReplacing];
 }
 
-- (bool)_processPath:(NSString*)path withContents:(NSMutableString*)contents	// threaded
+- (bool)_processPath:(MimsyPath*)path withContents:(NSMutableString*)contents	// threaded
 {
 	bool edited = false;
 	
@@ -117,7 +117,7 @@
 
 // TODO: Might be better to display a window with a progress bar. Could set the title like
 // find in files does.
-- (bool)_processMatches:(NSArray*)matches forPath:(NSString*)path withContents:(NSMutableString*)contents	// threaded
+- (bool)_processMatches:(NSArray*)matches forPath:(MimsyPath*)path withContents:(NSMutableString*)contents	// threaded
 {
 	UNUSED(path);
 	bool edited = false;

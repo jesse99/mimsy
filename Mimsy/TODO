@@ -22,12 +22,9 @@ Creating plugins
     - can be helpful to restart xcode (so auto-completion and errors work in the new plugin)
 
 
-ExtraDirectory
-
 
 
 * Seems like we could get goto definition working with just the styler:
-    - open local should use ExtraDirectory setting
     - log scan times
     - can we speed up samba?
     - update a few coco projects with extra directories

@@ -26,7 +26,7 @@
 	NSDictionary* _matchAttrs;
 }
 
-- (id)init:(FindInFilesController*)controller path:(NSString*)path
+- (id)init:(FindInFilesController*)controller path:(MimsyPath*)path
 {
 	self = [super init:controller path:path];
 	
@@ -71,7 +71,7 @@
 		dispatch_async(concurrent, ^
 		   {
 			   LOG("Find:Verbose", "Found %lu open paths", openPaths.count);
-			   if ([self.root compare:@"Open Windows"] == NSOrderedSame)
+			   if ([self.root.asString compare:@"Open Windows"] == NSOrderedSame)
 			   {
 				   self.numFilesLeft = (int) openPaths.count;
 				   if (openPaths.count > 0)

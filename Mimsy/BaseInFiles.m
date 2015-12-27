@@ -16,7 +16,7 @@
 	Glob* _excludeAllGlobs;
 }
 
-- (id)init:(FindInFilesController*)controller path:(NSString*)path
+- (id)init:(FindInFilesController*)controller path:(MimsyPath*)path
 {
 	self = [super init];
 	
@@ -61,20 +61,20 @@
 	[dirPaths addObject:_root];
 	while (dirPaths.count > 0)
 	{
-		NSString* directory = [dirPaths lastObject];
+		MimsyPath* directory = [dirPaths lastObject];
 		[dirPaths removeLastObject];
 		
 		NSError* error = nil;
-		NSArray* items = [fm contentsOfDirectoryAtPath:directory error:&error];
+		NSArray* items = [fm contentsOfDirectoryAtPath:directory.asString error:&error];
 		if (items)
 		{
 			for (NSString* item in items)
 			{
-				NSString* path = [directory stringByAppendingPathComponent:item];
+				MimsyPath* path = [directory appendWithComponent:item];
 				if (![_excludeGlobs matchName:item] && ![_excludeAllGlobs matchName:item])
 				{
 					BOOL isDirectory = FALSE;
-					if ([fm fileExistsAtPath:path isDirectory:&isDirectory])
+					if ([fm fileExistsAtPath:path.asString isDirectory:&isDirectory])
 					{
 						if (isDirectory)
 							[dirPaths addObject:path];
@@ -129,13 +129,13 @@
 	LOG("Find:Verbose", "Processing %lu paths", end - begin);
 	for (NSUInteger i = begin; i < end && !self._aborted; ++i)
 	{
-		NSString* path = paths[i];
+		MimsyPath* path = paths[i];
 		NSString* errStr = nil;
 		const char* op = "reading";
 		
 		NSError* error = nil;
 		OSAtomicDecrement32Barrier(&_numFilesLeft);
-		NSData* data = [NSData dataWithContentsOfFile:path options:0 error:&error];
+		NSData* data = [NSData dataWithContentsOfFile:path.asString options:0 error:&error];
 		if (data)
 		{
 			op = "decoding";
@@ -146,7 +146,7 @@
 				if (edited)
 				{
 					op = "writing";
-					if (![decoded.text writeToFile:path atomically:YES encoding:decoded.encoding error:&error])
+					if (![decoded.text writeToFile:path.asString atomically:YES encoding:decoded.encoding error:&error])
 						errStr = [error localizedFailureReason];
 				}
 			}
@@ -173,7 +173,7 @@
 		[self _onFinish];
 }
 
-- (bool)_processPath:(NSString*) path withContents:(NSMutableString*)contents	// threaded
+- (bool)_processPath:(MimsyPath*)path withContents:(NSMutableString*)contents	// threaded
 {
 	NSMutableArray* matches = [NSMutableArray new];
 	
@@ -200,7 +200,7 @@
 	return edited;
 }
 
-- (struct RangeVector*)_findRangesForStyle:(NSString*)styleName path:(NSString*)path contents:(NSString*)contents
+- (struct RangeVector*)_findRangesForStyle:(NSString*)styleName path:(MimsyPath*)path contents:(NSString*)contents
 {
 	__block struct RangeVector* ranges = NULL;
 	
@@ -209,7 +209,7 @@
 		ranges = malloc(sizeof(struct RangeVector));
 		*ranges = newRangeVector();
 		
-		Language* language = [Languages findWithFileName:path.lastPathComponent contents:contents];
+		Language* language = [Languages findWithFileName:path.lastComponent contents:contents];
 		if (language && language.styler)
 		{
 			StyleRuns* runs = [language.styler computeStyles:contents editCount:0];
@@ -242,7 +242,7 @@
 }
 
 // subclasses need to implement these
-- (bool)_processMatches:(NSArray*)matches forPath:(NSString*)path withContents:(NSMutableString*)contents	// threaded
+- (bool)_processMatches:(NSArray*)matches forPath:(MimsyPath*)path withContents:(NSMutableString*)contents	// threaded
 {
 	UNUSED(matches, path, contents);
 	ASSERT(false);	

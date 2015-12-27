@@ -75,7 +75,7 @@ static FindInFilesController* _findFilesController = nil;
 {
 	UNUSED(sender);
 	
-	NSString* directory = [self _getSelectedDirectory];
+	MimsyPath* directory = [self _getSelectedDirectory];
 	if (directory)
 	{
 		[self _updateControlsForReplace:false];
@@ -89,7 +89,7 @@ static FindInFilesController* _findFilesController = nil;
 {
 	UNUSED(sender);
 
-	NSString* directory = [self _getSelectedDirectory];
+	MimsyPath* directory = [self _getSelectedDirectory];
 	if (directory)
 	{
 		[self _updateControlsForReplace:true];
@@ -125,7 +125,7 @@ static FindInFilesController* _findFilesController = nil;
 	}
 }
 
-- (NSString*)_getSelectedDirectory
+- (MimsyPath*)_getSelectedDirectory
 {
 	NSString* selected = [self.directoryMenu titleOfSelectedItem];
 	
@@ -134,7 +134,7 @@ static FindInFilesController* _findFilesController = nil;
 		selected = [_normalPaths valueForKey:selected];
 	}
 	
-	return selected;
+	return [[MimsyPath alloc] initWithString:selected];
 }
 
 - (void)_addPathToDirectoryMenu:(NSString*)path
