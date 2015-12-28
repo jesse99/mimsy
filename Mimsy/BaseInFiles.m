@@ -56,50 +56,35 @@
 
 - (void)_step2FindPaths			// threaded
 {
-	NSMutableArray* paths = [NSMutableArray new];
+	NSMutableArray* paths = [[NSMutableArray alloc] initWithCapacity:256];
 	LOG("Find:Verbose", "Finding paths");
-
-	NSFileManager* fm = [NSFileManager new];
-	NSMutableArray* dirPaths = [NSMutableArray new];
-	[dirPaths addObject:_root];
-	while (dirPaths.count > 0)
-	{
-		MimsyPath* directory = [dirPaths lastObject];
-		[dirPaths removeLastObject];
-		
-		NSError* error = nil;
-		NSArray* items = [fm contentsOfDirectoryAtPath:directory.asString error:&error];
-		if (items)
-		{
-			for (NSString* item in items)
-			{
-				MimsyPath* path = [directory appendWithComponent:item];
-				if (![_excludeGlobs matchName:item] && ![_excludeAllGlobs matchName:item])
-				{
-					BOOL isDirectory = FALSE;
-					if ([fm fileExistsAtPath:path.asString isDirectory:&isDirectory])
-					{
-						if (isDirectory)
-							[dirPaths addObject:path];
-						else if ([_includeGlobs matchName:item])
-						{
-							[paths addObject:path];
-						}
-					}
-				}
-			}
-		}
-		else
-		{
-			dispatch_queue_t main = dispatch_get_main_queue();
-			dispatch_async(main,
-			   ^{
-				   NSString* reason = [error localizedFailureReason];
-				   NSString* mesg = [NSString stringWithFormat:@"Error walking '%@': %@", directory, reason];
-				   [TranscriptController writeError:mesg];
-			   });
-		}
-	}
+    
+    AppDelegate* app = [NSApp delegate];
+    [app enumerateWithDir:_root recursive:true
+        error:
+        ^(NSString* _Nonnull error)
+        {
+            NSString* mesg = [NSString stringWithFormat:@"Find error:: %@", error];
+            [TranscriptController writeError:mesg];
+        }
+        predicate:^BOOL(MimsyPath* _Nonnull dir, NSString* _Nonnull name)
+        {
+            // TODO: could speed this up by changing enumerateWithDir to support
+            // directly pruning sub-directories.
+            const char* str = dir.asString.UTF8String;
+            if (![_excludeGlobs matchStr:str] && ![_excludeAllGlobs matchStr:str])
+                if ([_includeGlobs matchName:name])
+                    return true;
+            return false;
+        }
+        callback:^(MimsyPath* _Nonnull dir, NSArray<NSString*>* _Nonnull names)
+        {
+            for (NSString* name in names)
+            {
+                MimsyPath* path = [dir appendWithComponent:name];
+                [paths addObject:path];
+            }
+        }];
 	
 	_numFilesLeft = (int) paths.count;
 	if (paths.count > 0)

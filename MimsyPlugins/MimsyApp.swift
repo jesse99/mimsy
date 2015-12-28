@@ -73,9 +73,6 @@ public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMe
     case Changed
 }
 
-// TODO: Once we can call static protocol methods from within swift we can
-// clean some of this up, e.g. text view registration, glob creation, etc.
-
 /// This is used by plugins to communicate with the top level of Mimsy. 
 @objc public protocol MimsyApp
 {

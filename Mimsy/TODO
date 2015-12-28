@@ -24,8 +24,6 @@ Creating plugins
 
 
 
-* Project context menus should probably be created like text menus.
-* Do a push
 * Look at work stuff
 * Add basic tab completion:
     - should we parse files with identifier?
