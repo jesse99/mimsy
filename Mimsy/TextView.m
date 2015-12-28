@@ -527,7 +527,9 @@ static NSString* getKey(NSEvent* event)
     
     NSMenu* menu = [[NSMenu alloc] initWithTitle:@""];
     
+    _doubleClicking = true;             // not actually a double click but we want to do the same sort of thing...
     [self _extendSelection:event];
+    _doubleClicking = false;
     [self.window makeKeyAndOrderFront:self];
     
     NSArray<TextContextMenuBlock>* items;
