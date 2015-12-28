@@ -201,6 +201,8 @@ public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMe
     func findLanguage(path: MimsyPath) -> MimsyLanguage?
 
     func languages() -> [MimsyLanguage]
+    
+    func _modTime(path: MimsyPath) throws -> NSNumber
 }
 
 public extension MimsyApp
@@ -321,3 +323,5 @@ public extension MimsyApp
 }
 
 var unicodeNames: [String]?
+var app: MimsyApp?
+

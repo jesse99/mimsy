@@ -26,7 +26,7 @@ class StdDefinitionsParser: MimsyPlugin, ItemParser
         // rarely so we don't bother rebuilding this info when the user edits settings. (We
         // could of course because doing this isn't that expensive but settings can change
         // every time the user switches between different projects which could happen quite
-        // a bit, also we'd have to make it thread safe).
+        // a bit, we'd have to make this thread safe).
         for lang in app.languages()
         {
             if !lang.getPatterns("Function").isEmpty || !lang.getPatterns("Structure").isEmpty

@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 
 #include <dirent.h>
+#include <sys/stat.h>
 
 #import "ColorCategory.h"
 #import "ConfigParser.h"
@@ -197,6 +198,27 @@ void initLogGlobs()
 - (void)logString:(NSString*)topic text:(NSString*)text
 {
     LOG(STR(topic), "%s", STR(text));
+}
+
+- (NSNumber* __nullable)_modTime:(MimsyPath* __nonnull)path error:(NSError* __nullable* __null_unspecified)error
+{
+    struct stat state;
+    int err = stat(path.asString.UTF8String, &state);
+    if (!err)
+    {
+        double secs = state.st_mtimespec.tv_sec + 1.0e-9*state.st_mtimespec.tv_nsec;
+        return [NSNumber numberWithDouble:secs];
+    }
+    else
+    {
+        if (error)
+        {
+            NSString* mesg = [NSString stringWithFormat:@"Failed to stat '%@': %s", path, strerror(errno)];
+            NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
+            *error = [NSError errorWithDomain:@"mimsy" code:4 userInfo:dict];
+        }
+        return nil;
+    }
 }
 
 - (NSArray<id<MimsyLanguage>>* __nonnull)languages

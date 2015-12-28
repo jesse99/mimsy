@@ -34,7 +34,7 @@ public protocol ItemParser
     var method: ParseMethod {get}
     
     /// Returns the file name extensions that the plugin can handle.
-    /// Note that these does not include the dot.
+    /// Note that these do not include the dot.
     var extensionNames: [String] {get}
     
     /// Throws if there was an error parsing (typically a file IO error,

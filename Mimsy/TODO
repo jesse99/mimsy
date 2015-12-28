@@ -37,10 +37,15 @@ chunked readdir
 predicate (and better parser lookups)
     47.3s
 
+with modtimes back in
+    52.6
 
-* Work on a new directory enumerator:
-    - do the modtime check
-    - do the modtime check but store the moddate with the root and do the check in the predicate
+cleaner shouldProcess
+    45.1s, 44.8
+
+
+
+
 * Persist definitions:
     - save these off locally in the caches directory, probably as binary blobs
     - might want to have the chunker do the modtime test
@@ -48,6 +53,7 @@ predicate (and better parser lookups)
     - update a few coco projects with extra directories
     - make sure definitions are segregated by projects
     - check for TODOs
+* Right click shouldn't extend the selection through dots
 * Project context menus should probably be created like text menus.
 * Add basic tab completion:
     - should we parse files with identifier?

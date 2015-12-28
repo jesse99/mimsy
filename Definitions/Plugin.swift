@@ -16,7 +16,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
             app.registerProject(.Closing, onClosing)
             app.registerProject(.Changed, onChanged)
 
-            app.registerWithSelectionTextContextMenu(.Lookup, callback: contextMenu)
+//            app.registerWithSelectionTextContextMenu(.Lookup, callback: addLogItem)
         }
         else if (stage == 3)
         {
@@ -40,7 +40,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         }
     }
     
-    func contextMenu(view: MimsyTextView) -> [TextContextMenuItem]
+    func addLogItem(view: MimsyTextView) -> [TextContextMenuItem]
     {
         if let project = view.project
         {
@@ -79,7 +79,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     
     func onOpened(project: MimsyProject)
     {
-        projects[project.path] = [:]
+        projects[project.path] = ProjectInfo(modTime: 0.0, files: [:])
         startScanning(project)
     }
     
@@ -124,17 +124,18 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
             }
         }
         
-        var pathInfos: [MimsyPath: ItemsInfo] = [:]
+        var latestModTime = 0.0
+        var newInfo: [MimsyPath: [ItemName]] = [:]
 
         let root = project.path
         
-        var count = scanDir(&pathInfos, root, root)
+        var count = scanDir(&newInfo, &latestModTime, root, root)
         for dir in project.settings.stringValues("ExtraDirectory")
         {
-            count += scanDir(&pathInfos, root, MimsyPath(withString: dir))
+            count += scanDir(&newInfo, &latestModTime, root, MimsyPath(withString: dir))
         }
         
-        let (decs, defs) = buildPaths(pathInfos)
+        let (decs, defs) = buildPaths(newInfo)
         //        dumpPaths("Declarations", decs)
         //        dumpPaths("Definitions", defs)
         
@@ -145,7 +146,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
             // Update the projects dictionary, but only if the project is still open.
             if let _ = self.projects[root]
             {
-                self.projects[root] = pathInfos
+                self.projects[root] = ProjectInfo(modTime: latestModTime, files: newInfo)
                 self.declarations[root] = decs
                 self.definitions[root] = defs
                 reportElapsed(count)
@@ -166,28 +167,63 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     }
     
     // Threaded code
-    func scanDir(inout pathInfos: [MimsyPath: ItemsInfo], _ root: MimsyPath, _ dir: MimsyPath) -> Int
+    func scanDir(inout newInfo: [MimsyPath: [ItemName]], inout _ latestModTime: Double, _ root: MimsyPath, _ dir: MimsyPath) -> Int
     {
-//        let oldPathInfos = projects[root]
+        let oldInfo = projects[root]
         var count = 0
         
+        func shouldProcess(dir: MimsyPath, _ fileName: String) -> Bool
+        {
+            let path = dir.append(component: fileName)
+            if let name = path.extensionName() where self.parsers.keys.contains(name)
+            {
+                do
+                {
+                    let mtime = try path.modTime()
+                    latestModTime = max(mtime, latestModTime)
+                    
+                    switch oldInfo
+                    {
+                    case .Some(let old):
+                        if mtime > old.modTime
+                        {
+                            return true
+                        }
+                        else
+                        {
+                            newInfo[path] = old.files[path]
+                        }
+                        break
+                    case .None:
+                        return true
+                    }
+                }
+                catch let err as NSError
+                {
+                    self.app.log("Plugins", "Failed to stat %@ when trying to parse definitions: %@", path, err.localizedFailureReason!)
+                }
+                catch
+                {
+                    self.app.log("Plugins", "Failed to stat %@ when trying to parse definitions: unknown error", path)
+                }
+            }
+                
+            return false
+        }
+    
         app.enumerate(dir: dir, recursive: true,
             error: {self.app.log("Plugins", "StdDefinitions error: %@", $0)},
-            predicate: {(dir, fileName) in
-                let name = (fileName as NSString).pathExtension
-                return self.parsers.keys.contains(name)
-            },
+            predicate: shouldProcess,
             callback: {(parent, fileNames) in
                 do
                 {
                     for fileName in fileNames
                     {
                         let name = (fileName as NSString).pathExtension
-                        let parser = self.parsers[name]!        // bang is safe because of the predicate above
-                        
-                        let currentDate = NSDate()
                         let path = parent.append(component: fileName)
-                        pathInfos[path] = ItemsInfo(date: currentDate, items: try parser.parse(path))
+
+                        let parser = self.parsers[name]!        // bang is safe because of the predicate above
+                        newInfo[path] = try parser.parse(path)
                         count += 1
                     }
                 }
@@ -201,60 +237,11 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
                 }
             })
         
-//        let fm = NSFileManager.defaultManager()
-//        let keys = [NSURLIsDirectoryKey, NSURLPathKey, NSURLContentModificationDateKey]
-//        if let enumerator = fm.enumeratorAtURL(dir.asURL(), includingPropertiesForKeys: keys, options: .SkipsHiddenFiles, errorHandler:
-//        {(url, err) -> Bool in
-//            self.app.log("Plugins", "Failed to enumerate %@ when trying to parse definitions: %@", url, err)
-//            return true
-//        })
-//        {
-//            for element in enumerator
-//            {
-//                let url = element as! NSURL
-//                
-//                do
-//                {
-//                    if try !url.isDirectoryValue()
-//                    {
-//                        let path = try url.pathValue()
-//                        let currentDate = try url.contentModificationDateValue()
-//                        
-//                        if let oldPathInfo = oldPathInfos?[path]
-//                        {
-//                            if currentDate.compare(oldPathInfo.date) == .OrderedDescending
-//                            {
-//                                pathInfos[path] = ItemsInfo(date: currentDate, items: try parse(path))
-//                                count += 1
-//                            }
-//                            else
-//                            {
-//                                pathInfos[path] = oldPathInfo
-//                            }
-//                        }
-//                        else
-//                        {
-//                            pathInfos[path] = ItemsInfo(date: currentDate, items: try parse(path))
-//                            count += 1
-//                        }
-//                    }
-//                }
-//                catch let err as NSError
-//                {
-//                    self.app.log("Plugins", "Failed to process %@ when trying to parse definitions: %@", url, err.localizedFailureReason!)
-//                }
-//                catch
-//                {
-//                    self.app.log("Plugins", "Failed to process %@ when trying to parse definitions: unknown error", url)
-//                }
-//           }
-//        }
-        
         return count
     }
-    
+        
     // Threaded code
-    func buildPaths(infos: [MimsyPath: ItemsInfo]) -> ([String: [ItemPath]], [String: [ItemPath]])
+    func buildPaths(infos: [MimsyPath: [ItemName]]) -> ([String: [ItemPath]], [String: [ItemPath]])
     {
         func add(inout namePaths: [String: [ItemPath]], _ name: String, _ path: ItemPath)
         {
@@ -272,9 +259,9 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         var decs: [String: [ItemPath]] = [:]
         var defs: [String: [ItemPath]] = [:]
         
-        for (path, info) in infos
+        for (path, items) in infos
         {
-            for item in info.items
+            for item in items
             {
                 switch item
                 {
@@ -319,15 +306,12 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         case Queued
     }
     
-    struct ItemsInfo
+    struct ProjectInfo
     {
-        let date: NSDate
-        let items: [ItemName]
+        let modTime: Double
+        let files: [MimsyPath: [ItemName]]  // file paths to definitions within that file
     }
     
-    // Project path to file path to definitions within that file
-    typealias ProjectItemNames = [MimsyPath: [MimsyPath: ItemsInfo]]
-
     // Project path to name to definitions.
     typealias ProjectItemPaths = [MimsyPath: [String: [ItemPath]]]
     
@@ -338,7 +322,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     
     var parsers: [String: ItemParser] = [:] // key is a file extension
     var states: [MimsyPath: State] = [:]
-    var projects: ProjectItemNames = [:]
+    var projects: [MimsyPath: ProjectInfo] = [:]    // key is a project root
     var declarations: ProjectItemPaths = [:]
     var definitions: ProjectItemPaths = [:]
 }

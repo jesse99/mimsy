@@ -7,5 +7,3 @@ FOUNDATION_EXPORT const unsigned char MimsyPluginsVersionString[];
 
 // Import everything that Mimsy will need.
 #import <MimsyPlugins/MimsyPlugins-Swift.h>
-
-

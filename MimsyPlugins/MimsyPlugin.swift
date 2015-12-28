@@ -5,9 +5,10 @@ import Cocoa
 public class MimsyPlugin: NSObject
 {
     /// Mimsy will instantiate plugins when it loads their bundles.
-    public init(fromApp app: MimsyApp, bundle: NSBundle)
+    public init(fromApp: MimsyApp, bundle: NSBundle)
     {
-        self.app = app
+        MimsyPlugins.app = fromApp
+        self.app = fromApp
         self.bundle = bundle
     }
     
@@ -43,11 +44,8 @@ public class MimsyPlugin: NSObject
     // after the old window resigns.
     public func onMainChanged(controller: NSWindowController?)
     {
-        
     }
     
-    /// Plugins should use MimsyApp whenever they want to communicate with
-    /// Mimsy.
     public let app: MimsyApp
     
     /// The plugin's bundle.

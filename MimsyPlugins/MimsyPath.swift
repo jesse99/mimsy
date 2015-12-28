@@ -122,6 +122,14 @@ public class MimsyPath: NSObject, CustomDebugStringConvertible
         return self.extensionName() != nil
     }
     
+    /// Returns the modification time in seconds. For a directory this will
+    /// return the last time a file within the directory was added, removed
+    /// or renamed (but not modified).
+    public func modTime() throws -> Double
+    {
+        return try app!._modTime(self).doubleValue
+    }
+    
     /// Returns true if the target's components start with all the path's components.
     public func hasRoot(root: MimsyPath) -> Bool
     {
