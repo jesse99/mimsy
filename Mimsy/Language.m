@@ -161,7 +161,7 @@
 		_glob = [[ConditionalGlob alloc] initWithGlobs:globs regexen:regexen conditionals:conditionals];
 		_shebangs = shebangs;
 		_styler = [self _createStyler:names patterns:patterns lines:lines errors:errors];
-        _patterns = epatterns;
+        _patterns = epatterns;  // note that we want to do this via an atomic operation because getPatterns can be called from a thread
 		
         AppDelegate* app = [NSApp delegate];
         _settings = [[Settings alloc] init:_name context:app];

@@ -200,6 +200,9 @@ void initLogGlobs()
     LOG(STR(topic), "%s", STR(text));
 }
 
+
+// Presumbably this is faster than attributesOfItemAtPath:error: because that method returns a bunch
+// more stuff (which adds up quick when using stuff like remote samba volumes).
 - (NSNumber* __nullable)_modTime:(MimsyPath* __nonnull)path error:(NSError* __nullable* __null_unspecified)error
 {
     struct stat state;
@@ -357,6 +360,9 @@ void initLogGlobs()
             }
         }
 
+        // Batching the files up should be faster because w'll get better locality reading the directory
+        // contents before dealing with files. Probably won't make much difference for local volumes but
+        // remote volumes can be quite slow.
         callback(dir, fileNames);
         (void) closedir(dirP);
     }

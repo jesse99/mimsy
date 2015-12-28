@@ -83,6 +83,9 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         startScanning(project)
     }
     
+    // TODO: Could cache this data which would definitely help remote volumes (for samba
+    // over VPN I am getting a pathetic 7 files/second even after tuning both this code
+    // and the samba configuration).
     func onClosing(project: MimsyProject)
     {
         projects[project.path] = nil

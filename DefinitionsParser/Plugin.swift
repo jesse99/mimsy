@@ -62,7 +62,7 @@ class StdDefinitionsParser: MimsyPlugin, ItemParser
         
         let lang = languages[path.extensionName()!]!  // we should only have been called if the file's extension matches one in keys so the bangs are OK
         
-        let patterns = lang.getPatterns("Function") + lang.getPatterns("Structure") // TODO: not thread safe?
+        let patterns = lang.getPatterns("Function") + lang.getPatterns("Structure")
         if !patterns.isEmpty                          // could be empty if the user has edited the language file
         {
             let re = try findRegex(patterns)

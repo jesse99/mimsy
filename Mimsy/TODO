@@ -22,39 +22,12 @@ Creating plugins
     - can be helpful to restart xcode (so auto-completion and errors work in the new plugin)
 
 
-scanning go-tools
-    100s
-
-without loading
-    117s
-
-readdir (with no modtime checks)
-    99s
-
-chunked readdir
-    89.2
-
-predicate (and better parser lookups)
-    47.3s
-
-with modtimes back in
-    52.6
-
-cleaner shouldProcess
-    45.1s, 44.8
 
 
-
-
-* Persist definitions:
-    - save these off locally in the caches directory, probably as binary blobs
-    - might want to have the chunker do the modtime test
-* Seems like we could get goto definition working with just the styler:
-    - update a few coco projects with extra directories
-    - make sure definitions are segregated by projects
-    - check for TODOs
 * Right click shouldn't extend the selection through dots
 * Project context menus should probably be created like text menus.
+* Do a push
+* Look at work stuff
 * Add basic tab completion:
     - should we parse files with identifier?
     - would get lots of false positives for stuff like comments and strings
