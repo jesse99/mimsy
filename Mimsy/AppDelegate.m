@@ -1,5 +1,7 @@
 #import "AppDelegate.h"
 
+#include <dirent.h>
+
 #import "ColorCategory.h"
 #import "ConfigParser.h"
 #import "Constants.h"
@@ -273,6 +275,61 @@ void initLogGlobs()
 - (id<MimsySettings> __nonnull)settings
 {
     return _layeredSettings;
+}
+
+- (void)enumerateWithDir:(MimsyPath* __nonnull)root recursive:(BOOL)recursive error:(void (^ __nonnull)(NSString* __nonnull))error callback:(void (^ __nonnull)(MimsyPath* __nonnull))callback
+{
+    NSMutableArray<MimsyPath*>* dirs = [NSMutableArray new];
+    [dirs addObject:root];
+    
+    while (dirs.count > 0)
+    {
+        MimsyPath* dir = [dirs lastObject];
+        [dirs removeLastObject];
+        
+        DIR* dirP = opendir(dir.asString.UTF8String);
+        if (!dirP)
+        {
+            NSString* mesg = [[NSString alloc] initWithFormat:@"Failed to open '%@': %s.", dir, strerror(errno)];
+            error(mesg);
+            continue;
+        }
+        
+        struct dirent entry;
+        struct dirent* entryP;
+        while (true)
+        {
+            int err = readdir_r(dirP, &entry, &entryP);
+            if (err)
+            {
+                NSString* mesg = [[NSString alloc] initWithFormat:@"Failed to read '%@': %s.", dir, strerror(errno)];
+                error(mesg);
+                break;
+            }
+            else if (!entryP)
+            {
+                break;
+            }
+            
+            if (entry.d_name[0] != '.')
+            {
+                if (entry.d_type == DT_REG)
+                {
+                    NSString* fileName = [[NSString alloc] initWithBytes:entry.d_name length:entry.d_namlen encoding:NSUTF8StringEncoding];
+                    MimsyPath* path = [dir appendWithComponent:fileName];
+                    callback(path);
+                }
+                else if (recursive && entry.d_type == DT_DIR)
+                {
+                    NSString* fileName = [[NSString alloc] initWithBytes:entry.d_name length:entry.d_namlen encoding:NSUTF8StringEncoding];
+                    MimsyPath* path = [dir appendWithComponent:fileName];
+                    [dirs addObject:path];
+                }
+            }
+        }
+
+        (void) closedir(dirP);
+    }
 }
 
 - (void)addKeyHelp:(NSString * __nonnull)plugin :(NSString * __nonnull)context :(NSString * __nonnull)key :(NSString * __nonnull)description

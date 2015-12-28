@@ -82,6 +82,14 @@ public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMe
     /// plugin or languages or projects.
     var settings: MimsySettings {get}
     
+    /// Calls a block for each file in a directory.
+    ///
+    /// - Parameter dir: The directory that begins the enumeration.
+    /// - Parameter recursive: If true then also process files in subdirectories of dir.
+    /// - Parameter error: Called with an error message if a directory cannot be read.
+    /// - Parameter callback: Called with the full path of each visible file in the directories.
+    func enumerate(dir dir: MimsyPath, recursive: Bool, error: (NSString) -> (), callback: (MimsyPath) -> ())
+    
     /// Typically the extension method will be used instead of this.
     func addMenuItem(item: NSMenuItem, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem?, invoke: InvokeMenuItem) -> Bool
     

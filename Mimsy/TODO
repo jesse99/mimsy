@@ -22,11 +22,29 @@ Creating plugins
     - can be helpful to restart xcode (so auto-completion and errors work in the new plugin)
 
 
+scanning go-tools
+    100s
 
+without loading
+    117s
+
+readdir (with no modtime checks)
+
+
+* Work on a new directory enumerator:
+    - use readdir and a callback with the full path
+    - skip hidden directories
+    - skip modtime check for now
+    - do a commit
+    - try calling the callback with an entire directory worth of files
+    - use a predicate callback (takes a dir and file name)
+    - definitions should not use shebangs
+    - may want to build a table of file extensions to languages
+    - do the modtime check
+    - do the modtime check but store the moddate with the root and do the check in the predicate
 * Persist definitions:
-    - see how long go-tools takes to scan if we don't do reads
     - save these off locally in the caches directory, probably as binary blobs
-    - go-tools normally takes 100s to scan
+    - might want to have the chunker do the modtime test
 * Seems like we could get goto definition working with just the styler:
     - update a few coco projects with extra directories
     - make sure definitions are segregated by projects

@@ -154,57 +154,75 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     // Threaded code
     func scanDir(inout pathInfos: [MimsyPath: ItemsInfo], _ root: MimsyPath, _ dir: MimsyPath) -> Int
     {
-        let oldPathInfos = projects[root]
+//        let oldPathInfos = projects[root]
         var count = 0
         
-        let fm = NSFileManager.defaultManager()
-        let keys = [NSURLIsDirectoryKey, NSURLPathKey, NSURLContentModificationDateKey]
-        if let enumerator = fm.enumeratorAtURL(dir.asURL(), includingPropertiesForKeys: keys, options: .SkipsHiddenFiles, errorHandler:
-        {(url, err) -> Bool in
-            self.app.log("Plugins", "Failed to enumerate %@ when trying to parse definitions: %@", url, err)
-            return true
-        })
+        app.enumerate(dir: dir, recursive: true, error: {self.app.log("Plugins", "StdDefinitions error: %@", $0)})
         {
-            for element in enumerator
+            do
             {
-                let url = element as! NSURL
-                
-                do
-                {
-                    if try !url.isDirectoryValue()
-                    {
-                        let path = try url.pathValue()
-                        let currentDate = try url.contentModificationDateValue()
-                        
-                        if let oldPathInfo = oldPathInfos?[path]
-                        {
-                            if currentDate.compare(oldPathInfo.date) == .OrderedDescending
-                            {
-                                pathInfos[path] = ItemsInfo(date: currentDate, items: try parse(path))
-                                count += 1
-                            }
-                            else
-                            {
-                                pathInfos[path] = oldPathInfo
-                            }
-                        }
-                        else
-                        {
-                            pathInfos[path] = ItemsInfo(date: currentDate, items: try parse(path))
-                            count += 1
-                        }
-                    }
-                }
-                catch let err as NSError
-                {
-                    self.app.log("Plugins", "Failed to process %@ when trying to parse definitions: %@", url, err.localizedFailureReason!)
-                }
-                catch
-                {
-                    self.app.log("Plugins", "Failed to process %@ when trying to parse definitions: unknown error", url)
-                }
-           }
+                let currentDate = NSDate()
+                pathInfos[$0] = ItemsInfo(date: currentDate, items: try self.parse($0))
+                count += 1
+            }
+            catch let err as NSError
+            {
+                self.app.log("Plugins", "Failed to process %@ when trying to parse definitions: %@", $0, err.localizedFailureReason!)
+            }
+            catch
+            {
+                self.app.log("Plugins", "Failed to process %@ when trying to parse definitions: unknown error", $0)
+            }
         }
+        
+//        let fm = NSFileManager.defaultManager()
+//        let keys = [NSURLIsDirectoryKey, NSURLPathKey, NSURLContentModificationDateKey]
+//        if let enumerator = fm.enumeratorAtURL(dir.asURL(), includingPropertiesForKeys: keys, options: .SkipsHiddenFiles, errorHandler:
+//        {(url, err) -> Bool in
+//            self.app.log("Plugins", "Failed to enumerate %@ when trying to parse definitions: %@", url, err)
+//            return true
+//        })
+//        {
+//            for element in enumerator
+//            {
+//                let url = element as! NSURL
+//                
+//                do
+//                {
+//                    if try !url.isDirectoryValue()
+//                    {
+//                        let path = try url.pathValue()
+//                        let currentDate = try url.contentModificationDateValue()
+//                        
+//                        if let oldPathInfo = oldPathInfos?[path]
+//                        {
+//                            if currentDate.compare(oldPathInfo.date) == .OrderedDescending
+//                            {
+//                                pathInfos[path] = ItemsInfo(date: currentDate, items: try parse(path))
+//                                count += 1
+//                            }
+//                            else
+//                            {
+//                                pathInfos[path] = oldPathInfo
+//                            }
+//                        }
+//                        else
+//                        {
+//                            pathInfos[path] = ItemsInfo(date: currentDate, items: try parse(path))
+//                            count += 1
+//                        }
+//                    }
+//                }
+//                catch let err as NSError
+//                {
+//                    self.app.log("Plugins", "Failed to process %@ when trying to parse definitions: %@", url, err.localizedFailureReason!)
+//                }
+//                catch
+//                {
+//                    self.app.log("Plugins", "Failed to process %@ when trying to parse definitions: unknown error", url)
+//                }
+//           }
+//        }
         
         return count
     }
