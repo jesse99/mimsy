@@ -199,6 +199,11 @@ void initLogGlobs()
     LOG(STR(topic), "%s", STR(text));
 }
 
+- (NSArray<id<MimsyLanguage>>* __nonnull)languages
+{
+    return [Languages languages];
+}
+
 - (id<MimsyLanguage> __nullable)findLanguage:(MimsyPath* __nonnull)path
 {
     __block Language* language = nil;
@@ -277,11 +282,12 @@ void initLogGlobs()
     return _layeredSettings;
 }
 
-- (void)enumerateWithDir:(MimsyPath* __nonnull)root recursive:(BOOL)recursive error:(void (^ __nonnull)(NSString* __nonnull))error callback:(void (^ __nonnull)(MimsyPath* __nonnull))callback
+- (void)enumerateWithDir:(MimsyPath* __nonnull)root recursive:(BOOL)recursive error:(void (^ __nonnull)(NSString* __nonnull))error predicate:(BOOL (^ __nullable)(MimsyPath* __nonnull, NSString* __nonnull))predicate callback:(void (^ __nonnull)(MimsyPath* __nonnull, NSArray<NSString*>* __nonnull))callback
 {
     NSMutableArray<MimsyPath*>* dirs = [NSMutableArray new];
     [dirs addObject:root];
     
+    NSMutableArray<NSString*>* fileNames = [NSMutableArray new];
     while (dirs.count > 0)
     {
         MimsyPath* dir = [dirs lastObject];
@@ -297,6 +303,7 @@ void initLogGlobs()
         
         struct dirent entry;
         struct dirent* entryP;
+        [fileNames removeAllObjects];
         while (true)
         {
             int err = readdir_r(dirP, &entry, &entryP);
@@ -316,8 +323,8 @@ void initLogGlobs()
                 if (entry.d_type == DT_REG)
                 {
                     NSString* fileName = [[NSString alloc] initWithBytes:entry.d_name length:entry.d_namlen encoding:NSUTF8StringEncoding];
-                    MimsyPath* path = [dir appendWithComponent:fileName];
-                    callback(path);
+                    if (!predicate || predicate(dir, fileName))
+                        [fileNames addObject:fileName];
                 }
                 else if (recursive && entry.d_type == DT_DIR)
                 {
@@ -328,6 +335,7 @@ void initLogGlobs()
             }
         }
 
+        callback(dir, fileNames);
         (void) closedir(dirP);
     }
 }

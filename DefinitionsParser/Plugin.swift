@@ -12,8 +12,37 @@ class StdDefinitionsParser: MimsyPlugin, ItemParser
                 defs.register(self)
             }
         }
+        else if (stage == 2)
+        {
+            findLanguages()
+        }
         
         return nil
+    }
+    
+    func findLanguages()
+    {
+        // Note that we assume that Globs and the existence of Function/Structure change very
+        // rarely so we don't bother rebuilding this info when the user edits settings. (We
+        // could of course because doing this isn't that expensive but settings can change
+        // every time the user switches between different projects which could happen quite
+        // a bit, also we'd have to make it thread safe).
+        for lang in app.languages()
+        {
+            if !lang.getPatterns("Function").isEmpty || !lang.getPatterns("Structure").isEmpty
+            {
+                let globs = lang.settings.stringValue("Globs", missing: "")
+                let patterns = globs.componentsSeparatedByString(" ")
+                for pattern in patterns
+                {
+                    if pattern.hasPrefix("*.")
+                    {
+                        let name = pattern.substringFromIndex(pattern.startIndex.advancedBy(2))
+                        languages[name] = lang
+                    }
+                }
+            }
+        }
     }
     
     var method: ParseMethod
@@ -21,19 +50,27 @@ class StdDefinitionsParser: MimsyPlugin, ItemParser
         get {return .Regex}
     }
     
-    // Threaded code
-    func tryParse(path: MimsyPath) throws -> [ItemName]?
+    var extensionNames: [String]
     {
-        var items: [ItemName]? = nil
+        get {return Array(languages.keys)}
+    }
+    
+    // Threaded code
+    func parse(path: MimsyPath) throws -> [ItemName]
+    {
+        var items: [ItemName]
         
-        if let lang = app.findLanguage(path)    // TODO: this may not be quite thread safe
+        let lang = languages[path.extensionName()!]!  // we should only have been called if the file's extension matches one in keys so the bangs are OK
+        
+        let patterns = lang.getPatterns("Function") + lang.getPatterns("Structure") // TODO: not thread safe?
+        if !patterns.isEmpty                          // could be empty if the user has edited the language file
         {
-            let patterns = lang.getPatterns("Function") + lang.getPatterns("Structure")
-            if !patterns.isEmpty
-            {
-                let re = try findRegex(patterns)
-                items = try parse(lang, re, path)
-            }
+            let re = try findRegex(patterns)
+            items = try parse(lang, re, path)
+        }
+        else
+        {
+            items = []
         }
         
         return items
@@ -42,6 +79,8 @@ class StdDefinitionsParser: MimsyPlugin, ItemParser
     // Threaded code
     func findRegex(var patterns: [String]) throws -> NSRegularExpression
     {
+        // It's easier to cache patterns instead of directly caching regexen because
+        // that way we don't have to detect edits to language files.
         patterns = patterns.map {"(?:" + $0 + ")"}
         let pattern = patterns.joinWithSeparator("|")
         
@@ -116,5 +155,6 @@ class StdDefinitionsParser: MimsyPlugin, ItemParser
         return false
     }
     
-    var regexen: [String: NSRegularExpression] = [:]
+    var regexen: [String: NSRegularExpression] = [:]    // key is a regex pattern
+    var languages: [String: MimsyLanguage] = [:]        // key is a file extension
 }

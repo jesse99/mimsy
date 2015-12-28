@@ -1,12 +1,15 @@
 #import "Language.h"
 
+#import "AppDelegate.h"
 #import "ConditionalGlob.h"
 #import "ConfigParser.h"
 #import "RegexStyler.h"
+#import "Settings.h"
 #import "Utils.h"
 
 @implementation Language
 {
+    Settings* _settings;
     NSMutableArray* _settingKeys;
     NSMutableArray* _settingValues;
     NSDictionary* _patterns;
@@ -68,6 +71,8 @@
 				else if ([key isEqualToString:@"globs"])
 				{
 					[globs addObjectsFromArray:[entry.value splitByString:@" "]];
+                    [_settingKeys addObject:entry.key];
+                    [_settingValues addObject:entry.value];
 				}
 				else if ([key isEqualToString:@"shebang"])
 				{
@@ -158,7 +163,14 @@
 		_styler = [self _createStyler:names patterns:patterns lines:lines errors:errors];
         _patterns = epatterns;
 		
-		if (errors.count > 0)
+        AppDelegate* app = [NSApp delegate];
+        _settings = [[Settings alloc] init:_name context:app];
+        for (NSUInteger i = 0; i < _settingKeys.count; i++)
+        {
+            [_settings addKey:_settingKeys[i] value:_settingValues[i]];
+        }
+
+        if (errors.count > 0)
 		{
 			NSString* mesg = [[errors componentsJoinedByString:@", "] titleCase];
 			NSDictionary* dict = @{NSLocalizedFailureReasonErrorKey:mesg};
@@ -184,6 +196,11 @@
 - (NSArray*)settingValues
 {
     return _settingValues;
+}
+
+-(id<MimsySettings> __nonnull)settings
+{
+    return _settings;
 }
 
 - (BOOL)matches:(MimsyPath* __nonnull)file

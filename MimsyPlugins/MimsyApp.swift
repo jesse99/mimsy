@@ -8,6 +8,7 @@ public typealias ProjectContextMenuItemTitle = (files: [MimsyPath], dirs: [Mimsy
 public typealias InvokeProjectCommand = (files: [MimsyPath], dirs: [MimsyPath]) -> ()
 public typealias TextRangeCallback = (MimsyTextView, NSRange) -> ()
 public typealias ProjectCallback = (MimsyProject) -> ()
+public typealias FilePredicate = (MimsyPath, String) -> Bool
 
 public typealias InvokeTextCommand = (MimsyTextView) -> ()
 
@@ -87,8 +88,9 @@ public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMe
     /// - Parameter dir: The directory that begins the enumeration.
     /// - Parameter recursive: If true then also process files in subdirectories of dir.
     /// - Parameter error: Called with an error message if a directory cannot be read.
-    /// - Parameter callback: Called with the full path of each visible file in the directories.
-    func enumerate(dir dir: MimsyPath, recursive: Bool, error: (NSString) -> (), callback: (MimsyPath) -> ())
+    /// - Parameter predicate: Optional block that returns true for files that should be processed.
+    /// - Parameter callback: Called with the full path of a directory and an array of non-hidden file names.
+    func enumerate(dir dir: MimsyPath, recursive: Bool, error: (String) -> (), predicate: FilePredicate?, callback: (MimsyPath, [String]) -> ())
     
     /// Typically the extension method will be used instead of this.
     func addMenuItem(item: NSMenuItem, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem?, invoke: InvokeMenuItem) -> Bool
@@ -197,6 +199,8 @@ public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMe
 
     /// Uses the file's extension (and possibly shebang) to try and find a language associated with the file.
     func findLanguage(path: MimsyPath) -> MimsyLanguage?
+
+    func languages() -> [MimsyLanguage]
 }
 
 public extension MimsyApp

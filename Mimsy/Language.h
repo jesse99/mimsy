@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "MimsyPlugins.h"
 
-@class ConditionalGlob, ConfigParser, LocalSettings, RegexStyler;
+@class ConditionalGlob, ConfigParser, RegexStyler;
 
 /// Encapsulates the information from a language file.
 @interface Language : NSObject <MimsyLanguage>

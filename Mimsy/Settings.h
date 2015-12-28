@@ -11,9 +11,9 @@
 
 /// Will be nil for the root which is either the app or, transiently,
 /// a plugin.
-- (id<SettingsContext> __nullable)parent;
+- (nullable id<SettingsContext>)parent;
 
-- (Settings* __nullable)layeredSettings;
+- (nullable Settings*)layeredSettings;
 
 @end
 
@@ -23,33 +23,33 @@ extern id<SettingsContext> __nullable activeContext;
 @interface Settings : NSObject <MimsySettings>
 
 /// Name is used for error reporting.
-- (Settings* __nonnull)init:(NSString* __nonnull)name context:(id<SettingsContext> __nonnull)context;
+- (nonnull Settings*)init:(nonnull NSString*)name context:(nonnull id<SettingsContext>)context;
 
-- (id<SettingsContext> __nonnull)context;
+- (nonnull id<SettingsContext>)context;
 
-- (void)addKey:(NSString* __nonnull)key value:(NSString* __nonnull)value;
+- (void)addKey:(nonnull NSString*)key value:(nonnull NSString*)value;
 
-- (bool)hasKey:(NSString* __nonnull)name;
+- (bool)hasKey:(nonnull NSString*)name;
 
-- (NSArray* __nonnull)getKeys;
+- (nonnull NSArray*)getKeys;
 
 /// These are used to access single values which may be overridden.
-- (BOOL)boolValue:(NSString* __nonnull)name missing:(BOOL)value;
+- (BOOL)boolValue:(nonnull NSString*)name missing:(BOOL)value;
 
-- (int)intValue:(NSString* __nonnull)name missing:(int)value;
+- (int)intValue:(nonnull NSString*)name missing:(int)value;
 
-- (unsigned int)uintValue:(NSString* __nonnull)name missing:(unsigned int)value;
+- (unsigned int)uintValue:(nonnull NSString*)name missing:(unsigned int)value;
 
-- (NSString* __nonnull)stringValue:(NSString* __nonnull)name missing:(NSString* __nonnull)value;
+- (nonnull NSString*)stringValue:(nonnull NSString*)name missing:(nonnull NSString*)value;
 
 //// These are used to access keys which may have multiple values. Contexts
 // may extend these with new values.
-- (NSArray* __nonnull)stringValues:(NSString* __nonnull)name;
+- (nonnull NSArray*)stringValues:(nonnull NSString*)name;
 
 /// This is nice to use in place of stringValues whenever parsing
 /// is involved because when emitting warnings the fileName can
 /// be included.
-- (void)enumerate:(NSString* __nonnull) key with:(void (^ __nonnull)(NSString* __nonnull fileName, NSString* __nonnull value))block;
+- (void)enumerate:(nonnull NSString*) key with:(void (^ __nonnull)(NSString* __nonnull fileName, NSString* __nonnull value))block;
 
 - (NSUInteger)checksum;
 

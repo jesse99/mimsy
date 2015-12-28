@@ -6,6 +6,9 @@ import Cocoa
     /// The language name, "python", "objc", "go", etc.
     var name: String {get}
     
+    /// Contains settings for only the language.
+    var settings: MimsySettings {get}
+    
     /// Text used for comments extending to the end of a line, e.g. "//".
     var lineComment: String? {get}
     

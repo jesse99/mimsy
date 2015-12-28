@@ -19,4 +19,6 @@
 
 + (void)enumerate:(void (^)(Language* lang, bool* stop))block;
 
++ (NSArray*)languages;
+
 @end

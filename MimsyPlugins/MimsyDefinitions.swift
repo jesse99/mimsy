@@ -33,11 +33,14 @@ public protocol ItemParser
 {
     var method: ParseMethod {get}
     
-    /// Returns a value if the parser was capable of parsing the file.
+    /// Returns the file name extensions that the plugin can handle.
+    /// Note that these does not include the dot.
+    var extensionNames: [String] {get}
+    
     /// Throws if there was an error parsing (typically a file IO error,
     /// syntax problems should be ignored). Note that this is typically
     /// called from a thread.
-    func tryParse(path: MimsyPath) throws -> [ItemName]?
+    func parse(path: MimsyPath) throws -> [ItemName]
 }
 
 /// Uses registered parsers to parse files within a project. The parsed information

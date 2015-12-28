@@ -20,10 +20,24 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         }
         else if (stage == 3)
         {
+            findParsers(regexParsers)   // ordered thusly so if a later one has the same extension it will take precedence
+            findParsers(parserParsers)
+            findParsers(toolParsers)
             frozen = true
         }
         
         return nil
+    }
+    
+    func findParsers(parsers: [ItemParser])
+    {
+        for parser in parsers
+        {
+            for name in parser.extensionNames
+            {
+                self.parsers[name] = parser
+            }
+        }
     }
     
     func contextMenu(view: MimsyTextView) -> [TextContextMenuItem]
@@ -157,23 +171,35 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
 //        let oldPathInfos = projects[root]
         var count = 0
         
-        app.enumerate(dir: dir, recursive: true, error: {self.app.log("Plugins", "StdDefinitions error: %@", $0)})
-        {
-            do
-            {
-                let currentDate = NSDate()
-                pathInfos[$0] = ItemsInfo(date: currentDate, items: try self.parse($0))
-                count += 1
-            }
-            catch let err as NSError
-            {
-                self.app.log("Plugins", "Failed to process %@ when trying to parse definitions: %@", $0, err.localizedFailureReason!)
-            }
-            catch
-            {
-                self.app.log("Plugins", "Failed to process %@ when trying to parse definitions: unknown error", $0)
-            }
-        }
+        app.enumerate(dir: dir, recursive: true,
+            error: {self.app.log("Plugins", "StdDefinitions error: %@", $0)},
+            predicate: {(dir, fileName) in
+                let name = (fileName as NSString).pathExtension
+                return self.parsers.keys.contains(name)
+            },
+            callback: {(parent, fileNames) in
+                do
+                {
+                    for fileName in fileNames
+                    {
+                        let name = (fileName as NSString).pathExtension
+                        let parser = self.parsers[name]!        // bang is safe because of the predicate above
+                        
+                        let currentDate = NSDate()
+                        let path = parent.append(component: fileName)
+                        pathInfos[path] = ItemsInfo(date: currentDate, items: try parser.parse(path))
+                        count += 1
+                    }
+                }
+                catch let err as NSError
+                {
+                    self.app.log("Plugins", "Failed to process %@ when trying to parse definitions: %@", parent, err.localizedFailureReason!)
+                }
+                catch
+                {
+                    self.app.log("Plugins", "Failed to process %@ when trying to parse definitions: unknown error", parent)
+                }
+            })
         
 //        let fm = NSFileManager.defaultManager()
 //        let keys = [NSURLIsDirectoryKey, NSURLPathKey, NSURLContentModificationDateKey]
@@ -228,49 +254,6 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     }
     
     // Threaded code
-    func dumpPaths(kind: String, _ paths: [String: [ItemPath]])
-    {
-        if !paths.isEmpty
-        {
-            app.log("Plugins", "\(kind):")
-            
-            var entries: [String] = []
-            for (name, items) in paths
-            {
-                let loc = (items.map {"\($0.path.lastComponent()):\($0.location)"}).joinWithSeparator(", ")
-                entries.append("   \(name)  \(loc)")
-            }
-            
-            entries.sortInPlace()
-            
-            for entry in entries
-            {
-                app.log("Plugins", "%@", entry)
-            }
-        }
-    }
-    
-    // Threaded code
-    func parse(path: MimsyPath) throws -> [ItemName]
-    {
-        func _parse(candidates: [ItemParser], _ path: MimsyPath) throws -> [ItemName]?
-        {
-            for parser in candidates
-            {
-                if let items = try parser.tryParse(path)
-                {
-                    return items
-                    
-                }
-            }
-            
-            return nil
-        }
-        
-        return try _parse(toolParsers, path) ?? _parse(parserParsers, path) ?? _parse(regexParsers, path) ?? []
-    }
-    
-    // Threaded code
     func buildPaths(infos: [MimsyPath: ItemsInfo]) -> ([String: [ItemPath]], [String: [ItemPath]])
     {
         func add(inout namePaths: [String: [ItemPath]], _ name: String, _ path: ItemPath)
@@ -306,6 +289,29 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         return (decs, defs)
     }
     
+    // Threaded code
+    func dumpPaths(kind: String, _ paths: [String: [ItemPath]])
+    {
+        if !paths.isEmpty
+        {
+            app.log("Plugins", "\(kind):")
+            
+            var entries: [String] = []
+            for (name, items) in paths
+            {
+                let loc = (items.map {"\($0.path.lastComponent()):\($0.location)"}).joinWithSeparator(", ")
+                entries.append("   \(name)  \(loc)")
+            }
+            
+            entries.sortInPlace()
+            
+            for entry in entries
+            {
+                app.log("Plugins", "%@", entry)
+            }
+        }
+    }
+    
     enum State
     {
         case Idle
@@ -330,6 +336,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     var regexParsers: [ItemParser] = []
     var frozen = false
     
+    var parsers: [String: ItemParser] = [:] // key is a file extension
     var states: [MimsyPath: State] = [:]
     var projects: ProjectItemNames = [:]
     var declarations: ProjectItemPaths = [:]

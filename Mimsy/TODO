@@ -29,17 +29,16 @@ without loading
     117s
 
 readdir (with no modtime checks)
+    99s
+
+chunked readdir
+    89.2
+
+predicate (and better parser lookups)
+    47.3s
 
 
 * Work on a new directory enumerator:
-    - use readdir and a callback with the full path
-    - skip hidden directories
-    - skip modtime check for now
-    - do a commit
-    - try calling the callback with an entire directory worth of files
-    - use a predicate callback (takes a dir and file name)
-    - definitions should not use shebangs
-    - may want to build a table of file extensions to languages
     - do the modtime check
     - do the modtime check but store the moddate with the root and do the check in the predicate
 * Persist definitions:

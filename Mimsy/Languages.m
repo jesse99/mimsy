@@ -63,6 +63,11 @@ static NSArray* _languages;
 	return lang;
 }
 
++ (NSArray*)languages
+{
+    return _languages;
+}
+
 + (Language*)findWithlangName:(NSString*)name
 {	
 	for (Language* candidate in _languages)
