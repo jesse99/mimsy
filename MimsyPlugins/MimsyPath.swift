@@ -130,12 +130,20 @@ public class MimsyPath: NSObject, CustomDebugStringConvertible
         return try app!._modTime(self).doubleValue
     }
     
-    /// Returns true if the target's components start with all the path's components.
+    /// Returns true if the target's components start with all the roots components.
     public func hasRoot(root: MimsyPath) -> Bool
     {
         let lhs = self.components()
         let rhs = root.components()
         return lhs.count >= rhs.count && lhs.prefix(rhs.count) == ArraySlice(rhs)
+    }
+    
+    /// Returns true if the target's components end with all the stems components.
+    public func hasStem(stem: MimsyPath) -> Bool
+    {
+        let lhs = self.components()
+        let rhs = stem.components()
+        return lhs.count >= rhs.count && lhs.suffix(rhs.count) == ArraySlice(rhs)
     }
     
     /// Removes the root's components from the start of the target.

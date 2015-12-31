@@ -85,7 +85,7 @@ public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMe
     /// - Parameter dir: The directory that begins the enumeration.
     /// - Parameter recursive: If true then also process files in subdirectories of dir.
     /// - Parameter error: Called with an error message if a directory cannot be read.
-    /// - Parameter predicate: Optional block that returns true for files that should be processed.
+    /// - Parameter predicate: Called with a directory and file name. Returns true if the file should be processed.
     /// - Parameter callback: Called with the full path of a directory and an array of non-hidden file names.
     func enumerate(dir dir: MimsyPath, recursive: Bool, error: (String) -> (), predicate: FilePredicate?, callback: (MimsyPath, [String]) -> ())
     
