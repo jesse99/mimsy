@@ -5,6 +5,7 @@
 @class TextController;
 
 typedef void (^NullaryBlock)();
+typedef void (^BoolBlock)(bool);
 typedef void (^InvokeTextCommandBlock)(id<MimsyTextView> _Nonnull);
 typedef NSString* _Nullable (^TextContextMenuItemTitleBlock)(id<MimsyTextView> _Nonnull);
 typedef NSString* __nullable (^ __nonnull ProjectContextMenuItemTitleBlock)(NSArray<MimsyPath*>* __nonnull, NSArray<MimsyPath*>* __nonnull);
@@ -29,6 +30,9 @@ void initLogGlobs(void);
 
 - (void)saveAllDocuments:(id _Nullable)sender;
 
+/// Saved is called with true if all documents were saved successfully.
+- (void)saveAllDocumentsWithBlock:(BoolBlock _Nonnull)saved;
+
 - (void)openWithMimsy:(NSURL* _Nonnull)url;
 - (IBAction)openAsBinaryAction:(id _Nullable)sender;
 - (void)searchSite:(id _Nullable)sender;
@@ -36,7 +40,7 @@ void initLogGlobs(void);
 - (void)openTimeMachine:(id _Nullable)sender;
 
 //// This works like performSelector:withObject:afterDelay: except that calling it with a
-// name that is pending is a no-op.
+/// name that is pending is a no-op.
 + (void)execute:(NSString* _Nonnull)key withSelector:(SEL _Nonnull)selector withObject:(id _Nullable)object afterDelay:(NSTimeInterval)delay;
 + (void)execute:(NSString* _Nonnull)key afterDelay:(NSTimeInterval)delay withBlock:(NullaryBlock _Nonnull)block;
 

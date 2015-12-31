@@ -42,6 +42,72 @@ typedef void (^ProjectBlock)(id<MimsyProject> _Nonnull);
 @end
 
 // ------------------------------------------------------------------------------------
+// We need this lame class because:
+// 1) If we just call saveDocument on all the documents then, when we build remotely,
+// the documents are still saving when the build starts (even if we put a big sleep
+// after the saves).
+// 2) NSDocument is still old school and relies on delegates and selectors to provide
+// save status instead of using blocks which would allow us to more nicely encapsulate
+// state..
+@interface SaveAllDocuments : NSObject
+
+- (id)init:(BoolBlock)saved;
+
+- (void)save:(NSDocument*)doc;
+
+- (void)finishedSaving;
+
+- (void)document:(NSDocument*)document didSave:(BOOL)suceeded contextInfo:(void*)info;
+
+@end
+
+@implementation SaveAllDocuments
+{
+    BoolBlock _callback;
+    bool _success;
+    int _count;
+}
+
+- (id)init:(BoolBlock)saved
+{
+    self = [super init];
+    
+    if (self)
+    {
+        _callback = saved;
+        _success = true;
+        _count = 0;
+    }
+    
+    return self;
+}
+
+- (void)save:(NSDocument*)doc
+{
+    ++_count;
+    [doc saveDocumentWithDelegate:self didSaveSelector:@selector(document:didSave:contextInfo:) contextInfo:NULL];
+}
+
+- (void)finishedSaving
+{
+    if (_count == 0)            // i.e. we didn't actually save anything
+        _callback(_success);
+}
+
+- (void)document:(NSDocument*)document didSave:(BOOL)suceeded contextInfo:(void*)info
+{
+    UNUSED(document, info);
+    
+    if (!suceeded)
+        _success = false;
+    
+    if (--_count == 0)
+        _callback(_success);
+}
+
+@end
+
+// ------------------------------------------------------------------------------------
 @interface PluginMenuItem : NSObject
 
 - (id)initFromEnabled:(MenuEnabledBlock)enabled invoke:(MenuInvokeBlock)invoke;
@@ -1127,10 +1193,9 @@ void initLogGlobs()
 	}
 }
 
-// This isn't terribly useful with auto-saving on, but it will help make old-school
-// uses more comfortable. There's also a save all method on NSDocumentController but
-// I think it just auto-saves because it doesn't clear the "edited" text within the
-// window titles.
+// This isn't too useful for people when auto-saving is on but it is useful when
+// doing stuff like builds where we want more control over when documents are
+// saved.
 - (void)saveAllDocuments:(id)sender
 {
 	for (NSDocument* doc in [[NSDocumentController sharedDocumentController] documents])
@@ -1139,6 +1204,20 @@ void initLogGlobs()
 			if (doc.fileURL && doc.fileType)
 				[doc saveDocument:sender];
 	}
+}
+
+- (void)saveAllDocumentsWithBlock:(BoolBlock)saved
+{
+    SaveAllDocuments* saver = [[SaveAllDocuments alloc] init:saved];
+    
+    for (NSDocument* doc in [[NSDocumentController sharedDocumentController] documents])
+    {
+        if (doc.isDocumentEdited)
+            if (doc.fileURL && doc.fileType)
+                [saver save:doc];
+    }
+    
+    [saver finishedSaving];
 }
 
 - (void)openWithMimsy:(NSURL*)url

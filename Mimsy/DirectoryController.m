@@ -417,14 +417,19 @@ static DirectoryController* _lastBuilt;
 		if (target && target.length > 0)
 		{
 			AppDelegate* app = (AppDelegate*) [NSApp delegate];
-			[app saveAllDocuments:self];
-            _lastBuilt = self;
-
-			NSString* flags = [self _findBuildFlags:target];
-            NSDictionary* info = [_buildItems objectForKey:target];
-            if (!info)
-                info = [Builders build:_builderInfo target:target flags:flags env:_buildVars];
-			[self _doBuild:info];
+            [app saveAllDocumentsWithBlock:^(bool success)
+            {
+                if (success)
+                {
+                    _lastBuilt = self;
+                    
+                    NSString* flags = [self _findBuildFlags:target];
+                    NSDictionary* info = [_buildItems objectForKey:target];
+                    if (!info)
+                        info = [Builders build:_builderInfo target:target flags:flags env:_buildVars];
+                    [self _doBuild:info];
+                }
+            }];
 		}
 		else
 		{
