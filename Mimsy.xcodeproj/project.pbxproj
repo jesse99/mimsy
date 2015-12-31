@@ -621,6 +621,7 @@
 		3747063C1C20FB40008F42DF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		374706401C20FB70008F42DF /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
 		374706461C20FCA3008F42DF /* Description.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Description.rtf; sourceTree = "<group>"; };
+		374771581C35964500B5D84C /* Todo.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Todo.rtf; sourceTree = "<group>"; };
 		374844261C2E5DF8002F3B8D /* SequenceExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SequenceExtension.swift; sourceTree = "<group>"; };
 		375140D216800FFD00C329AF /* ConfigParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigParser.h; sourceTree = "<group>"; };
 		375140D316800FFD00C329AF /* ConfigParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigParser.m; sourceTree = "<group>"; };
@@ -789,7 +790,6 @@
 		37A8C6C016758FF400D4DB13 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		37A8C6C216758FF400D4DB13 /* DecodeTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DecodeTests.h; sourceTree = "<group>"; };
 		37A8C6C316758FF400D4DB13 /* DecodeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DecodeTests.m; sourceTree = "<group>"; };
-		37A8C6CD167590E700D4DB13 /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		37A93CF51C11EBAE00AFE5AC /* MimsySettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimsySettings.swift; sourceTree = "<group>"; };
 		37A93CF91C13969000AFE5AC /* settings */ = {isa = PBXFileReference; lastKnownFileType = folder; path = settings; sourceTree = "<group>"; };
 		37AAB37B1C2282000041BA02 /* HighlightTodo.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HighlightTodo.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1491,7 +1491,7 @@
 		37A8C69C16758FF400D4DB13 /* Mimsy */ = {
 			isa = PBXGroup;
 			children = (
-				37A8C6CD167590E700D4DB13 /* TODO */,
+				374771581C35964500B5D84C /* Todo.rtf */,
 				370040351676C89C0009907A /* README.md */,
 				37BC76DA1A008DA30037DC6A /* Mimsy-Bridging-Header.h */,
 				37979FEB16AAEE94009D9944 /* App */,
