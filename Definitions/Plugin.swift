@@ -157,7 +157,8 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
                 switch self.states[root]!
                 {
                 case .Idle:
-                    assert(false)
+                    //assert(false)
+                    break
                     
                 case .Scanning:
                     self.states[root] = .Idle
