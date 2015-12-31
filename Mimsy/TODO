@@ -24,7 +24,15 @@ Creating plugins
 
 
 
-* Look at work stuff
+* Make this an rtf file
+* Should be able to speed up resolvePath
+    - use new dir enumerate method
+    - check open windows first
+* Might want to add a little delay when saving because of a build.
+* Editing BuildItem's doesn't rebuild (or change) the build menu
+* .Idle assert fired
+    - maybe caused by closing project window
+* Would up adding windows new line characters to Links.go
 * Add basic tab completion:
     - should we parse files with identifier?
     - would get lots of false positives for stuff like comments and strings

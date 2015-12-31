@@ -1342,7 +1342,7 @@ static __weak TextController* _frontmost;
 				dispatch_queue_t main = dispatch_get_main_queue();
 				dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 50*NSEC_PER_MSEC);
 				dispatch_after(delay, main, ^{
-                    [_textView insertText:padding replacementRange:NSMakeRange(range.location, 0)];
+                    [_textView insertText:padding replacementRange:NSMakeRange(range.location+1, 0)];
                 });
 			}
         }
