@@ -19,26 +19,42 @@
     {
         [result addObject:path];
     }
-    else if ([path.asString contains:@"/"])
-    {
-        [Utils enumerateDeepDir:root glob:nil error:NULL block:^(MimsyPath* item, bool* stop)
-        {
-            if ([item.asString endsWith:path.asString])
-            {
-                [result addObject:item];
-                *stop = true;
-            }
-         }];
-    }
     else
     {
-        [Utils enumerateDeepDir:root glob:nil error:NULL block:^(MimsyPath* item, bool* stop)
+        // First see if we have any open windows that match the path. (This will often happen
+        // and speeds up the resolve a lot when using remote shares).
+        [TextController enumerate:^(TextController* controller, bool* stop)
         {
-            UNUSED(stop);
-            
-            if ([item.asString endsWith:path.asString])
-                [result addObject:item];
-         }];
+            if ([controller.path hasStem:path])
+            {
+                [result addObject:controller.path];
+                *stop = true;
+            }
+        }];
+        
+        // If that failed then search for the file.
+        if (result.count == 0)
+        {
+            AppDelegate* app = [NSApp delegate];
+            [app enumerateWithDir:root recursive:true error:^(NSString* _Nonnull err)
+            {
+                NSString* mesg = [NSString stringWithFormat:@"Error resolving '%@': %@", root, err];
+                [TranscriptController writeError:mesg];
+            }
+            predicate:^BOOL(MimsyPath* _Nonnull dir, NSString* _Nonnull fileName)
+            {
+                MimsyPath* candidate = [dir appendWithComponent:fileName];
+                return [candidate hasStem:path];
+            }
+            callback:^(MimsyPath* _Nonnull dir, NSArray<NSString*>* _Nonnull fileNames)
+            {
+                for (NSString* fileName in fileNames)
+                {
+                    MimsyPath* p = [dir appendWithComponent:fileName];
+                    [result addObject:p];
+                }
+            }];
+        }
     }
     
     return result;
