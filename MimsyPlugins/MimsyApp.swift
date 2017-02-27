@@ -4,73 +4,73 @@ public typealias EnabledMenuItem = (NSMenuItem) -> Bool
 public typealias InvokeMenuItem = () -> ()
 public typealias TextViewCallback = (MimsyTextView) -> ()
 public typealias TextViewKeyCallback = (MimsyTextView) -> Bool
-public typealias ProjectContextMenuItemTitle = (files: [MimsyPath], dirs: [MimsyPath]) -> String?
-public typealias InvokeProjectCommand = (files: [MimsyPath], dirs: [MimsyPath]) -> ()
+public typealias ProjectContextMenuItemTitle = (_ files: [MimsyPath], _ dirs: [MimsyPath]) -> String?
+public typealias InvokeProjectCommand = (_ files: [MimsyPath], _ dirs: [MimsyPath]) -> ()
 public typealias TextRangeCallback = (MimsyTextView, NSRange) -> ()
 public typealias ProjectCallback = (MimsyProject) -> ()
 public typealias FilePredicate = (MimsyPath, String) -> Bool
 
 public typealias InvokeTextCommand = (MimsyTextView) -> ()
 
-public class TextContextMenuItem: NSObject
+open class TextContextMenuItem: NSObject
 {
-    public init(title: String, invoke: InvokeTextCommand)
+    public init(title: String, invoke: @escaping InvokeTextCommand)
     {
         self.title = title
         self.invoke = invoke
     }
     
-    public let title: String
-    public let invoke: InvokeTextCommand
+    open let title: String
+    open let invoke: InvokeTextCommand
 }
 
 public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMenuItem]
 
 @objc public enum MenuItemLoc: Int
 {
-    case Before = 1, After, Sorted
+    case before = 1, after, sorted
 }
 
 @objc public enum NoTextSelectionPos: Int
 {
-    case Start = 1, Middle, End
+    case start = 1, middle, end
 }
 
 @objc public enum WithTextSelectionPos: Int
 {
-    case Lookup = 1, Transform, Search, Add
+    case lookup = 1, transform, search, add
 }
 
 @objc public enum TextViewNotification: Int
 {
     /// Invoked just before a text document is saved.
-    case Saving = 1
+    case saving = 1
     
     /// Invoked after the selection has changed.
-    case SelectionChanged
+    case selectionChanged
     
     /// Invoked after language styling is applied.
-    case AppliedStyles
+    case appliedStyles
     
     /// Invoked just after a text document is opened.
-    case Opened
+    case opened
     
     /// Invoked just before a text document is closed.
-    case Closing
+    case closing
 }
 
 @objc public enum ProjectNotification: Int
 {
     /// Invoked just after a project window is opened.
-    case Opened = 1
+    case opened = 1
     
     /// Invoked just before a project window is closed.
-    case Closing
+    case closing
     
     /// Called when a file or directory within the project  is created, 
     /// removed, renamed, or modified. (These events are coalesced so for 
     /// something like a move there will only be one notification).
-    case Changed
+    case changed
 }
 
 /// This is used by plugins to communicate with the top level of Mimsy. 
@@ -87,10 +87,10 @@ public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMe
     /// - Parameter error: Called with an error message if a directory cannot be read.
     /// - Parameter predicate: Called with a directory and file name. Returns true if the file should be processed.
     /// - Parameter callback: Called with the full path of a directory and an array of non-hidden file names.
-    func enumerate(dir dir: MimsyPath, recursive: Bool, error: (String) -> (), predicate: FilePredicate?, callback: (MimsyPath, [String]) -> ())
+    func enumerate(dir: MimsyPath, recursive: Bool, error: (String) -> (), predicate: FilePredicate, callback: (MimsyPath, [String]) -> ())
     
     /// Typically the extension method will be used instead of this.
-    func addMenuItem(item: NSMenuItem, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem?, invoke: InvokeMenuItem) -> Bool
+    func addMenuItem(_ item: NSMenuItem, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem?, invoke: InvokeMenuItem) -> Bool
     
     /// - Returns: If the frontmost window is a text document window then it is returned. Otherwise nil is returned.
     func textView() -> MimsyTextView?
@@ -99,10 +99,10 @@ public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMe
     func transcript() -> MimsyTranscript
     
     /// Registers a function that will be called when various project related events happen.
-    func registerProject(kind: ProjectNotification, _ hook: ProjectCallback)
+    func registerProject(_ kind: ProjectNotification, _ hook: ProjectCallback)
     
     /// Registers a function that will be called when various text view related events happen.
-    func registerTextView(kind: TextViewNotification, _ hook: TextViewCallback)
+    func registerTextView(_ kind: TextViewNotification, _ hook: TextViewCallback)
 
     /// Used to register a function that will be called when a key is pressed. 
     ///
@@ -112,7 +112,7 @@ public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMe
     /// modifiers: "command", "control", "option", "shift". If multiple modifiers are used they should
     /// be listed in alphabetical order, e.g. "option-shift-tab".
     /// - Parameter hook: Return true to suppress further processing of the key.
-    func registerTextViewKey(key: String, _ identifier: String, _ hook: TextViewKeyCallback)
+    func registerTextViewKey(_ key: String, _ identifier: String, _ hook: TextViewKeyCallback)
     
     /// Used to generate the Special Keys help file.
     ///
@@ -121,14 +121,14 @@ public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMe
     /// "directory editor", "text editor", and language names (e.g. "python").
     /// - Parameter key: The name of the key, e.g. "Option-Shift-Tab".
     /// - Parameter description: What happens when the user presses the key.
-    func addKeyHelp(plugin: String, _ context: String, _ key: String, _ description: String)
+    func addKeyHelp(_ plugin: String, _ context: String, _ key: String, _ description: String)
 
     /// Removes help added via addKeyHelp.
-    func removeKeyHelp(plugin: String, _ context: String)
+    func removeKeyHelp(_ plugin: String, _ context: String)
 
     /// Removes functions registered with registerTextViewKey. This is often used when the keys
     /// plugins use change as a result of the user editing a settings file.
-    func clearRegisterTextViewKey(identifier: String)
+    func clearRegisterTextViewKey(_ identifier: String)
         
     /// Used to register a function that will be called when a language style is applied.
     ///
@@ -136,28 +136,28 @@ public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMe
     /// "*" can also be used in which case the hook is called after a sequence of elements are styled.
     /// - Parameter hook: The function to call. This will often add new attributes to the range passed 
     /// into the hook.
-    func registerApplyStyle(element: String, _ hook: TextRangeCallback)
+    func registerApplyStyle(_ element: String, _ hook: TextRangeCallback)
     
     /// Used to add a custom menu item to the directory editor.
     ///
     /// - Parameter title: Returns the name of the new menu item, or nil if an item should not be added.
     /// Plugins should only add a menu item if they are able to process all the selected items.
     /// - Parameter invoke: Called when the user selects the new menu item.
-    func registerProjectContextMenu(title: ProjectContextMenuItemTitle, invoke: InvokeProjectCommand)
+    func registerProjectContextMenu(_ title: ProjectContextMenuItemTitle, invoke: InvokeProjectCommand)
     
     /// Used to add a custom menu item to text contextual menus when there is no selection.
     ///
     /// - Parameter pos: Pre-defined location at which to insert the new sorted menu item.
     /// - Parameter title: Returns the name of the new menu item, or nil if an item should not be added.
     /// - Parameter invoke: Called when the user selects the new menu item.
-    func registerNoSelectionTextContextMenu(pos: NoTextSelectionPos, callback: TextContextMenuItemCallback)
+    func registerNoSelectionTextContextMenu(_ pos: NoTextSelectionPos, callback: TextContextMenuItemCallback)
     
     /// Used to add a custom menu item to text contextual menus when is a selection.
     ///
     /// - Parameter pos: Pre-defined location at which to insert the new sorted menu item.
     /// - Parameter title: Returns the name of the new menu item, or nil if an item should not be added.
     /// - Parameter invoke: Called when the user selects the new menu item.
-    func registerWithSelectionTextContextMenu(pos: WithTextSelectionPos, callback: TextContextMenuItemCallback)
+    func registerWithSelectionTextContextMenu(_ pos: WithTextSelectionPos, callback: TextContextMenuItemCallback)
     
     /// Returns the environment variables Mimsy was launched with (which are normally a subset
     /// of the variables the shell commands receive) augmented with Mimsy settings (e.g. to append
@@ -167,39 +167,39 @@ public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMe
     /// Returns a color from a name where the name may be a CSS3 color name ("Dark Green"), a VIM 7.3 
     /// name ("gray50"), hex RGB or RGBA numbers ("#FF0000" or "#FF0000FF"), or decimal RGB or RGBA
     /// tuples ("(255, 0, 0)" or "(255, 0, 0, 255)"). Names are lower cased and spaces are stripped.
-    func mimsyColor(name: String) -> NSColor?
+    func mimsyColor(_ name: String) -> NSColor?
     
     /// Opens a file with Mimsy where possible and as if double-clicked within the Finder otherwise.
     ///
     /// - Parameter path: Full path to a file.
-    func open(path: MimsyPath)
+    func open(_ path: MimsyPath)
     
     /// Opens a file with Mimsy where possible and as if double-clicked within the Finder otherwise.
     ///
     /// - Parameter path: Full path to a file.
     /// - Parameter withRange: Range of text to select and scroll into view.
-    func open(path: MimsyPath, withRange: NSRange)
+    func open(_ path: MimsyPath, withRange: NSRange)
     
     /// Opens a file as raw binary and display the contents as hex and ASCII.
     ///
     /// - Parameter path: Full path to a file.
-    func openAsBinary(path: MimsyPath)
+    func openAsBinary(_ path: MimsyPath)
         
     /// Typically the extension method will be used instead of this.
-    func logString(topic: String, text: String)
+    func logString(_ topic: String, text: String)
 
     /// Create a glob using one pattern.
-    func globWithString(glob: String) -> MimsyGlob
+    func globWithString(_ glob: String) -> MimsyGlob
     
     /// Create a glob using multiple patterns.
-    func globWithStrings(globs: [String]) -> MimsyGlob
+    func globWithStrings(_ globs: [String]) -> MimsyGlob
 
     /// Uses the file's extension (and possibly shebang) to try and find a language associated with the file.
-    func findLanguage(path: MimsyPath) -> MimsyLanguage?
+    func findLanguage(_ path: MimsyPath) -> MimsyLanguage?
 
     func languages() -> [MimsyLanguage]
     
-    func _modTime(path: MimsyPath) throws -> NSNumber
+    func _modTime(_ path: MimsyPath) throws -> NSNumber
 }
 
 public extension MimsyApp
@@ -229,9 +229,9 @@ public extension MimsyApp
     /// - Parameter invoke: The function to invoke when the menu item is selected.
     ///
     /// - Returns: True if menu item was added. False if sel could not be found.
-    public func addMenuItem(item: NSMenuItem? = nil, title: String? = nil, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem? = nil, invoke: InvokeMenuItem) -> Bool
+    public func addMenuItem(_ item: NSMenuItem? = nil, title: String? = nil, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem? = nil, invoke: InvokeMenuItem) -> Bool
     {
-        let theItem = item != nil ? item! : NSMenuItem(title: title!, action: "", keyEquivalent: "")
+        let theItem = item != nil ? item! : NSMenuItem(title: title!, action: nil, keyEquivalent: "")
         return addMenuItem(theItem, loc: loc, sel: sel, enabled: enabled, invoke: invoke)
     }
     
@@ -242,18 +242,18 @@ public extension MimsyApp
     /// - Parameter topic: Typically "Plugins", "Plugins:Verbose", or a custom topic name.
     /// - Parameter format: NSString style [format string](https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Strings/Articles/formatSpecifiers.html).
     /// - Parameter args: Optional arguments to feed into the format string.
-    public func log(topic: String, _ format: String, _ args: CVarArgType...)
+    public func log(_ topic: String, _ format: String, _ args: CVarArg...)
     {
         let text = String(format: format, arguments: args)
         logString(topic, text: text)
     }
     
     /// Returns the full path to an executable or nil.
-    public func findExe(name: String) -> String?
+    public func findExe(_ name: String) -> String?
     {
-        let pipe = NSPipe()
+        let pipe = Pipe()
         
-        let task = NSTask()
+        let task = Process()
         task.launchPath = "/bin/sh"
         task.arguments = ["-c", "which \(name)"]
         task.environment = environment()
@@ -266,8 +266,8 @@ public extension MimsyApp
         if task.terminationStatus == 0
         {
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            result = NSString(data: data, encoding: NSUTF8StringEncoding) as String?
-            result = result?.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet())
+            result = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as String?
+            result = result?.trimmingCharacters(in: CharacterSet.newlines)
         }
         
         return result
@@ -290,24 +290,24 @@ public extension MimsyApp
     {
         var names = [String]()
         
-        if let rpath = NSBundle.mainBundle().resourcePath
+        if let rpath = Bundle.main.resourcePath
         {
             let path = MimsyPath(withString: rpath).append(component: "UnicodeNames.zip")
             if let unzip = findExe("unzip")
             {
                 let contents = unzipFile(unzip, path)
-                names = contents.componentsSeparatedByString("\n")
+                names = contents.components(separatedBy: "\n")
             }
         }
         
         return names
     }
     
-    func unzipFile(tool: String, _ path: MimsyPath) -> String
+    func unzipFile(_ tool: String, _ path: MimsyPath) -> String
     {
-        let pipe = NSPipe()
+        let pipe = Pipe()
         
-        let task = NSTask()
+        let task = Process()
         task.launchPath = tool
         task.arguments = ["-p", path.asString()]
         task.standardOutput = pipe
@@ -315,7 +315,7 @@ public extension MimsyApp
         task.launch()
         
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        return NSString(data: data, encoding: NSUTF8StringEncoding) as String!
+        return NSString(data: data, encoding: String.Encoding.utf8.rawValue) as String!
     }
 }
 

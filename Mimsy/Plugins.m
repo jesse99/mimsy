@@ -53,7 +53,7 @@
 {
     layeredSettings = settings;
     
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
     [app setSettingsParent:self];
 }
 
@@ -61,7 +61,7 @@
 {
     layeredSettings = nil;
     
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
     [app setSettingsParent:nil];
 }
 
@@ -107,7 +107,7 @@ static void doStage(int stage)
 {
     _plugins = [NSMutableArray new];
     
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
     
     MimsyPath* plugins = [Paths installedDir:@"plugins"];
     LOG("Plugins:Verbose", "Loading plugins from %s", STR(plugins));

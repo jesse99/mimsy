@@ -57,7 +57,7 @@ id<SettingsContext> activeContext;
     [AppDelegate execute:@"update settings context" deferBy:0.2 withBlock:^{
         id<SettingsContext> oldContext = activeContext;
 
-        activeContext = [NSApp delegate];
+        activeContext = (AppDelegate*) [NSApp delegate];
         for (NSWindow* window in [NSApp orderedWindows])
         {
             if (window.isVisible && window.windowController)

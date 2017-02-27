@@ -3,7 +3,7 @@ import MimsyPlugins
 
 class StdOpenAsBinary: MimsyPlugin
 {
-    override func onLoad(stage: Int) -> String?
+    override func onLoad(_ stage: Int) -> String?
     {
         if stage == 1
         {
@@ -13,7 +13,7 @@ class StdOpenAsBinary: MimsyPlugin
         return nil
     }
     
-    func getTitle(files: [MimsyPath], dirs: [MimsyPath]) -> String?
+    func getTitle(_ files: [MimsyPath], dirs: [MimsyPath]) -> String?
     {
         if dirs.isEmpty && !files.isEmpty
         {
@@ -25,7 +25,7 @@ class StdOpenAsBinary: MimsyPlugin
         }
     }
     
-    func duplicateItems(files: [MimsyPath], dirs: [MimsyPath])
+    func duplicateItems(_ files: [MimsyPath], dirs: [MimsyPath])
     {
         for path in files
         {

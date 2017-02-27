@@ -2,18 +2,18 @@ import Foundation
 
 public enum ParseMethod: Int
 {
-    case Regex = 1
-    case Parser
-    case ExternalTool
+    case regex = 1
+    case parser
+    case externalTool
 }
 
 public enum ItemName
 {
     /// Declarations are things like C function prototypes declared in headers.
-    case Declaration(name: String, location: Int)
+    case declaration(name: String, location: Int)
     
     /// Definitions actually define the name.
-    case Definition(name: String, location: Int)
+    case definition(name: String, location: Int)
 }
 
 public struct ItemPath
@@ -40,7 +40,7 @@ public protocol ItemParser
     /// Throws if there was an error parsing (typically a file IO error,
     /// syntax problems should be ignored). Note that this is typically
     /// called from a thread.
-    func parse(path: MimsyPath) throws -> [ItemName]
+    func parse(_ path: MimsyPath) throws -> [ItemName]
 }
 
 /// Uses registered parsers to parse files within a project. The parsed information
@@ -50,13 +50,13 @@ public protocol MimsyDefinitions
     /// Multiple plugins may register themselves. When multiple plugins can parse
     /// a file the plugin with the larger value is used (for ties one plugin is
     /// chosen in an undefined way).
-    func register(parser: ItemParser)
+    func register(_ parser: ItemParser)
     
     /// Returns zero or more paths to declarations for a name.
-    func declarations(project: MimsyProject, name: String) -> [ItemPath]
+    func declarations(_ project: MimsyProject, name: String) -> [ItemPath]
     
     /// Returns zero or more paths to declarations for a name.
-    func definitions(project: MimsyProject, name: String) -> [ItemPath]
+    func definitions(_ project: MimsyProject, name: String) -> [ItemPath]
 }
 
 /// Initialized by (hopefully one) plugin at stage 0.

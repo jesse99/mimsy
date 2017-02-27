@@ -38,9 +38,9 @@
 
 @property (nonatomic, readonly, strong) MimsyPath* __nonnull path;
 @property (nonatomic, readonly, strong) id<MimsySettings> __nonnull settings;
-@property (weak) IBOutlet NSOutlineView* table;
-@property (weak) IBOutlet NSPopUpButton* targetsMenu;
-@property (weak) IBOutlet NSToolbarItem* buildButton;
-@property (weak) IBOutlet NSToolbarItem* cancelButton;
+@property (weak) IBOutlet NSOutlineView* _Nullable table;
+@property (weak) IBOutlet NSPopUpButton* _Nullable targetsMenu;
+@property (weak) IBOutlet NSToolbarItem* _Nullable buildButton;
+@property (weak) IBOutlet NSToolbarItem* _Nullable cancelButton;
 
 @end

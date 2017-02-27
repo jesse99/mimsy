@@ -58,7 +58,7 @@ static NSSize getTextSize(NSString* text, NSDictionary* attrs)
 	_color = [NSColor colorWithDeviceRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:1.0f];
 	_text = text;
 
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
     _delay = [app.layeredSettings uintValue:@"WarnWindowDelay" missing:60];
 		
 	[self _resize:text];

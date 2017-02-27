@@ -3,12 +3,12 @@ import MimsyPlugins
 
 class StdOpenDual: MimsyPlugin
 {
-    override func onLoad(stage: Int) -> String?
+    override func onLoad(_ stage: Int) -> String?
     {
         return nil
     }
     
-    override func onLoadSettings(settings: MimsySettings)
+    override func onLoadSettings(_ settings: MimsySettings)
     {
         app.clearRegisterTextViewKey(bundle.bundleIdentifier!)
         app.removeKeyHelp(bundle.bundleIdentifier!, "text editor")
@@ -26,7 +26,7 @@ class StdOpenDual: MimsyPlugin
         }
     }
     
-    func openDual(view: MimsyTextView) -> Bool
+    func openDual(_ view: MimsyTextView) -> Bool
     {
         if let originalPath = view.path
         {
@@ -38,10 +38,10 @@ class StdOpenDual: MimsyPlugin
             {
                 switch name
                 {
-                case .Extension(let name):
+                case .extension(let name):
                     fileNames.append(stem + "." + name)
 
-                case .Path(let path):
+                case .path(let path):
                     fileNames.append(path)
                 }
             }
@@ -67,7 +67,7 @@ class StdOpenDual: MimsyPlugin
         return true
     }
     
-    func findNames(path: MimsyPath) -> [Name]
+    func findNames(_ path: MimsyPath) -> [Name]
     {
         for mapping in mappings
         {
@@ -82,14 +82,14 @@ class StdOpenDual: MimsyPlugin
     
     enum Name
     {
-        case Extension(String)
-        case Path(String)
+        case `extension`(String)
+        case path(String)
         
-        static func parse(text: String) -> Name
+        static func parse(_ text: String) -> Name
         {
             return text.hasPrefix(".") ?
-                .Extension(text.substringFromIndex(text.startIndex.advancedBy(1))) :
-                .Path(text)
+                .extension(text.substring(from: text.characters.index(text.startIndex, offsetBy: 1))) :
+                .path(text)
         }
     }
     
@@ -100,7 +100,7 @@ class StdOpenDual: MimsyPlugin
         
         init(_ app: MimsyApp, _ text: String)
         {
-            var parts = text.componentsSeparatedByString(" ")
+            var parts = text.components(separatedBy: " ")
             glob = app.globWithString(parts.removeFirst())
             names = parts.map {Name.parse($0)}
         }

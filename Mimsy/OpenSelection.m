@@ -230,7 +230,7 @@ static bool _selectLocatedFiles(NSArray<NSString*>* files, int line, int col)
 	__block bool opened = false;
 
 	NSArray* reversed = files;
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
 	if ([app.layeredSettings boolValue:@"ReversePaths" missing:true])
 	{
 		reversed = [files map:

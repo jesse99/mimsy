@@ -3,17 +3,17 @@ import MimsyPlugins
 
 class StdFindGremlin: MimsyPlugin
 {
-    override func onLoad(stage: Int) -> String?
+    override func onLoad(_ stage: Int) -> String?
     {
         if stage == 1
         {
-            app.addMenuItem(title: "Find Gremlin", loc: .After, sel: "findPrevious:", enabled: enabled, invoke: findGremlin)
+            _ = app.addMenuItem(title: "Find Gremlin", loc: .after, sel: "findPrevious:", enabled: enabled, invoke: findGremlin)
         }
         
         return nil
     }
     
-    func enabled(item: NSMenuItem) -> Bool
+    func enabled(_ item: NSMenuItem) -> Bool
     {
         var enabled = false
         
@@ -34,19 +34,19 @@ class StdFindGremlin: MimsyPlugin
             let text = view.string
             let index = view.selectionRange.location + 1
             
-            for var i = index; i < text.length; ++i
+            for i in index ..< text.length
             {
-                let ch = Int(text.characterAtIndex(i))
+                let ch = Int(text.character(at: i))
                 if (ch < 32 && ch != 9 && ch != 10) || ch > 126
                 {
                     let names = app.getUnicodeNames()
                     if ch < names.count && names[ch] != "-"
                     {
-                        app.transcript().writeLine(.Info, "found \(names[ch]) (U+%04X)", ch)
+                        app.transcript().writeLine(.info, "found \(names[ch]) (U+%04X)", ch)
                     }
                     else
                     {
-                        app.transcript().writeLine(.Info, "found invalid code point U+%04X", ch)
+                        app.transcript().writeLine(.info, "found invalid code point U+%04X", ch)
                     }
                     view.selectionRange = NSMakeRange(i, 1)
                     return

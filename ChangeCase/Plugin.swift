@@ -3,26 +3,26 @@ import MimsyPlugins
 
 class StdChangeCase: MimsyPlugin
 {
-    override func onLoad(stage: Int) -> String?
+    override func onLoad(_ stage: Int) -> String?
     {
         if stage == 1
         {
-            app.addMenuItem(title: "Upper Case", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: upperCase)
-            app.addMenuItem(title: "Lower Case", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: lowerCase)
+            _ = app.addMenuItem(title: "Upper Case", loc: .sorted, sel: "transformItems:", enabled: enabled, invoke: upperCase)
+            _ = app.addMenuItem(title: "Lower Case", loc: .sorted, sel: "transformItems:", enabled: enabled, invoke: lowerCase)
             
-            app.registerWithSelectionTextContextMenu(.Transform, callback: contextMenu)
+            app.registerWithSelectionTextContextMenu(.transform, callback: contextMenu)
         }
         
         return nil
     }
     
-    func contextMenu(view: MimsyTextView) -> [TextContextMenuItem]
+    func contextMenu(_ view: MimsyTextView) -> [TextContextMenuItem]
     {
         return [TextContextMenuItem(title: "Upper Case", invoke: {_ in self.upperCase()}),
             TextContextMenuItem(title: "Lower Case", invoke: {_ in self.lowerCase()})]
     }
     
-    func enabled(item: NSMenuItem) -> Bool
+    func enabled(_ item: NSMenuItem) -> Bool
     {
         var enabled = false
         
@@ -39,7 +39,7 @@ class StdChangeCase: MimsyPlugin
         if let view = app.textView()
         {
             var text = view.selection
-            text = text.uppercaseString
+            text = text.uppercased()
             view.setSelection(text, undoText: "Upper Case")
         }
     }
@@ -49,7 +49,7 @@ class StdChangeCase: MimsyPlugin
         if let view = app.textView()
         {
             var text = view.selection
-            text = text.lowercaseString
+            text = text.lowercased()
             view.setSelection(text, undoText: "Lower Case")
         }
     }

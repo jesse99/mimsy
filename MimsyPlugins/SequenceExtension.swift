@@ -1,13 +1,13 @@
 import Foundation
 
-extension SequenceType
+extension Sequence
 {
-    @warn_unused_result
-    public func countFiltered(@noescape includeElement: (Self.Generator.Element) throws -> Bool) rethrows -> Int
+    
+    public func countFiltered(includeElement: (Self.Iterator.Element) throws -> Bool) rethrows -> Int
     {
         var count = 0
         
-        var generator = self.generate()
+        var generator = self.makeIterator()
         while (true)
         {
             if let element = generator.next()

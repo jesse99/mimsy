@@ -33,7 +33,7 @@
 		globs = [controller.excludedGlobsComboBox.stringValue splitByString:@" "];
 		_excludeGlobs = [[Glob alloc] initWithGlobs:globs];
 		
-        AppDelegate* app = [NSApp delegate];
+        AppDelegate* app = (AppDelegate*) [NSApp delegate];
 		globs = [[app.layeredSettings stringValue:@"FindAllAlwaysExclude" missing:@""] splitByString:@" "];
 		_excludeAllGlobs = [[Glob alloc] initWithGlobs:globs];
 	}
@@ -59,7 +59,7 @@
 	NSMutableArray* paths = [[NSMutableArray alloc] initWithCapacity:256];
 	LOG("Find:Verbose", "Finding paths");
     
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
     [app enumerateWithDir:_root recursive:true
         error:
         ^(NSString* _Nonnull error)

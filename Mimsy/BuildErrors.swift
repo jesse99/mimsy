@@ -5,22 +5,22 @@ import Foundation
 var _instance: BuildErrors = BuildErrors()
 
 /// Used to parse and display build errors.  
-public class BuildErrors : NSObject
+open class BuildErrors : NSObject
 {    
     class var instance: BuildErrors {return _instance}
     
     func appSettingsChanged()
     {
         _patterns = [Pattern]()
-        let app = NSApplication.sharedApplication().delegate as! AppDelegate;
+        let app = NSApplication.shared().delegate as! AppDelegate;
         app.layeredSettings().enumerate("BuildError", with: self.parseSetting)
         
         // We want to use the regexen that are able to pick out more information
         // first because the regexen can match the same messages.
-        _patterns = _patterns.sort {$0.fields.count > $1.fields.count}
+        _patterns = _patterns.sorted {$0.fields.count > $1.fields.count}
     }
     
-    func parseErrors(text: NSString, range: NSRange)
+    func parseErrors(_ text: NSString, range: NSRange)
     {
         _errors = [Error]()
         _index = -1
@@ -30,7 +30,7 @@ public class BuildErrors : NSObject
         let remap = getRemapPath()
         for pattern in _patterns
         {
-            pattern.regex.enumerateMatchesInString(text as String, options: [], range: range, usingBlock:
+            pattern.regex.enumerateMatches(in: text as String, options: [], range: range, using:
             {
             (match, flags, stop) in
                 if match != nil && matches[match!.range.location] == nil
@@ -43,7 +43,7 @@ public class BuildErrors : NSObject
             })
         }
 
-        _errors = _errors.sort {$0.transcriptRange.range.location < $1.transcriptRange.range.location}
+        _errors = _errors.sorted {$0.transcriptRange.range.location < $1.transcriptRange.range.location}
     }
     
     func canGotoNextError() -> Bool
@@ -68,14 +68,14 @@ public class BuildErrors : NSObject
         showErrorInFile()
     }
     
-    private func getRemapPath() -> [String]
+    fileprivate func getRemapPath() -> [String]
     {
         var mapping = ["", ""]
         
         if let context = activeContext, let settings = context.layeredSettings()
         {
             let remap = settings.stringValue("RemapBuildPath", missing: ":")
-            let parts = remap.componentsSeparatedByString(":")
+            let parts = remap.components(separatedBy: ":")
             if parts.count == 2
             {
                 mapping = parts
@@ -89,7 +89,7 @@ public class BuildErrors : NSObject
         return mapping
     }
     
-    private func gotoNewError(delta: Int)
+    fileprivate func gotoNewError(_ delta: Int)
     {
         let view = TranscriptController.getView()
         if _index >= 0 && _index < _errors.count
@@ -98,7 +98,7 @@ public class BuildErrors : NSObject
             let range = oldError.transcriptRange.range
             if range.location != NSNotFound
             {
-                view.textStorage!.removeAttribute(NSUnderlineStyleAttributeName, range: range)
+                view?.textStorage!.removeAttribute(NSUnderlineStyleAttributeName, range: range)
             }
         }
         
@@ -108,18 +108,18 @@ public class BuildErrors : NSObject
         //SLOG("App", "goto error at \(range.location):\(range.length): \(error.message)")
         if range.location != NSNotFound
         {
-            let attrs = [NSUnderlineStyleAttributeName: NSNumber(integer: NSUnderlineStyle.StyleSingle.rawValue)]
-            view.textStorage!.addAttributes(attrs, range: range)
+            let attrs = [NSUnderlineStyleAttributeName: NSNumber(value: NSUnderlineStyle.styleSingle.rawValue as Int)]
+            view?.textStorage!.addAttributes(attrs, range: range)
 
             // Typically we'd call showFindIndicatorForRange but that seems a bit
             // distracting when multiple windows are involved.
-            let delay = dispatch_time(DISPATCH_TIME_NOW, Int64(10*NSEC_PER_MSEC))
-            let main = dispatch_get_main_queue()
-            dispatch_after(delay, main, {view.scrollRangeToVisible(range)})
+            let delay = DispatchTime.now() + Double(Int64(10*NSEC_PER_MSEC)) / Double(NSEC_PER_SEC)
+            let main = DispatchQueue.main
+            main.asyncAfter(deadline: delay, execute: {view?.scrollRangeToVisible(range)})
         }
     }
     
-    private func showErrorInFile()
+    fileprivate func showErrorInFile()
     {
         let error = _errors[_index]
         if error.path != nil && error.fileRange != nil  // this code would be simpler by matching on a tuple but that doesn't work with Xcode 6.1
@@ -132,20 +132,22 @@ public class BuildErrors : NSObject
             }
             else
             {
-                OpenFile.openPath(error.path!, withRange: range)
+                OpenFile.open(error.path!, with: range)
             }
         }
         else if error.path != nil
         {
-            let main = dispatch_get_main_queue()
-            let delay = dispatch_time(DISPATCH_TIME_NOW, Int64(200*NSEC_PER_MSEC))
-            dispatch_after(delay, main,
-            { () in
-                OpenFile.openPath(error.path!, atLine: error.line, atCol: error.column, withTabWidth: 1, completed:
+            let main = DispatchQueue.main
+            let delay = DispatchTime.now() + Double(Int64(200*NSEC_PER_MSEC)) / Double(NSEC_PER_SEC)
+            main.asyncAfter(deadline: delay,
+            execute: { () in
+                OpenFile.open(error.path!, atLine: error.line, atCol: error.column, withTabWidth: 1, completed:
                     { (tc) -> Void in
                         // We need to defer this because the selection isn't correct when the document is opened.
-                        let r = tc.getTextView().selectedRange
-                        error.fileRange = PersistentRange(error.path!, range: r, block: nil)
+                        if let r = tc?.getTextView().selectedRange
+                        {
+                            error.fileRange = PersistentRange(error.path!, range: r, block: nil)
+                        }
                 })
             })
         }
@@ -155,9 +157,9 @@ public class BuildErrors : NSObject
         }
     }
     
-    private func parseSetting(fileName: String!, value: String!)
+    fileprivate func parseSetting(_ fileName: String!, value: String!)
     {
-        func parseTags(tags: String) -> [Character: Int]
+        func parseTags(_ tags: String) -> [Character: Int]
         {
             var result = [Character: Int]()
             
@@ -167,7 +169,8 @@ public class BuildErrors : NSObject
                 switch char
                 {
                 case "F", "L", "C", "M":
-                    result[char] = index++
+                    result[char] = index
+                    index += 1
                 default:
                     TranscriptController.writeError("BuildError in \(fileName) tags should contain FLCM characters, not '\(tags)'")
                }
@@ -176,10 +179,10 @@ public class BuildErrors : NSObject
             return result
         }
         
-        func createRegex(pattern: String) -> NSRegularExpression?
+        func createRegex(_ pattern: String) -> NSRegularExpression?
         {
             do {
-                return try NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.AnchorsMatchLines)
+                return try NSRegularExpression(pattern: pattern, options: NSRegularExpression.Options.anchorsMatchLines)
             } catch let error as NSError {
                 TranscriptController.writeError("BuildError in \(fileName) regex '\(pattern)' is malformed: \(error.localizedFailureReason)")
                 return nil
@@ -190,11 +193,11 @@ public class BuildErrors : NSObject
         }
         
         // BuildError: FLCM ^([^:\r\n]+):(\d+):(\d+):\s+\w+:\s+(.+)$
-        let range = value.rangeOfString(" ")
+        let range = value.range(of: " ")
         if let range = range
         {
-            let tags = parseTags(value.substringToIndex(range.startIndex))
-            let regex = createRegex(value.substringFromIndex(range.startIndex.successor()))
+            let tags = parseTags(value.substring(to: range.lowerBound))
+            let regex = createRegex(value.substring(from: range.lowerBound))
             if tags.count > 0 && regex != nil
             {
                 let element = Pattern(fields: tags, regex: regex!)
@@ -208,18 +211,18 @@ public class BuildErrors : NSObject
         }
     }
 
-    private class Error
+    fileprivate class Error
     {
         init(text: NSString, pattern: Pattern, match: NSTextCheckingResult, remap: [String])
         {
             var file: MimsyPath?
             switch pattern.fields["F"]
             {
-            case .Some(let i):
-                var s = text.substringWithRange(match.rangeAtIndex(i))
+            case .some(let i):
+                var s = text.substring(with: match.rangeAt(i))
                 if !remap.isEmpty && !remap[0].isEmpty
                 {
-                    s = s.stringByReplacingOccurrencesOfString(remap[0], withString: remap[1])
+                    s = s.replacingOccurrences(of: remap[0], with: remap[1])
                 }
                 file = MimsyPath(withString: s)
             default:
@@ -228,7 +231,7 @@ public class BuildErrors : NSObject
             
             if let i = pattern.fields["L"]
             {
-                line = Int(text.substringWithRange(match.rangeAtIndex(i)))!
+                line = Int(text.substring(with: match.rangeAt(i)))!
             }
             else
             {
@@ -237,7 +240,7 @@ public class BuildErrors : NSObject
             
             if let i = pattern.fields["C"]
             {
-                column = Int(text.substringWithRange(match.rangeAtIndex(i)))!
+                column = Int(text.substring(with: match.rangeAt(i)))!
             }
             else
             {
@@ -246,19 +249,18 @@ public class BuildErrors : NSObject
             
             switch pattern.fields["M"]
             {
-            case .Some(let i):
-                message = text.substringWithRange(match.rangeAtIndex(i))
-                transcriptRange = PersistentRange(TranscriptController.getInstance(), range: match.rangeAtIndex(i))
+            case .some(let i):
+                message = text.substring(with: match.rangeAt(i))
+                transcriptRange = PersistentRange(TranscriptController.getInstance(), range: match.rangeAt(i))
             default:
                 message = nil
                 transcriptRange = PersistentRange(TranscriptController.getInstance(), range: match.range)
             }
 
-            let current = DirectoryController.getCurrentController()
+            let current = DirectoryController.getCurrent()
             if current != nil && file != nil
             {
-                let paths = OpenFile.resolvePath(file!, rootedAt: current!.path)
-                if paths.count > 0
+                if let paths = OpenFile.resolve(file!, rootedAt: current!.path), paths.count > 0
                 {
                     // Hopefully tools will provide more than just a file name on errors.
                     // Failing that people will hopefully not reuse source file names.
@@ -285,13 +287,13 @@ public class BuildErrors : NSObject
         let message: String?
     }
     
-    private struct Pattern
+    fileprivate struct Pattern
     {
         let fields: [Character: Int]
         let regex: NSRegularExpression
     }
     
-    private var _patterns = [Pattern]()
-    private var _errors = [Error]()
-    private var _index: Int = -1
+    fileprivate var _patterns = [Pattern]()
+    fileprivate var _errors = [Error]()
+    fileprivate var _index: Int = -1
 }

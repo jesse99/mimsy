@@ -12,5 +12,5 @@ import Foundation
 
     /// Returns a list of full paths within the project that match name which
     /// may be either a file name or a (usually relative) path.
-    func resolve(name: String) -> [MimsyPath]
+    func resolve(_ name: String) -> [MimsyPath]
 }

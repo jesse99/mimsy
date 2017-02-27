@@ -1,8 +1,8 @@
 import Foundation
 
-public struct MimsyError: ErrorType
+public struct MimsyError: Error
 {
-    public init(_ format: String, _ args: CVarArgType...)
+    public init(_ format: String, _ args: CVarArg...)
     {
         text = String(format: format, arguments: args)
     }

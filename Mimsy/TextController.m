@@ -190,7 +190,7 @@ static __weak TextController* _frontmost;
 
 + (void)_addTextViewItem:(NSString*)title selector:(SEL)selector
 {
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
     NSMenu* menu = app.textMenu;
     if (menu)
     {
@@ -363,7 +363,7 @@ static __weak TextController* _frontmost;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processedEditing:) name:NSTextStorageDidProcessEditingNotification object:self.textView.textStorage];
 
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
     [app invokeTextViewHook:TextViewNotificationOpened view:self];
 }
 
@@ -391,7 +391,7 @@ static __weak TextController* _frontmost;
 {
 	UNUSED(notification);
 	
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
     [app invokeTextViewHook:TextViewNotificationClosing view:self];
 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -1235,7 +1235,7 @@ static __weak TextController* _frontmost;
 {
     [self.declarationsPopup onAppliedStyles:self.textView];
     
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
     [app invokeTextViewHook:TextViewNotificationAppliedStyles view:self];
 }
 
@@ -1287,7 +1287,7 @@ static __weak TextController* _frontmost;
     [self _updateLineNumberButton];
     [_declarationsPopup onSelectionChanged:self.textView];
     
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
     [app invokeTextViewHook:TextViewNotificationSelectionChanged view:self];
 }
 

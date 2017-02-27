@@ -3,7 +3,7 @@ import MimsyPlugins
 
 class StdTrashItems: MimsyPlugin
 {
-    override func onLoad(stage: Int) -> String?
+    override func onLoad(_ stage: Int) -> String?
     {
         if stage == 1
         {
@@ -13,7 +13,7 @@ class StdTrashItems: MimsyPlugin
         return nil
     }
     
-    func getTitle(files: [MimsyPath], dirs: [MimsyPath]) -> String?
+    func getTitle(_ files: [MimsyPath], dirs: [MimsyPath]) -> String?
     {
         let count = files.count + dirs.count
         if count > 1
@@ -30,7 +30,7 @@ class StdTrashItems: MimsyPlugin
         }
     }
     
-    func trashItems(files: [MimsyPath], dirs: [MimsyPath])
+    func trashItems(_ files: [MimsyPath], dirs: [MimsyPath])
     {
         for path in files
         {
@@ -43,20 +43,20 @@ class StdTrashItems: MimsyPlugin
         }
     }
     
-    func trash(path: MimsyPath)
+    func trash(_ path: MimsyPath)
     {
         do
         {
-            let fm = NSFileManager.defaultManager()
-            try fm.trashItemAtURL(path.asURL(), resultingItemURL: nil)
+            let fm = FileManager.default
+            try fm.trashItem(at: path.asURL(), resultingItemURL: nil)
         }
         catch let err as NSError
         {
-            app.transcript().write(.Error, text: "error moving \(path) to the trash: \(err.localizedFailureReason)")
+            app.transcript().write(.error, text: "error moving \(path) to the trash: \(err.localizedFailureReason)")
         }
         catch
         {
-            app.transcript().write(.Error, text: "unknown error moving \(path) to the trash")
+            app.transcript().write(.error, text: "unknown error moving \(path) to the trash")
         }
     }
 }

@@ -163,7 +163,7 @@
 		_styler = [self _createStyler:names patterns:patterns lines:lines errors:errors];
         _patterns = epatterns;  // note that we want to do this via an atomic operation because getPatterns can be called from a thread
 		
-        AppDelegate* app = [NSApp delegate];
+        AppDelegate* app = (AppDelegate*) [NSApp delegate];
         _settings = [[Settings alloc] init:_name context:app];
         for (NSUInteger i = 0; i < _settingKeys.count; i++)
         {

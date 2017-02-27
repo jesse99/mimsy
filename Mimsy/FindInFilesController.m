@@ -21,7 +21,7 @@ static FindInFilesController* _findFilesController = nil;
     if (self)
 	{
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(openedDir:) name:@"OpenedDirectory" object:nil];
-        AppDelegate* app = [NSApp delegate];
+        AppDelegate* app = (AppDelegate*) [NSApp delegate];
 		_reversedPaths = [app.layeredSettings boolValue:@"ReversePaths" missing:true];
 		_normalPaths = [NSMutableDictionary new];
     }
@@ -163,7 +163,7 @@ static FindInFilesController* _findFilesController = nil;
 {
 	UNUSED(sender);
 
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
 	_reversedPaths = [app.layeredSettings boolValue:@"ReversePaths" missing:true];
 	_normalPaths = [NSMutableDictionary new];
 

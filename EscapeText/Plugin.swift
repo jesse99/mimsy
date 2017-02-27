@@ -4,26 +4,26 @@ import MimsyPlugins
 
 class StdEscapeText: MimsyPlugin
 {
-    override func onLoad(stage: Int) -> String?
+    override func onLoad(_ stage: Int) -> String?
     {
         if stage == 1
         {
-            app.addMenuItem(title: "Escape HTML", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: html)
-            app.addMenuItem(title: "Escape XML", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: xml)
+            _ = app.addMenuItem(title: "Escape HTML", loc: .sorted, sel: "transformItems:", enabled: enabled, invoke: html)
+            _ = app.addMenuItem(title: "Escape XML", loc: .sorted, sel: "transformItems:", enabled: enabled, invoke: xml)
             
-            app.registerWithSelectionTextContextMenu(.Transform, callback: contextMenu)
+            app.registerWithSelectionTextContextMenu(.transform, callback: contextMenu)
         }
         
         return nil
     }
     
-    func contextMenu(view: MimsyTextView) -> [TextContextMenuItem]
+    func contextMenu(_ view: MimsyTextView) -> [TextContextMenuItem]
     {
         return [TextContextMenuItem(title: "Escape HTML", invoke: {_ in self.html()}),
             TextContextMenuItem(title: "Escape XML", invoke: {_ in self.xml()})]
     }
     
-    func enabled(item: NSMenuItem) -> Bool
+    func enabled(_ item: NSMenuItem) -> Bool
     {
         var enabled = false
         
@@ -40,10 +40,10 @@ class StdEscapeText: MimsyPlugin
         if let view = app.textView()
         {
             var text = view.selection
-            text = text.stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-            text = text.stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-            text = text.stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-            text = text.stringByReplacingOccurrencesOfString("\"", withString: "&quot;")
+            text = text.replacingOccurrences(of: "&", with: "&amp;")
+            text = text.replacingOccurrences(of: "<", with: "&lt;")
+            text = text.replacingOccurrences(of: ">", with: "&gt;")
+            text = text.replacingOccurrences(of: "\"", with: "&quot;")
             view.setSelection(text, undoText: "Escape HTML")
         }
     }
@@ -53,11 +53,11 @@ class StdEscapeText: MimsyPlugin
         if let view = app.textView()
         {
             var text = view.selection
-            text = text.stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-            text = text.stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-            text = text.stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-            text = text.stringByReplacingOccurrencesOfString("\"", withString: "&quot;")
-            text = text.stringByReplacingOccurrencesOfString("'", withString: "&apos;")
+            text = text.replacingOccurrences(of: "&", with: "&amp;")
+            text = text.replacingOccurrences(of: "<", with: "&lt;")
+            text = text.replacingOccurrences(of: ">", with: "&gt;")
+            text = text.replacingOccurrences(of: "\"", with: "&quot;")
+            text = text.replacingOccurrences(of: "'", with: "&apos;")
             view.setSelection(text, undoText: "Escape XML")
         }
     }

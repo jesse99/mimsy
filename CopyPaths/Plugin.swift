@@ -3,18 +3,18 @@ import MimsyPlugins
 
 class StdCopyPaths: MimsyPlugin
 {
-    override func onLoad(stage: Int) -> String?
+    override func onLoad(_ stage: Int) -> String?
     {
         if stage == 1
         {
-            app.registerNoSelectionTextContextMenu(.Start, callback: contextMenu)
+            app.registerNoSelectionTextContextMenu(.start, callback: contextMenu)
             app.registerProjectContextMenu(getProjectTitle, invoke: copyProjectItems)
         }
         
         return nil
     }
     
-    func contextMenu(view: MimsyTextView) -> [TextContextMenuItem]
+    func contextMenu(_ view: MimsyTextView) -> [TextContextMenuItem]
     {
         if view.path != nil
         {
@@ -26,7 +26,7 @@ class StdCopyPaths: MimsyPlugin
         }
     }
     
-    func getProjectTitle(files: [MimsyPath], dirs: [MimsyPath]) -> String?
+    func getProjectTitle(_ files: [MimsyPath], dirs: [MimsyPath]) -> String?
     {
         let count = files.count + dirs.count
         
@@ -44,18 +44,19 @@ class StdCopyPaths: MimsyPlugin
         }
     }
     
-    func copyFileItem(view: MimsyTextView)
+    func copyFileItem(_ view: MimsyTextView)
     {
-        let pb = NSPasteboard.generalPasteboard()
+        let pb = NSPasteboard.general()
+        let text = view.path!.asString() as NSString
         pb.clearContents()
-        pb.writeObjects([view.path!.asString()])
+        pb.writeObjects([text])
     }
     
-    func copyProjectItems(files: [MimsyPath], dirs: [MimsyPath])
+    func copyProjectItems(_ files: [MimsyPath], dirs: [MimsyPath])
     {
-        let pb = NSPasteboard.generalPasteboard()
+        let pb = NSPasteboard.general()
         pb.clearContents()
-        pb.writeObjects(files.map {$0.asString()})
-        pb.writeObjects(dirs.map {$0.asString()})
+        pb.writeObjects(files.map {$0.asString() as NSString})
+        pb.writeObjects(dirs.map {$0.asString() as NSString})
     }
 }

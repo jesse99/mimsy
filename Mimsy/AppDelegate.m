@@ -269,7 +269,7 @@ void initLogGlobs()
 
 // Presumbably this is faster than attributesOfItemAtPath:error: because that method returns a bunch
 // more stuff (which adds up quick when using stuff like remote samba volumes).
-- (NSNumber* __nullable)_modTime:(MimsyPath* __nonnull)path error:(NSError* __nullable* __null_unspecified)error
+- (NSNumber* __nullable)_modTime:(MimsyPath* __nonnull)path error:(NSError* __nullable*)error
 {
     struct stat state;
     int err = stat(path.asString.UTF8String, &state);
@@ -368,12 +368,12 @@ void initLogGlobs()
     [_installer addSourcePath:path];
 }
 
-- (id<MimsySettings> __nonnull)settings
+- (id<MimsySettings> __nonnull)settings 
 {
     return _layeredSettings;
 }
 
-- (void)enumerateWithDir:(MimsyPath* __nonnull)root recursive:(BOOL)recursive error:(void (^ __nonnull)(NSString* __nonnull))error predicate:(BOOL (^ __nullable)(MimsyPath* __nonnull, NSString* __nonnull))predicate callback:(void (^ __nonnull)(MimsyPath* __nonnull, NSArray<NSString*>* __nonnull))callback
+- (void)enumerateWithDir:(MimsyPath* __nonnull)root recursive:(BOOL)recursive error:(void (^ __nonnull)(NSString* __nonnull))error predicate:(BOOL (^)(MimsyPath* __nonnull, NSString* __nonnull))predicate callback:(void (^ __nonnull)(MimsyPath* __nonnull, NSArray<NSString*>* __nonnull))callback
 {
     NSMutableArray<MimsyPath*>* dirs = [NSMutableArray new];
     [dirs addObject:root];

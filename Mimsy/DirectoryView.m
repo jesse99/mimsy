@@ -75,7 +75,7 @@
 
 - (void)_addPluginItems
 {
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
     for (ProjectContextItem* citem in app.projectItems)
     {
         NSString* title = (citem.title)(_files, _dirs);

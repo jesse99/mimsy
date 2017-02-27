@@ -20,9 +20,9 @@ import Cocoa
     
     /// Returns true if the file's extension matches the languages extensions
     /// or the file has a matching shebang.
-    func matches(file: MimsyPath) -> Bool
+    func matches(_ file: MimsyPath) -> Bool
     
     /// Returns the regular expression patterns associated with the element.
     /// Note that zero or more patterns may be returned.
-    func getPatterns(element: String) -> [String]
+    func getPatterns(_ element: String) -> [String]
 }

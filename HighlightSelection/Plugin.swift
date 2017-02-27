@@ -3,19 +3,19 @@ import MimsyPlugins
 
 class StdHighlightSelection: MimsyPlugin
 {
-    override func onLoad(stage: Int) -> String?
+    override func onLoad(_ stage: Int) -> String?
     {
         if stage == 1
         {
-            app.registerTextView(.Closing, closing)
-            app.registerTextView(.SelectionChanged, selectionChanged)
+            app.registerTextView(.closing, closing)
+            app.registerTextView(.selectionChanged, selectionChanged)
             app.registerApplyStyle("*", render)
         }
         
         return nil
     }
     
-    override func onLoadSettings(settings: MimsySettings)
+    override func onLoadSettings(_ settings: MimsySettings)
     {
         do
         {
@@ -24,15 +24,15 @@ class StdHighlightSelection: MimsyPlugin
         }
         catch let err as MimsyError
         {
-            app.transcript().write(.Error, text: "StdHighlightSelection had an error loading settings: \(err.text)\n")
+            app.transcript().write(.error, text: "StdHighlightSelection had an error loading settings: \(err.text)\n")
         }
         catch
         {
-            app.transcript().write(.Error, text: "StdHighlightSelection unknown error\n")
+            app.transcript().write(.error, text: "StdHighlightSelection unknown error\n")
         }
     }
     
-    func closing(view: MimsyTextView)
+    func closing(_ view: MimsyTextView)
     {
         if let path = view.path
         {
@@ -42,9 +42,9 @@ class StdHighlightSelection: MimsyPlugin
 
     // Called whenever the selection changes. We do a quick check to see if the selection
     // range is sane and then stash away the selected word (or nil out the old reference).
-    func selectionChanged(view: MimsyTextView)
+    func selectionChanged(_ view: MimsyTextView)
     {
-        if let path = view.path where view.language != nil
+        if let path = view.path, view.language != nil
         {
             var selection: Selection? = nil
             
@@ -53,7 +53,7 @@ class StdHighlightSelection: MimsyPlugin
             {
                 if isWord(view, range)
                 {
-                    selection = Selection(word: view.string.substringWithRange(range), range: range)
+                    selection = Selection(word: view.string.substring(with: range), range: range)
                 }
             }
             
@@ -72,14 +72,14 @@ class StdHighlightSelection: MimsyPlugin
     // This is called after styles have been applied to a chunk of text. We find all the
     // instances of the word in the chunk and underline them if they are not the original
     // selection and not substrings of a larger identifier.
-    func render(view: MimsyTextView, styledRange: NSRange)
+    func render(_ view: MimsyTextView, styledRange: NSRange)
     {
         if let path = view.path, let selection = selections[path], let storage = view.view.textStorage
         {
             var searchRange = styledRange
             while searchRange.length >= selection.range.length
             {
-                let wordRange = view.string.rangeOfString(selection.word, options: .LiteralSearch, range: searchRange)
+                let wordRange = view.string.range(of: selection.word, options: .literal, range: searchRange)
                 if wordRange.length > 0
                 {
                     if isWord(view, wordRange)
@@ -98,7 +98,7 @@ class StdHighlightSelection: MimsyPlugin
         }
     }
     
-    func isWord(view: MimsyTextView, _ range: NSRange) -> Bool
+    func isWord(_ view: MimsyTextView, _ range: NSRange) -> Bool
     {
         guard let storage = view.view.textStorage else
         {

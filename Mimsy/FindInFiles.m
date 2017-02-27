@@ -35,7 +35,7 @@
 		_findText = controller.findText;
 		_resultsController = [[FindResultsController alloc] initWith:self];
 		
-        AppDelegate* app = [NSApp delegate];
+        AppDelegate* app = (AppDelegate*) [NSApp delegate];
 		_reversePaths = [app.layeredSettings boolValue:@"ReversePaths" missing:true];
 				
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsChanged:) name:@"SettingsChanged" object:nil];
@@ -195,7 +195,7 @@
 		title = [NSString stringWithFormat:@"Find '%@' with %d files left", _findText, self.numFilesLeft];
 	}
 	
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
     if ([app.settings boolValue:@"ReportElapsedTimes" missing:false])
     {
         double elapsed = getTime() - self.startTime;

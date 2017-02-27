@@ -35,7 +35,7 @@
         // If that failed then search for the file.
         if (result.count == 0)
         {
-            AppDelegate* app = [NSApp delegate];
+            AppDelegate* app = (AppDelegate*) [NSApp delegate];
             [app enumerateWithDir:root recursive:true error:^(NSString* _Nonnull err)
             {
                 NSString* mesg = [NSString stringWithFormat:@"Error resolving '%@': %@", root, err];
@@ -229,7 +229,7 @@
     if ([[NSWorkspace sharedWorkspace] isFilePackageAtPath:path.asString])
         return true;
     
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
     NSString* fileName = [path lastComponent];
     NSString* setting = [app.layeredSettings stringValue:@"DontOpenWithMimsy" missing:@""];
 	if (setting.length > 0)

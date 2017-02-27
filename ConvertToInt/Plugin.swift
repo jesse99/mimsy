@@ -3,26 +3,26 @@ import MimsyPlugins
 
 class StdConvertToInt: MimsyPlugin
 {
-    override func onLoad(stage: Int) -> String?
+    override func onLoad(_ stage: Int) -> String?
     {
         if stage == 1
         {
-            app.addMenuItem(title: "Convert to Decimal", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: toDecimal)
-            app.addMenuItem(title: "Convert to Hex", loc: .Sorted, sel: "transformItems:", enabled: enabled, invoke: toHex)
+            _ = app.addMenuItem(title: "Convert to Decimal", loc: .sorted, sel: "transformItems:", enabled: enabled, invoke: toDecimal)
+            _ = app.addMenuItem(title: "Convert to Hex", loc: .sorted, sel: "transformItems:", enabled: enabled, invoke: toHex)
             
-            app.registerWithSelectionTextContextMenu(.Transform, callback: contextMenu)
+            app.registerWithSelectionTextContextMenu(.transform, callback: contextMenu)
         }
         
         return nil
     }
     
-    func contextMenu(view: MimsyTextView) -> [TextContextMenuItem]
+    func contextMenu(_ view: MimsyTextView) -> [TextContextMenuItem]
     {
         return [TextContextMenuItem(title: "Convert to Decimal", invoke: {_ in self.toDecimal()}),
             TextContextMenuItem(title: "Convert to Hex", invoke: {_ in self.toHex()})]
     }
     
-    func enabled(item: NSMenuItem) -> Bool
+    func enabled(_ item: NSMenuItem) -> Bool
     {
         var enabled = false
         
@@ -72,7 +72,7 @@ class StdConvertToInt: MimsyPlugin
         }
     }
     
-    func toUTF8(text: String, format: String) -> String
+    func toUTF8(_ text: String, format: String) -> String
     {
         var newText = ""
 
@@ -88,25 +88,26 @@ class StdConvertToInt: MimsyPlugin
         return newText
     }
     
-    func toInt(var text: String, radix: Int) -> Int?
+    func toInt(_ text: String, radix: Int) -> Int?
     {
+        var text = text
         if text.hasPrefix("0b")
         {
-            text.removeRange(text.startIndex ..< text.startIndex.advancedBy(2))
+            text.removeSubrange(text.startIndex ..< text.characters.index(text.startIndex, offsetBy: 2))
             return toInt(text, radix: 2)
         }
         else if text.hasPrefix("0o")
         {
-            text.removeRange(text.startIndex ..< text.startIndex.advancedBy(2))
+            text.removeSubrange(text.startIndex ..< text.characters.index(text.startIndex, offsetBy: 2))
             return toInt(text, radix: 8)
         }
         else if text.hasPrefix("0x")
         {
-            text.removeRange(text.startIndex ..< text.startIndex.advancedBy(2))
+            text.removeSubrange(text.startIndex ..< text.characters.index(text.startIndex, offsetBy: 2))
             return toInt(text, radix: 16)
         }
         
-        text = text.stringByReplacingOccurrencesOfString("_", withString: "")
+        text = text.replacingOccurrences(of: "_", with: "")
         return Int(text, radix: radix)
     }
 }

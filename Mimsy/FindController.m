@@ -71,7 +71,7 @@ typedef void (^FindBlock)(BaseTextController* controller, NSRegularExpression* r
 		NSString* findText = [self.findText copy];
 		_finding = true;
 
-        AppDelegate* app = [NSApp delegate];
+        AppDelegate* app = (AppDelegate*) [NSApp delegate];
         bool wrap = [app.layeredSettings boolValue:@"FindWraps" missing:true];
 		
 		[self _updateComboBox:self.findComboBox with:findText];

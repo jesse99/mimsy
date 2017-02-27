@@ -170,7 +170,7 @@
 	TextController* tmp = _controller;
 	if (tmp)
 	{
-        AppDelegate* app = [NSApp delegate];
+        AppDelegate* app = (AppDelegate*) [NSApp delegate];
 		NSTextStorage* storage = tmp.textView.textStorage;
         NSDictionary* elementHooks = app.applyElementHooks;
 		double startTime = getTime();

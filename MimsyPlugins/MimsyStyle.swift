@@ -4,22 +4,22 @@ import Cocoa
 /// attribute styles (e.g. from a language file).
 public enum MimsyStyle
 {
-    case BackColor(NSColor)
-    case Color(NSColor)
-    case Skew(SkewArgument)
-    case Size(SizeArgument)
-    case Stroke(StrokeArgument)
-    case Underline(UnderLineArgument)
-    case UnderlineColor(NSColor)
+    case backColor(NSColor)
+    case color(NSColor)
+    case skew(SkewArgument)
+    case size(SizeArgument)
+    case stroke(StrokeArgument)
+    case underline(UnderLineArgument)
+    case underlineColor(NSColor)
     
-    public static func parse(app: MimsyApp, _ text: String) throws -> [MimsyStyle]
+    public static func parse(_ app: MimsyApp, _ text: String) throws -> [MimsyStyle]
     {
         var styles: [MimsyStyle] = []
         
-        let parts = text.componentsSeparatedByString(" ")
+        let parts = text.components(separatedBy: " ")
         for part in parts
         {
-            let fields = part.componentsSeparatedByString("=")
+            let fields = part.components(separatedBy: "=")
             if fields.count != 2
             {
                 throw MimsyError("Expected key=value pair not '%@'", part)
@@ -27,13 +27,13 @@ public enum MimsyStyle
             
             switch fields[0]
             {
-            case "back-color":      styles.append(.BackColor(try parseColor(app, fields[1])))
-            case "color":           styles.append(.Color(try parseColor(app, fields[1])))
-            case "skew":            styles.append(.Skew(try SkewArgument.parse(fields[1])))
-            case "size":            styles.append(.Size(try SizeArgument.parse(fields[1])))
-            case "stroke":          styles.append(.Stroke(try StrokeArgument.parse(fields[1])))
-            case "underline":       styles.append(.Underline(try UnderLineArgument.parse(fields[1])))
-            case "underline-color": styles.append(.UnderlineColor(try parseColor(app, fields[1])))
+            case "back-color":      styles.append(.backColor(try parseColor(app, fields[1])))
+            case "color":           styles.append(.color(try parseColor(app, fields[1])))
+            case "skew":            styles.append(.skew(try SkewArgument.parse(fields[1])))
+            case "size":            styles.append(.size(try SizeArgument.parse(fields[1])))
+            case "stroke":          styles.append(.stroke(try StrokeArgument.parse(fields[1])))
+            case "underline":       styles.append(.underline(try UnderLineArgument.parse(fields[1])))
+            case "underline-color": styles.append(.underlineColor(try parseColor(app, fields[1])))
             default:                throw MimsyError("bad key: %@", fields[0])
             }
         }
@@ -41,24 +41,24 @@ public enum MimsyStyle
         return styles
     }
     
-    public static func apply(str: NSMutableAttributedString, _ styles: [MimsyStyle], _ range: NSRange)
+    public static func apply(_ str: NSMutableAttributedString, _ styles: [MimsyStyle], _ range: NSRange)
     {
         for style in styles
         {
             switch style
             {
-            case BackColor(let color): str.addAttribute(NSBackgroundColorAttributeName, value: color, range: range)
-            case Color(let color): str.addAttribute(NSForegroundColorAttributeName, value: color, range: range)
-            case Skew(let arg): arg.apply(str, range)
-            case Size(let arg): arg.apply(str, range)
-            case Stroke(let arg): arg.apply(str, range)
-            case Underline(let arg): arg.apply(str, range)
-            case UnderlineColor(let color): str.addAttribute(NSUnderlineColorAttributeName, value: color, range: range)
+            case backColor(let color): str.addAttribute(NSBackgroundColorAttributeName, value: color, range: range)
+            case color(let color): str.addAttribute(NSForegroundColorAttributeName, value: color, range: range)
+            case skew(let arg): arg.apply(str, range)
+            case size(let arg): arg.apply(str, range)
+            case stroke(let arg): arg.apply(str, range)
+            case underline(let arg): arg.apply(str, range)
+            case underlineColor(let color): str.addAttribute(NSUnderlineColorAttributeName, value: color, range: range)
             }
         }
     }
     
-    static func parseColor(app: MimsyApp, _ name: String) throws -> NSColor
+    static func parseColor(_ app: MimsyApp, _ name: String) throws -> NSColor
     {
         if let color = app.mimsyColor(name)
         {
@@ -73,20 +73,20 @@ public enum MimsyStyle
 
 public enum SkewArgument
 {
-    case Italic
-    case SkewAmount(Float)
+    case italic
+    case skewAmount(Float)
     
-    static func parse(text: String) throws -> SkewArgument
+    static func parse(_ text: String) throws -> SkewArgument
     {
         switch text
         {
-        case "italic":      return .Italic
-        case "0", "0.0":    return .SkewAmount(0.0)
+        case "italic":      return .italic
+        case "0", "0.0":    return .skewAmount(0.0)
         default:
             let value = (text as NSString).floatValue
             if value != 0.0
             {
-                return .SkewAmount(value)
+                return .skewAmount(value)
             }
             else
             {
@@ -95,40 +95,40 @@ public enum SkewArgument
         }
     }
 
-    func apply(str: NSMutableAttributedString, _ range: NSRange)
+    func apply(_ str: NSMutableAttributedString, _ range: NSRange)
     {
         switch self
         {
-        case Italic:
-            str.addAttribute(NSObliquenessAttributeName, value: NSNumber(float: 0.15), range: range)
-        case SkewAmount(let value):
-            str.addAttribute(NSObliquenessAttributeName, value: NSNumber(float: value), range: range)
+        case .italic:
+            str.addAttribute(NSObliquenessAttributeName, value: NSNumber(value: 0.15 as Float), range: range)
+        case .skewAmount(let value):
+            str.addAttribute(NSObliquenessAttributeName, value: NSNumber(value: value as Float), range: range)
         }
     }
 }
 
 public enum SizeArgument
 {
-    case MuchSmaller
-    case Smaller
-    case Larger
-    case MuchLarger
-    case PointSize(Float)
+    case muchSmaller
+    case smaller
+    case larger
+    case muchLarger
+    case pointSize(Float)
     
-    static func parse(text: String) throws -> SizeArgument
+    static func parse(_ text: String) throws -> SizeArgument
     {
         switch text
         {
-        case "much-smaller":    return .MuchSmaller
-        case "smaller":         return .Smaller
-        case "larger":          return .Larger
-        case "much-larger":     return .MuchLarger
-        case "0", "0.0":        return .PointSize(0.0)
+        case "much-smaller":    return .muchSmaller
+        case "smaller":         return .smaller
+        case "larger":          return .larger
+        case "much-larger":     return .muchLarger
+        case "0", "0.0":        return .pointSize(0.0)
         default:
             let value = (text as NSString).floatValue
             if value != 0.0
             {
-                return .PointSize(value)
+                return .pointSize(value)
             }
             else
             {
@@ -137,21 +137,20 @@ public enum SizeArgument
         }
     }
     
-    func apply(str: NSMutableAttributedString, _ range: NSRange)
+    func apply(_ str: NSMutableAttributedString, _ range: NSRange)
     {
         var delta: Float = 0.0
         
         switch self
         {
-        case MuchSmaller:           delta = -4.0
-        case Smaller:               delta = -2.0
-        case Larger:                delta = 2.0
-        case MuchLarger:            delta = 4.0
-        case PointSize(let value):  delta = value
+        case .muchSmaller:           delta = -4.0
+        case .smaller:               delta = -2.0
+        case .larger:                delta = 2.0
+        case .muchLarger:            delta = 4.0
+        case .pointSize(let value):  delta = value
         }
         
-        let effRange = UnsafeMutablePointer<NSRange>(nil)
-        if let value = str.attribute(NSFontAttributeName, atIndex: range.location, effectiveRange: effRange) as? NSFont
+        if let value = str.attribute(NSFontAttributeName, at: range.location, effectiveRange: nil) as? NSFont
         {
             let size = max(Float(value.pointSize) + delta, 6.0)
             let font = NSFont(name: value.fontName, size: CGFloat(size))
@@ -162,28 +161,28 @@ public enum SizeArgument
 
 public enum StrokeArgument
 {
-    case Normal
-    case Outline
-    case Bold
-    case VeryBold
-    case SuperBold
-    case Width(Float)
+    case normal
+    case outline
+    case bold
+    case veryBold
+    case superBold
+    case width(Float)
     
-    static func parse(text: String) throws -> StrokeArgument
+    static func parse(_ text: String) throws -> StrokeArgument
     {
         switch text
         {
-        case "normal":      return .Normal
-        case "outline":     return .Outline
-        case "bold":        return .Bold
-        case "very-bold":   return .VeryBold
-        case "super-bold":  return .SuperBold
-        case "0", "0.0":    return .Width(0.0)
+        case "normal":      return .normal
+        case "outline":     return .outline
+        case "bold":        return .bold
+        case "very-bold":   return .veryBold
+        case "super-bold":  return .superBold
+        case "0", "0.0":    return .width(0.0)
         default:
             let value = (text as NSString).floatValue
             if value != 0.0
             {
-                return .Width(value)
+                return .width(value)
             }
             else
             {
@@ -192,46 +191,46 @@ public enum StrokeArgument
         }
     }
     
-    func apply(str: NSMutableAttributedString, _ range: NSRange)
+    func apply(_ str: NSMutableAttributedString, _ range: NSRange)
     {
         var value: Float
 
         switch self
         {
-        case Normal:        value = 0.0
-        case Outline:       value = 3.0
-        case Bold:          value = -3.0
-        case VeryBold:      value = -5.0
-        case SuperBold:     value = -7.0
-        case Width(let v):  value = v
+        case .normal:        value = 0.0
+        case .outline:       value = 3.0
+        case .bold:          value = -3.0
+        case .veryBold:      value = -5.0
+        case .superBold:     value = -7.0
+        case .width(let v):  value = v
         }
 
-        str.addAttribute(NSStrokeWidthAttributeName, value: NSNumber(float: value), range: range)
+        str.addAttribute(NSStrokeWidthAttributeName, value: NSNumber(value: value as Float), range: range)
 }
 }
 
 public enum UnderLineArgument
 {
-    case None
-    case Single
-    case Thick
-    case Double
-    case Style(Int)
+    case none
+    case single
+    case thick
+    case double
+    case style(Int)
     
-    static func parse(text: String) throws -> UnderLineArgument
+    static func parse(_ text: String) throws -> UnderLineArgument
     {
         switch (text)
         {
-        case "none":    return .None
-        case "single":  return .Single
-        case "thick":   return .Thick
-        case "double":  return .Double
-        case "0":       return .Style(0)
+        case "none":    return .none
+        case "single":  return .single
+        case "thick":   return .thick
+        case "double":  return .double
+        case "0":       return .style(0)
         default:
             let value = (text as NSString).integerValue
             if value != 0
             {
-                return .Style(value)
+                return .style(value)
             }
             else
             {
@@ -241,20 +240,20 @@ public enum UnderLineArgument
     }
 
     
-    func apply(str: NSMutableAttributedString, _ range: NSRange)
+    func apply(_ str: NSMutableAttributedString, _ range: NSRange)
     {
         var value: Int
         
         switch self
         {
-        case None:          value = NSUnderlineStyle.StyleNone.rawValue
-        case Single:        value = NSUnderlineStyle.StyleSingle.rawValue
-        case Thick:         value = NSUnderlineStyle.StyleThick.rawValue
-        case Double:        value = NSUnderlineStyle.StyleDouble.rawValue
-        case Style(let v):  value = v
+        case .none:          value = NSUnderlineStyle.styleNone.rawValue
+        case .single:        value = NSUnderlineStyle.styleSingle.rawValue
+        case .thick:         value = NSUnderlineStyle.styleThick.rawValue
+        case .double:        value = NSUnderlineStyle.styleDouble.rawValue
+        case .style(let v):  value = v
         }
 
-        str.addAttribute(NSUnderlineStyleAttributeName, value: NSNumber(integer: value), range: range)
+        str.addAttribute(NSUnderlineStyleAttributeName, value: NSNumber(value: value as Int), range: range)
     }
 }
 

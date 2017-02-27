@@ -1,13 +1,13 @@
 import Foundation
 
-public extension NSURL
+public extension URL
 {
     /// Wrapper around getResourceValue(NSURLContentModificationDateKey).
-    public func contentModificationDateValue() throws -> NSDate
+    public func contentModificationDateValue() throws -> Date
     {
         var rsrc: AnyObject?
-        try self.getResourceValue(&rsrc, forKey: NSURLContentModificationDateKey)
-        if let date = rsrc as? NSDate
+        try (self as NSURL).getResourceValue(&rsrc, forKey: URLResourceKey.contentModificationDateKey)
+        if let date = rsrc as? Date
         {
             return date
         }
@@ -18,7 +18,7 @@ public extension NSURL
     public func isDirectoryValue() throws -> Bool
     {
         var rsrc: AnyObject?
-        try self.getResourceValue(&rsrc, forKey: NSURLIsDirectoryKey)
+        try (self as NSURL).getResourceValue(&rsrc, forKey: URLResourceKey.isDirectoryKey)
         if let flag = rsrc as? NSNumber
         {
             return flag == 1
@@ -30,7 +30,7 @@ public extension NSURL
     public func nameValue() throws -> String
     {
         var rsrc: AnyObject?
-        try self.getResourceValue(&rsrc, forKey: NSURLNameKey)
+        try (self as NSURL).getResourceValue(&rsrc, forKey: URLResourceKey.nameKey)
         if let name = rsrc as? NSString
         {
             return name as String
@@ -42,7 +42,7 @@ public extension NSURL
     public func pathValue() throws -> MimsyPath
     {
         var rsrc: AnyObject?
-        try self.getResourceValue(&rsrc, forKey: NSURLPathKey)
+        try (self as NSURL).getResourceValue(&rsrc, forKey: URLResourceKey.pathKey)
         if let path = rsrc as? NSString
         {
             return MimsyPath(withString: path as String)

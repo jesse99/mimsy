@@ -175,7 +175,7 @@
 		mesg = [NSString stringWithFormat:@"Replace '%@' replaced nothing", _findController.findText];
 	}
 	
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
     if ([app.settings boolValue:@"ReportElapsedTimes" missing:false])
     {
         double elapsed = getTime() - self.startTime;

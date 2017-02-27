@@ -3,7 +3,7 @@ import MimsyPlugins
 
 class StdDefinitionsParser: MimsyPlugin, ItemParser
 {
-    override func onLoad(stage: Int) -> String?
+    override func onLoad(_ stage: Int) -> String?
     {
         if stage == 1
         {
@@ -32,12 +32,12 @@ class StdDefinitionsParser: MimsyPlugin, ItemParser
             if !lang.getPatterns("Function").isEmpty || !lang.getPatterns("Structure").isEmpty
             {
                 let globs = lang.settings.stringValue("Globs", missing: "")
-                let patterns = globs.componentsSeparatedByString(" ")
+                let patterns = globs.components(separatedBy: " ")
                 for pattern in patterns
                 {
                     if pattern.hasPrefix("*.")
                     {
-                        let name = pattern.substringFromIndex(pattern.startIndex.advancedBy(2))
+                        let name = pattern.substring(from: pattern.characters.index(pattern.startIndex, offsetBy: 2))
                         languages[name] = lang
                     }
                 }
@@ -47,7 +47,7 @@ class StdDefinitionsParser: MimsyPlugin, ItemParser
     
     var method: ParseMethod
     {
-        get {return .Regex}
+        get {return .regex}
     }
     
     var extensionNames: [String]
@@ -56,7 +56,7 @@ class StdDefinitionsParser: MimsyPlugin, ItemParser
     }
     
     // Threaded code
-    func parse(path: MimsyPath) throws -> [ItemName]
+    func parse(_ path: MimsyPath) throws -> [ItemName]
     {
         var items: [ItemName]
         
@@ -77,12 +77,13 @@ class StdDefinitionsParser: MimsyPlugin, ItemParser
     }
     
     // Threaded code
-    func findRegex(var patterns: [String]) throws -> NSRegularExpression
+    func findRegex(_ patterns: [String]) throws -> NSRegularExpression
     {
+        var patterns = patterns
         // It's easier to cache patterns instead of directly caching regexen because
         // that way we don't have to detect edits to language files.
         patterns = patterns.map {"(?:" + $0 + ")"}
-        let pattern = patterns.joinWithSeparator("|")
+        let pattern = patterns.joined(separator: "|")
         
         if let re = regexen[pattern]
         {
@@ -90,37 +91,37 @@ class StdDefinitionsParser: MimsyPlugin, ItemParser
         }
         else
         {
-            let re = try NSRegularExpression(pattern: pattern, options: [.AllowCommentsAndWhitespace, .AnchorsMatchLines])
+            let re = try NSRegularExpression(pattern: pattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
             regexen[pattern] = re
             return re
         }
     }
     
     // Threaded code
-    func parse(lang: MimsyLanguage, _ re: NSRegularExpression, _ path: MimsyPath) throws -> [ItemName]
+    func parse(_ lang: MimsyLanguage, _ re: NSRegularExpression, _ path: MimsyPath) throws -> [ItemName]
     {
         var items: [ItemName] = []
 //        app.log("Plugins", "parsing %@", path.lastComponent())
         
-        let contents = try NSString(contentsOfFile: path.asString(), encoding: NSUTF8StringEncoding)
-        re.enumerateMatchesInString(contents as String, options: NSMatchingOptions(rawValue: 0), range: NSRange(location: 0, length: contents.length))
+        let contents = try NSString(contentsOfFile: path.asString(), encoding: String.Encoding.utf8.rawValue)
+        re.enumerateMatches(in: contents as String, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSRange(location: 0, length: contents.length))
         { (match, flags, stop) in
             if let match = match
             {
                 for i in 1..<match.numberOfRanges
                 {
-                    let range = match.rangeAtIndex(i)
+                    let range = match.rangeAt(i)
                     if range.length > 0
                     {
-                        let name = contents.substringWithRange(range)
+                        let name = contents.substring(with: range)
                         if self.isDeclaration(lang, contents, range)
                         {
-                            items.append(ItemName.Declaration(name: name, location: range.location))
+                            items.append(ItemName.declaration(name: name, location: range.location))
 //                            self.app.log("Plugins", "   found %@ declaration", name)
                         }
                         else
                         {
-                            items.append(ItemName.Definition(name: name, location: range.location))
+                            items.append(ItemName.definition(name: name, location: range.location))
 //                            self.app.log("Plugins", "   found %@ definition", name)
                         }
                         break
@@ -132,14 +133,14 @@ class StdDefinitionsParser: MimsyPlugin, ItemParser
         return items
     }
     
-    func isDeclaration(lang: MimsyLanguage, _ text: NSString, _ range: NSRange) -> Bool
+    func isDeclaration(_ lang: MimsyLanguage, _ text: NSString, _ range: NSRange) -> Bool
     {
         if lang.name == "c" || lang.name == "c++"
         {
             var i = range.location + range.length
             while i < min(text.length, range.location + range.length + 200)
             {
-                let ch = Character(UnicodeScalar(text.characterAtIndex(i)))
+                let ch = Character(UnicodeScalar(text.character(at: i))!)
                 if ch == "{"
                 {
                     return false

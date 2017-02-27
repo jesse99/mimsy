@@ -1,14 +1,14 @@
 import Foundation
 
 /// Type safe path abstraction.
-public class MimsyPath: NSObject, CustomDebugStringConvertible
+open class MimsyPath: NSObject
 {
     /// Constructs a path without attempting to standardize the path.
     public init(withString: String)
     {
         assert(!withString.isEmpty)
  
-        path = withString
+        path = withString as NSString
         super.init()
     }
     
@@ -17,7 +17,7 @@ public class MimsyPath: NSObject, CustomDebugStringConvertible
     /// path use "/" as the first component.
     public init(withComponents: String...)
     {
-        path = NSString.pathWithComponents(withComponents)
+        path = NSString.path(withComponents: withComponents) as NSString
         super.init()
         
         assert(path.length > 0)
@@ -25,51 +25,51 @@ public class MimsyPath: NSObject, CustomDebugStringConvertible
     
     public init(withArray: [String])
     {
-        path = NSString.pathWithComponents(withArray)
+        path = NSString.path(withComponents: withArray) as NSString
         super.init()
         
         assert(path.length > 0)
     }
     
-    public override var debugDescription: String
+    open override var debugDescription: String
     {
         get {return path as String}
     }
 
-    override public var description: String
+    override open var description: String
     {
         return path as String
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool
+    open override func isEqual(_ object: Any?) -> Bool
     {
         if let rhs = object as? MimsyPath
         {
-            return path.isEqualToString(rhs.path as String)
+            return path.isEqual(to: rhs.path as String)
         }
         return false
     }
     
-    public override var hash: Int
+    open override var hash: Int
     {
         return path.hash
     }
     
-    public func isEqualTo(path path: MimsyPath?) -> Bool
+    open func isEqualTo(path: MimsyPath?) -> Bool
     {
-        return path != nil && self.path.isEqualToString(path!.path as String)
+        return path != nil && self.path.isEqual(to: path!.path as String)
     }
     
     /// This should only be used for interop.
-    public func asString() -> String
+    open func asString() -> String
     {
         return path as String
     }
     
     /// This should only be used for interop.
-    public func asURL() -> NSURL
+    open func asURL() -> URL
     {
-        return NSURL(fileURLWithPath: path as String)
+        return URL(fileURLWithPath: path as String)
     }
     
     /// Cleans up the path by:
@@ -78,46 +78,46 @@ public class MimsyPath: NSObject, CustomDebugStringConvertible
     /// * For absolute paths resolving "..".
     /// * Reducing things like "//" and "/./" to a single slash.
     /// Note that symbolic links are not resolved.
-    public func standardize() -> MimsyPath
+    open func standardize() -> MimsyPath
     {
-        return MimsyPath(withString: path.stringByStandardizingPath)
+        return MimsyPath(withString: path.standardizingPath)
     }
     
     /// Resolves all sym links in absolute paths and as many as possible
     /// for relative paths then standardize the result.
-    public func resolveSymLinks() -> MimsyPath
+    open func resolveSymLinks() -> MimsyPath
     {
-        return MimsyPath(withString: path.stringByResolvingSymlinksInPath)
+        return MimsyPath(withString: path.resolvingSymlinksInPath)
     }
     
     /// Returns a new path suitable for humans that does not point to an 
     /// existing file or directory.
-    public func makeUnique() -> MimsyPath
+    open func makeUnique() -> MimsyPath
     {
         let root = self.popExtension()
         let ext = self.hasExtension() ? ".\(self.extensionName())" : ""
         
         var n = 0
-        let fm = NSFileManager.defaultManager()
+        let fm = FileManager.default
         while true
         {
             let candidate = n == 0 ? "\(root)\(ext)" : "\(root) \(n)\(ext)"
-            if !fm.fileExistsAtPath(candidate)  // also checks for directories
+            if !fm.fileExists(atPath: candidate)  // also checks for directories
             {
                 return MimsyPath(withString: candidate)
             }
-            n++
+            n += 1
         }
     }
     
     /// Returns true if the path is an absolute path.
-    public func isAbsolute() -> Bool
+    open func isAbsolute() -> Bool
     {
-        return path.absolutePath
+        return path.isAbsolutePath
     }
 
     /// Returns true if the last component has a period.
-    public func hasExtension() -> Bool
+    open func hasExtension() -> Bool
     {
         return self.extensionName() != nil
     }
@@ -125,13 +125,13 @@ public class MimsyPath: NSObject, CustomDebugStringConvertible
     /// Returns the modification time in seconds. For a directory this will
     /// return the last time a file within the directory was added, removed
     /// or renamed (but not modified).
-    public func modTime() throws -> Double
+    open func modTime() throws -> Double
     {
         return try app!._modTime(self).doubleValue
     }
     
     /// Returns true if the target's components start with all the roots components.
-    public func hasRoot(root: MimsyPath) -> Bool
+    open func hasRoot(_ root: MimsyPath) -> Bool
     {
         let lhs = self.components()
         let rhs = root.components()
@@ -139,7 +139,7 @@ public class MimsyPath: NSObject, CustomDebugStringConvertible
     }
     
     /// Returns true if the target's components end with all the stems components.
-    public func hasStem(stem: MimsyPath) -> Bool
+    open func hasStem(_ stem: MimsyPath) -> Bool
     {
         let lhs = self.components()
         let rhs = stem.components()
@@ -148,7 +148,7 @@ public class MimsyPath: NSObject, CustomDebugStringConvertible
     
     /// Removes the root's components from the start of the target.
     /// Error if hasRoot is false.
-    public func removeRoot(root: MimsyPath) -> MimsyPath
+    open func removeRoot(_ root: MimsyPath) -> MimsyPath
     {
         assert(hasRoot(root))
         
@@ -160,7 +160,7 @@ public class MimsyPath: NSObject, CustomDebugStringConvertible
     
     /// For "foo/bar.rtf" this will return ["foo", "bar.rtf"].
     /// For "/foo/bar.rtf" this will return ["/", "foo", "bar.rtf"].
-    public func components() -> [String]
+    open func components() -> [String]
     {
         return path.pathComponents
     }
@@ -170,21 +170,21 @@ public class MimsyPath: NSObject, CustomDebugStringConvertible
     /// For "/tmp/" this returns "tmp".
     /// For "scratch///" this returns "scratch".
     /// For "/" this returns "/".
-    public func lastComponent() -> String
+    open func lastComponent() -> String
     {
         return path.lastPathComponent
     }
     
     /// Returns the portion of the path after the last period or
     /// nil if the lastComponent has no period.
-    public func extensionName() -> String?
+    open func extensionName() -> String?
     {
         let name = path.pathExtension
         return name.isEmpty ? nil : name
     }
     
     /// Creates a new path by appending a relative path onto the target.
-    public func append(path path: MimsyPath) -> MimsyPath
+    open func append(path: MimsyPath) -> MimsyPath
     {
         assert(!path.isAbsolute())
         
@@ -194,28 +194,28 @@ public class MimsyPath: NSObject, CustomDebugStringConvertible
     }
     
     /// Creates a new path by appending a new path component onto the target.
-    public func append(component component: String) -> MimsyPath
+    open func append(component: String) -> MimsyPath
     {
-        return MimsyPath(withString: path.stringByAppendingPathComponent(component))
+        return MimsyPath(withString: path.appendingPathComponent(component))
     }
     
     /// Creates a new path by appending an extension onto the target (don't include the period).
-    public func append(extensionName extensionName: String) -> MimsyPath
+    open func append(extensionName: String) -> MimsyPath
     {
         assert(!extensionName.hasPrefix("."))
-        return MimsyPath(withString: path.stringByAppendingPathExtension(extensionName)!)
+        return MimsyPath(withString: path.appendingPathExtension(extensionName)!)
     }
     
     /// Removes the last component along with a trailing slash (if present).
-    public func popComponent() -> MimsyPath
+    open func popComponent() -> MimsyPath
     {
-        return MimsyPath(withString: path.stringByDeletingLastPathComponent)
+        return MimsyPath(withString: path.deletingLastPathComponent)
     }
     
     /// Removes the extension name and period (if present).
-    public func popExtension() -> MimsyPath
+    open func popExtension() -> MimsyPath
     {
-        return MimsyPath(withString: path.stringByDeletingPathExtension)
+        return MimsyPath(withString: path.deletingPathExtension)
     }
     
     let path: NSString

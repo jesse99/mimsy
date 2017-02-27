@@ -3,7 +3,7 @@ import MimsyPlugins
 
 class StdDuplicateFile: MimsyPlugin
 {
-    override func onLoad(stage: Int) -> String?
+    override func onLoad(_ stage: Int) -> String?
     {
         if stage == 1
         {
@@ -13,7 +13,7 @@ class StdDuplicateFile: MimsyPlugin
         return nil
     }
     
-    func getTitle(files: [MimsyPath], dirs: [MimsyPath]) -> String?
+    func getTitle(_ files: [MimsyPath], dirs: [MimsyPath]) -> String?
     {
         if dirs.isEmpty && !files.isEmpty
         {
@@ -25,23 +25,23 @@ class StdDuplicateFile: MimsyPlugin
         }
     }
     
-    func duplicateItems(files: [MimsyPath], dirs: [MimsyPath])
+    func duplicateItems(_ files: [MimsyPath], dirs: [MimsyPath])
     {
-        let fm = NSFileManager.defaultManager()
+        let fm = FileManager.default
         for oldPath in files
         {
             do
             {
                 let newPath = oldPath.makeUnique()
-                try fm.copyItemAtPath(oldPath.asString(), toPath: newPath.asString())
+                try fm.copyItem(atPath: oldPath.asString(), toPath: newPath.asString())
             }
             catch let err as NSError
             {
-                app.transcript().write(.Error, text: "error copying \(oldPath): \(err.localizedFailureReason)")
+                app.transcript().write(.error, text: "error copying \(oldPath): \(err.localizedFailureReason)")
             }
             catch
             {
-                app.transcript().write(.Error, text: "unknown error copying \(oldPath)")
+                app.transcript().write(.error, text: "unknown error copying \(oldPath)")
             }
         }
     }

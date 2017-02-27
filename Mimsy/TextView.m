@@ -299,7 +299,7 @@ static NSString* getKey(NSEvent* event)
     {
         NSString* fn = decorateKey(event, key);
         
-        AppDelegate* app = [NSApp delegate];
+        AppDelegate* app = (AppDelegate*) [NSApp delegate];
         TextController* controller = self.window.windowController;
         handled = [app invokeTextViewKeyHook:fn view:controller];
     }
@@ -523,7 +523,7 @@ static NSString* getKey(NSEvent* event)
 
 - (NSMenu*)menuForEvent:(NSEvent*)event
 {
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
     
     NSMenu* menu = [[NSMenu alloc] initWithTitle:@""];
     

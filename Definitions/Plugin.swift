@@ -4,7 +4,7 @@ import MimsyPlugins
 
 class StdDefinitions: MimsyPlugin, MimsyDefinitions
 {
-    override func onLoad(stage: Int) -> String?
+    override func onLoad(_ stage: Int) -> String?
     {
         if stage == 0
         {
@@ -12,9 +12,9 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         }
         else if stage == 1
         {
-            app.registerProject(.Opened, onOpened)
-            app.registerProject(.Closing, onClosing)
-            app.registerProject(.Changed, onChanged)
+            app.registerProject(.opened, onOpened)
+            app.registerProject(.closing, onClosing)
+            app.registerProject(.changed, onChanged)
 
 //            app.registerWithSelectionTextContextMenu(.Lookup, callback: addLogItem)
         }
@@ -29,7 +29,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         return nil
     }
     
-    func findParsers(parsers: [ItemParser])
+    func findParsers(_ parsers: [ItemParser])
     {
         for parser in parsers
         {
@@ -40,7 +40,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         }
     }
     
-    func addLogItem(view: MimsyTextView) -> [TextContextMenuItem]
+    func addLogItem(_ view: MimsyTextView) -> [TextContextMenuItem]
     {
         if let project = view.project
         {
@@ -53,7 +53,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         return []
     }
     
-    func register(parser: ItemParser)
+    func register(_ parser: ItemParser)
     {
         // The parser arrays are used from a thread so we don't want the main thread
         // changing them while the thread is using them.
@@ -61,23 +61,23 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         
         switch parser.method
         {
-        case .Regex: regexParsers.append(parser)
-        case .Parser: parserParsers.append(parser)
-        case .ExternalTool: toolParsers.append(parser)
+        case .regex: regexParsers.append(parser)
+        case .parser: parserParsers.append(parser)
+        case .externalTool: toolParsers.append(parser)
         }
     }
     
-    func declarations(project: MimsyProject, name: String) -> [ItemPath]
+    func declarations(_ project: MimsyProject, name: String) -> [ItemPath]
     {
         return declarations[project.path]?[name] ?? []
     }
     
-    func definitions(project: MimsyProject, name: String) -> [ItemPath]
+    func definitions(_ project: MimsyProject, name: String) -> [ItemPath]
     {
         return definitions[project.path]?[name] ?? []
     }
     
-    func onOpened(project: MimsyProject)
+    func onOpened(_ project: MimsyProject)
     {
         projects[project.path] = ProjectInfo(modTime: 0.0, files: [:])
         startScanning(project)
@@ -86,44 +86,44 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     // TODO: Could cache this data which would definitely help remote volumes (for samba
     // over VPN I am getting a pathetic 7 files/second even after tuning both this code
     // and the samba configuration).
-    func onClosing(project: MimsyProject)
+    func onClosing(_ project: MimsyProject)
     {
         projects[project.path] = nil
         states[project.path] = nil
     }
     
-    func onChanged(project: MimsyProject)
+    func onChanged(_ project: MimsyProject)
     {
         switch states[project.path]!
         {
-        case .Idle:
+        case .idle:
             startScanning(project)
-        case .Scanning:
-            states[project.path] = .Queued
-        case .Queued:
+        case .scanning:
+            states[project.path] = .queued
+        case .queued:
             break
         }
     }
     
-    func startScanning(project: MimsyProject)
+    func startScanning(_ project: MimsyProject)
     {
         let root = project.path
-        assert(states[root] ?? .Idle != .Scanning)
-        states[root] = .Scanning
+        assert(states[root] ?? .idle != .scanning)
+        states[root] = .scanning
         
-        let concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)
-        dispatch_async(concurrent) {self.scanProject(project, NSDate().timeIntervalSince1970)}
+        let concurrent = DispatchQueue.global(qos: .background)
+        concurrent.async {self.scanProject(project, Date().timeIntervalSince1970)}
     }
     
     // Threaded code
-    func scanProject(project: MimsyProject, _ startTime: NSTimeInterval)
+    func scanProject(_ project: MimsyProject, _ startTime: TimeInterval)
     {
-        func reportElapsed(count: Int)
+        func reportElapsed(_ count: Int)
         {
             if app.settings.boolValue("ReportElapsedTimes", missing: false)
             {
-                let elapsed = NSDate().timeIntervalSince1970 - startTime
-                app.transcript().writeLine(.Plain, "Parsed %@ for definitions in %.1fs (%.2f files/sec)", project.path, elapsed, NSTimeInterval(count)/elapsed)
+                let elapsed = Date().timeIntervalSince1970 - startTime
+                app.transcript().writeLine(.plain, "Parsed %@ for definitions in %.1fs (%.2f files/sec)", project.path, elapsed, TimeInterval(count)/elapsed)
             }
         }
         
@@ -142,9 +142,9 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
         //        dumpPaths("Declarations", decs)
         //        dumpPaths("Definitions", defs)
         
-        let main = dispatch_get_main_queue()
-        let delay = dispatch_time(DISPATCH_TIME_NOW, Int64(0*NSEC_PER_MSEC))
-        dispatch_after(delay, main)
+        let main = DispatchQueue.main
+        let delay = DispatchTime.now() + Double(Int64(0*NSEC_PER_MSEC)) / Double(NSEC_PER_SEC)
+        main.asyncAfter(deadline: delay)
         {
             // Update the projects dictionary, but only if the project is still open.
             if let _ = self.projects[root]
@@ -152,18 +152,18 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
                 self.projects[root] = ProjectInfo(modTime: latestModTime, files: newInfo)
                 self.declarations[root] = decs
                 self.definitions[root] = defs
-                reportElapsed(count)
+//                reportElapsed(count)
                 
                 switch self.states[root]!
                 {
-                case .Idle:
+                case .idle:
                     //assert(false)
                     break
                     
-                case .Scanning:
-                    self.states[root] = .Idle
+                case .scanning:
+                    self.states[root] = .idle
                     
-                case .Queued:
+                case .queued:
                     self.startScanning(project)
                 }
             }
@@ -171,15 +171,15 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     }
     
     // Threaded code
-    func scanDir(inout newInfo: [MimsyPath: [ItemName]], inout _ latestModTime: Double, _ root: MimsyPath, _ dir: MimsyPath) -> Int
+    func scanDir(_ newInfo: inout [MimsyPath: [ItemName]], _ latestModTime: inout Double, _ root: MimsyPath, _ dir: MimsyPath) -> Int
     {
         let oldInfo = projects[root]
         var count = 0
         
-        func shouldProcess(dir: MimsyPath, _ fileName: String) -> Bool
+        func shouldProcess(_ dir: MimsyPath, _ fileName: String) -> Bool
         {
             let path = dir.append(component: fileName)
-            if let name = path.extensionName() where self.parsers.keys.contains(name)
+            if let name = path.extensionName(), self.parsers.keys.contains(name)
             {
                 do
                 {
@@ -188,7 +188,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
                     
                     switch oldInfo
                     {
-                    case .Some(let old):
+                    case .some(let old):
                         if mtime > old.modTime
                         {
                             return true
@@ -198,7 +198,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
                             newInfo[path] = old.files[path]
                         }
                         break
-                    case .None:
+                    case .none:
                         return true
                     }
                 }
@@ -245,9 +245,9 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     }
         
     // Threaded code
-    func buildPaths(infos: [MimsyPath: [ItemName]]) -> ([String: [ItemPath]], [String: [ItemPath]])
+    func buildPaths(_ infos: [MimsyPath: [ItemName]]) -> ([String: [ItemPath]], [String: [ItemPath]])
     {
-        func add(inout namePaths: [String: [ItemPath]], _ name: String, _ path: ItemPath)
+        func add(_ namePaths: inout [String: [ItemPath]], _ name: String, _ path: ItemPath)
         {
             if var paths = namePaths[name]
             {
@@ -269,9 +269,9 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
             {
                 switch item
                 {
-                case .Declaration(let name, let location):
+                case .declaration(let name, let location):
                     add(&decs, name, ItemPath(path: path, location: location))
-                case .Definition(let name, let location):
+                case .definition(let name, let location):
                     add(&defs, name, ItemPath(path: path, location: location))
                 }
             }
@@ -281,7 +281,7 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     }
     
     // Threaded code
-    func dumpPaths(kind: String, _ paths: [String: [ItemPath]])
+    func dumpPaths(_ kind: String, _ paths: [String: [ItemPath]])
     {
         if !paths.isEmpty
         {
@@ -290,11 +290,11 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
             var entries: [String] = []
             for (name, items) in paths
             {
-                let loc = (items.map {"\($0.path.lastComponent()):\($0.location)"}).joinWithSeparator(", ")
+                let loc = (items.map {"\($0.path.lastComponent()):\($0.location)"}).joined(separator: ", ")
                 entries.append("   \(name)  \(loc)")
             }
             
-            entries.sortInPlace()
+            entries.sort()
             
             for entry in entries
             {
@@ -305,9 +305,9 @@ class StdDefinitions: MimsyPlugin, MimsyDefinitions
     
     enum State
     {
-        case Idle
-        case Scanning
-        case Queued
+        case idle
+        case scanning
+        case queued
     }
     
     struct ProjectInfo

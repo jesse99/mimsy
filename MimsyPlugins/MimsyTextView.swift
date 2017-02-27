@@ -3,10 +3,10 @@ import Cocoa
 @objc public enum MappingOptions: Int
 {
     /// The mappings glyphs are rendered for each character that was matched.
-    case UseGlyphsForEachChar = 0
+    case useGlyphsForEachChar = 0
     
     /// The mappings glyphs are rendered for the entire match.
-    case UseGlyphsForEntireRange
+    case useGlyphsForEntireRange
 }
 
 /// Helper used to communicate with Mimsy's text document views.
@@ -33,7 +33,7 @@ import Cocoa
     ///
     /// - Parameter text: The text used for the selection.
     /// - Parameter undoText: Text added to the Undo menu item.
-    func setSelection(text: String, undoText: String)
+    func setSelection(_ text: String, undoText: String)
     
     /// Returns the project the text document is within, if any.
     var project: MimsyProject? {get}
@@ -55,14 +55,14 @@ import Cocoa
     ///
     /// - Parameter text: The new text.
     /// - Parameter undoText: Text added to the Undo menu item.
-    func setText(text: String, undoText: String)
+    func setText(_ text: String, undoText: String)
     
     /// Replaces part of the text within the document.
     ///
     /// - Parameter text: The new text.
     /// - Parameter forRange: The range to replace with the new text.
     /// - Parameter undoText: Text added to the Undo menu item.
-    func setText(text: String, forRange: NSRange, undoText: String)
+    func setText(_ text: String, forRange: NSRange, undoText: String)
 
     /// Mappings are used to modify the way that text is rendered after language styles are applied.
     /// If a mapping with the regex already exists then the old mapping will be replaced with the
@@ -73,12 +73,12 @@ import Cocoa
     /// - Parameter chars: Characters to render the matched text with. Often a special Unicode character
     /// like "\u2738" (HEAVY EIGHT POINTED RECTILINEAR BLACK STAR).
     /// - Parameter options: Whether to use the glyphs for the entire match or for each character within the match.
-    func addMapping(regex: NSRegularExpression, style: String, chars: String, options: MappingOptions)
+    func addMapping(_ regex: NSRegularExpression, style: String, chars: String, options: MappingOptions)
     
     /// Removes a mapping added with addMapiing. No-op if the regex cannot be found.
     ///
     /// - Parameter regex: Must be identical to the object passed into addMapping.
-    func removeMapping(regex: NSRegularExpression)
+    func removeMapping(_ regex: NSRegularExpression)
     
     /// Forces language styling to be re-applied.
     func resetStyles()
@@ -98,7 +98,7 @@ public extension MimsyTextView
         // Go backwards till the start of the line.
         while start > 0
         {
-            let ch = text.characterAtIndex(start-1)
+            let ch = text.character(at: start-1)
             if ch == 10
             {
                 break
@@ -109,7 +109,7 @@ public extension MimsyTextView
         // Go forward till the end of the line.
         while end < text.length
         {
-            let ch = text.characterAtIndex(end - 1)
+            let ch = text.character(at: end - 1)
             if ch == 10
             {
                 break

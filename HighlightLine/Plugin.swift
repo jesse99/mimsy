@@ -3,17 +3,17 @@ import MimsyPlugins
 
 class StdHighlightLine: MimsyPlugin
 {
-    override func onLoad(stage: Int) -> String?
+    override func onLoad(_ stage: Int) -> String?
     {
         if stage == 1
         {
-            app.registerTextView(.SelectionChanged, selectionChanged)
+            app.registerTextView(.selectionChanged, selectionChanged)
         }
         
         return nil
     }
     
-    override func onLoadSettings(settings: MimsySettings)
+    override func onLoadSettings(_ settings: MimsySettings)
     {
         let name = settings.stringValue("LineColor", missing: "PeachPuff")
         if let candidate = app.mimsyColor(name)
@@ -35,9 +35,9 @@ class StdHighlightLine: MimsyPlugin
     //
     // This might impact other plugins that manipulate the back color but those will always
     // be iffy with this plugin (unless they're very transient).
-    func selectionChanged(view: MimsyTextView)
+    func selectionChanged(_ view: MimsyTextView)
     {
-        if let view = app.textView(), let managers = view.view.textStorage?.layoutManagers where managers.count > 0
+        if let view = app.textView(), let managers = view.view.textStorage?.layoutManagers, managers.count > 0
         {
             let layout = managers[0]
             let range = NSRange(location: 0, length: view.string.length)
@@ -45,7 +45,7 @@ class StdHighlightLine: MimsyPlugin
            
             // Only highlight if the selection is on a single line (and, in the interests of efficiency,
             // shortcut this process for really long selections).
-            if view.selectionRange.length < maxSelLen && !view.selection.containsString("\n")
+            if view.selectionRange.length < maxSelLen && !view.selection.contains("\n")
             {
                 let range = view.selectedLineRange()
                 layout.addTemporaryAttribute(NSBackgroundColorAttributeName, value: color, forCharacterRange: range)
@@ -53,6 +53,6 @@ class StdHighlightLine: MimsyPlugin
         }
     }
     
-    var color: NSColor = NSColor.blueColor()
+    var color: NSColor = NSColor.blue
     var maxSelLen = 1024
 }

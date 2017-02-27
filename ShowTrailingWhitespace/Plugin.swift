@@ -3,22 +3,22 @@ import MimsyPlugins
 
 class StdShowTrailingWhitespace: MimsyPlugin
 {
-    override func onLoad(stage: Int) -> String?
+    override func onLoad(_ stage: Int) -> String?
     {
         if stage == 1
         {
-            app.addMenuItem(title: "Show Trailing Whitespace", loc: .Sorted, sel: "showItems:", enabled: enabled, invoke: toggleEnabled)
+            _ = app.addMenuItem(title: "Show Trailing Whitespace", loc: .sorted, sel: "showItems:", enabled: enabled, invoke: toggleEnabled)
         }
         
         return nil
     }
     
-    func enabled(item: NSMenuItem) -> Bool
+    func enabled(_ item: NSMenuItem) -> Bool
     {
         var enabled = false
         var title = "Show Trailing Whitespace"
         
-        if let view = app.textView() where view.language != nil
+        if let view = app.textView(), view.language != nil
         {
             enabled = true
             if self.enabled || userEnabled
@@ -35,32 +35,32 @@ class StdShowTrailingWhitespace: MimsyPlugin
     {
         userEnabled = !userEnabled
         
-        if let view = app.textView() where view.language != nil
+        if let view = app.textView(), view.language != nil
         {
             setMapping(view)
         }
     }
 
-    override func onLoadSettings(settings: MimsySettings)
+    override func onLoadSettings(_ settings: MimsySettings)
     {
         enabled = settings.boolValue("ShowTrailingWhitespace", missing: false)
         style = settings.stringValue("TrailingWhiteSpaceStyle", missing: "Error")
         chars = settings.stringValue("TrailingWhitespaceChars", missing: "•")
     }
     
-    override func onMainChanged(controller: NSWindowController?)
+    override func onMainChanged(_ controller: NSWindowController?)
     {
-        if let view = controller as? MimsyTextView where view.language != nil
+        if let view = controller as? MimsyTextView, view.language != nil
         {
             setMapping(view)
         }
     }
     
-    func setMapping(view: MimsyTextView)
+    func setMapping(_ view: MimsyTextView)
     {
         if enabled || userEnabled
         {
-            view.addMapping(re, style: style, chars: chars, options: .UseGlyphsForEachChar)
+            view.addMapping(re, style: style, chars: chars, options: .useGlyphsForEachChar)
         }
         else
         {
@@ -68,7 +68,7 @@ class StdShowTrailingWhitespace: MimsyPlugin
         }
     }
     
-    let re = try! NSRegularExpression(pattern: "\\S+([\\ \\t]+)\\n", options: NSRegularExpressionOptions(rawValue: 0))
+    let re = try! NSRegularExpression(pattern: "\\S+([\\ \\t]+)\\n", options: NSRegularExpression.Options(rawValue: 0))
     var userEnabled = false
     var enabled = false
     var style = ""

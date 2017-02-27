@@ -2,10 +2,10 @@ import Cocoa
 
 /// This is the base class that plugins inherit from. Often only onLoad
 /// is overriden.
-public class MimsyPlugin: NSObject
+open class MimsyPlugin: NSObject
 {
     /// Mimsy will instantiate plugins when it loads their bundles.
-    public init(fromApp: MimsyApp, bundle: NSBundle)
+    public init(fromApp: MimsyApp, bundle: Bundle)
     {
         MimsyPlugins.app = fromApp
         self.app = fromApp
@@ -23,32 +23,32 @@ public class MimsyPlugin: NSObject
     ///
     /// - Returns: nil if the plugin was able to load or an error message if it
     /// failed to load (or doesn't want to run).
-    public func onLoad(stage: Int) -> String?
+    open func onLoad(_ stage: Int) -> String?
     {
         return nil
     }
     
     /// Called just before Mimsy exits (assuming it exits normally).
-    public func onUnload()
+    open func onUnload()
     {
     }
     
     /// Called between stage 0 and stage 1 and when settings change. Contains settings for the 
     /// current language (if any), for the current project (if any), for the app, and for the
     /// plugin (if any).
-    public func onLoadSettings(settings: MimsySettings)
+    open func onLoadSettings(_ settings: MimsySettings)
     {
     }
     
     // Called when the main window changes. Note that this is called after onLoadSettings and
     // after the old window resigns.
-    public func onMainChanged(controller: NSWindowController?)
+    open func onMainChanged(_ controller: NSWindowController?)
     {
     }
     
-    public let app: MimsyApp
+    open let app: MimsyApp
     
     /// The plugin's bundle.
-    public let bundle: NSBundle
+    open let bundle: Bundle
 }
 

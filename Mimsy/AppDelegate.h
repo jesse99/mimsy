@@ -66,8 +66,8 @@ void initLogGlobs(void);
 
 @property (readonly) bool inited;
 @property (readonly) ProcFileSystem*_Nonnull procFileSystem;
-@property (weak) IBOutlet NSMenu *searchMenu;
-@property (weak) IBOutlet NSMenu *textMenu;
+@property (weak) IBOutlet NSMenu*_Nullable searchMenu;
+@property (weak) IBOutlet NSMenu* _Nullable textMenu;
 @property (strong) IBOutlet NSMenu* _Nonnull recentDirectoriesMenu;
 
 @end

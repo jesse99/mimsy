@@ -3,7 +3,7 @@ import MimsyPlugins
 
 class StdShowInFinder: MimsyPlugin
 {
-    override func onLoad(stage: Int) -> String?
+    override func onLoad(_ stage: Int) -> String?
     {
         if stage == 1
         {
@@ -13,21 +13,21 @@ class StdShowInFinder: MimsyPlugin
         return nil
     }
     
-    func getTitle(files: [MimsyPath], dirs: [MimsyPath]) -> String?
+    func getTitle(_ files: [MimsyPath], dirs: [MimsyPath]) -> String?
     {
         return !files.isEmpty || !dirs.isEmpty ? "Show in Finder" : nil
     }
     
-    func showItems(files: [MimsyPath], dirs: [MimsyPath])
+    func showItems(_ files: [MimsyPath], dirs: [MimsyPath])
     {
         for path in files
         {
-            NSWorkspace.sharedWorkspace().selectFile(path.asString(), inFileViewerRootedAtPath: "")
+            NSWorkspace.shared().selectFile(path.asString(), inFileViewerRootedAtPath: "")
         }
 
         for path in dirs
         {
-            NSWorkspace.sharedWorkspace().selectFile(path.asString(), inFileViewerRootedAtPath: "")
+            NSWorkspace.shared().selectFile(path.asString(), inFileViewerRootedAtPath: "")
         }
     }
 }

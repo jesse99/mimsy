@@ -3,7 +3,7 @@ import MimsyPlugins
 
 class StdNewDirectory: MimsyPlugin
 {
-    override func onLoad(stage: Int) -> String?
+    override func onLoad(_ stage: Int) -> String?
     {
         if stage == 1
         {
@@ -13,7 +13,7 @@ class StdNewDirectory: MimsyPlugin
         return nil
     }
     
-    func getTitle(files: [MimsyPath], dirs: [MimsyPath]) -> String?
+    func getTitle(_ files: [MimsyPath], dirs: [MimsyPath]) -> String?
     {
         // We'll keep things simple and only create a new directory next
         // to a single item. This way we avoid creating a bunch of sibling
@@ -23,7 +23,7 @@ class StdNewDirectory: MimsyPlugin
         return files.count + dirs.count == 1 ? "New Directory" : nil
     }
     
-    func createItem(files: [MimsyPath], dirs: [MimsyPath])
+    func createItem(_ files: [MimsyPath], dirs: [MimsyPath])
     {
         for oldPath in files
         {
@@ -41,22 +41,23 @@ class StdNewDirectory: MimsyPlugin
         }
     }
     
-    func create(var newPath: MimsyPath)
+    func create(_ newPath: MimsyPath)
     {
+        var newPath = newPath
         newPath = newPath.makeUnique()
 
         do
         {
-            let fm = NSFileManager.defaultManager()
-            try fm.createDirectoryAtPath(newPath.asString(), withIntermediateDirectories: true, attributes: nil)
+            let fm = FileManager.default
+            try fm.createDirectory(atPath: newPath.asString(), withIntermediateDirectories: true, attributes: nil)
         }
         catch let err as NSError
         {
-            app.transcript().write(.Error, text: "error creating \(newPath): \(err.localizedFailureReason)")
+            app.transcript().write(.error, text: "error creating \(newPath): \(err.localizedFailureReason)")
         }
         catch
         {
-            app.transcript().write(.Error, text: "unknown error creating \(newPath)")
+            app.transcript().write(.error, text: "unknown error creating \(newPath)")
         }
     }
 }

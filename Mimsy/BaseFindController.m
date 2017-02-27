@@ -83,7 +83,7 @@ NSUInteger replaceAll(BaseFindController* findController, BaseTextController* te
 	{
 		[box insertItemWithObjectValue:text atIndex:0];
 		
-        AppDelegate* app = [NSApp delegate];
+        AppDelegate* app = (AppDelegate*) [NSApp delegate];
 		NSInteger max = [app.layeredSettings intValue:@"NumFindItems" missing:8];
 		while (box.numberOfItems > max)
 		{
@@ -134,7 +134,7 @@ static NSArray* intersectElements(NSArray* lhs, NSArray* rhs)
 {
 	UNUSED(notification);
 
-    AppDelegate* app = [NSApp delegate];
+    AppDelegate* app = (AppDelegate*) [NSApp delegate];
 	NSString* oldSelection = [_searchWithinComboBox stringValue];
 	
 	NSArray* patterns;
