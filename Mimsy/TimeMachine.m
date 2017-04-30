@@ -348,7 +348,10 @@ static NSString* _getTimeStr(double timestamp)
 	if (!err)
 	{
         NSString* output = [stdout stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-		_timeMachineDir = [[MimsyPath alloc] initWithString:output];
+        if (output && output.length > 0)
+            _timeMachineDir = [[MimsyPath alloc] initWithString:output];
+        else
+            LOG("Warning", "couldn't find time machine directory");
 	}
 	else
 	{
