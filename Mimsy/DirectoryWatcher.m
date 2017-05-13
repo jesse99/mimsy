@@ -88,11 +88,27 @@ static void Callback(ConstFSEventStreamRef stream, void* refcon, size_t numEvent
 	
 	for (size_t i = 0; i < numEvents; ++i)
 	{
-		if (flags[i] != blacklist)
+        FSEventStreamEventFlags bits = flags[i];
+		if (bits != blacklist)
 		{
-			LOG("Mimsy:Verbose", "%s %s", STR(paths[i]), STR(getFlags(flags[i])));
+			LOG("Mimsy:Verbose", "%s %s", STR(paths[i]), STR(getFlags(bits)));
+            
+            // The whole point of this is to notify clients when something changed but when an item
+            // is created or renamed clients can't tell what was changed so we need to tell them
+            // that the parent directory was modified.
             MimsyPath* path = [[MimsyPath alloc] initWithString:paths[i]];
-			watcher.callback(path, flags[i]);
+            if (bits & (kFSEventStreamEventFlagItemCreated | kFSEventStreamEventFlagItemRenamed)) {
+                if (bits & kFSEventStreamEventFlagItemIsFile) {
+                    bits &= ~(FSEventStreamEventFlags) (kFSEventStreamEventFlagItemCreated | kFSEventStreamEventFlagItemIsFile);
+                    bits |= kFSEventStreamEventFlagItemIsDir | kFSEventStreamEventFlagItemModified;
+                } else {
+                    bits &= ~(FSEventStreamEventFlags) (kFSEventStreamEventFlagItemCreated);
+                    bits |= kFSEventStreamEventFlagItemModified;
+                }
+                path = [path popComponent];
+            }
+            
+			watcher.callback(path, bits);
 		}
 	}
 }
