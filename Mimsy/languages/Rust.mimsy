@@ -1,30 +1,23 @@
 Language: rust
 Globs: *.rs *.rc
 LineComment: //
-ContextHelp: {rust}[Rust Std Lib]http://static.rust-lang.org/doc/std/index.html
-ContextHelp: {rust}[Rust Core Lib]http://static.rust-lang.org/doc/core/index.html
-ContextHelp: {rust}[Rust Tutorial]http://static.rust-lang.org/doc/tutorial.html
-ContextHelp: {rust}[Rust Language Manual]http://static.rust-lang.org/doc/rust.html
+ContextHelp: {rust}[Rust Std Lib]https://doc.rust-lang.org/std/
+ContextHelp: {rust}[Crates]https://docs.rs/
+ContextHelp: {rust}[The Book]https://doc.rust-lang.org/book/
+ContextHelp: {rust}[Rust Reference]https://doc.rust-lang.org/stable/reference/
 SearchIn: [Rust]https://www.google.com/#q=${TEXT}+site:static.rust-lang.org%2Fdoc%2Fmaster
 
-DocComment: /// .* $
 DocComment: //! .* $
-DocComment: /\*! (?: . | \r | \n)*? \*/
-DocComment: /\*\* (?: . | \r | \n)*? \*/
+DocComment: /// .* $
 Comment: // .* $
 Comment: /\* (?: . | \r | \n)*? \*/
 String: " (?: [^"\\] | \\. | \\\n | \\\r)* "
 
 Character: ' (?: [^'\r\n\\] | \\.)* '
 
-Conditional: \b(?: else | if | loop | match)\b
-Exception: \b(?: fail)\b
-Keyword: \b(?: once | as | assert | break | do | enum | fn | impl | let | log | mod | return | struct | trait | type | use)\b
-Operator: \b(?: copy | move)\b
-Repeat: \b(?: for | while)\b
-StorageClass: \b(?: const | extern | mut | priv | pub | pure | ref | static | unsafe)\b
-Type: \b(?: Const | Copy | Durable | Send | Owned | binary32 | binary64 | bool | char | f32 | f64 | float | i16 | i32 | i64 | i8 | int | self | str | u16 | u32 | u64 | u8 | uint) (?! \w | \( )
-Macro: \b(?: fmt\! | error! | warn\! | info\! | debug\! | env\! | stringify\! | proto\! | include\! | include_str\! | include_bin\! | log_syntax\! | trace_macros\! | ident_to_str\! | concat_idents\!)
+Keyword: \b(?: abstract | alignof | as | become | box | break | const | continue | crate | do | else | enum | extern | false | final | fn | for | if | impl | in | let | loop | macro | match | mod | move | mut | offsetof | override | priv | proc | pub | pure | ref | return | Self | self | sizeof | static | struct | super | trait | true | type | typeof | unsafe | unsized | use | virtual | where | while | yield)\b
+Type: \b(?: Const | Copy | Durable | Send | Owned | binary32 | binary64 | bool | char | f32 | f64 | float | i16 | i32 | i64 | i8 | | self | str | u16 | u32 | u64 | u8 | isize | usize) (?! \w | \( )
+#Macro: \b(?: fmt\! | error! | warn\! | info\! | debug\! | env\! | stringify\! | proto\! | include\! | include_str\! | include_bin\! | log_syntax\! | trace_macros\! | ident_to_str\! | concat_idents\!)
 
 Boolean: \b(?: false | true)\b
 
@@ -38,7 +31,6 @@ Structure: (?<= type) \s+ ([\w]+)
 Function: (?<= \s fn) \s+ ([\w_]+) \s* (?= \(|<)
 Function: ^ \s* (new) \s*  \(
 Function: ^ \s* (drop) \s*  \{
-Operator: \s+ (\&\& | \|\|) \s+
 Identifier: \$ \w+
 
 Identifier: \b [a-zA-Z_] [\w_]* \b
