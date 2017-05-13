@@ -1,0 +1,20 @@
+Language: toml
+Globs: *.toml
+LineComment: \x23
+ContextHelp: {toml}[TOML]https://github.com/toml-lang/toml
+
+Comment: \x23 .* $
+String: " (?: [^"\r\n\\] | \\.)* "
+String: ' (?: [^'\r\n\\] | \\.)* '
+String: ''' (?: .*?) '''
+
+Attribute: ^ \s* \[ [^\n\]]+ \]
+
+Boolean: \b(?: false | true | FALSE | TRUE)\b
+
+Identifier: \b [a-zA-Z_] [\w_]* \b
+
+Float: (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)?)
+Float: (\. [\d_]+ (?: [eE] [+-]? [\d_]+)?)
+Number: ([\d_]+)
+Number: (0x [0-9a-fA-f]+)
