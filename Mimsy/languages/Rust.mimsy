@@ -5,7 +5,7 @@ ContextHelp: {rust}[Rust Std Lib]https://doc.rust-lang.org/std/
 ContextHelp: {rust}[Crates]https://docs.rs/
 ContextHelp: {rust}[The Book]https://doc.rust-lang.org/book/
 ContextHelp: {rust}[Rust Reference]https://doc.rust-lang.org/stable/reference/
-SearchIn: [Rust]https://www.google.com/#q=${TEXT}+site:static.rust-lang.org%2Fdoc%2Fmaster
+SearchIn: [Standard Lib]https://doc.rust-lang.org/std/?search=${TEXT}
 
 DocComment: //! .* $
 DocComment: /// .* $
@@ -13,16 +13,16 @@ Comment: // .* $
 Comment: /\* (?: . | \r | \n)*? \*/
 String: " (?: [^"\\] | \\. | \\\n | \\\r)* "
 
-Character: ' (?: [^'\r\n\\] | \\.)* '
+Character: ' [^'] '
+Character: ' (?: \\ [^'\r\n\\]+) '
 
 Keyword: \b(?: abstract | alignof | as | become | box | break | const | continue | crate | do | else | enum | extern | false | final | fn | for | if | impl | in | let | loop | macro | match | mod | move | mut | offsetof | override | priv | proc | pub | pure | ref | return | Self | self | sizeof | static | struct | super | trait | true | type | typeof | unsafe | unsized | use | virtual | where | while | yield)\b
-Type: \b(?: Const | Copy | Durable | Send | Owned | binary32 | binary64 | bool | char | f32 | f64 | float | i16 | i32 | i64 | i8 | | self | str | u16 | u32 | u64 | u8 | isize | usize) (?! \w | \( )
-#Macro: \b(?: fmt\! | error! | warn\! | info\! | debug\! | env\! | stringify\! | proto\! | include\! | include_str\! | include_bin\! | log_syntax\! | trace_macros\! | ident_to_str\! | concat_idents\!)
+Macro: \b(?: macro_rules | assert | assert_eq | assert_ne | cfg | column | concat | debug_assert | debug_assert_eq | debug_assert_ne | env | file | format | format_args | include | include_bytes | include_str | line | module_path | option_env | panic | print | println | stringify | thread_local | concant_idents | select | try | unimplemented | unreachable | vec | write | writeln)\!
 
 Boolean: \b(?: false | true)\b
 
-Attribute: ^ \s* \x23 \s* \[ (\w+)
-Argument: \b(?: (?<! (?: let | impl | struct) \s) \s* [&+]? (\w+) \s* : (?! :))
+Attribute: ^ \s* \x23 !? \s* \[  \w+ \b
+Argument: \b(?: (?<! (?: let | impl | struct) \s) \s* (\w+) \s* : (?! :))
 Structure: (?<= enum) \s+ (\w+)
 Structure: (?<= trait) (?: (?: \s* < [\w:\s,]+ > \s*) | \s+) ([\w@~&]+)
 Structure: (?<= impl) (?: (?: \s* < [\w:\s,]+ > \s*) | \s+) ([\w@~&]+)
@@ -31,13 +31,16 @@ Structure: (?<= type) \s+ ([\w]+)
 Function: (?<= \s fn) \s+ ([\w_]+) \s* (?= \(|<)
 Function: ^ \s* (new) \s*  \(
 Function: ^ \s* (drop) \s*  \{
-Identifier: \$ \w+
 
+Float: \b(\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)? (?: f \d+)?)\b
+Float: \b(\. \d+ [\d_]* (?: [eE] [+-]? [\d_]+)? (?: f \d+)?)\b
+Number: \b(0b [01_]+ (?: [uif] \d*)?)\b
+Number: \b(0x [0-9A-Fa-f_]+ (?: [uif] \d*)?)\b
+Number: \b(\d+ [\d_]* (?: [uif] \d*)?)\b
+Float: \b([eE] [+-]? [\d_]+ (?: f \d+)?)\b
+
+Type: \b(?: String | Eq | PartialEq | Ord | PartialOrd | Clone | Copy | Hash | Default | Zero | Debug | binary32 | binary64 | bool | char | f32 | f64 | float | i16 | i32 | i64 | i8 | str | u16 | u32 | u64 | u8 | isize | usize)\b
+
+Identifier: \$ \w+
 Identifier: \b [a-zA-Z_] [\w_]* \b
 
-Float: (\d+ \. [\d_]+ (?: [eE] [+-]? [\d_]+)? (?: f \d+)?)
-Float: (\. [\d_]+ (?: [eE] [+-]? [\d_]+)? (?: f \d+)?)
-Number: (0b [01_]+ (?: [uif] \d*)?)
-Number: (0x [0-9A-Fa-f_]+ (?: [uif] \d*)?)
-Number: ([\d_]+ (?: [uif] \d*)?)
-Float: ([eE] [+-]? [\d_]+ (?: f \d+)?)
