@@ -346,7 +346,21 @@ void initLogGlobs()
     NSMutableDictionary* env = [NSMutableDictionary new];
     [env addEntriesFromDictionary:[[NSProcessInfo processInfo] environment]];
     
-    NSArray* newPaths = [self.layeredSettings stringValues:@"AppendPath"];
+    NSArray* newPaths = [self.layeredSettings stringValues:@"PrependPath"];
+    if (newPaths && newPaths.count > 0)
+    {
+        NSString* prefix = [newPaths componentsJoinedByString:@":"];
+        
+        NSString* paths = env[@"PATH"];
+        if (paths && paths.length > 0)
+            paths = [NSString stringWithFormat:@"%@:%@", prefix, paths];
+        else
+            paths = prefix;
+        
+        env[@"PATH"] = paths;
+    }
+    
+    newPaths = [self.layeredSettings stringValues:@"AppendPath"];
     if (newPaths && newPaths.count > 0)
     {
         NSString* suffix = [newPaths componentsJoinedByString:@":"];
