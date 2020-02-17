@@ -41,14 +41,14 @@ class StdHighlightLine: MimsyPlugin
         {
             let layout = managers[0]
             let range = NSRange(location: 0, length: view.string.length)
-            layout.removeTemporaryAttribute(NSBackgroundColorAttributeName, forCharacterRange: range)
+            layout.removeTemporaryAttribute(NSAttributedString.Key.backgroundColor, forCharacterRange: range)
            
             // Only highlight if the selection is on a single line (and, in the interests of efficiency,
             // shortcut this process for really long selections).
             if view.selectionRange.length < maxSelLen && !view.selection.contains("\n")
             {
                 let range = view.selectedLineRange()
-                layout.addTemporaryAttribute(NSBackgroundColorAttributeName, value: color, forCharacterRange: range)
+                layout.addTemporaryAttribute(NSAttributedString.Key.backgroundColor, value: color, forCharacterRange: range)
             }
         }
     }

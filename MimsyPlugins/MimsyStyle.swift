@@ -47,13 +47,13 @@ public enum MimsyStyle
         {
             switch style
             {
-            case backColor(let color): str.addAttribute(NSBackgroundColorAttributeName, value: color, range: range)
-            case color(let color): str.addAttribute(NSForegroundColorAttributeName, value: color, range: range)
+            case backColor(let color): str.addAttribute(NSAttributedString.Key.backgroundColor, value: color, range: range)
+            case color(let color): str.addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: range)
             case skew(let arg): arg.apply(str, range)
             case size(let arg): arg.apply(str, range)
             case stroke(let arg): arg.apply(str, range)
             case underline(let arg): arg.apply(str, range)
-            case underlineColor(let color): str.addAttribute(NSUnderlineColorAttributeName, value: color, range: range)
+            case underlineColor(let color): str.addAttribute(NSAttributedString.Key.underlineColor, value: color, range: range)
             }
         }
     }
@@ -100,9 +100,9 @@ public enum SkewArgument
         switch self
         {
         case .italic:
-            str.addAttribute(NSObliquenessAttributeName, value: NSNumber(value: 0.15 as Float), range: range)
+            str.addAttribute(NSAttributedString.Key.obliqueness, value: NSNumber(value: 0.15 as Float), range: range)
         case .skewAmount(let value):
-            str.addAttribute(NSObliquenessAttributeName, value: NSNumber(value: value as Float), range: range)
+            str.addAttribute(NSAttributedString.Key.obliqueness, value: NSNumber(value: value as Float), range: range)
         }
     }
 }
@@ -150,11 +150,11 @@ public enum SizeArgument
         case .pointSize(let value):  delta = value
         }
         
-        if let value = str.attribute(NSFontAttributeName, at: range.location, effectiveRange: nil) as? NSFont
+        if let value = str.attribute(NSAttributedString.Key.font, at: range.location, effectiveRange: nil) as? NSFont
         {
             let size = max(Float(value.pointSize) + delta, 6.0)
             let font = NSFont(name: value.fontName, size: CGFloat(size))
-            str.addAttribute(NSFontAttributeName, value: font!, range: range)
+            str.addAttribute(NSAttributedString.Key.font, value: font!, range: range)
         }
     }
 }
@@ -205,7 +205,7 @@ public enum StrokeArgument
         case .width(let v):  value = v
         }
 
-        str.addAttribute(NSStrokeWidthAttributeName, value: NSNumber(value: value as Float), range: range)
+        str.addAttribute(NSAttributedString.Key.strokeWidth, value: NSNumber(value: value as Float), range: range)
 }
 }
 
@@ -246,14 +246,14 @@ public enum UnderLineArgument
         
         switch self
         {
-        case .none:          value = NSUnderlineStyle.styleNone.rawValue
-        case .single:        value = NSUnderlineStyle.styleSingle.rawValue
-        case .thick:         value = NSUnderlineStyle.styleThick.rawValue
-        case .double:        value = NSUnderlineStyle.styleDouble.rawValue
+        case .none:          value = NSUnderlineStyle().rawValue
+        case .single:        value = NSUnderlineStyle.single.rawValue
+        case .thick:         value = NSUnderlineStyle.thick.rawValue
+        case .double:        value = NSUnderlineStyle.double.rawValue
         case .style(let v):  value = v
         }
 
-        str.addAttribute(NSUnderlineStyleAttributeName, value: NSNumber(value: value as Int), range: range)
+        str.addAttribute(NSAttributedString.Key.underlineStyle, value: NSNumber(value: value as Int), range: range)
     }
 }
 

@@ -7,12 +7,12 @@ var _instance: BuildErrors = BuildErrors()
 /// Used to parse and display build errors.  
 open class BuildErrors : NSObject
 {    
-    class var instance: BuildErrors {return _instance}
+    @objc class var instance: BuildErrors {return _instance}
     
-    func appSettingsChanged()
+    @objc func appSettingsChanged()
     {
         _patterns = [Pattern]()
-        let app = NSApplication.shared().delegate as! AppDelegate;
+        let app = NSApplication.shared.delegate as! AppDelegate;
         app.layeredSettings().enumerate("BuildError", with: self.parseSetting)
         
         // We want to use the regexen that are able to pick out more information
@@ -20,7 +20,7 @@ open class BuildErrors : NSObject
         _patterns = _patterns.sorted {$0.fields.count > $1.fields.count}
     }
     
-    func parseErrors(_ text: NSString, range: NSRange)
+   @objc func parseErrors(_ text: NSString, range: NSRange)
     {
         let len = text.length
         assert(range.location >= 0)
@@ -55,23 +55,23 @@ open class BuildErrors : NSObject
         _errors = _errors.sorted {$0.transcriptRange.range.location < $1.transcriptRange.range.location}
     }
     
-    func canGotoNextError() -> Bool
+    @objc func canGotoNextError() -> Bool
     {
         return _index + 1 < _errors.count
     }
     
-    func canGotoPreviousError() -> Bool
+    @objc func canGotoPreviousError() -> Bool
     {
         return _index > 0
     }
     
-    func gotoNextError()
+    @objc func gotoNextError()
     {
         gotoNewError(1)
         showErrorInFile()
     }
     
-    func gotoPreviousError()
+    @objc func gotoPreviousError()
     {
         gotoNewError(-1)
         showErrorInFile()
@@ -107,7 +107,7 @@ open class BuildErrors : NSObject
             let range = oldError.transcriptRange.range
             if range.location != NSNotFound
             {
-                view?.textStorage!.removeAttribute(NSUnderlineStyleAttributeName, range: range)
+                view?.textStorage!.removeAttribute(NSAttributedString.Key.underlineStyle, range: range)
             }
         }
         
@@ -117,8 +117,8 @@ open class BuildErrors : NSObject
         //SLOG("App", "goto error at \(range.location):\(range.length): \(error.message)")
         if range.location != NSNotFound
         {
-            let attrs = [NSUnderlineStyleAttributeName: NSNumber(value: NSUnderlineStyle.styleSingle.rawValue as Int)]
-            view?.textStorage!.addAttributes(attrs, range: range)
+            let attrs = [convertFromNSAttributedStringKey(NSAttributedString.Key.underlineStyle): NSNumber(value: NSUnderlineStyle.single.rawValue as Int)]
+            view?.textStorage!.addAttributes(convertToNSAttributedStringKeyDictionary(attrs), range: range)
 
             // Typically we'd call showFindIndicatorForRange but that seems a bit
             // distracting when multiple windows are involved.
@@ -206,8 +206,8 @@ open class BuildErrors : NSObject
         let range = value.range(of: " ")
         if let range = range
         {
-            let tags = parseTags(value.substring(to: range.lowerBound))
-            let regex = createRegex(value.substring(from: range.lowerBound))
+            let tags = parseTags(String(value![..<range.lowerBound]))
+            let regex = createRegex(String(value![range.lowerBound...]))
             if tags.count > 0 && regex != nil
             {
                 let element = Pattern(fields: tags, regex: regex!)
@@ -229,7 +229,7 @@ open class BuildErrors : NSObject
             switch pattern.fields["F"]
             {
             case .some(let i):
-                var s = text.substring(with: match.rangeAt(i))
+                var s = text.substring(with: match.range(at: i))
                 if !remap.isEmpty && !remap[0].isEmpty
                 {
                     s = s.replacingOccurrences(of: remap[0], with: remap[1])
@@ -241,7 +241,7 @@ open class BuildErrors : NSObject
             
             if let i = pattern.fields["L"]
             {
-                line = Int(text.substring(with: match.rangeAt(i)))!
+                line = Int(text.substring(with: match.range(at: i)))!
             }
             else
             {
@@ -250,7 +250,7 @@ open class BuildErrors : NSObject
             
             if let i = pattern.fields["C"]
             {
-                column = Int(text.substring(with: match.rangeAt(i)))!
+                column = Int(text.substring(with: match.range(at: i)))!
             }
             else
             {
@@ -260,8 +260,8 @@ open class BuildErrors : NSObject
             switch pattern.fields["M"]
             {
             case .some(let i):
-                message = text.substring(with: match.rangeAt(i))
-                transcriptRange = PersistentRange(TranscriptController.getInstance(), range: match.rangeAt(i))
+                message = text.substring(with: match.range(at: i))
+                transcriptRange = PersistentRange(TranscriptController.getInstance(), range: match.range(at: i))
             default:
                 message = nil
                 transcriptRange = PersistentRange(TranscriptController.getInstance(), range: match.range)
@@ -306,4 +306,14 @@ open class BuildErrors : NSObject
     fileprivate var _patterns = [Pattern]()
     fileprivate var _errors = [Error]()
     fileprivate var _index: Int = -1
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToNSAttributedStringKeyDictionary(_ input: [String: Any]) -> [NSAttributedString.Key: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

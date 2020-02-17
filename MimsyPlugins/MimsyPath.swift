@@ -4,7 +4,7 @@ import Foundation
 open class MimsyPath: NSObject
 {
     /// Constructs a path without attempting to standardize the path.
-    public init(withString: String)
+    @objc public init(withString: String)
     {
         assert(!withString.isEmpty)
  
@@ -23,7 +23,7 @@ open class MimsyPath: NSObject
         assert(path.length > 0)
     }
     
-    public init(withArray: [String])
+    @objc public init(withArray: [String])
     {
         path = NSString.path(withComponents: withArray) as NSString
         super.init()
@@ -55,19 +55,19 @@ open class MimsyPath: NSObject
         return path.hash
     }
     
-    open func isEqualTo(path: MimsyPath?) -> Bool
+    @objc open func isEqualTo(path: MimsyPath?) -> Bool
     {
         return path != nil && self.path.isEqual(to: path!.path as String)
     }
     
     /// This should only be used for interop.
-    open func asString() -> String
+    @objc open func asString() -> String
     {
         return path as String
     }
     
     /// This should only be used for interop.
-    open func asURL() -> URL
+    @objc open func asURL() -> URL
     {
         return URL(fileURLWithPath: path as String)
     }
@@ -78,21 +78,21 @@ open class MimsyPath: NSObject
     /// * For absolute paths resolving "..".
     /// * Reducing things like "//" and "/./" to a single slash.
     /// Note that symbolic links are not resolved.
-    open func standardize() -> MimsyPath
+    @objc open func standardize() -> MimsyPath
     {
         return MimsyPath(withString: path.standardizingPath)
     }
     
     /// Resolves all sym links in absolute paths and as many as possible
     /// for relative paths then standardize the result.
-    open func resolveSymLinks() -> MimsyPath
+    @objc open func resolveSymLinks() -> MimsyPath
     {
         return MimsyPath(withString: path.resolvingSymlinksInPath)
     }
     
     /// Returns a new path suitable for humans that does not point to an 
     /// existing file or directory.
-    open func makeUnique() -> MimsyPath
+    @objc open func makeUnique() -> MimsyPath
     {
         let root = self.popExtension()
         let ext = self.hasExtension() ? ".\(String(describing: self.extensionName()))" : ""
@@ -111,13 +111,13 @@ open class MimsyPath: NSObject
     }
     
     /// Returns true if the path is an absolute path.
-    open func isAbsolute() -> Bool
+    @objc open func isAbsolute() -> Bool
     {
         return path.isAbsolutePath
     }
 
     /// Returns true if the last component has a period.
-    open func hasExtension() -> Bool
+    @objc open func hasExtension() -> Bool
     {
         return self.extensionName() != nil
     }
@@ -131,7 +131,7 @@ open class MimsyPath: NSObject
     }
     
     /// Returns true if the target's components start with all the roots components.
-    open func hasRoot(_ root: MimsyPath) -> Bool
+    @objc open func hasRoot(_ root: MimsyPath) -> Bool
     {
         let lhs = self.components()
         let rhs = root.components()
@@ -139,7 +139,7 @@ open class MimsyPath: NSObject
     }
     
     /// Returns true if the target's components end with all the stems components.
-    open func hasStem(_ stem: MimsyPath) -> Bool
+    @objc open func hasStem(_ stem: MimsyPath) -> Bool
     {
         let lhs = self.components()
         let rhs = stem.components()
@@ -148,7 +148,7 @@ open class MimsyPath: NSObject
     
     /// Removes the root's components from the start of the target.
     /// Error if hasRoot is false.
-    open func removeRoot(_ root: MimsyPath) -> MimsyPath
+    @objc open func removeRoot(_ root: MimsyPath) -> MimsyPath
     {
         assert(hasRoot(root))
         
@@ -160,7 +160,7 @@ open class MimsyPath: NSObject
     
     /// For "foo/bar.rtf" this will return ["foo", "bar.rtf"].
     /// For "/foo/bar.rtf" this will return ["/", "foo", "bar.rtf"].
-    open func components() -> [String]
+    @objc open func components() -> [String]
     {
         return path.pathComponents
     }
@@ -170,21 +170,21 @@ open class MimsyPath: NSObject
     /// For "/tmp/" this returns "tmp".
     /// For "scratch///" this returns "scratch".
     /// For "/" this returns "/".
-    open func lastComponent() -> String
+    @objc open func lastComponent() -> String
     {
         return path.lastPathComponent
     }
     
     /// Returns the portion of the path after the last period or
     /// nil if the lastComponent has no period.
-    open func extensionName() -> String?
+    @objc open func extensionName() -> String?
     {
         let name = path.pathExtension
         return name.isEmpty ? nil : name
     }
     
     /// Creates a new path by appending a relative path onto the target.
-    open func append(path: MimsyPath) -> MimsyPath
+    @objc open func append(path: MimsyPath) -> MimsyPath
     {
         assert(!path.isAbsolute())
         
@@ -194,29 +194,29 @@ open class MimsyPath: NSObject
     }
     
     /// Creates a new path by appending a new path component onto the target.
-    open func append(component: String) -> MimsyPath
+    @objc open func append(component: String) -> MimsyPath
     {
         return MimsyPath(withString: path.appendingPathComponent(component))
     }
     
     /// Creates a new path by appending an extension onto the target (don't include the period).
-    open func append(extensionName: String) -> MimsyPath
+    @objc open func append(extensionName: String) -> MimsyPath
     {
         assert(!extensionName.hasPrefix("."))
         return MimsyPath(withString: path.appendingPathExtension(extensionName)!)
     }
     
     /// Removes the last component along with a trailing slash (if present).
-    open func popComponent() -> MimsyPath
+    @objc open func popComponent() -> MimsyPath
     {
         return MimsyPath(withString: path.deletingLastPathComponent)
     }
     
     /// Removes the extension name and period (if present).
-    open func popExtension() -> MimsyPath
+    @objc open func popExtension() -> MimsyPath
     {
         return MimsyPath(withString: path.deletingPathExtension)
     }
     
-    let path: NSString
+    @objc let path: NSString
 }

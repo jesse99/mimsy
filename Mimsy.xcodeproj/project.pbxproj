@@ -133,7 +133,6 @@
 		37A8C6A316758FF400D4DB13 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6A216758FF400D4DB13 /* main.m */; };
 		37A8C6A716758FF400D4DB13 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C6A516758FF400D4DB13 /* Credits.rtf */; };
 		37A8C6B016758FF400D4DB13 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C6AE16758FF400D4DB13 /* MainMenu.xib */; };
-		37A8C6B816758FF400D4DB13 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C6B716758FF400D4DB13 /* SenTestingKit.framework */; };
 		37A8C6B916758FF400D4DB13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37A8C69616758FF400D4DB13 /* Cocoa.framework */; };
 		37A8C6C116758FF400D4DB13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 37A8C6BF16758FF400D4DB13 /* InfoPlist.strings */; };
 		37A8C6C416758FF400D4DB13 /* DecodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C6C316758FF400D4DB13 /* DecodeTests.m */; };
@@ -785,7 +784,6 @@
 		37A8C6A616758FF400D4DB13 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		37A8C6AF16758FF400D4DB13 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		37A8C6B616758FF400D4DB13 /* MimsyTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MimsyTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		37A8C6B716758FF400D4DB13 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		37A8C6BE16758FF400D4DB13 /* MimsyTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MimsyTests-Info.plist"; sourceTree = "<group>"; };
 		37A8C6C016758FF400D4DB13 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		37A8C6C216758FF400D4DB13 /* DecodeTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DecodeTests.h; sourceTree = "<group>"; };
@@ -980,7 +978,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				37A8C6B816758FF400D4DB13 /* SenTestingKit.framework in Frameworks */,
 				37A8C6B916758FF400D4DB13 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1469,7 +1466,6 @@
 			isa = PBXGroup;
 			children = (
 				37A8C69616758FF400D4DB13 /* Cocoa.framework */,
-				37A8C6B716758FF400D4DB13 /* SenTestingKit.framework */,
 				37A8C69816758FF400D4DB13 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -2282,102 +2278,102 @@
 				TargetAttributes = {
 					370D2BAA1C2CD7FE0091C2BF = {
 						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					3720B6E51C1FC80900A6622C = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					3741748F1C2A436800EA51DE = {
 						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					374706391C20FB40008F42DF = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					3756B8B11C0BF257002B0B56 = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					376D81F31C1FAA2900866B4D = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					377230AE1C1A982E0089F12D = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					3775F4A71C0BBFD9001AFA06 = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					37771B5B1C2DEC230016A3CE = {
 						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					3793190B1C1FAE22006F199D = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					37A8C69116758FF400D4DB13 = {
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					37AAB37A1C2282000041BA02 = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					37B1F5D11C23B422003C3383 = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					37B557801C2107440060AD55 = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					37BABADE1C0AB5CB00B9B5AB = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					37C32DBC1C1FB88D000742FB = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					37CDF3961C07BF9E009E48B4 = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					37CDF3AC1C07CC3A009E48B4 = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					37D0BB7D1C13FC620053617F = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					37D0BB991C165FAB0053617F = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					37E8C5891C0C0DE500849644 = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					37E8C59B1C0C110500849644 = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					37E8EE951C0C1F9300E1C3B9 = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					37E8EEA71C0FEAF600E1C3B9 = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 					37EB1D5B1C1FE52E005CC016 = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1010;
 					};
 				};
 			};
@@ -3320,7 +3316,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -3353,7 +3350,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.DefinitionsParser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -3386,7 +3384,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -3419,7 +3418,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.NewDirectory;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -3452,7 +3452,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -3485,7 +3486,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.Definitions;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -3518,7 +3520,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -3551,7 +3554,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.TrashItems;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -3584,7 +3588,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -3617,7 +3622,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.ConvertToInt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -3650,7 +3656,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -3683,7 +3690,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.ShowInFinder;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -3716,7 +3724,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -3749,7 +3758,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.ShowTrailingWhitespace;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -3782,7 +3792,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -3815,7 +3826,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.FindGremlin;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -3848,7 +3860,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -3881,7 +3894,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.DefinitionsGoto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -3914,7 +3928,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -3947,7 +3962,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.CopyPaths;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -4094,7 +4110,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mimsy/Mimsy-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -4144,7 +4161,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "JDJ.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Mimsy/Mimsy-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -4212,7 +4230,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -4245,7 +4264,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.HighlightTodo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -4278,7 +4298,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -4311,7 +4332,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.HighlightSelection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -4344,7 +4366,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -4377,7 +4400,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.OpenAsBinary;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -4408,7 +4432,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.GoFormat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -4440,7 +4465,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.GoFormat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -4473,7 +4499,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -4506,7 +4533,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.DuplicateFile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -4546,7 +4574,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -4586,7 +4615,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.MimsyPlugins;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -4620,7 +4650,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -4653,7 +4684,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.ChangeCase;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -4686,7 +4718,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -4719,7 +4752,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.OpenDual;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -4752,7 +4786,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -4785,7 +4820,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.SelectElement;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -4818,7 +4854,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -4851,7 +4888,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.EscapeText;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -4884,7 +4922,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -4917,7 +4956,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.ReverseLines;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -4950,7 +4990,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -4983,7 +5024,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.SortLines;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -5016,7 +5058,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -5049,7 +5092,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.HighlightLine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -5082,7 +5126,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
@@ -5115,7 +5160,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mimsy.NewFile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;

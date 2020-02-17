@@ -46,7 +46,7 @@ class StdCopyPaths: MimsyPlugin
     
     func copyFileItem(_ view: MimsyTextView)
     {
-        let pb = NSPasteboard.general()
+        let pb = NSPasteboard.general
         let text = view.path!.asString() as NSString
         pb.clearContents()
         pb.writeObjects([text])
@@ -54,7 +54,7 @@ class StdCopyPaths: MimsyPlugin
     
     func copyProjectItems(_ files: [MimsyPath], dirs: [MimsyPath])
     {
-        let pb = NSPasteboard.general()
+        let pb = NSPasteboard.general
         pb.clearContents()
         pb.writeObjects(files.map {$0.asString() as NSString})
         pb.writeObjects(dirs.map {$0.asString() as NSString})

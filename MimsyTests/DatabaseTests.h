@@ -1,5 +1,5 @@
-#import <SenTestingKit/SenTestingKit.h>
-
-@interface DatabaseTests : SenTestCase
-
-@end
+//#import <SenTestingKit/SenTestingKit.h>
+//
+//@interface DatabaseTests : SenTestCase
+//
+//@end

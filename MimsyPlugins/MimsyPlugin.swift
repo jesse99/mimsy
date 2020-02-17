@@ -5,7 +5,7 @@ import Cocoa
 open class MimsyPlugin: NSObject
 {
     /// Mimsy will instantiate plugins when it loads their bundles.
-    public init(fromApp: MimsyApp, bundle: Bundle)
+    @objc public init(fromApp: MimsyApp, bundle: Bundle)
     {
         MimsyPlugins.app = fromApp
         self.app = fromApp
@@ -23,32 +23,32 @@ open class MimsyPlugin: NSObject
     ///
     /// - Returns: nil if the plugin was able to load or an error message if it
     /// failed to load (or doesn't want to run).
-    open func onLoad(_ stage: Int) -> String?
+    @objc open func onLoad(_ stage: Int) -> String?
     {
         return nil
     }
     
     /// Called just before Mimsy exits (assuming it exits normally).
-    open func onUnload()
+    @objc open func onUnload()
     {
     }
     
     /// Called between stage 0 and stage 1 and when settings change. Contains settings for the 
     /// current language (if any), for the current project (if any), for the app, and for the
     /// plugin (if any).
-    open func onLoadSettings(_ settings: MimsySettings)
+    @objc open func onLoadSettings(_ settings: MimsySettings)
     {
     }
     
     // Called when the main window changes. Note that this is called after onLoadSettings and
     // after the old window resigns.
-    open func onMainChanged(_ controller: NSWindowController?)
+    @objc open func onMainChanged(_ controller: NSWindowController?)
     {
     }
     
     public let app: MimsyApp
     
     /// The plugin's bundle.
-    public let bundle: Bundle
+    @objc public let bundle: Bundle
 }
 

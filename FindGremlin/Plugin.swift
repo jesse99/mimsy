@@ -55,7 +55,7 @@ class StdFindGremlin: MimsyPlugin
             
             // We could support wrapping around (if the FindWraps setting is set)
             // but that works best with Find and Find Again commands.
-            NSBeep()
+            NSSound.beep()
         }
     }
 }

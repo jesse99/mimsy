@@ -22,12 +22,12 @@ class StdShowInFinder: MimsyPlugin
     {
         for path in files
         {
-            NSWorkspace.shared().selectFile(path.asString(), inFileViewerRootedAtPath: "")
+            NSWorkspace.shared.selectFile(path.asString(), inFileViewerRootedAtPath: "")
         }
 
         for path in dirs
         {
-            NSWorkspace.shared().selectFile(path.asString(), inFileViewerRootedAtPath: "")
+            NSWorkspace.shared.selectFile(path.asString(), inFileViewerRootedAtPath: "")
         }
     }
 }

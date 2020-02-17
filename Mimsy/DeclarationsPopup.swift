@@ -11,7 +11,7 @@ class DeclarationsPopup : NSPopUpButton
     
     override func mouseDown(with theEvent: NSEvent)
     {
-        if theEvent.modifierFlags.rawValue & NSEventModifierFlags.option.rawValue != 0
+        if theEvent.modifierFlags.rawValue & NSEvent.ModifierFlags.option.rawValue != 0
         {
             sortItems{let d0 = $0; return d0.name < $1.name || (d0.name == $1.name && d0.range.location < $1.range.location)}
             super.mouseDown(with: theEvent)
@@ -23,14 +23,14 @@ class DeclarationsPopup : NSPopUpButton
         }
     }
     
-    func onAppliedStyles(_ view: NSTextView)
+    @objc func onAppliedStyles(_ view: NSTextView)
     {
         _decs = [Declaration]()
         _view = view
         
         let str = view.textStorage
         let text: NSString = str!.string as NSString
-        str?.enumerateAttribute("element name", in: NSMakeRange(0, str!.length), options: [], using: { (value, range, stop) -> Void in
+        str?.enumerateAttribute(convertToNSAttributedStringKey("element name"), in: NSMakeRange(0, str!.length), options: [], using: { (value, range, stop) -> Void in
             if let name = value as? NSString
             { 
                 let prefix = self.findIndent(text, range: range)
@@ -51,7 +51,7 @@ class DeclarationsPopup : NSPopUpButton
         self.onSelectionChanged(view)
     }
     
-    func onSelectionChanged(_ view: NSTextView)
+    @objc func onSelectionChanged(_ view: NSTextView)
     {
        let range = view.selectedRange()
         
@@ -67,7 +67,7 @@ class DeclarationsPopup : NSPopUpButton
         self.selectItem(at: -1)
     }
     
-    func onSelectItem(_ sender: NSMenuItem)
+    @objc func onSelectItem(_ sender: NSMenuItem)
     {
         let range = sender.representedObject as! NSRange
         
@@ -129,14 +129,14 @@ class DeclarationsPopup : NSPopUpButton
             self.addItem(withTitle: dec.name)
 
             var attrs = [String: AnyObject]()
-            attrs[NSFontAttributeName] = NSFont.systemFont(ofSize: NSFont.smallSystemFontSize())
+            attrs[convertFromNSAttributedStringKey(NSAttributedString.Key.font)] = NSFont.systemFont(ofSize: NSFont.smallSystemFontSize)
             if dec.isType
             {
-                attrs[NSStrokeWidthAttributeName] = -4.0 as AnyObject?
+                attrs[convertFromNSAttributedStringKey(NSAttributedString.Key.strokeWidth)] = -4.0 as AnyObject?
             }
             
             let item = self.lastItem
-            item!.attributedTitle = NSAttributedString(string: dec.name, attributes: attrs)
+            item!.attributedTitle = NSAttributedString(string: dec.name, attributes: convertToOptionalNSAttributedStringKeyDictionary(attrs))
             item!.representedObject = dec.range
             item!.target = self
             item!.action = #selector(DeclarationsPopup.onSelectItem(_:))
@@ -152,4 +152,20 @@ class DeclarationsPopup : NSPopUpButton
     
     fileprivate var _view: NSTextView?
     fileprivate var _decs: [Declaration]
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToNSAttributedStringKey(_ input: String) -> NSAttributedString.Key {
+	return NSAttributedString.Key(rawValue: input)
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

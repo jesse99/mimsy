@@ -1,5 +1,5 @@
-#import <SenTestingKit/SenTestingKit.h>
-
-@interface ColorTests : SenTestCase
-
-@end
+//#import <SenTestingKit/SenTestingKit.h>
+//
+//@interface ColorTests : SenTestCase
+//
+//@end

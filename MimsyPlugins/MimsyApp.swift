@@ -20,8 +20,8 @@ open class TextContextMenuItem: NSObject
         self.invoke = invoke
     }
     
-    public let title: String
-    public let invoke: InvokeTextCommand
+    @objc public let title: String
+    @objc public let invoke: InvokeTextCommand
 }
 
 public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMenuItem]

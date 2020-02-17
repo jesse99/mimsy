@@ -13,7 +13,7 @@ public extension NSAttributedString
         
         let effRange = UnsafeMutablePointer<NSRange>.allocate(capacity: 1)
         effRange.pointee = NSRange(location: 0, length: 0)
-        let attrs = self.attributes(at: range.location, longestEffectiveRange: effRange, in: clipRange)
+        let attrs = convertFromNSAttributedStringKeyDictionary(self.attributes(at: range.location, longestEffectiveRange: effRange, in: clipRange))
         if let name = attrs["element name"], effRange.pointee.length == range.length
         {
             return (name as! String)
@@ -21,4 +21,9 @@ public extension NSAttributedString
 
         return nil
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKeyDictionary(_ input: [NSAttributedString.Key: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
 }

@@ -44,7 +44,7 @@ class StdSelectElement: MimsyPlugin
             {
                 var start = view.selectionRange.location + view.selectionRange.length
                 var range = NSRange(location: 0, length: 0)
-                if let name = text.attribute("element name", at: start, effectiveRange: &range)
+                if let name = text.attribute(convertToNSAttributedStringKey("element name"), at: start, effectiveRange: &range)
                 {
                     if range.location < start && self.elementNames.contains(name as! String)
                     {
@@ -54,7 +54,7 @@ class StdSelectElement: MimsyPlugin
                 
                 let maxRange = NSRange(location: start, length: view.string.length - start)
                 let options = NSAttributedString.EnumerationOptions(rawValue: 0)
-                text.enumerateAttribute("element name", in: maxRange, options: options, using: { (value, range, stop) -> Void in
+                text.enumerateAttribute(convertToNSAttributedStringKey("element name"), in: maxRange, options: options, using: { (value, range, stop) -> Void in
                     if let name = value as? NSString
                     {
                         if self.elementNames.contains(name as String)
@@ -88,7 +88,7 @@ class StdSelectElement: MimsyPlugin
             {
                 var start = view.selectionRange.location
                 var range = NSRange(location: 0, length: 0)
-                if let name = text.attribute("element name", at: start, effectiveRange: &range)
+                if let name = text.attribute(convertToNSAttributedStringKey("element name"), at: start, effectiveRange: &range)
                 {
                     if range.location + range.length < start && self.elementNames.contains(name as! String)
                     {
@@ -98,7 +98,7 @@ class StdSelectElement: MimsyPlugin
                 
                 let maxRange = NSRange(location: 0, length: start)
                 let options = NSAttributedString.EnumerationOptions.reverse
-                text.enumerateAttribute("element name", in: maxRange, options: options, using: { (value, range, stop) -> Void in
+                text.enumerateAttribute(convertToNSAttributedStringKey("element name"), in: maxRange, options: options, using: { (value, range, stop) -> Void in
                     if let name = value as? NSString
                     {
                         if self.elementNames.contains(name as String)
@@ -138,7 +138,7 @@ class StdSelectElement: MimsyPlugin
                 let start = view.selectionRange.location + view.selectionRange.length
                 let maxRange = NSRange(location: start, length: view.string.length - start)
                 let options = NSAttributedString.EnumerationOptions(rawValue: 0)
-                text.enumerateAttribute("element name", in: maxRange, options: options, using: { (value, range, stop) -> Void in
+                text.enumerateAttribute(convertToNSAttributedStringKey("element name"), in: maxRange, options: options, using: { (value, range, stop) -> Void in
                     if let name = value as? NSString
                     {
                         if name == "function"
@@ -180,7 +180,7 @@ class StdSelectElement: MimsyPlugin
                 let start = view.selectionRange.location
                 let maxRange = NSRange(location: 0, length: start)
                 let options = NSAttributedString.EnumerationOptions.reverse
-                text.enumerateAttribute("element name", in: maxRange, options: options, using: { (value, range, stop) -> Void in
+                text.enumerateAttribute(convertToNSAttributedStringKey("element name"), in: maxRange, options: options, using: { (value, range, stop) -> Void in
                     if let name = value as? NSString
                     {
                         if name == "function"
@@ -260,4 +260,9 @@ class StdSelectElement: MimsyPlugin
     var elementNames: [String] = []
     var wordRe: NSRegularExpression? = nil
     var paraRe: NSRegularExpression? = nil
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToNSAttributedStringKey(_ input: String) -> NSAttributedString.Key {
+	return NSAttributedString.Key(rawValue: input)
 }

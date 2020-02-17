@@ -1,5 +1,5 @@
-#import <SenTestingKit/SenTestingKit.h>
+//#import <SenTestingKit/SenTestingKit.h>
 
-@interface RegexStylerTests : SenTestCase
-
-@end
+//@interface RegexStylerTests : SenTestCase
+//
+//@end

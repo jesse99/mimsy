@@ -88,7 +88,7 @@ class StdOpenDual: MimsyPlugin
         static func parse(_ text: String) -> Name
         {
             return text.hasPrefix(".") ?
-                .extension(text.substring(from: text.index(text.startIndex, offsetBy: 1))) :
+                .extension(String(text[text.index(text.startIndex, offsetBy: 1)...])) :
                 .path(text)
         }
     }
