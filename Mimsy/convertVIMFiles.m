@@ -1034,7 +1034,7 @@ static NSDictionary* getAttributes(GlobalStyle* global, NSString* name, ElementS
 		fontName = @"Menlo";
 	float size = 16;
 	if ([name isEqualToString:@"Structure"] || [name isEqualToString:@"PreCondit"])
-		size *= 1.25;
+		size *= (float) 1.25;
 	attrs[NSFontAttributeName] = [NSFont fontWithName:fontName size:size];
 	
 	NSColor* fgColor = getColor(global, style.fgColor);
