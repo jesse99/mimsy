@@ -311,7 +311,7 @@ void initLogGlobs()
     return language;
 }
 
--(BOOL)addMenuItem:(NSMenuItem*)item loc:(enum MenuItemLoc)loc sel:(NSString*)sel enabled:(MenuEnabledBlock)enabled invoke:(MenuInvokeBlock)invoke
+-(BOOL)addNewMenuItem:(NSMenuItem*)item loc:(enum MenuItemLoc)loc sel:(NSString*)sel enabled:(MenuEnabledBlock)enabled invoke:(__attribute__((noescape)) MenuInvokeBlock)invoke
 {
     NSMenu* menu = nil;
     NSInteger at = 0;
@@ -387,7 +387,7 @@ void initLogGlobs()
     return _layeredSettings;
 }
 
-- (void)enumerateWithDir:(MimsyPath* __nonnull)root recursive:(BOOL)recursive error:(void (^ __nonnull)(NSString* __nonnull))error predicate:(BOOL (^)(MimsyPath* __nonnull, NSString* __nonnull))predicate callback:(void (^ __nonnull)(MimsyPath* __nonnull, NSArray<NSString*>* __nonnull))callback
+- (void)enumerateWithDir:(MimsyPath* __nonnull)root recursive:(BOOL)recursive error:(__attribute__((noescape)) void (^ __nonnull)(NSString* __nonnull))error predicate:(__attribute__((noescape)) BOOL (^)(MimsyPath* __nonnull, NSString* __nonnull))predicate callback:(__attribute__((noescape)) void (^ __nonnull)(MimsyPath* __nonnull, NSArray<NSString*>* __nonnull))callback
 {
     NSMutableArray<MimsyPath*>* dirs = [NSMutableArray new];
     [dirs addObject:root];
@@ -531,7 +531,7 @@ void initLogGlobs()
     return _applyElementStyles;
 }
 
-- (void)registerApplyStyle:(NSString*)element :(TextRangeBlock)hook
+- (void)registerApplyStyle:(NSString*)element :(__attribute__((noescape)) TextRangeBlock)hook
 {
     element = [element lowercaseString];
     NSMutableArray* items = [_applyElementStyles objectForKey:element];
@@ -544,7 +544,7 @@ void initLogGlobs()
     [items addObject:hook];
 }
 
-- (void)registerNoSelectionTextContextMenu:(enum NoTextSelectionPos)pos callback:(TextContextMenuBlock)callback
+- (void)registerNoSelectionTextContextMenu:(enum NoTextSelectionPos)pos callback:(__attribute__((noescape)) TextContextMenuBlock)callback
 {
     NSValue* key = @((int) pos);
     NSMutableArray* items = [_noSelectionItems objectForKey:key];
@@ -557,7 +557,7 @@ void initLogGlobs()
     [items addObject:callback];
 }
 
-- (void)registerWithSelectionTextContextMenu:(enum WithTextSelectionPos)pos callback:(TextContextMenuBlock)callback
+- (void)registerWithSelectionTextContextMenu:(enum WithTextSelectionPos)pos callback:(__attribute__((noescape)) TextContextMenuBlock)callback
 {
     NSValue* key = @((int) pos);
     NSMutableArray* items = [_withSelectionItems objectForKey:key];
@@ -631,7 +631,7 @@ void initLogGlobs()
     return [NSColor colorWithMimsyName:name];
 }
 
-- (void)registerProject:(enum ProjectNotification)kind :(ProjectBlock)hook
+- (void)registerProject:(enum ProjectNotification)kind :(__attribute__((noescape)) ProjectBlock)hook
 {
     NSValue* key = @((int) kind);
     NSMutableArray* hooks = [_projectHooks objectForKey:key];
@@ -654,7 +654,7 @@ void initLogGlobs()
     }
 }
 
-- (void)registerTextView:(enum TextViewNotification)kind :(TextViewBlock)hook
+- (void)registerTextView:(enum TextViewNotification)kind :(__attribute__((noescape)) TextViewBlock)hook
 {
     NSValue* key = @((int) kind);
     NSMutableArray* hooks = [_textHooks objectForKey:key];
@@ -1536,7 +1536,7 @@ void initLogGlobs()
 			[parser enumerate:
 				 ^(ConfigParserEntry* entry)
 				 {
-					 [_layeredSettings addKey:entry.key value:entry.value];
+                     [self->_layeredSettings addKey:entry.key value:entry.value];
 				 }];
 		}
 		else

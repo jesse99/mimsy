@@ -37,7 +37,7 @@ class StdDuplicateFile: MimsyPlugin
             }
             catch let err as NSError
             {
-                app.transcript().write(.error, text: "error copying \(oldPath): \(err.localizedFailureReason)")
+                app.transcript().write(.error, text: "error copying \(oldPath): \(String(describing: err.localizedFailureReason))")
             }
             catch
             {

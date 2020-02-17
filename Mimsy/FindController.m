@@ -104,9 +104,9 @@ typedef void (^FindBlock)(BaseTextController* controller, NSRegularExpression* r
 					   }
 				   };
 			   
-			   ASSERT(searchRange.location <= _text.length);
-			   ASSERT(searchRange.location + searchRange.length <= _text.length);
-			   [regex enumerateMatchesInString:_text options:options range:searchRange usingBlock:matcher];
+               ASSERT(searchRange.location <= self->_text.length);
+               ASSERT(searchRange.location + searchRange.length <= self->_text.length);
+               [regex enumerateMatchesInString:self->_text options:options range:searchRange usingBlock:matcher];
 			   
 			   if (range.location == NSNotFound && wrap)
 			   {
@@ -114,9 +114,9 @@ typedef void (^FindBlock)(BaseTextController* controller, NSRegularExpression* r
 				   {
 					   searchRange = NSMakeRange(0, searchFrom - 1);
 
-					   ASSERT(searchRange.location <= _text.length);
-					   ASSERT(searchRange.location + searchRange.length <= _text.length);
-					   [regex enumerateMatchesInString:_text options:options range:searchRange usingBlock:matcher];
+                       ASSERT(searchRange.location <= self->_text.length);
+                       ASSERT(searchRange.location + searchRange.length <= self->_text.length);
+                       [regex enumerateMatchesInString:self->_text options:options range:searchRange usingBlock:matcher];
 				   }
 				   wrappedAround = true;
 			   }
@@ -124,17 +124,17 @@ typedef void (^FindBlock)(BaseTextController* controller, NSRegularExpression* r
 			   dispatch_async(main,
 				  ^{
 					  if (wrappedAround)
-						  _wrappedAround = true;
+                          self->_wrappedAround = true;
 					  
 					  if (range.location != NSNotFound)
 					  {
-						  BaseTextController* controller = _controller;
+                          BaseTextController* controller = self->_controller;
 						  if (controller)
 						  {
-							  if (_wrappedAround && range.location + range.length >= _initialSearchFrom)
+                              if (self->_wrappedAround && range.location + range.length >= self->_initialSearchFrom)
 							  {
 								  [controller showInfo:@"Reached Start"];
-								  _wrappedAround = false;
+                                  self->_wrappedAround = false;
 							  }
 							  
 							  block(controller, regex, match);
@@ -142,7 +142,7 @@ typedef void (^FindBlock)(BaseTextController* controller, NSRegularExpression* r
 					  }
 					  else
 						  NSBeep();
-					  _finding = false;
+                      self->_finding = false;
 				  });
 		   });
 	}
@@ -184,7 +184,7 @@ typedef void (^FindBlock)(BaseTextController* controller, NSRegularExpression* r
 			   
 			   // There's no good way to search backwards so we'll use a bad way...
 			   NSMatchingOptions options = NSMatchingWithTransparentBounds | NSMatchingWithoutAnchoringBounds;
-			   [regex enumerateMatchesInString:_text options:options range:searchRange usingBlock:
+               [regex enumerateMatchesInString:self->_text options:options range:searchRange usingBlock:
 					^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop)
 				   {
 					   UNUSED(flags, stop);
@@ -196,13 +196,13 @@ typedef void (^FindBlock)(BaseTextController* controller, NSRegularExpression* r
 				  ^{
 					  if (candidate.location != NSNotFound)
 					  {
-						  BaseTextController* controller = _controller;
+                          BaseTextController* controller = self->_controller;
 						  if (controller)
 							  [self _showSelection:candidate in:controller];
 					  }
 					  else
 						  NSBeep();
-					  _finding = false;
+                      self->_finding = false;
 				  });
 		   });
 	}

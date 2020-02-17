@@ -20,8 +20,8 @@ open class TextContextMenuItem: NSObject
         self.invoke = invoke
     }
     
-    open let title: String
-    open let invoke: InvokeTextCommand
+    public let title: String
+    public let invoke: InvokeTextCommand
 }
 
 public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMenuItem]
@@ -90,7 +90,7 @@ public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMe
     func enumerate(dir: MimsyPath, recursive: Bool, error: (String) -> (), predicate: FilePredicate, callback: (MimsyPath, [String]) -> ())
     
     /// Typically the extension method will be used instead of this.
-    func addMenuItem(_ item: NSMenuItem, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem?, invoke: InvokeMenuItem) -> Bool
+    func addNewMenuItem(_ item: NSMenuItem, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem?, invoke: @escaping InvokeMenuItem) -> Bool
     
     /// - Returns: If the frontmost window is a text document window then it is returned. Otherwise nil is returned.
     func textView() -> MimsyTextView?
@@ -99,10 +99,10 @@ public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMe
     func transcript() -> MimsyTranscript
     
     /// Registers a function that will be called when various project related events happen.
-    func registerProject(_ kind: ProjectNotification, _ hook: ProjectCallback)
+    func registerProject(_ kind: ProjectNotification, _ hook: @escaping ProjectCallback)
     
     /// Registers a function that will be called when various text view related events happen.
-    func registerTextView(_ kind: TextViewNotification, _ hook: TextViewCallback)
+    func registerTextView(_ kind: TextViewNotification, _ hook: @escaping TextViewCallback)
 
     /// Used to register a function that will be called when a key is pressed. 
     ///
@@ -112,7 +112,7 @@ public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMe
     /// modifiers: "command", "control", "option", "shift". If multiple modifiers are used they should
     /// be listed in alphabetical order, e.g. "option-shift-tab".
     /// - Parameter hook: Return true to suppress further processing of the key.
-    func registerTextViewKey(_ key: String, _ identifier: String, _ hook: TextViewKeyCallback)
+    func registerTextViewKey(_ key: String, _ identifier: String, _ hook: @escaping TextViewKeyCallback)
     
     /// Used to generate the Special Keys help file.
     ///
@@ -136,28 +136,28 @@ public typealias TextContextMenuItemCallback = (MimsyTextView) -> [TextContextMe
     /// "*" can also be used in which case the hook is called after a sequence of elements are styled.
     /// - Parameter hook: The function to call. This will often add new attributes to the range passed 
     /// into the hook.
-    func registerApplyStyle(_ element: String, _ hook: TextRangeCallback)
+    func registerApplyStyle(_ element: String, _ hook: @escaping TextRangeCallback)
     
     /// Used to add a custom menu item to the directory editor.
     ///
     /// - Parameter title: Returns the name of the new menu item, or nil if an item should not be added.
     /// Plugins should only add a menu item if they are able to process all the selected items.
     /// - Parameter invoke: Called when the user selects the new menu item.
-    func registerProjectContextMenu(_ title: ProjectContextMenuItemTitle, invoke: InvokeProjectCommand)
+    func registerProjectContextMenu(_ title: @escaping ProjectContextMenuItemTitle, invoke: @escaping InvokeProjectCommand)
     
     /// Used to add a custom menu item to text contextual menus when there is no selection.
     ///
     /// - Parameter pos: Pre-defined location at which to insert the new sorted menu item.
     /// - Parameter title: Returns the name of the new menu item, or nil if an item should not be added.
     /// - Parameter invoke: Called when the user selects the new menu item.
-    func registerNoSelectionTextContextMenu(_ pos: NoTextSelectionPos, callback: TextContextMenuItemCallback)
+    func registerNoSelectionTextContextMenu(_ pos: NoTextSelectionPos, callback: @escaping TextContextMenuItemCallback)
     
     /// Used to add a custom menu item to text contextual menus when is a selection.
     ///
     /// - Parameter pos: Pre-defined location at which to insert the new sorted menu item.
     /// - Parameter title: Returns the name of the new menu item, or nil if an item should not be added.
     /// - Parameter invoke: Called when the user selects the new menu item.
-    func registerWithSelectionTextContextMenu(_ pos: WithTextSelectionPos, callback: TextContextMenuItemCallback)
+    func registerWithSelectionTextContextMenu(_ pos: WithTextSelectionPos, callback: @escaping TextContextMenuItemCallback)
     
     /// Returns the environment variables Mimsy was launched with (which are normally a subset
     /// of the variables the shell commands receive) augmented with Mimsy settings (e.g. to append
@@ -229,10 +229,10 @@ public extension MimsyApp
     /// - Parameter invoke: The function to invoke when the menu item is selected.
     ///
     /// - Returns: True if menu item was added. False if sel could not be found.
-    public func addMenuItem(_ item: NSMenuItem? = nil, title: String? = nil, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem? = nil, invoke: InvokeMenuItem) -> Bool
+    public func addMenuItem(_ item: NSMenuItem? = nil, title: String? = nil, loc: MenuItemLoc, sel: String, enabled: EnabledMenuItem? = nil, invoke: @escaping InvokeMenuItem) -> Bool
     {
         let theItem = item != nil ? item! : NSMenuItem(title: title!, action: nil, keyEquivalent: "")
-        return addMenuItem(theItem, loc: loc, sel: sel, enabled: enabled, invoke: invoke)
+        return addNewMenuItem(theItem, loc: loc, sel: sel, enabled: enabled, invoke: invoke)
     }
     
     /// Depending upon whether the logging.mimsy settings file enables the topic
@@ -315,7 +315,7 @@ public extension MimsyApp
         task.launch()
         
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        return NSString(data: data, encoding: String.Encoding.utf8.rawValue) as String!
+        return NSString(data: data, encoding: String.Encoding.utf8.rawValue)! as String
     }
 }
 

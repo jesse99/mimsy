@@ -250,19 +250,20 @@ static NSMutableArray* startupErrors;
 		^(NSString* element, NSRange range, BOOL* stop)
 		{
 			(void) stop;
+            (void) range;
 			if (element)
 			{
 				if ([element isEqualToString:@"info"])
-					[self.view.textStorage setAttributes:_infoAttrs range:range];
+                    [self.view.textStorage setAttributes:self->_infoAttrs range:range];
 				
 				else if ([element isEqualToString:@"command"])
-					[self.view.textStorage setAttributes:_commandAttrs range:range];
+                    [self.view.textStorage setAttributes:self->_commandAttrs range:range];
 				
 				else if ([element isEqualToString:@"stdout"])
-					[self.view.textStorage setAttributes:_stdoutAttrs range:range];
+                    [self.view.textStorage setAttributes:self->_stdoutAttrs range:range];
 				
 				else if ([element isEqualToString:@"stderr"])
-					[self.view.textStorage setAttributes:_stderrAttrs range:range];
+                    [self.view.textStorage setAttributes:self->_stderrAttrs range:range];
 			}
 		}
 	 ];

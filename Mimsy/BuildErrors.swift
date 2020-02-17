@@ -22,15 +22,24 @@ open class BuildErrors : NSObject
     
     func parseErrors(_ text: NSString, range: NSRange)
     {
+        let len = text.length
+        assert(range.location >= 0)
+        //assert(range.location + range.length <= len);
+        
         _errors = [Error]()
         _index = -1
+        
+        if range.location + range.length > len {   // TODO: fix this (happens when the transcript truncates)
+            return;
+        }
+
         
         var matches = [Int: Bool]()
         
         let remap = getRemapPath()
         for pattern in _patterns
         {
-            pattern.regex.enumerateMatches(in: text as String, options: [], range: range, using:
+            pattern.regex.enumerateMatches(in: text as String, options: .reportCompletion, range: range, using:
             {
             (match, flags, stop) in
                 if match != nil && matches[match!.range.location] == nil
@@ -164,7 +173,7 @@ open class BuildErrors : NSObject
             var result = [Character: Int]()
             
             var index = 1
-            for char in tags.characters
+            for char in tags
             {
                 switch char
                 {
@@ -172,7 +181,7 @@ open class BuildErrors : NSObject
                     result[char] = index
                     index += 1
                 default:
-                    TranscriptController.writeError("BuildError in \(fileName) tags should contain FLCM characters, not '\(tags)'")
+                    TranscriptController.writeError("BuildError in \(String(describing: fileName)) tags should contain FLCM characters, not '\(tags)'")
                }
             }
             
@@ -181,13 +190,14 @@ open class BuildErrors : NSObject
         
         func createRegex(_ pattern: String) -> NSRegularExpression?
         {
+            let pattern = pattern.trimmingCharacters(in: CharacterSet.whitespaces)
             do {
                 return try NSRegularExpression(pattern: pattern, options: NSRegularExpression.Options.anchorsMatchLines)
             } catch let error as NSError {
-                TranscriptController.writeError("BuildError in \(fileName) regex '\(pattern)' is malformed: \(error.localizedFailureReason)")
+                TranscriptController.writeError("BuildError in \(String(describing: fileName)) regex '\(pattern)' is malformed: \(error.localizedFailureReason ?? "unknown")")
                 return nil
             } catch {
-                TranscriptController.writeError("BuildError in \(fileName) regex '\(pattern)' is malformed: unknown error")
+                TranscriptController.writeError("BuildError in \(String(describing: fileName)) regex '\(pattern)' is malformed: unknown error")
                 return nil
             }
         }
@@ -207,7 +217,7 @@ open class BuildErrors : NSObject
         }
         else
         {
-            TranscriptController.writeError("BuildError in \(fileName) should have tags then a space then a regex pattern, not '\(value)'")
+            TranscriptController.writeError("BuildError in \(String(describing: fileName)) should have tags then a space then a regex pattern, not '\(String(describing: value))'")
         }
     }
 

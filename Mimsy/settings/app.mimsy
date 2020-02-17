@@ -59,6 +59,12 @@ BuildError: FLCM ^([^:\r\n]+):(\d+):(\d+):\s+\w+:\s+(.+)$
 # go
 BuildError: FLM ^([^:\r\n]+):(\d+):(.+)$
 
+# rust
+# error: expected one of `.`, `;`, `?`, or an operator, found `tx`
+#   --> src/main.rs:230:4
+BuildError: MFLC ^error: ([^\n]+)\n\s+-->\s+([^:]+):(\d+):(\d+)
+BuildError: MFLC ^warning: ([^\n]+)\n\s+-->\s+([^:]+):(\d+):(\d+)
+
 #### Open Selection ####################################################
 # These are globs for paths that open selection will open preferentially: when open
 # selection uses the locate command and finds files matching these paths it will open 

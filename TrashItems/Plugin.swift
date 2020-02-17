@@ -52,7 +52,7 @@ class StdTrashItems: MimsyPlugin
         }
         catch let err as NSError
         {
-            app.transcript().write(.error, text: "error moving \(path) to the trash: \(err.localizedFailureReason)")
+            app.transcript().write(.error, text: "error moving \(path) to the trash: \(String(describing: err.localizedFailureReason))")
         }
         catch
         {

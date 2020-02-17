@@ -95,7 +95,7 @@ open class MimsyPath: NSObject
     open func makeUnique() -> MimsyPath
     {
         let root = self.popExtension()
-        let ext = self.hasExtension() ? ".\(self.extensionName())" : ""
+        let ext = self.hasExtension() ? ".\(String(describing: self.extensionName()))" : ""
         
         var n = 0
         let fm = FileManager.default

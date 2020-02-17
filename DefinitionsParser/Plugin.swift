@@ -37,7 +37,7 @@ class StdDefinitionsParser: MimsyPlugin, ItemParser
                 {
                     if pattern.hasPrefix("*.")
                     {
-                        let name = pattern.substring(from: pattern.characters.index(pattern.startIndex, offsetBy: 2))
+                        let name = pattern.substring(from: pattern.index(pattern.startIndex, offsetBy: 2))
                         languages[name] = lang
                     }
                 }

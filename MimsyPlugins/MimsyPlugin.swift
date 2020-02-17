@@ -46,9 +46,9 @@ open class MimsyPlugin: NSObject
     {
     }
     
-    open let app: MimsyApp
+    public let app: MimsyApp
     
     /// The plugin's bundle.
-    open let bundle: Bundle
+    public let bundle: Bundle
 }
 

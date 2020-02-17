@@ -72,8 +72,8 @@
             // TODO: could speed this up by changing enumerateWithDir to support
             // directly pruning sub-directories.
             const char* str = dir.asString.UTF8String;
-            if (![_excludeGlobs matchStr:str] && ![_excludeAllGlobs matchStr:str])
-                if ([_includeGlobs matchName:name])
+            if (![self->_excludeGlobs matchStr:str] && ![self->_excludeAllGlobs matchStr:str])
+                if ([self->_includeGlobs matchName:name])
                     return true;
             return false;
         }

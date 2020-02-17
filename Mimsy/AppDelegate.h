@@ -4,7 +4,7 @@
 @class ProcFileSystem;
 @class TextController;
 
-typedef void (^NullaryBlock)();
+typedef void (^NullaryBlock)(void);
 typedef void (^BoolBlock)(bool);
 typedef void (^InvokeTextCommandBlock)(id<MimsyTextView> _Nonnull);
 typedef NSString* _Nullable (^TextContextMenuItemTitleBlock)(id<MimsyTextView> _Nonnull);

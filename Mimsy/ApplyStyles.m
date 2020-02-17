@@ -77,7 +77,7 @@
 		[AsyncStyler computeStylesFor:tmp.fullLanguage withText:tmp.text editCount:tmp.editCount completion:
 			^(StyleRuns* runs)
 			{
-				TextController* tmp2 = _controller;
+                TextController* tmp2 = self->_controller;
 				if (tmp2)
 				{
 					[runs mapElementsToStyles:
@@ -141,18 +141,18 @@
 		 {
 			 (void) style;
 			 
-			 NSUInteger loc = _appliedRuns.data[numApplied].range.location;
-			 NSUInteger len = _appliedRuns.data[numApplied].range.length;
-			 if (numApplied < _appliedRuns.count &&
-				 _appliedRuns.data[numApplied].elementIndex == elementIndex &&
+             NSUInteger loc = self->_appliedRuns.data[numApplied].range.location;
+             NSUInteger len = self->_appliedRuns.data[numApplied].range.length;
+             if (numApplied < self->_appliedRuns.count &&
+                 self->_appliedRuns.data[numApplied].elementIndex == elementIndex &&
 				 loc == range.location && len == range.length &&
-				 (_braceRight == 0 || loc + len < _braceLeft))
+                 (self->_braceRight == 0 || loc + len < self->_braceLeft))
 			 {
 				 ++numApplied; 
 			 }
 			 else
 			 {
-				 setSizeStyleRunVector(&_appliedRuns, numApplied);
+                 setSizeStyleRunVector(&self->_appliedRuns, numApplied);
 				 *stop = true;
 			 }
 		 }
@@ -189,7 +189,7 @@
 					beginLoc = range.location;
 				
 				lastLoc = range.location + range.length;
-				if (lastLoc < _firstDirtyLoc)
+                if (lastLoc < self->_firstDirtyLoc)
 				{
 					[storage removeAttribute:NSBackgroundColorAttributeName range:range];
 					[storage removeAttribute:NSLinkAttributeName range:range];
@@ -250,7 +250,7 @@
 			
 			dispatch_queue_t main = dispatch_get_main_queue();
 			dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 100*NSEC_PER_MSEC);	// 0.1s
-			dispatch_after(delay, main, ^{if (!_queued) [self addDirtyLocation:_firstDirtyLoc reason:@"still dirty"];});
+            dispatch_after(delay, main, ^{if (!self->_queued) [self addDirtyLocation:self->_firstDirtyLoc reason:@"still dirty"];});
 		}
 		else if (runs.length)
 		{

@@ -275,7 +275,7 @@ static SelectStyleController* _controller;
 		{
 			(void) stop;
 			(void) index;
-			return [obj.name isEqualToString:_default];
+            return [obj.name isEqualToString:self->_default];
 		}];
 
 	NSTableView* temp = _table;
@@ -334,14 +334,14 @@ static SelectStyleController* _controller;
 			{
 				if ([entry.key isEqualToString:@"Default"])
 				{
-					_default = entry.value;
+                    self->_default = entry.value;
 				}
 				else
 				{
 					NSArray* parts = [entry.value componentsSeparatedByString:@"|"];
 					if (parts.count == 2)
 					{
-						NSUInteger i = [_rows indexOfObjectPassingTest:
+                        NSUInteger i = [self->_rows indexOfObjectPassingTest:
 							^BOOL(StyleRowObject* obj, NSUInteger index, BOOL* stop)
 							{
 								(void) stop;
@@ -352,10 +352,10 @@ static SelectStyleController* _controller;
 						if (i != NSNotFound)
 						{
 							if ([parts[0] length])
-								[_rows[i] setRating:parts[0]];
+                                [self->_rows[i] setRating:parts[0]];
 							
 							if ([parts[1] length])
-								[_rows[i] setComment:parts[1]];
+                                [self->_rows[i] setComment:parts[1]];
 						}
 					}
 					else

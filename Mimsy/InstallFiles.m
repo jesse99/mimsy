@@ -199,11 +199,11 @@
 				{
 					if ([entry.key isEqualToString:@"version"])
 					{
-						_version = entry.value;
+                        self->_version = entry.value;
 					}
 					else if ([entry.key isEqualToString:@"build"])
 					{
-						_build = entry.value;
+                        self->_build = entry.value;
 					}
 					else
 					{

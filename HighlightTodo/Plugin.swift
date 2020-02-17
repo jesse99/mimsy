@@ -28,7 +28,7 @@ class StdHighlightTodo: MimsyPlugin
         }
         catch let err as NSError
         {
-            app.transcript().write(.error, text: "StdHighlightTodo couldn't compile '\(pattern)' as a regex: \(err.localizedFailureReason)\n")
+            app.transcript().write(.error, text: "StdHighlightTodo couldn't compile '\(pattern)' as a regex: \(String(describing: err.localizedFailureReason))\n")
         }
         catch let err as MimsyError
         {

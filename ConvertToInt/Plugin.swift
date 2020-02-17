@@ -93,18 +93,15 @@ class StdConvertToInt: MimsyPlugin
         var text = text
         if text.hasPrefix("0b")
         {
-            text.removeSubrange(text.startIndex ..< text.characters.index(text.startIndex, offsetBy: 2))
-            return toInt(text, radix: 2)
+            return toInt(String(text.dropFirst(2)), radix: 2)
         }
         else if text.hasPrefix("0o")
         {
-            text.removeSubrange(text.startIndex ..< text.characters.index(text.startIndex, offsetBy: 2))
-            return toInt(text, radix: 8)
+            return toInt(String(text.dropFirst(2)), radix: 8)
         }
         else if text.hasPrefix("0x")
         {
-            text.removeSubrange(text.startIndex ..< text.characters.index(text.startIndex, offsetBy: 2))
-            return toInt(text, radix: 16)
+            return toInt(String(text.dropFirst(2)), radix: 16)
         }
         
         text = text.replacingOccurrences(of: "_", with: "")

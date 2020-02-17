@@ -150,7 +150,7 @@
 	dispatch_queue_t main = dispatch_get_main_queue();
 	dispatch_async(main,
 	   ^{
-		   if (--_numThreads == 0)
+           if (--self->_numThreads == 0)
 			   [self _finishedReplacing];
 	   });
 }

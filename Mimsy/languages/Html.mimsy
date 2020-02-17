@@ -1,0 +1,14 @@
+Language: html
+Globs: *.html *.htm
+ContextHelp: {html}[Markup]http://dev.w3.org/html5/markup
+ContextHelp: {html}[Tags]http://htmldog.com/reference/htmltags
+SearchIn: [MDN]https://developer.mozilla.org/en-US/search?q=${TEXT}
+
+Comment: <!-- (?: . | \r | \n)*? -->
+Keyword: (?:< \s*) [\w:.]+			# <element
+Keyword: (?:< \s*) /[\w:.]+ \s* >		# </element>
+Operator: (?:< \s*) ! [\w:.]+				# <!name
+Label: [\w:.-]+ (?= \s* = \s* ["'])		# attribute = "
+String: " [^"\r\n]* "
+String: ' [^'\r\n]* '
+

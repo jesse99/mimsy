@@ -1,9 +1,10 @@
-{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf830
 {\fonttbl\f0\froman\fcharset0 Times-Roman;}
 {\colortbl;\red255\green255\blue255;\red24\green123\blue11;\red255\green0\blue0;}
+{\*\expandedcolortbl;;\csgenericrgb\c9412\c48235\c4314;\csgenericrgb\c100000\c0\c0;}
 \viewkind0
 \deftab480
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
 \f0\fs36 \cf0 The language files are used to do syntax hilighting for text files and to control what qualifies as a word for operations like double-clicking. Language globs are patterns used to associate a file with a language. Typically they are the exact name of a file (\cf2 'Makefile'\cf0 ) or based on the file's extension (\cf2 '*.cs'\cf0 ).\
 \
@@ -12,41 +13,49 @@ These settings can also override or extend existing settings defined in the app.
 New languages can be added to the user directory. Languages are defined using a simple line-based file format consisting of settings and elements. The settings configure various aspects of the language and the elements affect highlighting.\
 \
 The settings are:\
-\pard\pardeftab480\pardirnatural
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
-\b \cf0 Language
-\b0 : is the name of the language. By convention this is lower case. This is a required setting.\
+\b \cf0 ConditionalGlob
+\b0 : consists of a glob, followed by a space, followed by a regex. Files will use the language if the glob matches the file name and the regex matches something in the contents. Languages where a ConditionalGlob matches will be used instead of languages where just a Glob matches.\
+\
+\pard\pardeftab480\pardirnatural\partightenfactor0
+
+\b \cf0 ContextHelp
+\b0 : are URLs added to the Help menu when the main window matches this language.\
 \
 
 \b Globs
 \b0 : is a space separated list of file name globs associated with the language. This is a required setting.\
 \
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
-\b ConditionalGlob
-\b0 : consists of a glob, followed by a space, followed by a regex. Files will use the language if the glob matches the file name and the regex matches something in the contents. Languages where a ConditionalGlob matches will be used instead of languages where just a Glob matches.\
-\
-
-\b Shebang
-\b0 : name of the associated tool appearing on a shebang line. May appear multiple times. This is an alternative way to associate files with a language. \cf3 Not implemented yet.\cf0 \
-\
-
-\b IgnoreWhitespace
+\b \cf0 IgnoreWhitespace
 \b0 : if this is true then leading and trailing whitespace is not highlighted. Defaults to false. \cf3 Not implemented yet.\cf0 \
 \
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
-\b LineComment
-\b0 : is used with the toggle comments command.\
-
-\b \
-Help
-\b0 : are URLs added to the Help menu when the main window matches this language.\
+\b \cf0 Language
+\b0 : is the name of the language. By convention this is lower case. This is a required setting.\
 \
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
-\b Shebangs
+\b \cf0 LineComment
+\b0 : is used with the toggle comments command.\
+\pard\pardeftab480\pardirnatural\partightenfactor0
+\cf0 \
+\pard\pardeftab480\pardirnatural\partightenfactor0
+
+\b \cf0 Shebang
 \b0 : space separated list of shebangs associated with the language, eg sh ksh csh bash. This allows files written in the language to be highlighted even if they don't have a matching glob. \cf3 Not implemented yet.\cf0 \
 \
+\pard\pardeftab480\pardirnatural\partightenfactor0
 
-\b SpacesNotTabs
+\b \cf0 SearchIn
+\b0 : adds an item to the context menu to search a web site for the current selection.\
+\
+\pard\pardeftab480\pardirnatural\partightenfactor0
+
+\b \cf0 SpacesNotTabs
 \b0 : if true spaces are inserted instead of tabs. If present this will override the directory editor preference. \cf3 Not implemented yet.\cf0 \
 \
 

@@ -384,8 +384,8 @@ static enum LineEndian getEndian(NSString* text, bool* hasMac, bool* hasWindows)
 		 ^(NSNotification* notification)
 		 {
 			 UNUSED(notification);
-			 [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillCloseNotification object:_info.window];
-			 _info = nil;
+             [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillCloseNotification object:self->_info.window];
+             self->_info = nil;
 		 }
 		 ];
 	}

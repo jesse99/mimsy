@@ -47,21 +47,21 @@
 				NSString* key = [entry.key lowercaseString];
 				if ([key isEqualToString:@"language"])
 				{
-					if (_name)
+                    if (self->_name)
 						[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
 					
-					_name = entry.value;
+                    self->_name = entry.value;
 				}
 				else if ([key isEqualToString:@"linecomment"])
 				{
-					if (_lineComment)
+                    if (self->_lineComment)
 						[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
 					
-					_lineComment = entry.value;	
+                    self->_lineComment = entry.value;	
 				}
 				else if ([key isEqualToString:@"word"])
 				{
-					if (_word)
+                    if (self->_word)
 						[errors addObject:[NSString stringWithFormat:@"duplicate %@ key on line %ld", entry.key, entry.line]];
 					
 					word = entry.value;
@@ -71,8 +71,8 @@
 				else if ([key isEqualToString:@"globs"])
 				{
 					[globs addObjectsFromArray:[entry.value splitByString:@" "]];
-                    [_settingKeys addObject:entry.key];
-                    [_settingValues addObject:entry.value];
+                    [self->_settingKeys addObject:entry.key];
+                    [self->_settingValues addObject:entry.value];
 				}
 				else if ([key isEqualToString:@"shebang"])
 				{
@@ -107,8 +107,8 @@
                 else if ([key isEqualToString:@"contexthelp"] || [key isEqualToString:@"searchin"])
                 {
                     // Lame special case for some settings that tend not to compile as regexen.
-                    [_settingKeys addObject:entry.key];
-                    [_settingValues addObject:entry.value];
+                    [self->_settingKeys addObject:entry.key];
+                    [self->_settingValues addObject:entry.value];
                 }
 				else
 				{
@@ -128,8 +128,8 @@
                     }
                     [evalue addObject:entry.value];
                     
-                    [_settingKeys addObject:entry.key];
-                    [_settingValues addObject:entry.value];
+                    [self->_settingKeys addObject:entry.key];
+                    [self->_settingValues addObject:entry.value];
 				}
 			}
 		];

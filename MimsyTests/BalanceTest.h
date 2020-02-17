@@ -1,5 +1,3 @@
-#import <SenTestingKit/SenTestingKit.h>
-
-@interface BalanceTest : SenTestCase
-
-@end
+//@interface BalanceTest : SenTestCase
+//
+//@end

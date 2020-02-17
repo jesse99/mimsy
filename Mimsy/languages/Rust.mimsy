@@ -5,7 +5,7 @@ ContextHelp: {rust}[Rust Std Lib]https://doc.rust-lang.org/std/
 ContextHelp: {rust}[Crates]https://docs.rs/
 ContextHelp: {rust}[The Book]https://doc.rust-lang.org/book/
 ContextHelp: {rust}[Rust Reference]https://doc.rust-lang.org/stable/reference/
-SearchIn: [Standard Lib]https://doc.rust-lang.org/std/?search=${TEXT}
+SearchIn: [Rust Standard Lib]https://doc.rust-lang.org/std/?search=${TEXT}
 
 DocComment: //! .* $
 DocComment: /// .* $
@@ -17,15 +17,15 @@ Character: ' [^'] '
 Character: ' (?: \\ [^'\r\n\\]+) '
 
 Keyword: \b(?: abstract | alignof | as | become | box | break | const | continue | crate | do | else | enum | extern | false | final | fn | for | if | impl | in | let | loop | macro | match | mod | move | mut | offsetof | override | priv | proc | pub | pure | ref | return | Self | self | sizeof | static | struct | super | trait | true | type | typeof | unsafe | unsized | use | virtual | where | while | yield)\b
-Macro: \b(?: macro_rules | assert | assert_eq | assert_ne | cfg | column | concat | debug_assert | debug_assert_eq | debug_assert_ne | env | file | format | format_args | include | include_bytes | include_str | line | module_path | option_env | panic | print | println | stringify | thread_local | concant_idents | select | try | unimplemented | unreachable | vec | write | writeln)\!
+Macro: \b(?: macro_rules | assert | assert_eq | assert_ne | cfg | column | concat | debug_assert | debug_assert_eq | debug_assert_ne | env | eprint | eprintln | file | format | format_args | include | include_bytes | include_str | line | module_path | option_env | panic | print | println | stringify | thread_local | concant_idents | select | try | unimplemented | unreachable | vec | write | writeln)\!
 
 Boolean: \b(?: false | true)\b
 
 Attribute: ^ \s* \x23 !? \s* \[  \w+ \b
 Argument: \b(?: (?<! (?: let | impl | struct) \s) \s* (\w+) \s* : (?! :))
 Structure: (?<= enum) \s+ (\w+)
-Structure: (?<= trait) (?: (?: \s* < [\w:\s,]+ > \s*) | \s+) ([\w@~&]+)
-Structure: (?<= impl) (?: (?: \s* < [\w:\s,]+ > \s*) | \s+) ([\w@~&]+)
+Structure: (?<= trait) (?: (?: \s* < [\w:\s,+']+ > \s*) | (?: \s+ [\w]+::) | \s+) ([\w@~&]+)
+Structure: (?<= impl) (?: (?: \s* < [\w:\s,+']+ > \s*) | (?: \s+ [\w]+::) | \s+) ([\w@~&]+)
 Structure: (?<= struct) \s+ ([\w]+)
 Structure: (?<= type) \s+ ([\w]+)
 Function: (?<= \s fn) \s+ ([\w_]+) \s* (?= \(|<)

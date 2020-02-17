@@ -299,8 +299,8 @@ static DirectoryController* _lastBuilt;
 		 
 		 if (!error)
 		 {
-			 NSOutlineView* table = _table;
-			 if (_table)
+             NSOutlineView* table = self->_table;
+             if (self->_table)
 				 [table deselectAll:self];
 		 }
 		 else
@@ -424,9 +424,9 @@ static DirectoryController* _lastBuilt;
                     _lastBuilt = self;
                     
                     NSString* flags = [self _findBuildFlags:target];
-                    NSDictionary* info = [_buildItems objectForKey:target];
+                    NSDictionary* info = [self->_buildItems objectForKey:target];
                     if (!info)
-                        info = [Builders build:_builderInfo target:target flags:flags env:_buildVars];
+                        info = [Builders build:self->_builderInfo target:target flags:flags env:self->_buildVars];
                     [self _doBuild:info];
                 }
             }];
@@ -623,7 +623,7 @@ static DirectoryController* _lastBuilt;
 	dispatch_async(concurrent, ^
 	{
 		startTime = time(NULL);
-		NSError* err = [Utils run:_buildTask stdout:&stdout stderr:&stderr timeout:NoTimeOut];
+        NSError* err = [Utils run:self->_buildTask stdout:&stdout stderr:&stderr timeout:NoTimeOut];
 		dispatch_async(main, ^
 		{
 		  stdout = [stdout stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -644,7 +644,7 @@ static DirectoryController* _lastBuilt;
               if (BuildErrors.instance.canGotoNextError)
                   [BuildErrors.instance gotoNextError];
           }
-		  _buildTask = nil;
+            self->_buildTask = nil;
 		  [self _updateBuildButtons];
 		  
 		  if (!err)
@@ -1060,7 +1060,7 @@ static DirectoryController* _lastBuilt;
 			 }
 			 else if ([entry.key isEqualToString:@"BuildTarget"])
 			 {
-				 _defaultTarget = entry.value;
+                 self->_defaultTarget = entry.value;
 			 }
 			 else if ([entry.key isEqualToString:@"GlobStyles"])
 			 {
@@ -1077,7 +1077,7 @@ static DirectoryController* _lastBuilt;
 			 }
 			 else
 			 {
-				 [_layeredSettings addKey:entry.key value:entry.value];
+                 [self->_layeredSettings addKey:entry.key value:entry.value];
 			 }
 		 }
 		 ];

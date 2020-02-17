@@ -53,7 +53,7 @@ class StdNewDirectory: MimsyPlugin
         }
         catch let err as NSError
         {
-            app.transcript().write(.error, text: "error creating \(newPath): \(err.localizedFailureReason)")
+            app.transcript().write(.error, text: "error creating \(newPath): \(String(describing: err.localizedFailureReason))")
         }
         catch
         {

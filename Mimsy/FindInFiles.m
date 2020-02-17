@@ -65,7 +65,7 @@
 	__block NSMutableArray* openPaths = [NSMutableArray new];
 	__block int numPendingSaves = 0;
 	
-	void (^nextStep)() = ^()
+    void (^nextStep)(void) = ^()
 	{
 		dispatch_queue_t concurrent = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 		dispatch_async(concurrent, ^
@@ -139,16 +139,16 @@
 	dispatch_queue_t main = dispatch_get_main_queue();
 	dispatch_async(main,
 	   ^{
-		   if (_resultsController.window.isVisible)
+           if (self->_resultsController.window.isVisible)
 		   {
 			   if (matches.count > 0)
 			   {
 				   LOG("Find:Verbose", "Found %lu matches for %s", matches.count, STR(path.lastComponent));
-				   ++_numFiles;
-				   _numMatches += matches.count;
+                   ++self->_numFiles;
+                   self->_numMatches += matches.count;
 				   
 				   [self _addPersistentAttribute:matchStrs matches:matches path:path];
-				   [_resultsController addPath:pathStr matches:matchStrs];
+                   [self->_resultsController addPath:pathStr matches:matchStrs];
 			   }
 			   else
 			   {
@@ -156,12 +156,12 @@
 			   }
 
 			   NSString* title = [self _getResultsWindowTitle];
-			   [_resultsController.window setTitle:title];
+               [self->_resultsController.window setTitle:title];
 		   }
 		   else
 		   {
-			   [_resultsController releaseWindow];
-			   _resultsController = nil;
+               [self->_resultsController releaseWindow];
+               self->_resultsController = nil;
 		   }
 	   });
 	
@@ -216,15 +216,15 @@
 	dispatch_async(main,
 	   ^{
 		   LOG("Find:Verbose", "Finished find");
-           if (_resultsController.window.isVisible)
+           if (self->_resultsController.window.isVisible)
 		   {
 			   NSString* title = [self _getResultsWindowTitle];
-			   [_resultsController.window setTitle:title];
+               [self->_resultsController.window setTitle:title];
 		   }
 		   else
 		   {
-			   [_resultsController releaseWindow];
-			   _resultsController = nil;
+               [self->_resultsController releaseWindow];
+               self->_resultsController = nil;
 		   }
 	   });
 }
@@ -321,9 +321,9 @@
 			   {
 				   if (range.range.location == NSNotFound)
 				   {
-					   [str setAttributes:_disabledAttrs range:fullRange];
+                       [str setAttributes:self->_disabledAttrs range:fullRange];
 					   [str addAttribute:@"FindRange" value:range range:fullRange];
-					   [_resultsController.window display];
+                       [self->_resultsController.window display];
 				   }
 			   }];
 		[str addAttribute:@"FindRange" value:pr range:fullRange];
@@ -389,7 +389,7 @@
 				 
 				 if (value)
 				 {
-					 [newStr setAttributes:_matchAttrs range:range];
+                     [newStr setAttributes:self->_matchAttrs range:range];
 					 [newStr addAttribute:@"MatchedText" value:@"" range:range];
 				 }
 			 }];

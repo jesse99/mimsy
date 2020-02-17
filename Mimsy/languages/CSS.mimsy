@@ -1,0 +1,11 @@
+Language: css
+Globs: *.css *.htm
+ContextHelp: {css}[CSS MDN]https://developer.mozilla.org/en-US/docs/Web/CSS
+SearchIn: [MDN]https://developer.mozilla.org/en-US/search?q=${TEXT}
+
+Comment: \/\*[^*]*\*+(?:[^/*][^*]*\*+)*\/
+Keyword: \b(?: import)\b
+Keyword: ^ \s* (?: \x23 | \.)? \w [^\{\r\n]*  \s* (?= \{)
+Label: \w [^:\{\r\n\ ]* : \s
+String: " [^"\r\n]* "
+String: ' [^'\r\n]* '
